@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\SquareFrameLayout.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapFactory</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SquareFrameLayout</name> <super><extends>extends <name>FrameLayout</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>squareHeight</name></decl>;</decl_stmt>
+
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareFrameLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareFrameLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB</name></name></expr></argument>)</argument_list></annotation> <annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareFrameLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>attrs</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getTheme</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>obtainStyledAttributes</name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SquareFrameLayout</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>squareHeight</name></name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SquareFrameLayout_square_height</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>squareHeight</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onMeasure</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>widthMeasureSpec</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>heightMeasureSpec</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">//noinspection SuspiciousNameCombination</comment>
+    <if>if <condition>(<expr><name>squareHeight</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onMeasure</name></name><argument_list>(<argument><expr><name>heightMeasureSpec</name></expr></argument>, <argument><expr><name>heightMeasureSpec</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+    <else>else              <block type="pseudo"><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onMeasure</name></name><argument_list>(<argument><expr><name>widthMeasureSpec</name></expr></argument>, <argument><expr><name>widthMeasureSpec</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+  }</block></function>
+}</block></class>
+</unit>

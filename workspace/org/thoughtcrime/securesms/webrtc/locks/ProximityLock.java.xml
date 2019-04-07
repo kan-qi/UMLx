@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\webrtc\locks\ProximityLock.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>locks</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>PowerManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>InvocationTargetException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Method</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Controls access to the proximity lock.
+ * The proximity lock is not part of the public API.
+ *
+ * @author Stuart O. Anderson
+*/</comment>
+<class>class <name>ProximityLock</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ProximityLock</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Method</name></type> <name>wakelockParameterizedRelease</name> <init>= <expr><call><name>getWakelockParamterizedReleaseMethod</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name><name>PowerManager</name><operator>.</operator><name>WakeLock</name></name></argument>&gt;</argument_list></name></type> <name>proximityLock</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>PROXIMITY_SCREEN_OFF_WAKE_LOCK</name> <init>= <expr><literal type="number">32</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>WAIT_FOR_PROXIMITY_NEGATIVE</name>    <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><name>ProximityLock</name><parameter_list>(<parameter><decl><type><name>PowerManager</name></type> <name>pm</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>proximityLock</name> <operator>=</operator> <call><name>getProximityLock</name><argument_list>(<argument><expr><name>pm</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name><name>PowerManager</name><operator>.</operator><name>WakeLock</name></name></argument>&gt;</argument_list></name></type> <name>getProximityLock</name><parameter_list>(<parameter><decl><type><name>PowerManager</name></type> <name>pm</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>pm</name><operator>.</operator><name>isWakeLockLevelSupported</name></name><argument_list>(<argument><expr><name><name>PowerManager</name><operator>.</operator><name>PROXIMITY_SCREEN_OFF_WAKE_LOCK</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><call><name><name>pm</name><operator>.</operator><name>newWakeLock</name></name><argument_list>(<argument><expr><name><name>PowerManager</name><operator>.</operator><name>PROXIMITY_SCREEN_OFF_WAKE_LOCK</name></name></expr></argument>,
+                                                    <argument><expr><literal type="string">"Signal Proximity Lock"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block></then> <else>else <block>{
+      <try>try <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><call><name><name>pm</name><operator>.</operator><name>newWakeLock</name></name><argument_list>(<argument><expr><name>PROXIMITY_SCREEN_OFF_WAKE_LOCK</name></expr></argument>, <argument><expr><literal type="string">"RedPhone Incall"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to create proximity lock"</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></catch></try>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>acquire</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>proximityLock</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isHeld</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>acquire</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>release</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>proximityLock</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>||</operator> <operator>!</operator><call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isHeld</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>release</name><argument_list>(<argument><expr><name><name>PowerManager</name><operator>.</operator><name>RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>released</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>wakelockParameterizedRelease</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>wakelockParameterizedRelease</name><operator>.</operator><name>invoke</name></name><argument_list>(<argument><expr><call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>WAIT_FOR_PROXIMITY_NEGATIVE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>released</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalAccessException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>InvocationTargetException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><name>released</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>release</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Released proximity lock:"</literal> <operator>+</operator> <call><name><name>proximityLock</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isHeld</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>Method</name></type> <name>getWakelockParamterizedReleaseMethod</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>PowerManager</name><operator>.</operator><name>WakeLock</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getDeclaredMethod</name></name></name><argument_list>(<argument><expr><literal type="string">"release"</literal></expr></argument>, <argument><expr><name><name>Integer</name><operator>.</operator><name>TYPE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchMethodException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Parameterized WakeLock release not available on this device."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

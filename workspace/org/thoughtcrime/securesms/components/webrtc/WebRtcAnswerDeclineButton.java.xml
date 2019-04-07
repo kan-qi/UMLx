@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\webrtc\WebRtcAnswerDeclineButton.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>webrtc</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>AnimatorSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>ArgbEvaluator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>ObjectAnimator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RequiresApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>AccelerateInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>DecelerateInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>WebRtcAnswerDeclineButton</name> <super><extends>extends <name>LinearLayout</name></extends> <implements>implements <name><name>View</name><operator>.</operator><name>OnTouchListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>WebRtcAnswerDeclineButton</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TOTAL_TIME</name> <init>= <expr><literal type="number">1000</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SHAKE_TIME</name> <init>= <expr><literal type="number">200</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>UP_TIME</name>       <init>= <expr><operator>(</operator><name>TOTAL_TIME</name> <operator>-</operator> <name>SHAKE_TIME</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DOWN_TIME</name>     <init>= <expr><operator>(</operator><name>TOTAL_TIME</name> <operator>-</operator> <name>SHAKE_TIME</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>FADE_OUT_TIME</name> <init>= <expr><literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>FADE_IN_TIME</name>  <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SHIMMER_TOTAL</name> <init>= <expr><name>UP_TIME</name> <operator>+</operator> <name>SHAKE_TIME</name></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ANSWER_THRESHOLD</name>  <init>= <expr><literal type="number">112</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DECLINE_THRESHOLD</name> <init>= <expr><literal type="number">56</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>  <name>swipeUpText</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>fab</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>  <name>swipeDownText</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>arrowOne</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>arrowTwo</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>arrowThree</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>arrowFour</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>lastY</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>animating</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>complete</name>  <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>AnimatorSet</name></type> <name>animatorSet</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>AnswerDeclineListener</name></type> <name>listener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>WebRtcAnswerDeclineButton</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>WebRtcAnswerDeclineButton</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>WebRtcAnswerDeclineButton</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>RequiresApi</name><argument_list>(<argument><expr><name>api</name> <operator>=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>WebRtcAnswerDeclineButton</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setOrientation</name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setLayoutParams</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name></name><argument_list>(<argument><expr><name><name>ViewGroup</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>, <argument><expr><name><name>ViewGroup</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>inflate</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>webrtc_answer_decline_button</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>swipeUpText</name></name>   <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>swipe_up_text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fab</name></name>           <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>answer</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>swipeDownText</name></name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>swipe_down_text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>arrowOne</name></name>   <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>arrow_one</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>arrowTwo</name></name>   <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>arrow_two</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>arrowThree</name></name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>arrow_three</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>arrowFour</name></name>  <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>arrow_four</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fab</name><operator>.</operator><name>setOnTouchListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>startRingingAnimation</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><name>animating</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>animating</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateElements</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>stopRingingAnimation</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>animating</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>animating</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>resetElements</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setAnswerDeclineListener</name><parameter_list>(<parameter><decl><type><name>AnswerDeclineListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onTouch</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>, <parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+
+    <switch>switch <condition>(<expr><call><name><name>event</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr>:</case>
+        <expr_stmt><expr><call><name>resetElements</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>swipeUpText</name><operator>.</operator><name>animate</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>alpha</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>setDuration</name><argument_list>(<argument><expr><literal type="number">200</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>swipeDownText</name><operator>.</operator><name>animate</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>alpha</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>setDuration</name><argument_list>(<argument><expr><literal type="number">200</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>lastY</name> <operator>=</operator> <call><name><name>event</name><operator>.</operator><name>getRawY</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_CANCEL</name></name></expr>:</case>
+      <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_UP</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>swipeUpText</name><operator>.</operator><name>clearAnimation</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>swipeDownText</name><operator>.</operator><name>clearAnimation</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>swipeUpText</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>swipeDownText</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>setRotation</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">21</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>getDrawable</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTint</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_600</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTint</name><argument_list>(<argument><expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <expr_stmt><expr><name>animating</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>animateElements</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_MOVE</name></name></expr>:</case>
+        <decl_stmt><decl><type><name>float</name></type> <name>difference</name> <init>= <expr><call><name><name>event</name><operator>.</operator><name>getRawY</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>lastY</name></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>float</name></type> <name>differenceThreshold</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>float</name></type> <name>percentageToThreshold</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type>   <name>backgroundColor</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type>   <name>foregroundColor</name></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>difference</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name>differenceThreshold</name>   <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>dpToPx</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>ANSWER_THRESHOLD</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>percentageToThreshold</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><operator>(</operator><name>difference</name> <operator>*</operator> <operator>-</operator><literal type="number">1</literal><operator>)</operator> <operator>/</operator> <name>differenceThreshold</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>backgroundColor</name>       <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <operator>new</operator> <call><name>ArgbEvaluator</name><argument_list>()</argument_list></call><operator>.</operator><call><name>evaluate</name><argument_list>(<argument><expr><name>percentageToThreshold</name></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_100</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_600</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <if>if <condition>(<expr><name>percentageToThreshold</name> <operator>&gt;</operator> <literal type="number">0.5</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>foregroundColor</name> <operator>=</operator> <name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr>;</expr_stmt>
+          }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>foregroundColor</name> <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_600</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></else></if>
+
+          <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>setTranslationY</name></name><argument_list>(<argument><expr><name>difference</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <if>if <condition>(<expr><name>percentageToThreshold</name> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>lastY</name> <operator>=</operator> <call><name><name>event</name><operator>.</operator><name>getRawY</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <if>if <condition>(<expr><operator>!</operator><name>complete</name></expr>)</condition><then> <block>{
+              <expr_stmt><expr><name>complete</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onAnswered</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+          }</block></then></if>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><name>differenceThreshold</name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>dpToPx</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>DECLINE_THRESHOLD</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>percentageToThreshold</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><name>difference</name> <operator>/</operator> <name>differenceThreshold</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>backgroundColor</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <operator>new</operator> <call><name>ArgbEvaluator</name><argument_list>()</argument_list></call><operator>.</operator><call><name>evaluate</name><argument_list>(<argument><expr><name>percentageToThreshold</name></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>red_100</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>red_600</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <if>if <condition>(<expr><name>percentageToThreshold</name> <operator>&gt;</operator> <literal type="number">0.5</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>foregroundColor</name> <operator>=</operator> <name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr>;</expr_stmt>
+          }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>foregroundColor</name> <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_600</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></else></if>
+
+          <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>setRotation</name></name><argument_list>(<argument><expr><literal type="number">135</literal> <operator>*</operator> <name>percentageToThreshold</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <if>if <condition>(<expr><name>percentageToThreshold</name> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>lastY</name> <operator>=</operator> <call><name><name>event</name><operator>.</operator><name>getRawY</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+            <if>if <condition>(<expr><operator>!</operator><name>complete</name></expr>)</condition><then> <block>{
+              <expr_stmt><expr><name>complete</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onDeclined</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+          }</block></then></if>
+        }</block></else></if>
+
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTint</name><argument_list>(<argument><expr><name>backgroundColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>getDrawable</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTint</name><argument_list>(<argument><expr><name>foregroundColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <break>break;</break>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>animateElements</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>delay</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>fabUp</name>    <init>= <expr><call><name>getUpAnimation</name><argument_list>(<argument><expr><name>fab</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>fabDown</name>  <init>= <expr><call><name>getDownAnimation</name><argument_list>(<argument><expr><name>fab</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>fabShake</name> <init>= <expr><call><name>getShakeAnimation</name><argument_list>(<argument><expr><name>fab</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>animatorSet</name> <operator>=</operator> <operator>new</operator> <call><name>AnimatorSet</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><name>fabUp</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>with</name><argument_list>(<argument><expr><call><name>getUpAnimation</name><argument_list>(<argument><expr><name>swipeUpText</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><name>fabShake</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>after</name><argument_list>(<argument><expr><name>fabUp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><name>fabDown</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>with</name><argument_list>(<argument><expr><call><name>getDownAnimation</name><argument_list>(<argument><expr><name>swipeUpText</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>after</name><argument_list>(<argument><expr><name>fabShake</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><call><name>getFadeOut</name><argument_list>(<argument><expr><name>swipeDownText</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>with</name><argument_list>(<argument><expr><name>fabUp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><call><name>getFadeIn</name><argument_list>(<argument><expr><name>swipeDownText</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>after</name><argument_list>(<argument><expr><name>fabDown</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><call><name>getShimmer</name><argument_list>(<argument><expr><name>arrowFour</name></expr></argument>, <argument><expr><name>arrowThree</name></expr></argument>, <argument><expr><name>arrowTwo</name></expr></argument>, <argument><expr><name>arrowOne</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animator</name><operator>.</operator><name>AnimatorListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>animating</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>animateElements</name><argument_list>(<argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationCancel</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>setStartDelay</name></name><argument_list>(<argument><expr><name>delay</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Animator</name></type> <name>getShimmer</name><parameter_list>(<parameter><decl><type><name>View</name><modifier>...</modifier></type> <name>targets</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AnimatorSet</name></type> <name>animatorSet</name>  <init>= <expr><operator>new</operator> <call><name>AnimatorSet</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>         <name>evenDuration</name> <init>= <expr><name>SHIMMER_TOTAL</name> <operator>/</operator> <name><name>targets</name><operator>.</operator><name>length</name></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>         <name>interval</name>     <init>= <expr><literal type="number">75</literal></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name><name>targets</name><operator>.</operator><name>length</name></name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><call><name>getShimmer</name><argument_list>(<argument><expr><name><name>targets</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>, <argument><expr><name>evenDuration</name> <operator>+</operator> <operator>(</operator><name>evenDuration</name> <operator>-</operator> <name>interval</name><operator>)</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>after</name><argument_list>(<argument><expr><name>interval</name> <operator>*</operator> <name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>animatorSet</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ObjectAnimator</name></type> <name>getShimmer</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>target</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>duration</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>shimmer</name> <init>= <expr><call><name><name>ObjectAnimator</name><operator>.</operator><name>ofFloat</name></name><argument_list>(<argument><expr><name>target</name></expr></argument>, <argument><expr><literal type="string">"alpha"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>shimmer</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>duration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>shimmer</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ObjectAnimator</name></type> <name>getShakeAnimation</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>target</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>animator</name> <init>= <expr><call><name><name>ObjectAnimator</name><operator>.</operator><name>ofFloat</name></name><argument_list>(<argument><expr><name>target</name></expr></argument>, <argument><expr><literal type="string">"translationX"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">25</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">25</literal></expr></argument>, <argument><expr><literal type="number">25</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">25</literal></expr></argument>,<argument><expr><literal type="number">15</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">15</literal></expr></argument>, <argument><expr><literal type="number">6</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">6</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>SHAKE_TIME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>animator</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ObjectAnimator</name></type> <name>getUpAnimation</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>target</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>animator</name> <init>= <expr><call><name><name>ObjectAnimator</name><operator>.</operator><name>ofFloat</name></name><argument_list>(<argument><expr><name>target</name></expr></argument>, <argument><expr><literal type="string">"translationY"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal> <operator>*</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>dpToPx</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">32</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AccelerateInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>UP_TIME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>animator</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ObjectAnimator</name></type> <name>getDownAnimation</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>target</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>animator</name> <init>= <expr><call><name><name>ObjectAnimator</name><operator>.</operator><name>ofFloat</name></name><argument_list>(<argument><expr><name>target</name></expr></argument>, <argument><expr><literal type="string">"translationY"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DecelerateInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>DOWN_TIME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>animator</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ObjectAnimator</name></type> <name>getFadeOut</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>target</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>animator</name> <init>= <expr><call><name><name>ObjectAnimator</name><operator>.</operator><name>ofFloat</name></name><argument_list>(<argument><expr><name>target</name></expr></argument>, <argument><expr><literal type="string">"alpha"</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>FADE_OUT_TIME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>animator</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ObjectAnimator</name></type> <name>getFadeIn</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>target</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ObjectAnimator</name></type> <name>animator</name> <init>= <expr><call><name><name>ObjectAnimator</name><operator>.</operator><name>ofFloat</name></name><argument_list>(<argument><expr><name>target</name></expr></argument>, <argument><expr><literal type="string">"alpha"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>FADE_IN_TIME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>animator</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>resetElements</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>animating</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name>complete</name>  <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    
+    <if>if <condition>(<expr><name>animatorSet</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>animatorSet</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+    <expr_stmt><expr><call><name><name>swipeUpText</name><operator>.</operator><name>setTranslationY</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>fab</name><operator>.</operator><name>setTranslationY</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>swipeDownText</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>AnswerDeclineListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onAnswered</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onDeclined</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

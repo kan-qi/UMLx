@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\lock\RegistrationLockDialog.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>lock</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Typeface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Editable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableStringBuilder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spanned</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextWatcher</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>method</name><operator>.</operator><name>LinkMovementMethod</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>ClickableSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>StyleSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>DisplayMetrics</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Display</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>EditText</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ProgressBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>SwitchPreferenceCompat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ServiceUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceAccountManager</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>RegistrationLockDialog</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>RegistrationLockDialog</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>showReminderIfNecessary</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>RegistrationLockReminders</name><operator>.</operator><name>needsReminder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then>    <block type="pseudo"><return>return;</return></block></then></if>
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>AlertDialog</name></type> <name>dialog</name>      <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>style</name><operator>.</operator><name>RationaleDialog</name></name></expr></argument>)</argument_list></call>
+                                             <operator>.</operator><call><name>setView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>registration_lock_reminder_view</name></name></expr></argument>)</argument_list></call>
+                                             <operator>.</operator><call><name>setCancelable</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+                                             <operator>.</operator><call><name>setOnCancelListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>d</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>RegistrationLockReminders</name><operator>.</operator><name>scheduleReminder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                                             <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>WindowManager</name></type>  <name>windowManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getWindowManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Display</name></type>        <name>display</name>       <init>= <expr><call><name><name>windowManager</name><operator>.</operator><name>getDefaultDisplay</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>DisplayMetrics</name></type> <name>metrics</name>       <init>= <expr><operator>new</operator> <call><name>DisplayMetrics</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>display</name><operator>.</operator><name>getMetrics</name></name><argument_list>(<argument><expr><name>metrics</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>getWindow</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setSoftInputMode</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>SOFT_INPUT_STATE_VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>getWindow</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setLayout</name><argument_list>(<argument><expr><call>(<name>int</name>)<argument_list>(<argument><expr><name><name>metrics</name><operator>.</operator><name>widthPixels</name></name> <operator>*</operator> <literal type="number">.80</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>ViewGroup</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>EditText</name></type>    <name>pinEditText</name> <init>= <expr><call><name><name>dialog</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>pin</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>TextView</name></type>    <name>reminder</name>    <init>= <expr><call><name><name>dialog</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>reminder</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <assert>assert <expr><name>pinEditText</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+    <assert>assert <expr><name>reminder</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>reminderIntro</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_reminder</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>reminderText</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_registration_lock_is_enabled_for_your_phone_number</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>forgotText</name>   <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_i_forgot_my_pin</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>ClickableSpan</name></type> <name>clickableSpan</name> <init>= <expr><operator>new</operator> <class><super><name>ClickableSpan</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>widget</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>dismiss</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_forgotten_pin</name></name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setMessage</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_registration_lock_helps_protect_your_phone_number_from_unauthorized_registration_attempts</name></name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setPositiveButton</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ok</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call>
+                                        <operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+
+    <expr_stmt><expr><call><name><name>reminderIntro</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>reminderIntro</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spanned</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>forgotText</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><name>clickableSpan</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>forgotText</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spanned</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>reminder</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SpannableStringBuilder</name><argument_list>(<argument><expr><name>reminderIntro</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>reminderText</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>forgotText</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>reminder</name><operator>.</operator><name>setMovementMethod</name></name><argument_list>(<argument><expr><call><name><name>LinkMovementMethod</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>pinEditText</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>TextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>beforeTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>after</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>before</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>afterTextChanged</name><parameter_list>(<parameter><decl><type><name>Editable</name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>s</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>s</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getRegistrationLockPin</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>dismiss</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>RegistrationLockReminders</name><operator>.</operator><name>scheduleReminder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>showRegistrationLockPrompt</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SwitchPreferenceCompat</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SignalServiceAccountManager</name></type> <name>accountManager</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AlertDialog</name></type> <name>dialog</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_registration_lock</name></name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>registration_lock_dialog_view</name></name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setPositiveButton</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_enable</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setNegativeButton</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setOnShowListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>created</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name>Button</name></type> <name>button</name> <init>= <expr><operator>(</operator><operator>(</operator><name>AlertDialog</name><operator>)</operator> <name>created</name><operator>)</operator><operator>.</operator><call><name>getButton</name><argument_list>(<argument><expr><name><name>AlertDialog</name><operator>.</operator><name>BUTTON_POSITIVE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+        <decl_stmt><decl><type><name>EditText</name></type>    <name>pin</name>         <init>= <expr><call><name><name>dialog</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>pin</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>EditText</name></type>    <name>repeat</name>      <init>= <expr><call><name><name>dialog</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>repeat</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>ProgressBar</name></type> <name>progressBar</name> <init>= <expr><call><name><name>dialog</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>progress</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <assert>assert <expr><name>pin</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+        <assert>assert <expr><name>repeat</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+        <assert>assert <expr><name>progressBar</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>pinValue</name>    <init>= <expr><call><name><name>pin</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>repeatValue</name> <init>= <expr><call><name><name>repeat</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>pinValue</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&lt;</operator> <literal type="number">4</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_the_registration_lock_pin_must_be_at_least_four_digits</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <return>return;</return>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>pinValue</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>repeatValue</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_the_two_pins_you_entered_do_not_match</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <return>return;</return>
+        }</block></then></if>
+
+        <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>void</name></type> <name>onPreExecute</name><parameter_list>()</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>progressBar</name><operator>.</operator><name>setIndeterminate</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></function>
+
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>Boolean</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>voids</name></decl></parameter>)</parameter_list> <block>{
+            <try>try <block>{
+              <expr_stmt><expr><call><name><name>accountManager</name><operator>.</operator><name>setPin</name></name><argument_list>(<argument><expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>pinValue</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setRegistrationLockPin</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>pinValue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setRegistrationLockLastReminderTime</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setRegistrationLockNextReminderInterval</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>RegistrationLockReminders</name><operator>.</operator><name>INITIAL_INTERVAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+            }</block></catch></try>
+          }</block></function>
+
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Boolean</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <if>if <condition>(<expr><name>result</name></expr>)</condition><then> <block>{
+              <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>created</name><operator>.</operator><name>dismiss</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+              <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_error_connecting_to_the_service</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+          }</block></function>
+        }</block></class><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>showRegistrationUnlockPrompt</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SwitchPreferenceCompat</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SignalServiceAccountManager</name></type> <name>accountManager</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AlertDialog</name></type> <name>dialog</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_disable_registration_lock_pin</name></name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>registration_unlock_dialog_view</name></name></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setPositiveButton</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_disable</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>setNegativeButton</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                                        <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setOnShowListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>created</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name>Button</name></type> <name>button</name> <init>= <expr><operator>(</operator><operator>(</operator><name>AlertDialog</name><operator>)</operator> <name>created</name><operator>)</operator><operator>.</operator><call><name>getButton</name><argument_list>(<argument><expr><name><name>AlertDialog</name><operator>.</operator><name>BUTTON_POSITIVE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+        <decl_stmt><decl><type><name>ProgressBar</name></type> <name>progressBar</name> <init>= <expr><call><name><name>dialog</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>progress</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <assert>assert <expr><name>progressBar</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+
+        <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>void</name></type> <name>onPreExecute</name><parameter_list>()</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>progressBar</name><operator>.</operator><name>setIndeterminate</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></function>
+
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>Boolean</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>voids</name></decl></parameter>)</parameter_list> <block>{
+            <try>try <block>{
+              <expr_stmt><expr><call><name><name>accountManager</name><operator>.</operator><name>setPin</name></name><argument_list>(<argument><expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+            }</block></catch></try>
+          }</block></function>
+
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Boolean</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <if>if <condition>(<expr><name>result</name></expr>)</condition><then> <block>{
+              <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>created</name><operator>.</operator><name>dismiss</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+              <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationLockDialog_error_connecting_to_the_service</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+          }</block></function>
+        }</block></class><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+}</block></class>
+</unit>

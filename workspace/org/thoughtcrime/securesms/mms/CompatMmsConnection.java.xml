@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\CompatMmsConnection.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>PduHeaders</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>RetrieveConf</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>SendConf</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>transport</name><operator>.</operator><name>UndeliverableMessageException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CompatMmsConnection</name> <super><implements>implements <name>OutgoingMmsConnection</name>, <name>IncomingMmsConnection</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>CompatMmsConnection</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CompatMmsConnection</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>SendConf</name></type> <name>send</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws>
+  <block>{
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP_MR1</name></name></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending via Lollipop API"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><operator>new</operator> <call><name>OutgoingLollipopMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>UndeliverableMessageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Falling back to legacy connection..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>subscriptionId</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending via legacy connection"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <try>try <block>{
+        <decl_stmt><decl><type><name>SendConf</name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name>OutgoingLegacyMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>result</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>result</name><operator>.</operator><name>getResponseStatus</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>PduHeaders</name><operator>.</operator><name>RESPONSE_STATUS_OK</name></name></expr>)</condition><then> <block>{
+          <return>return <expr><name>result</name></expr>;</return>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got bad legacy response: "</literal> <operator>+</operator> <operator>(</operator><ternary><condition><expr><name>result</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>result</name><operator>.</operator><name>getResponseStatus</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>UndeliverableMessageException</name></type> | <type><name>ApnUnavailableException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name> <operator>&amp;&amp;</operator> <name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP_MR1</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Falling back to sending via Lollipop API"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><operator>new</operator> <call><name>OutgoingLollipopMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"Both lollipop and legacy connections failed..."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>RetrieveConf</name></type> <name>retrieve</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>contentLocation</name></decl></parameter>,
+                               <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>transactionId</name></decl></parameter>,
+                               <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument>, <argument><expr><name>MmsRadioException</name></expr></argument>, <argument><expr><name>ApnUnavailableException</name></expr></argument>, <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP_MR1</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Receiving via Lollipop API"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <try>try <block>{
+        <return>return <expr><operator>new</operator> <call><name>IncomingLollipopMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>retrieve</name><argument_list>(<argument><expr><name>contentLocation</name></expr></argument>, <argument><expr><name>transactionId</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>MmsException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Falling back to receiving via legacy connection"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <literal type="number">22</literal> <operator>||</operator> <name>subscriptionId</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Receiving via legacy API"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <try>try <block>{
+        <return>return <expr><operator>new</operator> <call><name>IncomingLegacyMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>retrieve</name><argument_list>(<argument><expr><name>contentLocation</name></expr></argument>, <argument><expr><name>transactionId</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>MmsRadioException</name></type> | <type><name>ApnUnavailableException</name></type> | <type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name> <operator>&amp;&amp;</operator> <name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP_MR1</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Falling back to receiving via Lollipop API"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><operator>new</operator> <call><name>IncomingLollipopMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>retrieve</name><argument_list>(<argument><expr><name>contentLocation</name></expr></argument>, <argument><expr><name>transactionId</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Both lollipop and fallback APIs failed..."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+}</block></class>
+</unit>

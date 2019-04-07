@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\video\exo\AttachmentDataSource.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>video</name><operator>.</operator><name>exo</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>DataSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>DataSpec</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>DefaultDataSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>TransferListener</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartAuthority</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AttachmentDataSource</name> <super><implements>implements <name>DataSource</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DefaultDataSource</name></type> <name>defaultDataSource</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>PartDataSource</name></type>    <name>partDataSource</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DataSource</name></type> <name>dataSource</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AttachmentDataSource</name><parameter_list>(<parameter><decl><type><name>DefaultDataSource</name></type> <name>defaultDataSource</name></decl></parameter>, <parameter><decl><type><name>PartDataSource</name></type> <name>partDataSource</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>defaultDataSource</name></name> <operator>=</operator> <name>defaultDataSource</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>partDataSource</name></name>    <operator>=</operator> <name>partDataSource</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>addTransferListener</name><parameter_list>(<parameter><decl><type><name>TransferListener</name></type> <name>transferListener</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>open</name><parameter_list>(<parameter><decl><type><name>DataSpec</name></type> <name>dataSpec</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><call><name><name>PartAuthority</name><operator>.</operator><name>isLocalUri</name></name><argument_list>(<argument><expr><name><name>dataSpec</name><operator>.</operator><name>uri</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>dataSource</name> <operator>=</operator> <name>partDataSource</name></expr>;</expr_stmt></block></then>
+    <else>else                                        <block type="pseudo"><expr_stmt><expr><name>dataSource</name> <operator>=</operator> <name>defaultDataSource</name></expr>;</expr_stmt></block></else></if>
+
+    <return>return <expr><call><name><name>dataSource</name><operator>.</operator><name>open</name></name><argument_list>(<argument><expr><name>dataSpec</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>readLength</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>dataSource</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>readLength</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Uri</name></type> <name>getUri</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataSource</name><operator>.</operator><name>getUri</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>getResponseHeaders</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptyMap</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name><name>dataSource</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

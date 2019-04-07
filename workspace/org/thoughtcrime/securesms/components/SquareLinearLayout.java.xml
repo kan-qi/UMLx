@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\SquareLinearLayout.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SquareLinearLayout</name> <super><extends>extends <name>LinearLayout</name></extends></super> <block>{
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB</name></name></expr></argument>)</argument_list></annotation> <annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation> <annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SquareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onMeasure</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>widthMeasureSpec</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>heightMeasureSpec</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">//noinspection SuspiciousNameCombination</comment>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onMeasure</name></name><argument_list>(<argument><expr><name>widthMeasureSpec</name></expr></argument>, <argument><expr><name>widthMeasureSpec</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

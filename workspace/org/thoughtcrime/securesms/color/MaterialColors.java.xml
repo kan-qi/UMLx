@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\color\MaterialColors.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MaterialColors</name> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>MaterialColorList</name></type> <name>CONVERSATION_PALETTE</name> <init>= <expr><operator>new</operator> <call><name>MaterialColorList</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>PLUM</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>CRIMSON</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>VERMILLION</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>VIOLET</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>BLUE</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>INDIGO</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>FOREST</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>WINTERGREEN</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>TEAL</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>BURLAP</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>TAUPE</name></name></expr></argument>,
+    <argument><expr><name><name>MaterialColor</name><operator>.</operator><name>STEEL</name></name></expr></argument>
+  )</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>MaterialColorList</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MaterialColor</name></argument>&gt;</argument_list></name></type> <name>colors</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>MaterialColorList</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>MaterialColor</name></argument>&gt;</argument_list></name></type> <name>colors</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>colors</name></name> <operator>=</operator> <name>colors</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>MaterialColor</name></type> <name>get</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>index</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>colors</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>index</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>size</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>colors</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>MaterialColor</name></type> <name>getByColor</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>colorValue</name></decl></parameter>)</parameter_list> <block>{
+      <for>for <control>(<init><decl><type><name>MaterialColor</name></type> <name>color</name> <range>: <expr><name>colors</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>color</name><operator>.</operator><name>represents</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>colorValue</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <return>return <expr><name>color</name></expr>;</return>
+        }</block></then></if>
+      }</block></for>
+
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name><name>int</name><index>[]</index></name></type> <name>asConversationColorArray</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>int</name><index>[]</index></name></type> <name>results</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><call><name><name>colors</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>   <name>index</name>   <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>MaterialColor</name></type> <name>color</name> <range>: <expr><name>colors</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><name><name>results</name><index>[<expr><name>index</name><operator>++</operator></expr>]</index></name> <operator>=</operator> <call><name><name>color</name><operator>.</operator><name>toConversationColor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <return>return <expr><name>results</name></expr>;</return>
+    }</block></function>
+
+  }</block></class>
+
+
+}</block></class>
+
+</unit>

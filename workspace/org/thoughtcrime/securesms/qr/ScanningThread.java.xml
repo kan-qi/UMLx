@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\qr\ScanningThread.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>BinaryBitmap</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>ChecksumException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>DecodeHintType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>FormatException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>NotFoundException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>PlanarYUVLuminanceSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>Result</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>common</name><operator>.</operator><name>HybridBinarizer</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>qrcode</name><operator>.</operator><name>QRCodeReader</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>camera</name><operator>.</operator><name>CameraView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>camera</name><operator>.</operator><name>CameraView</name><operator>.</operator><name>PreviewFrame</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>atomic</name><operator>.</operator><name>AtomicReference</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ScanningThread</name> <super><extends>extends <name>Thread</name></extends> <implements>implements <name><name>CameraView</name><operator>.</operator><name>PreviewCallback</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ScanningThread</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>QRCodeReader</name></type>                  <name>reader</name>       <init>= <expr><operator>new</operator> <call><name>QRCodeReader</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>AtomicReference</name><argument_list type="generic">&lt;<argument><name>ScanListener</name></argument>&gt;</argument_list></name></type> <name>scanListener</name> <init>= <expr><operator>new</operator> <call><name><name>AtomicReference</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>DecodeHintType</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type>   <name>hints</name>        <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>scanning</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>PreviewFrame</name></type> <name>previewFrame</name></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setCharacterSet</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>characterSet</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>hints</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name><name>DecodeHintType</name><operator>.</operator><name>CHARACTER_SET</name></name></expr></argument>, <argument><expr><name>characterSet</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setScanListener</name><parameter_list>(<parameter><decl><type><name>ScanListener</name></type> <name>scanListener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanListener</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name>scanListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPreviewFrame</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PreviewFrame</name></type> <name>previewFrame</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>previewFrame</name></name> <operator>=</operator> <name>previewFrame</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>notify</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></synchronized>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>RuntimeException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+    <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{
+      <decl_stmt><decl><type><name>PreviewFrame</name></type> <name>ourFrame</name></decl>;</decl_stmt>
+
+      <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+        <while>while <condition>(<expr><name>scanning</name> <operator>&amp;&amp;</operator> <name>previewFrame</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+          <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>wait</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></while>
+
+        <if>if <condition>(<expr><operator>!</operator><name>scanning</name></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then>
+        <else>else           <block type="pseudo"><expr_stmt><expr><name>ourFrame</name> <operator>=</operator> <name>previewFrame</name></expr>;</expr_stmt></block></else></if>
+
+        <expr_stmt><expr><name>previewFrame</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      }</block></synchronized>
+
+      <decl_stmt><decl><type><name>String</name></type>       <name>data</name>         <init>= <expr><call><name>getScannedData</name><argument_list>(<argument><expr><call><name><name>ourFrame</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>ourFrame</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>ourFrame</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>ourFrame</name><operator>.</operator><name>getOrientation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>ScanListener</name></type> <name>scanListener</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>scanListener</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>data</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>scanListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>scanListener</name><operator>.</operator><name>onQrDataFound</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+    }</block></while>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>stopScanning</name><parameter_list>()</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+      <expr_stmt><expr><name>scanning</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notify</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getScannedData</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>data</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>orientation</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <if>if <condition>(<expr><name>orientation</name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>ORIENTATION_PORTRAIT</name></name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>rotatedData</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name><name>data</name><operator>.</operator><name>length</name></name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>y</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>y</name> <operator>&lt;</operator> <name>height</name></expr>;</condition> <incr><expr><name>y</name><operator>++</operator></expr></incr>)</control> <block>{
+          <for>for <control>(<init><decl><type><name>int</name></type> <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>x</name> <operator>&lt;</operator> <name>width</name></expr>;</condition> <incr><expr><name>x</name><operator>++</operator></expr></incr>)</control> <block>{
+            <expr_stmt><expr><name><name>rotatedData</name><index>[<expr><name>x</name> <operator>*</operator> <name>height</name> <operator>+</operator> <name>height</name> <operator>-</operator> <name>y</name> <operator>-</operator> <literal type="number">1</literal></expr>]</index></name> <operator>=</operator> <name><name>data</name><index>[<expr><name>x</name> <operator>+</operator> <name>y</name> <operator>*</operator> <name>width</name></expr>]</index></name></expr>;</expr_stmt>
+          }</block></for>
+        }</block></for>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>tmp</name> <init>= <expr><name>width</name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>width</name>  <operator>=</operator> <name>height</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>height</name> <operator>=</operator> <name>tmp</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>data</name>   <operator>=</operator> <name>rotatedData</name></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>PlanarYUVLuminanceSource</name></type> <name>source</name> <init>= <expr><operator>new</operator> <call><name>PlanarYUVLuminanceSource</name><argument_list>(<argument><expr><name>data</name></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>,
+                                                                     <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>,
+                                                                     <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>BinaryBitmap</name></type> <name>bitmap</name> <init>= <expr><operator>new</operator> <call><name>BinaryBitmap</name><argument_list>(<argument><expr><operator>new</operator> <call><name>HybridBinarizer</name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Result</name></type>       <name>result</name> <init>= <expr><call><name><name>reader</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>, <argument><expr><name>hints</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>result</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>result</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr>;</return></block></then></if>
+
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NullPointerException</name></type> | <type><name>ChecksumException</name></type> | <type><name>FormatException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>NotFoundException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <comment type="line">// Thanks ZXing...</comment>
+    }</block></catch></try>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

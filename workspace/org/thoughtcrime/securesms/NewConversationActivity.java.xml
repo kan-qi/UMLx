@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\NewConversationActivity.java"><comment type="block">/*
+ * Copyright (C) 2015 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name><operator>.</operator><name>ConversationActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>ThreadDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity container for starting a new conversation.
+ *
+ * @author Moxie Marlinspike
+ *
+ */</comment>
+<class><specifier>public</specifier> class <name>NewConversationActivity</name> <super><extends>extends <name>ContactSelectionActivity</name></extends></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>NewConversationActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>, <argument><expr><name>ready</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <assert>assert <expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onContactSelected</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>number</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromExternal</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>number</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>ADDRESS_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>TEXT_EXTRA</name></name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>TEXT_EXTRA</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setDataAndType</name></name><argument_list>(<argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getData</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getType</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>existingThread</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdIfExistsFor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>THREAD_ID_EXTRA</name></name></expr></argument>, <argument><expr><name>existingThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>DISTRIBUTION_TYPE_EXTRA</name></name></expr></argument>, <argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>DistributionTypes</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+    <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>   <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBackPressed</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_refresh</name></name></expr>:</case>   <expr_stmt><expr><call><name>handleManualRefresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_new_group</name></name></expr>:</case> <expr_stmt><expr><call><name>handleCreateGroup</name><argument_list>()</argument_list></call></expr>;</expr_stmt>   <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_invite</name></name></expr>:</case>    <expr_stmt><expr><call><name>handleInvite</name><argument_list>()</argument_list></call></expr>;</expr_stmt>        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleManualRefresh</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>contactsFragment</name><operator>.</operator><name>setRefreshing</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>onRefresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCreateGroup</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>GroupCreateActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleInvite</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>InviteActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>boolean</name></type> <name>onPrepareOptionsPanel</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MenuInflater</name></type> <name>inflater</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>getMenuInflater</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>menu</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>new_conversation_activity</name></name></expr></argument>, <argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPrepareOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

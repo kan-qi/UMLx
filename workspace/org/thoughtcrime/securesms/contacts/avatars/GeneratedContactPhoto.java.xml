@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\avatars\GeneratedContactPhoto.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Typeface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>LayerDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>DrawableRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>AppCompatResources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>amulyakhare</name><operator>.</operator><name>textdrawable</name><operator>.</operator><name>TextDrawable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ThemeUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>GeneratedContactPhoto</name> <super><implements>implements <name>FallbackContactPhoto</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type>  <name>PATTERN</name>  <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"[^\\p{L}\\p{Nd}\\p{S}]+"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Typeface</name></type> <name>TYPEFACE</name> <init>= <expr><call><name><name>Typeface</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><literal type="string">"sans-serif-medium"</literal></expr></argument>, <argument><expr><name><name>Typeface</name><operator>.</operator><name>NORMAL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>    <name>fallbackResId</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>GeneratedContactPhoto</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><annotation>@<name>DrawableRes</name></annotation> <name>int</name></type> <name>fallbackResId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>          <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fallbackResId</name></name> <operator>=</operator> <name>fallbackResId</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Drawable</name></type> <name>asDrawable</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>asDrawable</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>color</name></expr></argument>,<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Drawable</name></type> <name>asDrawable</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>inverted</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>targetSize</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>contact_photo_target_size</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>character</name> <init>= <expr><call><name>getAbbreviation</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>character</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>base</name> <init>= <expr><call><name><name>TextDrawable</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                                  <operator>.</operator><call><name>beginConfig</name><argument_list>()</argument_list></call>
+                                  <operator>.</operator><call><name>width</name><argument_list>(<argument><expr><name>targetSize</name></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>height</name><argument_list>(<argument><expr><name>targetSize</name></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>useFont</name><argument_list>(<argument><expr><name>TYPEFACE</name></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>fontSize</name><argument_list>(<argument><expr><call><name><name>ViewUtil</name><operator>.</operator><name>dpToPx</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="number">24</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>textColor</name><argument_list>(<argument><expr><ternary><condition><expr><name>inverted</name></expr> ?</condition><then> <expr><name>color</name></expr> </then><else>: <expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></else></ternary></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>endConfig</name><argument_list>()</argument_list></call>
+                                  <operator>.</operator><call><name>buildRound</name><argument_list>(<argument><expr><name>character</name></expr></argument>, <argument><expr><ternary><condition><expr><name>inverted</name></expr> ?</condition><then> <expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr> </then><else>: <expr><name>color</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>gradient</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>ThemeUtil</name><operator>.</operator><name>isDarkTheme</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>avatar_gradient_dark</name></name></expr>
+                                                                                            </then><else>: <expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>avatar_gradient_light</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><operator>new</operator> <call><name>LayerDrawable</name><argument_list>(<argument><expr><operator>new</operator> <name><name>Drawable</name><index>[]</index></name> <block>{ <expr><name>base</name></expr>, <expr><name>gradient</name></expr> }</block></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><operator>new</operator> <call><name>ResourceContactPhoto</name><argument_list>(<argument><expr><name>fallbackResId</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asDrawable</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>color</name></expr></argument>, <argument><expr><name>inverted</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getAbbreviation</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type>      <name>parts</name>   <init>= <expr><call><name><name>name</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>StringBuilder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>           <name>count</name>   <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name><name>parts</name><operator>.</operator><name>length</name></name> <operator>&amp;&amp;</operator> <name>count</name> <operator>&lt;</operator> <literal type="number">2</literal></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>cleaned</name> <init>= <expr><call><name><name>PATTERN</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name><name>parts</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>replaceFirst</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>cleaned</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>appendCodePoint</name></name><argument_list>(<argument><expr><call><name><name>cleaned</name><operator>.</operator><name>codePointAt</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>count</name><operator>++</operator></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+
+    <if>if <condition>(<expr><call><name><name>builder</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Drawable</name></type> <name>asCallCard</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>AppCompatResources</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_person_large</name></name></expr></argument>)</argument_list></call></expr>;</return>
+
+  }</block></function>
+}</block></class>
+</unit>

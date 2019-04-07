@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\linkpreview\LegalUrlPatterns.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>linkpreview</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>LegalUrlPatterns</name> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>LATIN</name>    <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"["</literal> <operator>+</operator>
+                                                         <literal type="string">"\\x{0041}-\\x{005A}"</literal> <operator>+</operator>
+                                                         <literal type="string">"\\x{0061}-\\x{007A}"</literal> <operator>+</operator>
+                                                         <literal type="string">"\\x{00AA}"</literal>        <operator>+</operator>
+                                                         <literal type="string">"\\x{00BA}"</literal>        <operator>+</operator>
+                                                         <literal type="string">"\\x{00C0}-\\x{00DC}"</literal> <operator>+</operator>
+                                                         <literal type="string">"\\x{00D8}-\\x{00F6}"</literal> <operator>+</operator>
+                                                         <literal type="string">"\\x{00F8}-\\x{01BA}"</literal> <operator>+</operator>
+                                                         <literal type="string">"]"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>CYRILLIC</name> <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"["</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0400}-\\x{0481}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0482}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{0483}-\\x{0484}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0487}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{0488}-\\x{0489}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{048A}-\\x{052F}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1C80}-\\x{1C88}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1D2B}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{1D78}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{2DE0}-\\x{2DFF}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{A640}-\\x{A66D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{A66E}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{A66F}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{A670}-\\x{A672}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{A673}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{A674}-\\x{A67D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{A67E}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{A67F}"</literal>        <operator>+</operator>
+                                                          <literal type="string">"\\x{A680}-\\x{A69B}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{A69C}-\\x{A69D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{A69E}-\\x{A69F}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{FE2E}-\\x{FE2F}"</literal> <operator>+</operator>
+                                                          <literal type="string">"]"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>GREEK</name>     <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"["</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0370}-\\x{0373}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0375}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0376}-\\x{0377}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{037A}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{037B}-\\x{037D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{037F}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0384}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0386}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{0388}-\\x{038A}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{038C}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{038E}-\\x{03A1}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{03A3}-\\x{03E1}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{03F0}-\\x{03F5}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{03F6}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{03F7}-\\x{03FF}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1D26}-\\x{1D2A}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1D5D}-\\x{1D61}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1D66}-\\x{1D6A}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1DBF}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F00}-\\x{1F15}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F18}-\\x{1F1D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F20}-\\x{1F45}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F48}-\\x{1F4D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F50}-\\x{1F57}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F59}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F5B}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F5D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F5F}-\\x{1F7D}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1F80}-\\x{1FB4}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FB6}-\\x{1FBC}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FBD}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FBE}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FBF}-\\x{1FC1}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FC2}-\\x{1FC4}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FC6}-\\x{1FCC}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FCD}-\\x{1FCF}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FD0}-\\x{1FD3}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FD6}-\\x{1FDB}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FDD}-\\x{1FDF}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FE0}-\\x{1FEC}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FED}-\\x{1FEF}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FF2}-\\x{1FF4}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FF6}-\\x{1FFC}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{1FFD}-\\x{1FFE}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{2126}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{AB65}"</literal> <operator>+</operator>
+                                                          <literal type="string">"\\x{10140}-\\x{10174}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{10175}-\\x{10178}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{10179}-\\x{10189}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{1018A}-\\x{1018B}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{1018C}-\\x{1018E}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{101A0}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{1D200}-\\x{1D241}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{1D242}-\\x{1D244}"</literal><operator>+</operator>
+                                                          <literal type="string">"\\x{1D245}"</literal><operator>+</operator>
+                                                          <literal type="string">"]"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>

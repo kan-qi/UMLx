@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\ConversationListItem.java"><comment type="block">/*
+ * Copyright (C) 2014-2017 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>ColorStateList</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Typeface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>RippleDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>StyleSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RelativeLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>AlertView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>AvatarImageView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>DeliveryStatusView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>FromTextView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>ThumbnailView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>TypingIndicatorView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>ThreadRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>RecipientModifiedListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>search</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageResult</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DateUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>SearchUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ThemeUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ConversationListItem</name> <super><extends>extends <name>RelativeLayout</name></extends>
+                                  <implements>implements <name>RecipientModifiedListener</name>,
+                                             <name>BindableConversationListItem</name>, <name>Unbindable</name></implements></super>
+<block>{
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ConversationListItem</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>Typeface</name></type>  <name>BOLD_TYPEFACE</name>  <init>= <expr><call><name><name>Typeface</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><literal type="string">"sans-serif-medium"</literal></expr></argument>, <argument><expr><name><name>Typeface</name><operator>.</operator><name>NORMAL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>Typeface</name></type>  <name>LIGHT_TYPEFACE</name> <init>= <expr><call><name><name>Typeface</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><literal type="string">"sans-serif"</literal></expr></argument>, <argument><expr><name><name>Typeface</name><operator>.</operator><name>NORMAL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type>           <name>selectedThreads</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Recipient</name></type>           <name>recipient</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>                <name>threadId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>GlideRequests</name></type>       <name>glideRequests</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>                <name>subjectContainer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>            <name>subjectView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TypingIndicatorView</name></type> <name>typingView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>FromTextView</name></type>        <name>fromView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>            <name>dateView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>            <name>archivedView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DeliveryStatusView</name></type>  <name>deliveryStatusIndicator</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>AlertView</name></type>           <name>alertView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>            <name>unreadIndicator</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>                <name>lastSeen</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>             <name>unreadCount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>AvatarImageView</name></type> <name>contactPhotoImage</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ThumbnailView</name></type>   <name>thumbnailView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>distributionType</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ConversationListItem</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ConversationListItem</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onFinishInflate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onFinishInflate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subjectContainer</name></name>        <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>subject_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subjectView</name></name>             <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>subject</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>typingView</name></name>              <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>typing_indicator</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fromView</name></name>                <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>from</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>dateView</name></name>                <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>date</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>deliveryStatusIndicator</name></name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>delivery_status</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>alertView</name></name>               <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>indicators_parent</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contactPhotoImage</name></name>       <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>contact_photo_image</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>thumbnailView</name></name>           <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>archivedView</name></name>            <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>archived</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unreadIndicator</name></name>         <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>unread_indicator</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>thumbnailView</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>setTextViewGravityStart</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>fromView</name></name></expr></argument>, <argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>setTextViewGravityStart</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>subjectView</name></name></expr></argument>, <argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ThreadRecord</name></type> <name>thread</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>typingThreads</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>selectedThreads</name></decl></parameter>,
+                   <parameter><decl><type><name>boolean</name></type> <name>batchMode</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>bind</name><argument_list>(<argument><expr><name>thread</name></expr></argument>, <argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><name>typingThreads</name></expr></argument>, <argument><expr><name>selectedThreads</name></expr></argument>, <argument><expr><name>batchMode</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ThreadRecord</name></type> <name>thread</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>typingThreads</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>selectedThreads</name></decl></parameter>,
+                   <parameter><decl><type><name>boolean</name></type> <name>batchMode</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>highlightSubstring</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selectedThreads</name></name>  <operator>=</operator> <name>selectedThreads</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>        <operator>=</operator> <call><name><name>thread</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>threadId</name></name>         <operator>=</operator> <call><name><name>thread</name><operator>.</operator><name>getThreadId</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name>    <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unreadCount</name></name>      <operator>=</operator> <call><name><name>thread</name><operator>.</operator><name>getUnreadCount</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>distributionType</name></name> <operator>=</operator> <call><name><name>thread</name><operator>.</operator><name>getDistributionType</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastSeen</name></name>         <operator>=</operator> <call><name><name>thread</name><operator>.</operator><name>getLastSeen</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>highlightSubstring</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>name</name> <init>= <expr><ternary><condition><expr><call><name><name>recipient</name><operator>.</operator><name>isLocalNumber</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>note_to_self</name></name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>recipient</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fromView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>SearchUtil</name><operator>.</operator><name>getHighlightedSpan</name></name><argument_list>(<argument><expr><name>locale</name></expr></argument>, <argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>highlightSubstring</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fromView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <if>if <condition>(<expr><call><name><name>typingThreads</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>INVISIBLE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>typingView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>VISIBLE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>typingView</name><operator>.</operator><name>startAnimation</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>typingView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>typingView</name><operator>.</operator><name>stopAnimation</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>VISIBLE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>thread</name><operator>.</operator><name>getDisplayBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectView</name><operator>.</operator><name>setTypeface</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><name>LIGHT_TYPEFACE</name></expr> </then><else>: <expr><name>BOLD_TYPEFACE</name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectView</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><call><name><name>ThemeUtil</name><operator>.</operator><name>getThemedColor</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>conversation_list_item_subject_color</name></name></expr></argument>)</argument_list></call></expr>
+                                                     </then><else>: <expr><call><name><name>ThemeUtil</name><operator>.</operator><name>getThemedColor</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>conversation_list_item_unread_color</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>CharSequence</name></type> <name>date</name> <init>= <expr><call><name><name>DateUtils</name><operator>.</operator><name>getBriefRelativeTimeSpanString</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><call><name><name>thread</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>dateView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>date</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dateView</name><operator>.</operator><name>setTypeface</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><name>LIGHT_TYPEFACE</name></expr> </then><else>: <expr><name>BOLD_TYPEFACE</name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dateView</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><call><name><name>ThemeUtil</name><operator>.</operator><name>getThemedColor</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>conversation_list_item_date_color</name></name></expr></argument>)</argument_list></call></expr>
+                                             </then><else>: <expr><call><name><name>ThemeUtil</name><operator>.</operator><name>getThemedColor</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>conversation_list_item_unread_color</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isArchived</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>archivedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>archivedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name>setStatusIcons</name><argument_list>(<argument><expr><name>thread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setThumbnailSnippet</name><argument_list>(<argument><expr><name>thread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setBatchState</name><argument_list>(<argument><expr><name>batchMode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setRippleColor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setUnreadIndicator</name><argument_list>(<argument><expr><name>thread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>contactPhotoImage</name><operator>.</operator><name>setAvatar</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Recipient</name></type>     <name>contact</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Locale</name></type>        <name>locale</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type>        <name>highlightSubstring</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selectedThreads</name></name> <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>emptySet</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>       <operator>=</operator> <name>contact</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name>   <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>String</name></type> <name>name</name> <init>= <expr><ternary><condition><expr><call><name><name>recipient</name><operator>.</operator><name>isLocalNumber</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>note_to_self</name></name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>recipient</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>fromView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>SearchUtil</name><operator>.</operator><name>getHighlightedSpan</name></name><argument_list>(<argument><expr><name>locale</name></expr></argument>, <argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>highlightSubstring</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>subjectView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>SearchUtil</name><operator>.</operator><name>getHighlightedSpan</name></name><argument_list>(<argument><expr><name>locale</name></expr></argument>, <argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>, <argument><expr><call><name><name>contact</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toPhoneString</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>highlightSubstring</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dateView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>archivedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>unreadIndicator</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>alertView</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>thumbnailView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setBatchState</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setRippleColor</name><argument_list>(<argument><expr><name>contact</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contactPhotoImage</name><operator>.</operator><name>setAvatar</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>MessageResult</name></type> <name>messageResult</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Locale</name></type>        <name>locale</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type>        <name>highlightSubstring</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selectedThreads</name></name> <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>emptySet</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>       <operator>=</operator> <name><name>messageResult</name><operator>.</operator><name>conversationRecipient</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name>   <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>fromView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>subjectView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>SearchUtil</name><operator>.</operator><name>getHighlightedSpan</name></name><argument_list>(<argument><expr><name>locale</name></expr></argument>, <argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>, <argument><expr><name><name>messageResult</name><operator>.</operator><name>bodySnippet</name></name></expr></argument>, <argument><expr><name>highlightSubstring</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dateView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>DateUtils</name><operator>.</operator><name>getBriefRelativeTimeSpanString</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><name><name>messageResult</name><operator>.</operator><name>receivedTimestampMs</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>archivedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>unreadIndicator</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>alertView</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>thumbnailView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setBatchState</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setRippleColor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contactPhotoImage</name><operator>.</operator><name>setAvatar</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>unbind</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>recipient</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recipient</name><operator>.</operator><name>removeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setBatchState</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>batch</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSelected</name><argument_list>(<argument><expr><name>batch</name> <operator>&amp;&amp;</operator> <call><name><name>selectedThreads</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Recipient</name></type> <name>getRecipient</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>recipient</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getThreadId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>threadId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getUnreadCount</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>unreadCount</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getDistributionType</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>distributionType</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getLastSeen</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>lastSeen</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setThumbnailSnippet</name><parameter_list>(<parameter><decl><type><name>ThreadRecord</name></type> <name>thread</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>getSnippetUri</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>thumbnailView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>thumbnailView</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><call><name><name>thread</name><operator>.</operator><name>getSnippetUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>LayoutParams</name></type> <name>subjectParams</name> <init>= <expr><operator>(</operator><name><name>RelativeLayout</name><operator>.</operator><name>LayoutParams</name></name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>subjectContainer</name> <operator>.</operator><name>getLayoutParams</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>subjectParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>LEFT_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN_MR1</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>subjectParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>START_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectContainer</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><name>subjectParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>post</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ThumbnailPositioner</name><argument_list>(<argument><expr><name>thumbnailView</name></expr></argument>, <argument><expr><name>archivedView</name></expr></argument>, <argument><expr><name>deliveryStatusIndicator</name></expr></argument>, <argument><expr><name>dateView</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>thumbnailView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>LayoutParams</name></type> <name>subjectParams</name> <init>= <expr><operator>(</operator><name><name>RelativeLayout</name><operator>.</operator><name>LayoutParams</name></name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>subjectContainer</name><operator>.</operator><name>getLayoutParams</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>subjectParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>LEFT_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>status</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN_MR1</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>subjectParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>START_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>status</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subjectContainer</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><name>subjectParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setStatusIcons</name><parameter_list>(<parameter><decl><type><name>ThreadRecord</name></type> <name>thread</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>thread</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>thread</name><operator>.</operator><name>isOutgoingCall</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>thread</name><operator>.</operator><name>isVerificationStatusChange</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>alertView</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>alertView</name><operator>.</operator><name>setFailed</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isPendingInsecureSmsFallback</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>alertView</name><operator>.</operator><name>setPendingApproval</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name><name>alertView</name><operator>.</operator><name>setNone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <if>if      <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isPending</name></name><argument_list>()</argument_list></call></expr>)</condition><then>    <block type="pseudo"><expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setPending</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then>
+      <elseif>else <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isRemoteRead</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setRead</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isDelivered</name></name><argument_list>()</argument_list></call></expr>)</condition><then>  <block type="pseudo"><expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setDelivered</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+      <else>else                            <block type="pseudo"><expr_stmt><expr><call><name><name>deliveryStatusIndicator</name><operator>.</operator><name>setSent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setRippleColor</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>(</operator><call>(<name>RippleDrawable</name>)<argument_list>(<argument><expr><call><name>getBackground</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>mutate</name><argument_list>()</argument_list></call><operator>)</operator>
+          <operator>.</operator><call><name>setColor</name><argument_list>(<argument><expr><call><name><name>ColorStateList</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toConversationColor</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setUnreadIndicator</name><parameter_list>(<parameter><decl><type><name>ThreadRecord</name></type> <name>thread</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>thread</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>thread</name><operator>.</operator><name>getUnreadCount</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>unreadIndicator</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>unreadIndicator</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>unreadCount</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>unreadIndicator</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onModified</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <expr_stmt><expr><call><name><name>fromView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>contactPhotoImage</name><operator>.</operator><name>setAvatar</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setRippleColor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>ThumbnailPositioner</name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>View</name></type> <name>thumbnailView</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>View</name></type> <name>archivedView</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>View</name></type> <name>deliveryStatusView</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>View</name></type> <name>dateView</name></decl>;</decl_stmt>
+
+    <constructor><name>ThumbnailPositioner</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>thumbnailView</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>archivedView</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>deliveryStatusView</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>dateView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>thumbnailView</name></name>      <operator>=</operator> <name>thumbnailView</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>archivedView</name></name>       <operator>=</operator> <name>archivedView</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>deliveryStatusView</name></name> <operator>=</operator> <name>deliveryStatusView</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>dateView</name></name>           <operator>=</operator> <name>dateView</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>LayoutParams</name></type> <name>thumbnailParams</name> <init>= <expr><operator>(</operator><name><name>RelativeLayout</name><operator>.</operator><name>LayoutParams</name></name><operator>)</operator><call><name><name>thumbnailView</name><operator>.</operator><name>getLayoutParams</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>archivedView</name><operator>.</operator><name>getVisibility</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>View</name><operator>.</operator><name>VISIBLE</name></name> <operator>&amp;&amp;</operator>
+          <operator>(</operator><call><name><name>archivedView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>deliveryStatusView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>&gt;</operator> <call><name><name>dateView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr>)</condition><then>
+      <block>{
+        <expr_stmt><expr><call><name><name>thumbnailParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>LEFT_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>status</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN_MR1</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>thumbnailParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>START_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>status</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>thumbnailParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>LEFT_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>date</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN_MR1</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>thumbnailParams</name><operator>.</operator><name>addRule</name></name><argument_list>(<argument><expr><name><name>RelativeLayout</name><operator>.</operator><name>START_OF</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>date</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></else></if>
+
+      <expr_stmt><expr><call><name><name>thumbnailView</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><name>thumbnailParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

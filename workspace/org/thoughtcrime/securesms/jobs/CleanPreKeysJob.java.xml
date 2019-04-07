@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\CleanPreKeysJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>PreKeyUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidKeyIdException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>state</name><operator>.</operator><name>SignedPreKeyRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>state</name><operator>.</operator><name>SignedPreKeyStore</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceAccountManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>exceptions</name><operator>.</operator><name>NonSuccessfulResponseCodeException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>exceptions</name><operator>.</operator><name>PushNetworkException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Comparator</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<import>import static <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>AxolotlStorageModule</name><operator>.</operator><name>SignedPreKeyStoreFactory</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CleanPreKeysJob</name> <super><extends>extends <name>ContextJob</name></extends> <implements>implements <name>InjectableType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>CleanPreKeysJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ARCHIVE_AGE</name> <init>= <expr><call><name><name>TimeUnit</name><operator>.</operator><name>DAYS</name><operator>.</operator><name>toMillis</name></name><argument_list>(<argument><expr><literal type="number">7</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>transient</specifier> <type><name>SignalServiceAccountManager</name></type> <name>accountManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>transient</specifier> <type><name>SignedPreKeyStoreFactory</name></type> <name>signedPreKeyStoreFactory</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CleanPreKeysJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>CleanPreKeysJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withGroupId</name><argument_list>(<argument><expr><call><name><name>CleanPreKeysJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>withRetryCount</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Cleaning prekeys..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>int</name></type>                <name>activeSignedPreKeyId</name> <init>= <expr><call><name><name>PreKeyUtil</name><operator>.</operator><name>getActiveSignedPreKeyId</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SignedPreKeyStore</name></type>  <name>signedPreKeyStore</name>    <init>= <expr><call><name><name>signedPreKeyStoreFactory</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>activeSignedPreKeyId</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+      <decl_stmt><decl><type><name>SignedPreKeyRecord</name></type>             <name>currentRecord</name> <init>= <expr><call><name><name>signedPreKeyStore</name><operator>.</operator><name>loadSignedPreKey</name></name><argument_list>(<argument><expr><name>activeSignedPreKeyId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SignedPreKeyRecord</name></argument>&gt;</argument_list></name></type>       <name>allRecords</name>    <init>= <expr><call><name><name>signedPreKeyStore</name><operator>.</operator><name>loadSignedPreKeys</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>SignedPreKeyRecord</name></argument>&gt;</argument_list></name></type> <name>oldRecords</name>    <init>= <expr><call><name>removeRecordFrom</name><argument_list>(<argument><expr><name>currentRecord</name></expr></argument>, <argument><expr><name>allRecords</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Collections</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name>oldRecords</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SignedPreKeySorter</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Active signed prekey: "</literal> <operator>+</operator> <name>activeSignedPreKeyId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Old signed prekey record count: "</literal> <operator>+</operator> <call><name><name>oldRecords</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>boolean</name></type> <name>foundAgedRecord</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>SignedPreKeyRecord</name></type> <name>oldRecord</name> <range>: <expr><name>oldRecords</name></expr></range></decl></init>)</control> <block>{
+        <decl_stmt><decl><type><name>long</name></type> <name>archiveDuration</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <call><name><name>oldRecord</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>archiveDuration</name> <operator>&gt;=</operator> <name>ARCHIVE_AGE</name></expr>)</condition><then> <block>{
+          <if>if <condition>(<expr><operator>!</operator><name>foundAgedRecord</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>foundAgedRecord</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+          }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Removing signed prekey record: "</literal> <operator>+</operator> <call><name><name>oldRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" with timestamp: "</literal> <operator>+</operator> <call><name><name>oldRecord</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>signedPreKeyStore</name><operator>.</operator><name>removeSignedPreKey</name></name><argument_list>(<argument><expr><call><name><name>oldRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></else></if>
+        }</block></then></if>
+      }</block></for>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidKeyIdException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>throwable</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>throwable</name> <operator>instanceof</operator> <name>NonSuccessfulResponseCodeException</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">false</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>throwable</name> <operator>instanceof</operator> <name>PushNetworkException</name></expr>)</condition><then>               <block type="pseudo"><return>return <expr><literal type="boolean">true</literal></expr>;</return></block></then></if>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to execute clean signed prekeys task."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>SignedPreKeyRecord</name></argument>&gt;</argument_list></name></type> <name>removeRecordFrom</name><parameter_list>(<parameter><decl><type><name>SignedPreKeyRecord</name></type> <name>currentRecord</name></decl></parameter>,
+                                                          <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SignedPreKeyRecord</name></argument>&gt;</argument_list></name></type> <name>records</name></decl></parameter>)</parameter_list>
+
+  <block>{
+    <decl_stmt><decl><type><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>SignedPreKeyRecord</name></argument>&gt;</argument_list></name></type> <name>others</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>SignedPreKeyRecord</name></type> <name>record</name> <range>: <expr><name>records</name></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>record</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <call><name><name>currentRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>others</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>record</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+
+    <return>return <expr><name>others</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>SignedPreKeySorter</name> <super><implements>implements <name><name>Comparator</name><argument_list type="generic">&lt;<argument><name>SignedPreKeyRecord</name></argument>&gt;</argument_list></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>compare</name><parameter_list>(<parameter><decl><type><name>SignedPreKeyRecord</name></type> <name>lhs</name></decl></parameter>, <parameter><decl><type><name>SignedPreKeyRecord</name></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{
+      <if>if      <condition>(<expr><call><name><name>lhs</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <call><name><name>rhs</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then>
+      <elseif>else <if>if <condition>(<expr><call><name><name>lhs</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call> <operator>&lt;</operator> <call><name><name>rhs</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">1</literal></expr>;</return></block></then></if></elseif>
+      <else>else                                              <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></else></if>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

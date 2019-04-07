@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\BubbleDrawableBuilder.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>GradientDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>LayerDrawable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>BubbleDrawableBuilder</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>color</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>shadowColor</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>hasShadow</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>boolean</name><index>[]</index></name></type> <name>corners</name> <init>= <expr><operator>new</operator> <name><name>boolean</name><index>[]</index></name><block>{<expr><literal type="boolean">true</literal></expr>,<expr><literal type="boolean">true</literal></expr>,<expr><literal type="boolean">true</literal></expr>,<expr><literal type="boolean">true</literal></expr>}</block></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>protected</specifier> <name>BubbleDrawableBuilder</name><parameter_list>()</parameter_list> <block>{ }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>BubbleDrawableBuilder</name></type> <name>setColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name> <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+    <return>return <expr><name>this</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>BubbleDrawableBuilder</name></type> <name>setShadowColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>shadowColor</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>shadowColor</name></name> <operator>=</operator> <name>shadowColor</name></expr>;</expr_stmt>
+    <return>return <expr><name>this</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>BubbleDrawableBuilder</name></type> <name>setHasShadow</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>hasShadow</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>hasShadow</name></name> <operator>=</operator> <name>hasShadow</name></expr>;</expr_stmt>
+    <return>return <expr><name>this</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>BubbleDrawableBuilder</name></type> <name>setCorners</name><parameter_list>(<parameter><decl><type><name><name>boolean</name><index>[]</index></name></type> <name>corners</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>corners</name></name> <operator>=</operator> <name>corners</name></expr>;</expr_stmt>
+    <return>return <expr><name>this</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Drawable</name></type> <name>create</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>GradientDrawable</name></type> <name>bubble</name> <init>= <expr><operator>new</operator> <call><name>GradientDrawable</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>              <name>radius</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>message_bubble_corner_radius</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>float</name><index>[]</index></name></type>          <name>radii</name>  <init>= <expr><call><name>cornerBooleansToRadii</name><argument_list>(<argument><expr><name>corners</name></expr></argument>, <argument><expr><name>radius</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>bubble</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>bubble</name><operator>.</operator><name>setCornerRadii</name></name><argument_list>(<argument><expr><name>radii</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><name>hasShadow</name></expr>)</condition><then> <block>{
+      <return>return <expr><name>bubble</name></expr>;</return>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>GradientDrawable</name></type> <name>shadow</name>   <init>= <expr><operator>new</operator> <call><name>GradientDrawable</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>              <name>distance</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>message_bubble_shadow_distance</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>shadow</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>shadowColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>shadow</name><operator>.</operator><name>setCornerRadii</name></name><argument_list>(<argument><expr><name>radii</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name>LayerDrawable</name></type> <name>layers</name> <init>= <expr><operator>new</operator> <call><name>LayerDrawable</name><argument_list>(<argument><expr><operator>new</operator> <name><name>Drawable</name><index>[]</index></name><block>{<expr><name>shadow</name></expr>, <expr><name>bubble</name></expr>}</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>layers</name><operator>.</operator><name>setLayerInset</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>distance</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>layers</name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>float</name><index>[]</index></name></type> <name>cornerBooleansToRadii</name><parameter_list>(<parameter><decl><type><name><name>boolean</name><index>[]</index></name></type> <name>corners</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>corners</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name><name>corners</name><operator>.</operator><name>length</name></name> <operator>!=</operator> <literal type="number">4</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"there are four corners in a rectangle, silly"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>float</name><index>[]</index></name></type> <name>radii</name> <init>= <expr><operator>new</operator> <name><name>float</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>i</name>     <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>boolean</name></type> <name>corner</name> <range>: <expr><name>corners</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><name><name>radii</name><index>[<expr><name>i</name></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><name>i</name><operator>+</operator><literal type="number">1</literal></expr>]</index></name> <operator>=</operator> <ternary><condition><expr><name>corner</name></expr> ?</condition><then> <expr><name>radius</name></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr>;</expr_stmt>
+      <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>radii</name></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

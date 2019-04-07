@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\crypto\storage\TextSecureSessionStore.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>storage</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>SessionDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>SignalProtocolAddress</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>protocol</name><operator>.</operator><name>CiphertextMessage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>state</name><operator>.</operator><name>SessionRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>state</name><operator>.</operator><name>SessionStore</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>TextSecureSessionStore</name> <super><implements>implements <name>SessionStore</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>TextSecureSessionStore</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Object</name></type> <name>FILE_LOCK</name> <init>= <expr><operator>new</operator> <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>NonNull</name></annotation>  <specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>TextSecureSessionStore</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>SessionRecord</name></type> <name>loadSession</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SignalProtocolAddress</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <decl_stmt><decl><type><name>SessionRecord</name></type> <name>sessionRecord</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>load</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>sessionRecord</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"No existing session information found."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><operator>new</operator> <call><name>SessionRecord</name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></then></if>
+
+      <return>return <expr><name>sessionRecord</name></expr>;</return>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>storeSession</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SignalProtocolAddress</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SessionRecord</name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>store</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>record</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>containsSession</name><parameter_list>(<parameter><decl><type><name>SignalProtocolAddress</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <decl_stmt><decl><type><name>SessionRecord</name></type> <name>sessionRecord</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>load</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><name>sessionRecord</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator>
+             <call><name><name>sessionRecord</name><operator>.</operator><name>getSessionState</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>hasSenderChain</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator>
+             <call><name><name>sessionRecord</name><operator>.</operator><name>getSessionState</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSessionVersion</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>CiphertextMessage</name><operator>.</operator><name>CURRENT_VERSION</name></name></expr>;</return>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>deleteSession</name><parameter_list>(<parameter><decl><type><name>SignalProtocolAddress</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>delete</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>deleteAllSessions</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteAllFor</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>getSubDeviceSessions</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <return>return <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getSubDevices</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>archiveSiblingSessions</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SignalProtocolAddress</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>SessionDatabase</name><operator>.</operator><name>SessionRow</name></name></argument>&gt;</argument_list></name></type> <name>sessions</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getAllFor</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name><name>SessionDatabase</name><operator>.</operator><name>SessionRow</name></name></type> <name>row</name> <range>: <expr><name>sessions</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>row</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <call><name><name>address</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>row</name><operator>.</operator><name>getRecord</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>archiveCurrentState</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>storeSession</name><argument_list>(<argument><expr><operator>new</operator> <call><name>SignalProtocolAddress</name><argument_list>(<argument><expr><call><name><name>row</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>row</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>row</name><operator>.</operator><name>getRecord</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></for>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>archiveAllSessions</name><parameter_list>()</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>FILE_LOCK</name></expr>)</init> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>SessionDatabase</name><operator>.</operator><name>SessionRow</name></name></argument>&gt;</argument_list></name></type> <name>sessions</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSessionDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getAll</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name><name>SessionDatabase</name><operator>.</operator><name>SessionRow</name></name></type> <name>row</name> <range>: <expr><name>sessions</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>row</name><operator>.</operator><name>getRecord</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>archiveCurrentState</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>storeSession</name><argument_list>(<argument><expr><operator>new</operator> <call><name>SignalProtocolAddress</name><argument_list>(<argument><expr><call><name><name>row</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>row</name><operator>.</operator><name>getDeviceId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>row</name><operator>.</operator><name>getRecord</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></synchronized>
+  }</block></function>
+}</block></class>
+</unit>

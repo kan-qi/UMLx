@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\swipeback\SwipeBackActivityHelper.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>swipeback</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ColorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * @author Yrom
+ */</comment>
+<class><specifier>public</specifier> class <name>SwipeBackActivityHelper</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Activity</name></type> <name>mActivity</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>SwipeBackLayout</name></type> <name>mSwipeBackLayout</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>SwipeBackActivityHelper</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mActivity</name> <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mActivity</name><operator>.</operator><name>getWindow</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><name><name>Color</name><operator>.</operator><name>TRANSPARENT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mActivity</name><operator>.</operator><name>getWindow</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDecorView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mSwipeBackLayout</name> <operator>=</operator> <operator>(</operator><name>SwipeBackLayout</name><operator>)</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>mActivity</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(
+                <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>swipeback_layout</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mSwipeBackLayout</name><operator>.</operator><name>addSwipeListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>SwipeBackLayout</name><operator>.</operator><name>SwipeListener</name></name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onScrollStateChange</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>state</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>scrollPercent</name></decl></parameter>)</parameter_list> <block>{
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onEdgeTouch</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>edgeFlag</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Utils</name><operator>.</operator><name>convertActivityToTranslucent</name></name><argument_list>(<argument><expr><name>mActivity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onScrollOverThreshold</name><parameter_list>()</parameter_list> <block>{
+
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>onPostCreate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mSwipeBackLayout</name><operator>.</operator><name>attachToActivity</name></name><argument_list>(<argument><expr><name>mActivity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>View</name></type> <name>findViewById</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>mSwipeBackLayout</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <return>return <expr><call><name><name>mSwipeBackLayout</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></then></if>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>SwipeBackLayout</name></type> <name>getSwipeBackLayout</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mSwipeBackLayout</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

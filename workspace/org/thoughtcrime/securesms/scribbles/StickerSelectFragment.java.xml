@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\scribbles\StickerSelectFragment.java"><comment type="block">/*
+ * Copyright (C) 2016 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>scribbles</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>LoaderManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>Loader</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>GridLayoutManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>StickerSelectFragment</name> <super><extends>extends <name>Fragment</name></extends> <implements>implements <name><name>LoaderManager</name><operator>.</operator><name><name>LoaderCallbacks</name><argument_list type="generic">&lt;<argument><name><name>String</name><index>[]</index></name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>RecyclerView</name></type>             <name>recyclerView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>GlideRequests</name></type>            <name>glideRequests</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type>                   <name>assetDirectory</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>StickerSelectionListener</name></type> <name>listener</name></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>StickerSelectFragment</name></type> <name>newInstance</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>assetDirectory</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>StickerSelectFragment</name></type> <name>fragment</name> <init>= <expr><operator>new</operator> <call><name>StickerSelectFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><literal type="string">"assetDirectory"</literal></expr></argument>, <argument><expr><name>assetDirectory</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>fragment</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>,
+                           <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>ViewGroup</name></type> <name>container</name></decl></parameter>,
+                           <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>View</name></type> <name>view</name> <init>= <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>scribble_select_sticker_fragment</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recyclerView</name></name> <operator>=</operator> <call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>stickers_recycler_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>view</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreated</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityCreated</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name>  <operator>=</operator> <call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>assetDirectory</name></name> <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><literal type="string">"assetDirectory"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>getLoaderManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>initLoader</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setLayoutManager</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>GridLayoutManager</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name><name>String</name><index>[]</index></name></argument>&gt;</argument_list></name></type> <name>onCreateLoader</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>StickerLoader</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>assetDirectory</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLoadFinished</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name><name>String</name><index>[]</index></name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>, <parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>recyclerView</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>StickersAdapter</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLoaderReset</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name><name>String</name><index>[]</index></name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>recyclerView</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setListener</name><parameter_list>(<parameter><decl><type><name>StickerSelectionListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <class>class <name>StickersAdapter</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name><name>Adapter</name><argument_list type="generic">&lt;<argument><name><name>StickersAdapter</name><operator>.</operator><name>StickerViewHolder</name></name></argument>&gt;</argument_list></name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GlideRequests</name></type>  <name>glideRequests</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type>       <name>stickerFiles</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>LayoutInflater</name></type> <name>layoutInflater</name></decl>;</decl_stmt>
+
+    <constructor><name>StickersAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>String</name><index>[]</index></name></type> <name>stickerFiles</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name>  <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>stickerFiles</name></name>   <operator>=</operator> <name>stickerFiles</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>layoutInflater</name></name> <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>StickerViewHolder</name></type> <name>onCreateViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name>StickerViewHolder</name><argument_list>(<argument><expr><call><name><name>layoutInflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>scribble_sticker_item</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><name>StickerViewHolder</name></type> <name>holder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>fileName</name></name> <operator>=</operator> <name><name>stickerFiles</name><index>[<expr><name>position</name></expr>]</index></name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>load</name></name><argument_list>(<argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"file:///android_asset/"</literal> <operator>+</operator> <name><name>holder</name><operator>.</operator><name>fileName</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name><name>holder</name><operator>.</operator><name>image</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getItemCount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>stickerFiles</name><operator>.</operator><name>length</name></name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onViewRecycled</name><parameter_list>(<parameter><decl><type><name>StickerViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewRecycled</name></name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>clear</name></name><argument_list>(<argument><expr><name><name>holder</name><operator>.</operator><name>image</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>onStickerSelected</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fileName</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onStickerSelected</name></name><argument_list>(<argument><expr><name>fileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+
+    <class>class <name>StickerViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+
+      <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>fileName</name></decl>;</decl_stmt>
+      <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>image</name></decl>;</decl_stmt>
+
+      <constructor><name>StickerViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>image</name> <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>sticker_image</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+          <decl_stmt><decl><type><name>int</name></type> <name>pos</name> <init>= <expr><call><name>getAdapterPosition</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <if>if <condition>(<expr><name>pos</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>onStickerSelected</name><argument_list>(<argument><expr><name>fileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></constructor>
+    }</block></class>
+  }</block></class>
+
+  <interface>interface <name>StickerSelectionListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onStickerSelected</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+
+}</block></class>
+</unit>

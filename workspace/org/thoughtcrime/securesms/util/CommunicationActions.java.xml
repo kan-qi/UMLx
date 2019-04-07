@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\CommunicationActions.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ActivityNotFoundException</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>TaskStackBuilder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name><operator>.</operator><name>ConversationActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>WebRtcCallActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>WebRtcCallService</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CommunicationActions</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>startVoiceCall</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>RECORD_AUDIO</name></name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>CAMERA</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>withRationaleDialog</name><argument_list>(<argument><expr><call><name><name>activity</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationActivity_to_call_s_signal_needs_access_to_your_microphone_and_camera</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                             <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_mic_white_48dp</name></name></expr></argument>,
+                             <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_videocam_white_48dp</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>withPermanentDenialDialog</name><argument_list>(<argument><expr><call><name><name>activity</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationActivity_signal_needs_the_microphone_and_camera_permissions_in_order_to_call_s</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>onAllGranted</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+          <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_OUTGOING_CALL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>EXTRA_REMOTE_ADDRESS</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startService</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name>Intent</name></type> <name>activityIntent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>WebRtcCallActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>activityIntent</name><operator>.</operator><name>setFlags</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_NEW_TASK</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>activityIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>startConversation</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>startConversation</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>text</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>startConversation</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Context</name></type>          <name>context</name></decl></parameter>,
+                                       <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Recipient</name></type>        <name>recipient</name></decl></parameter>,
+                                       <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type>           <name>text</name></decl></parameter>,
+                                       <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>TaskStackBuilder</name></type> <name>backStack</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Long</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Long</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>voids</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdFor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>ADDRESS_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>THREAD_ID_EXTRA</name></name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>TIMING_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>TEXT_EXTRA</name></name></expr></argument>, <argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><name>backStack</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>backStack</name><operator>.</operator><name>addNextIntent</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>backStack</name><operator>.</operator><name>startActivities</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>composeSmsThroughDefaultApp</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_SENDTO</name></name></expr></argument>, <argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"smsto:"</literal> <operator>+</operator> <call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>text</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><literal type="string">"sms_body"</literal></expr></argument>, <argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>openBrowserLink</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>link</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_VIEW</name></name></expr></argument>, <argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>link</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ActivityNotFoundException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>CommunicationActions_no_browser_found</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_SHORT</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

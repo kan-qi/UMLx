@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\SearchUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spannable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spanned</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>CharacterStyle</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SearchUtil</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Spannable</name></type> <name>getHighlightedSpan</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>StyleFactory</name></type> <name>styleFactory</name></decl></parameter>,
+                                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>text</name></decl></parameter>,
+                                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>highlight</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><name>text</name> <operator>=</operator> <call><name><name>text</name><operator>.</operator><name>replaceAll</name></name><argument_list>(<argument><expr><literal type="string">"\n"</literal></expr></argument>, <argument><expr><literal type="string">" "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><call><name>getHighlightedSpan</name><argument_list>(<argument><expr><name>locale</name></expr></argument>, <argument><expr><name>styleFactory</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>highlight</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Spannable</name></type> <name>getHighlightedSpan</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>StyleFactory</name></type> <name>styleFactory</name></decl></parameter>,
+                                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Spannable</name></type> <name>text</name></decl></parameter>,
+                                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>highlight</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+
+    <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>highlight</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>text</name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>ranges</name>  <init>= <expr><call><name>getHighlightRanges</name><argument_list>(<argument><expr><name>locale</name></expr></argument>, <argument><expr><call><name><name>text</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>highlight</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SpannableString</name></type>              <name>spanned</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>range</name> <range>: <expr><name>ranges</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>spanned</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><call><name><name>styleFactory</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>range</name><operator>.</operator><name>first</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>range</name><operator>.</operator><name>second</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_INCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>spanned</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>static</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>getHighlightRanges</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                                                         <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>text</name></decl></parameter>,
+                                                         <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>highlight</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><call><name><name>text</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>String</name></type>       <name>normalizedText</name>      <init>= <expr><call><name><name>text</name><operator>.</operator><name>toLowerCase</name></name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>       <name>normalizedHighlight</name> <init>= <expr><call><name><name>highlight</name><operator>.</operator><name>toLowerCase</name></name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>highlightTokens</name>     <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>normalizedHighlight</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">"\\s"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>s</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>s</name><operator>.</operator><name>trim</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr></block></lambda></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>ranges</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>lastHighlightEndIndex</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>String</name></type> <name>highlightToken</name> <range>: <expr><name>highlightTokens</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>index</name></decl>;</decl_stmt>
+
+      <do>do <block>{
+        <expr_stmt><expr><name>index</name> <operator>=</operator> <call><name><name>normalizedText</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><name>highlightToken</name></expr></argument>, <argument><expr><name>lastHighlightEndIndex</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>lastHighlightEndIndex</name> <operator>=</operator> <name>index</name> <operator>+</operator> <call><name><name>highlightToken</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block> while <condition>(<expr><name>index</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>Character</name><operator>.</operator><name>isWhitespace</name></name><argument_list>(<argument><expr><call><name><name>normalizedText</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>index</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition>;</do>
+
+      <if>if <condition>(<expr><name>index</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ranges</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>index</name></expr></argument>, <argument><expr><name>lastHighlightEndIndex</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name>index</name> <operator>&lt;</operator> <literal type="number">0</literal> <operator>||</operator> <name>lastHighlightEndIndex</name> <operator>&gt;=</operator> <call><name><name>normalizedText</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <break>break;</break>
+      }</block></then></if>
+    }</block></for>
+
+    <if>if <condition>(<expr><call><name><name>ranges</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <call><name><name>highlightTokens</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><name>ranges</name></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>StyleFactory</name> <block>{
+    <function_decl><type><name>CharacterStyle</name></type> <name>create</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

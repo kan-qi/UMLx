@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\GroupCreateActivity.java"><comment type="block">/*
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name><operator>.</operator><name>ConversationActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>EditText</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>request</name><operator>.</operator><name>target</name><operator>.</operator><name>SimpleTarget</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>request</name><operator>.</operator><name>transition</name><operator>.</operator><name>Transition</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>soundcloud</name><operator>.</operator><name>android</name><operator>.</operator><name>crop</name><operator>.</operator><name>Crop</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>PushRecipientsPanel</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>PushRecipientsPanel</name><operator>.</operator><name>RecipientsPanelChangedListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactsCursorLoader</name><operator>.</operator><name>DisplayMode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>RecipientsEditor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ContactColors</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ResourceContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupDatabase</name><operator>.</operator><name>GroupRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>ThreadDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>groups</name><operator>.</operator><name>GroupManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>groups</name><operator>.</operator><name>GroupManager</name><operator>.</operator><name>GroupActionResult</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>SelectedRecipientsAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>SelectedRecipientsAdapter</name><operator>.</operator><name>OnRecipientDeletedListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>task</name><operator>.</operator><name>ProgressDialogAsyncTask</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>util</name><operator>.</operator><name>InvalidNumberException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity to create and update groups
+ *
+ * @author Jake McGinty
+ */</comment>
+<class><specifier>public</specifier> class <name>GroupCreateActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends>
+                                 <implements>implements <name>OnRecipientDeletedListener</name>,
+                                            <name>RecipientsPanelChangedListener</name></implements></super>
+<block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>GroupCreateActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>GROUP_ADDRESS_EXTRA</name> <init>= <expr><literal type="string">"group_recipient"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>GROUP_THREAD_EXTRA</name>  <init>= <expr><literal type="string">"group_thread"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>PICK_CONTACT</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier>  <name>int</name></type> <name>AVATAR_SIZE</name>  <init>= <expr><literal type="number">210</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EditText</name></type>     <name>groupName</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ListView</name></type>     <name>lv</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>    <name>avatar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>     <name>creatingText</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Bitmap</name></type>       <name>avatarBmp</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>NonNull</name></annotation> <specifier>private</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupData</name></argument>&gt;</argument_list></name></type> <name>groupToUpdate</name> <init>= <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>state</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>group_create_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <comment type="line">//noinspection ConstantConditions</comment>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeExistingGroup</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateViewState</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>isSignalGroup</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>hasNonPushMembers</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>disableSignalGroupViews</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>reasonResId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>View</name></type> <name>pushDisabled</name> <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>push_disabled</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>pushDisabled</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>TextView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>push_disabled_reason</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>setText</name><argument_list>(<argument><expr><name>reasonResId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>avatar</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>groupName</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>enableSignalGroupViews</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>push_disabled</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>avatar</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>groupName</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"ConstantConditions"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>updateViewState</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>disableSignalGroupViews</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_youre_not_registered_for_signal</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_actionbar_mms_title</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>hasNonPushMembers</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>disableSignalGroupViews</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_contacts_dont_support_push</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_actionbar_mms_title</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name>enableSignalGroupViews</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>groupToUpdate</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>
+                                     ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_actionbar_edit_title</name></name></expr>
+                                     </then><else>: <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_actionbar_title</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isActiveInDirectory</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRegistered</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>RecipientDatabase</name><operator>.</operator><name>RegisteredState</name><operator>.</operator><name>REGISTERED</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>addSelectedContacts</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name><modifier>...</modifier></type> <name>recipients</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><operator>new</operator> <call><name>AddMembersTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>, <argument><expr><name>recipients</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>addSelectedContacts</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>recipients</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>addSelectedContacts</name><argument_list>(<argument><expr><call><name><name>recipients</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>Recipient</name><index>[<expr><call><name><name>recipients</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>RecipientsEditor</name></type>    <name>recipientsEditor</name> <init>= <expr><call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>recipients_text</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>PushRecipientsPanel</name></type> <name>recipientsPanel</name>  <init>= <expr><call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>recipients</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>lv</name>           <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>selected_contacts_list</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>avatar</name>       <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>avatar</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>groupName</name>    <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>group_name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>creatingText</name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>creating_group_text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>SelectedRecipientsAdapter</name></type> <name>adapter</name> <init>= <expr><operator>new</operator> <call><name>SelectedRecipientsAdapter</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>setOnRecipientDeletedListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>lv</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipientsEditor</name><operator>.</operator><name>setHint</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>recipients_panel__add_members</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipientsPanel</name><operator>.</operator><name>setPanelChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>contacts_button</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>AddRecipientButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>avatar</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ResourceContactPhoto</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_group_white_24dp</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asDrawable</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>ContactColors</name><operator>.</operator><name>UNKNOWN_COLOR</name><operator>.</operator><name>toConversationColor</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>avatar</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Crop</name><operator>.</operator><name>pickImage</name></name><argument_list>(<argument><expr><name><name>GroupCreateActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeExistingGroup</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Address</name></type> <name>groupAddress</name> <init>= <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>GROUP_ADDRESS_EXTRA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>groupAddress</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>FillExistingGroupInfoAsyncTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>, <argument><expr><call><name><name>groupAddress</name><operator>.</operator><name>toGroupString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onPrepareOptionsMenu</name><parameter_list>(<parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MenuInflater</name></type> <name>inflater</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>getMenuInflater</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>menu</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>group_create</name></name></expr></argument>, <argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPrepareOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>
+        <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_create_group</name></name></expr>:</case>
+        <if>if <condition>(<expr><call><name><name>groupToUpdate</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>handleGroupUpdate</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then>
+        <else>else                           <block type="pseudo"><expr_stmt><expr><call><name>handleGroupCreate</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRecipientDeleted</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>remove</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateViewState</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRecipientsPanelUpdate</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>recipients</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>recipients</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>recipients</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>addSelectedContacts</name><argument_list>(<argument><expr><name>recipients</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleGroupCreate</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getCount</name><argument_list>()</argument_list></call> <operator>&lt;</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_contacts_no_members</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_contacts_no_members</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_SHORT</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+    <if>if <condition>(<expr><call><name>isSignalGroup</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>CreateSignalGroupTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>avatarBmp</name></expr></argument>, <argument><expr><call><name>getGroupName</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRecipients</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>CreateMmsGroupTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRecipients</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleGroupUpdate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><operator>new</operator> <call><name>UpdateSignalGroupTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>groupToUpdate</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><name>id</name></expr></argument>, <argument><expr><name>avatarBmp</name></expr></argument>,
+                              <argument><expr><call><name>getGroupName</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRecipients</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleOpenConversation</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>THREAD_ID_EXTRA</name></name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>DISTRIBUTION_TYPE_EXTRA</name></name></expr></argument>, <argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>DistributionTypes</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>ADDRESS_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>SelectedRecipientsAdapter</name></type> <name>getAdapter</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>SelectedRecipientsAdapter</name><operator>)</operator><call><name><name>lv</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getGroupName</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><call><name><name>groupName</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>groupName</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>reqCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>reqCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>Uri</name></type> <name>outputFile</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>fromFile</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getCacheDir</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"cropped"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>data</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name>resultCode</name> <operator>!=</operator> <name><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name></expr>)</condition><then>
+      <block type="pseudo"><return>return;</return></block></then></if>
+
+    <switch>switch <condition>(<expr><name>reqCode</name></expr>)</condition> <block>{
+      <case>case <expr><name>PICK_CONTACT</name></expr>:</case>
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>selected</name> <init>= <expr><call><name><name>data</name><operator>.</operator><name>getStringArrayListExtra</name></name><argument_list>(<argument><expr><literal type="string">"contacts"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>String</name></type> <name>contact</name> <range>: <expr><name>selected</name></expr></range></decl></init>)</control> <block>{
+          <decl_stmt><decl><type><name>Address</name></type>   <name>address</name>   <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromExternal</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>contact</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <expr_stmt><expr><call><name>addSelectedContacts</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+        <break>break;</break>
+
+      <case>case <expr><name><name>Crop</name><operator>.</operator><name>REQUEST_PICK</name></name></expr>:</case>
+        <expr_stmt><expr><operator>new</operator> <call><name>Crop</name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>output</name><argument_list>(<argument><expr><name>outputFile</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asSquare</name><argument_list>()</argument_list></call><operator>.</operator><call><name>start</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>Crop</name><operator>.</operator><name>REQUEST_CROP</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>asBitmap</name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><call><name><name>Crop</name><operator>.</operator><name>getOutput</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>skipMemoryCache</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>centerCrop</name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>override</name><argument_list>(<argument><expr><name>AVATAR_SIZE</name></expr></argument>, <argument><expr><name>AVATAR_SIZE</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>SimpleTarget</name><argument_list type="generic">&lt;<argument><name>Bitmap</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+                  <function><annotation>@<name>Override</name></annotation>
+                  <specifier>public</specifier> <type><name>void</name></type> <name>onResourceReady</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Bitmap</name></type> <name>resource</name></decl></parameter>, <parameter><decl><type><name><name>Transition</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <name>Bitmap</name></super></argument>&gt;</argument_list></name></type> <name>transition</name></decl></parameter>)</parameter_list> <block>{
+                    <expr_stmt><expr><call><name>setAvatar</name><argument_list>(<argument><expr><call><name><name>Crop</name><operator>.</operator><name>getOutput</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>resource</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                  }</block></function>
+                }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></switch>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>AddRecipientButtonListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>GroupCreateActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name><name>PushContactSelectionActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><call><name><name>groupToUpdate</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ContactSelectionListFragment</name><operator>.</operator><name>DISPLAY_MODE</name></name></expr></argument>, <argument><expr><name><name>DisplayMode</name><operator>.</operator><name>FLAG_PUSH</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ContactSelectionListFragment</name><operator>.</operator><name>DISPLAY_MODE</name></name></expr></argument>, <argument><expr><name><name>DisplayMode</name><operator>.</operator><name>FLAG_PUSH</name></name> <operator>|</operator> <name><name>DisplayMode</name><operator>.</operator><name>FLAG_SMS</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+      <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><name>PICK_CONTACT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>CreateMmsGroupTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>,<argument><name>Void</name></argument>,<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GroupCreateActivity</name></type> <name>activity</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type>      <name>members</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>CreateMmsGroupTask</name><parameter_list>(<parameter><decl><type><name>GroupCreateActivity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>members</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name>     <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>members</name></name>      <operator>=</operator> <name>members</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>GroupActionResult</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>avoid</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>memberAddresses</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>recipient</name> <range>: <expr><name>members</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>memberAddresses</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <decl_stmt><decl><type><name>String</name></type>    <name>groupId</name>        <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getOrCreateGroupForMembers</name><argument_list>(<argument><expr><name>memberAddresses</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>groupRecipient</name> <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>groupId</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>      <name>threadId</name>       <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdFor</name><argument_list>(<argument><expr><name>groupRecipient</name></expr></argument>, <argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>DistributionTypes</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><operator>new</operator> <call><name>GroupActionResult</name><argument_list>(<argument><expr><name>groupRecipient</name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>GroupActionResult</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>handleOpenConversation</name></name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>getThreadId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>result</name><operator>.</operator><name>getGroupRecipient</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onProgressUpdate</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onProgressUpdate</name></name><argument_list>(<argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>SignalGroupTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>,<argument><name>Void</name></argument>,<argument><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>GroupCreateActivity</name></type> <name>activity</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>Bitmap</name></type>              <name>avatar</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type>      <name>members</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>String</name></type>              <name>name</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>SignalGroupTask</name><parameter_list>(<parameter><decl><type><name>GroupCreateActivity</name></type> <name>activity</name></decl></parameter>,
+                           <parameter><decl><type><name>Bitmap</name></type>              <name>avatar</name></decl></parameter>,
+                           <parameter><decl><type><name>String</name></type>              <name>name</name></decl></parameter>,
+                           <parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type>      <name>members</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name>     <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>avatar</name></name>       <operator>=</operator> <name>avatar</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>         <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>members</name></name>      <operator>=</operator> <name>members</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPreExecute</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>group_details_layout</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>creating_group_layout</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_create_group</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>titleResId</name> <init>= <expr><ternary><condition><expr><call><name><name>activity</name><operator>.</operator><name>groupToUpdate</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>
+                             ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_updating_group</name></name></expr>
+                             </then><else>: <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_creating_group</name></name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>creatingText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>activity</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>titleResId</name></expr></argument>, <argument><expr><call><name><name>activity</name><operator>.</operator><name>getGroupName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></type> <name>groupActionResultOptional</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>activity</name><operator>.</operator><name>isFinishing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>group_details_layout</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>creating_group_layout</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_create_group</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>CreateSignalGroupTask</name> <super><extends>extends <name>SignalGroupTask</name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <name>CreateSignalGroupTask</name><parameter_list>(<parameter><decl><type><name>GroupCreateActivity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><name>Bitmap</name></type> <name>avatar</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>members</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name>avatar</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>members</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>aVoid</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>GroupManager</name><operator>.</operator><name>createGroup</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name>members</name></expr></argument>, <argument><expr><name>avatar</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>result</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThreadId</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>activity</name><operator>.</operator><name>isFinishing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>handleOpenConversation</name></name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThreadId</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getGroupRecipient</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostExecute</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name><name>activity</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>,
+                       <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_contacts_invalid_number</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>UpdateSignalGroupTask</name> <super><extends>extends <name>SignalGroupTask</name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>groupId</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>UpdateSignalGroupTask</name><parameter_list>(<parameter><decl><type><name>GroupCreateActivity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>groupId</name></decl></parameter>,
+                                 <parameter><decl><type><name>Bitmap</name></type> <name>avatar</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>members</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name>avatar</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>members</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name> <operator>=</operator> <name>groupId</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>aVoid</name></decl></parameter>)</parameter_list> <block>{
+      <try>try <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>GroupManager</name><operator>.</operator><name>updateGroup</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name>groupId</name></expr></argument>, <argument><expr><name>members</name></expr></argument>, <argument><expr><name>avatar</name></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidNumberException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupActionResult</name></argument>&gt;</argument_list></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>result</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThreadId</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>activity</name><operator>.</operator><name>isFinishing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getIntent</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>GROUP_THREAD_EXTRA</name></expr></argument>, <argument><expr><call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThreadId</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>GROUP_ADDRESS_EXTRA</name></expr></argument>, <argument><expr><call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getGroupRecipient</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>setResult</name></name><argument_list>(<argument><expr><name>RESULT_OK</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>finish</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostExecute</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name><name>activity</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>,
+                       <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_contacts_invalid_number</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>AddMembersTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>,<argument><name>Void</name></argument>,<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>AddMembersTask</name><operator>.</operator><name>Result</name></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <class><specifier>static</specifier> class <name>Result</name> <block>{
+      <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>recipient</name></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>boolean</name></type>             <name>isPush</name></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type>              <name>reason</name></decl>;</decl_stmt>
+
+      <constructor><specifier>public</specifier> <name>Result</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isPush</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>reason</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name> <operator>=</operator> <call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>isPush</name></name>    <operator>=</operator> <name>isPush</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>reason</name></name>    <operator>=</operator> <name>reason</name></expr>;</expr_stmt>
+      }</block></constructor>
+    }</block></class>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>GroupCreateActivity</name></type> <name>activity</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type>             <name>failIfNotPush</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>AddMembersTask</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GroupCreateActivity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name>      <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>failIfNotPush</name></name> <operator>=</operator> <call><name><name>activity</name><operator>.</operator><name>groupToUpdate</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Result</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Recipient</name><modifier>...</modifier></type> <name>recipients</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Result</name></argument>&gt;</argument_list></name></type> <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>recipient</name> <range>: <expr><name>recipients</name></expr></range></decl></init>)</control> <block>{
+        <decl_stmt><decl><type><name>boolean</name></type> <name>isPush</name> <init>= <expr><call><name>isActiveInDirectory</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>failIfNotPush</name> <operator>&amp;&amp;</operator> <operator>!</operator><name>isPush</name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Result</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><call><name><name>activity</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_cannot_add_non_push_to_existing_group</name></name></expr></argument>,
+                                                                 <argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Result</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><call><name><name>activity</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_youre_already_in_the_group</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif> <else>else <block>{
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Result</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>isPush</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></for>
+      <return>return <expr><name>results</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Result</name></argument>&gt;</argument_list></name></type> <name>results</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>activity</name><operator>.</operator><name>isFinishing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+      <for>for <control>(<init><decl><type><name>Result</name></type> <name>result</name> <range>: <expr><name>results</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>result</name><operator>.</operator><name>recipient</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>recipient</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>result</name><operator>.</operator><name>isPush</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>result</name><operator>.</operator><name>reason</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_SHORT</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></for>
+      <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>updateViewState</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>FillExistingGroupInfoAsyncTask</name> <super><extends>extends <name><name>ProgressDialogAsyncTask</name><argument_list type="generic">&lt;<argument><name>String</name></argument>,<argument><name>Void</name></argument>,<argument><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupData</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>GroupCreateActivity</name></type> <name>activity</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>FillExistingGroupInfoAsyncTask</name><parameter_list>(<parameter><decl><type><name>GroupCreateActivity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>activity</name></expr></argument>,
+            <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>GroupCreateActivity_loading_group_details</name></name></expr></argument>,
+            <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>please_wait</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name> <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupData</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>String</name><modifier>...</modifier></type> <name>groupIds</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>GroupDatabase</name></type>         <name>db</name>               <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type>       <name>recipients</name>       <init>= <expr><call><name><name>db</name><operator>.</operator><name>getGroupMembers</name></name><argument_list>(<argument><expr><name><name>groupIds</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupRecord</name></argument>&gt;</argument_list></name></type> <name>group</name>            <init>= <expr><call><name><name>db</name><operator>.</operator><name>getGroup</name></name><argument_list>(<argument><expr><name><name>groupIds</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type>        <name>existingContacts</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>recipients</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>existingContacts</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>recipients</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>group</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>GroupData</name><argument_list>(<argument><expr><name><name>groupIds</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>,
+                                         <argument><expr><name>existingContacts</name></expr></argument>,
+                                         <argument><expr><call><name><name>BitmapUtil</name><operator>.</operator><name>fromByteArray</name></name><argument_list>(<argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAvatar</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                         <argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAvatar</name><argument_list>()</argument_list></call></expr></argument>,
+                                         <argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTitle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupData</name></argument>&gt;</argument_list></name></type> <name>group</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostExecute</name></name><argument_list>(<argument><expr><name>group</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>group</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>activity</name><operator>.</operator><name>isFinishing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name><name>activity</name><operator>.</operator><name>groupToUpdate</name></name> <operator>=</operator> <name>group</name></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>groupName</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><name>avatarBmp</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>setAvatar</name></name><argument_list>(<argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><name>avatarBytes</name></expr></argument>, <argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><name>avatarBmp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <decl_stmt><decl><type><name>SelectedRecipientsAdapter</name></type> <name>adapter</name> <init>= <expr><operator>new</operator> <call><name>SelectedRecipientsAdapter</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><name>recipients</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>setOnRecipientDeletedListener</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>lv</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>updateViewState</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>private</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>setAvatar</name><parameter_list>(<parameter><decl><type><name>T</name></type> <name>model</name></decl></parameter>, <parameter><decl><type><name>Bitmap</name></type> <name>bitmap</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>avatarBmp</name> <operator>=</operator> <name>bitmap</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><name>model</name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>circleCrop</name><argument_list>()</argument_list></call>
+            <operator>.</operator><call><name>skipMemoryCache</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>GroupData</name> <block>{
+    <decl_stmt><decl><type><name>String</name></type>         <name>id</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>recipients</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Bitmap</name></type>         <name>avatarBmp</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>         <name>avatarBytes</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>         <name>name</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>GroupData</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>recipients</name></decl></parameter>, <parameter><decl><type><name>Bitmap</name></type> <name>avatarBmp</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>avatarBytes</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>id</name></name>          <operator>=</operator> <name>id</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipients</name></name>  <operator>=</operator> <name>recipients</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>avatarBmp</name></name>   <operator>=</operator> <name>avatarBmp</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>avatarBytes</name></name> <operator>=</operator> <name>avatarBytes</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>        <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+}</block></class>
+</unit>

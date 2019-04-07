@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\WebRtcCallActivity.java"><comment type="block">/*
+ * Copyright (C) 2016 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>AudioManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Window</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>EventBus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>Subscribe</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>ThreadMode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>WebRtcAnswerDeclineButton</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>WebRtcCallControls</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>WebRtcCallScreen</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>storage</name><operator>.</operator><name>TextSecureIdentityKeyStore</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>events</name><operator>.</operator><name>WebRtcViewModel</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>push</name><operator>.</operator><name>SignalServiceNetworkAccess</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>WebRtcCallService</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ServiceUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>IdentityKey</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>SignalProtocolAddress</name></name>;</import>
+
+<import>import static <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>SessionCipher</name><operator>.</operator><name>SESSION_LOCK</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>WebRtcCallActivity</name> <super><extends>extends <name>Activity</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STANDARD_DELAY_FINISH</name>    <init>= <expr><literal type="number">1000</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>BUSY_SIGNAL_DELAY_FINISH</name> <init>= <expr><literal type="number">5500</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ANSWER_ACTION</name>   <init>= <expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getCanonicalName</name></name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">".ANSWER_ACTION"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DENY_ACTION</name>     <init>= <expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getCanonicalName</name></name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">".DENY_ACTION"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>END_CALL_ACTION</name> <init>= <expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getCanonicalName</name></name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">".END_CALL_ACTION"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>WebRtcCallScreen</name></type>           <name>callScreen</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onCreate()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_SHOW_WHEN_LOCKED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_KEEP_SCREEN_ON</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>requestWindowFeature</name><argument_list>(<argument><expr><name><name>Window</name><operator>.</operator><name>FEATURE_NO_TITLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>webrtc_call_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setVolumeControlStream</name><argument_list>(<argument><expr><name><name>AudioManager</name><operator>.</operator><name>STREAM_VOICE_CALL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onResume()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeScreenshotSecurity</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>register</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onNewIntent</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list><block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onNewIntent"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><call><name><name>ANSWER_ACTION</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>handleAnswerCall</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>DENY_ACTION</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>handleDenyCall</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>END_CALL_ACTION</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>handleEndCall</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onPause"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>unregister</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfiguration</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfiguration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRequestPermissionsResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>String</name><index>[]</index></name></type> <name>permissions</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>int</name><index>[]</index></name></type> <name>grantResults</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>onRequestPermissionsResult</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>permissions</name></expr></argument>, <argument><expr><name>grantResults</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeScreenshotSecurity</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>ICE_CREAM_SANDWICH</name></name> <operator>&amp;&amp;</operator>
+        <call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenSecurityEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+    <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_SECURE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>clearFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_SECURE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>callScreen</name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>callScreen</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setHangupButtonListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>HangupButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setIncomingCallActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>IncomingCallActionListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setAudioMuteButtonListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AudioMuteButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setVideoMuteButtonListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>VideoMuteButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setCameraFlipButtonListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>CameraFlipButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setSpeakerButtonListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SpeakerButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setBluetoothButtonListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>BluetoothButtonListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleSetMuteAudio</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_SET_MUTE_AUDIO</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>EXTRA_MUTE</name></name></expr></argument>, <argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleSetMuteVideo</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>muted</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_SET_MUTE_VIDEO</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>EXTRA_MUTE</name></name></expr></argument>, <argument><expr><name>muted</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleFlipCamera</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_FLIP_CAMERA</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleAnswerCall</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>WebRtcViewModel</name></type> <name>event</name> <init>= <expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStickyEvent</name><argument_list>(<argument><expr><name><name>WebRtcViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>event</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>RECORD_AUDIO</name></name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>CAMERA</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+                 <operator>.</operator><call><name>withRationaleDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone</name></name></expr></argument>, <argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toShortString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                      <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_mic_white_48dp</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_videocam_white_48dp</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>withPermanentDenialDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>onAllGranted</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+                   <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_answering</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                   <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                   <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_ANSWER_CALL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                   <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                 }</block></lambda></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>onAnyDenied</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>handleDenyCall</name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleDenyCall</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>WebRtcViewModel</name></type> <name>event</name> <init>= <expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStickyEvent</name><argument_list>(<argument><expr><name><name>WebRtcViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>event</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_DENY_CALL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_ending_call</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>delayedFinish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleEndCall</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Hangup pressed, handling termination now..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_LOCAL_HANGUP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleIncomingCall</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setIncomingCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleOutgoingCall</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_dialing</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleTerminate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter> <comment type="block">/*, int terminationType */</comment>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"handleTerminate called"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_ending_call</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>removeStickyEvent</name><argument_list>(<argument><expr><name><name>WebRtcViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>delayedFinish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCallRinging</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_ringing</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCallBusy</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_busy</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>delayedFinish</name><argument_list>(<argument><expr><name>BUSY_SIGNAL_DELAY_FINISH</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCallConnected</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_IGNORE_CHEEK_PRESSES</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_connected</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><call><name><name>event</name><operator>.</operator><name>getLocalRenderer</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>event</name><operator>.</operator><name>getRemoteRenderer</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleRecipientUnavailable</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_recipient_unavailable</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>delayedFinish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleServerFailure</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setActiveCall</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_network_failed</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>delayedFinish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleNoSuchUser</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>isFinishing</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if> <comment type="line">// XXX Stuart added this check above, not sure why, so I'm repeating in ignorance. - moxie</comment>
+    <decl_stmt><decl><type><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></type> <name>dialog</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_number_not_registered</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setIconAttribute</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>dialog_alert_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setMessage</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_the_number_you_dialed_does_not_support_secure_voice</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setCancelable</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setPositiveButton</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RedPhone_got_it</name></name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name>OnClickListener</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleTerminate</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>setOnCancelListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnCancelListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onCancel</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleTerminate</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dialog</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleUntrustedIdentity</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>IdentityKey</name></type> <name>theirIdentity</name> <init>= <expr><call><name><name>event</name><operator>.</operator><name>getIdentityKey</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Recipient</name></type>   <name>recipient</name>     <init>= <expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setUntrustedIdentity</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>theirIdentity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setAcceptIdentityListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+        <synchronized>synchronized <init>(<expr><name>SESSION_LOCK</name></expr>)</init> <block>{
+          <decl_stmt><decl><type><name>TextSecureIdentityKeyStore</name></type> <name>identityKeyStore</name> <init>= <expr><operator>new</operator> <call><name>TextSecureIdentityKeyStore</name><argument_list>(<argument><expr><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>identityKeyStore</name><operator>.</operator><name>saveIdentity</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SignalProtocolAddress</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>theirIdentity</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></synchronized>
+
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>EXTRA_REMOTE_ADDRESS</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>WebRtcCallService</name><operator>.</operator><name>ACTION_OUTGOING_CALL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setCancelIdentityButton</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>handleTerminate</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>delayedFinish</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>delayedFinish</name><argument_list>(<argument><expr><name>STANDARD_DELAY_FINISH</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>delayedFinish</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>delayMillis</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>postDelayed</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+      <function><specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>finish</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>, <argument><expr><name>delayMillis</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Subscribe</name><argument_list>(<argument><expr><name>sticky</name> <operator>=</operator> <literal type="boolean">true</literal></expr></argument>, <argument><expr><name>threadMode</name> <operator>=</operator> <name><name>ThreadMode</name><operator>.</operator><name>MAIN</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onEventMainThread</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>WebRtcViewModel</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got message from service: "</literal> <operator>+</operator> <name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><call><name><name>event</name><operator>.</operator><name>getState</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name>CALL_CONNECTED</name></expr>:</case>          <expr_stmt><expr><call><name>handleCallConnected</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>            <break>break;</break>
+      <case>case <expr><name>NETWORK_FAILURE</name></expr>:</case>         <expr_stmt><expr><call><name>handleServerFailure</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>            <break>break;</break>
+      <case>case <expr><name>CALL_RINGING</name></expr>:</case>            <expr_stmt><expr><call><name>handleCallRinging</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>              <break>break;</break>
+      <case>case <expr><name>CALL_DISCONNECTED</name></expr>:</case>       <expr_stmt><expr><call><name>handleTerminate</name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt> <break>break;</break>
+      <case>case <expr><name>NO_SUCH_USER</name></expr>:</case>            <expr_stmt><expr><call><name>handleNoSuchUser</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>               <break>break;</break>
+      <case>case <expr><name>RECIPIENT_UNAVAILABLE</name></expr>:</case>   <expr_stmt><expr><call><name>handleRecipientUnavailable</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>     <break>break;</break>
+      <case>case <expr><name>CALL_INCOMING</name></expr>:</case>           <expr_stmt><expr><call><name>handleIncomingCall</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>             <break>break;</break>
+      <case>case <expr><name>CALL_OUTGOING</name></expr>:</case>           <expr_stmt><expr><call><name>handleOutgoingCall</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>             <break>break;</break>
+      <case>case <expr><name>CALL_BUSY</name></expr>:</case>               <expr_stmt><expr><call><name>handleCallBusy</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>                 <break>break;</break>
+      <case>case <expr><name>UNTRUSTED_IDENTITY</name></expr>:</case>      <expr_stmt><expr><call><name>handleUntrustedIdentity</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>        <break>break;</break>
+    }</block></switch>
+
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setRemoteVideoEnabled</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>isRemoteVideoEnabled</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>updateAudioState</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>isBluetoothAvailable</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>event</name><operator>.</operator><name>isMicrophoneEnabled</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setControlsEnabled</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getState</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>WebRtcViewModel</name><operator>.</operator><name>State</name><operator>.</operator><name>CALL_INCOMING</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>callScreen</name><operator>.</operator><name>setLocalVideoState</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getLocalCameraState</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>HangupButtonListener</name> <super><implements>implements <name><name>WebRtcCallScreen</name><operator>.</operator><name>HangupButtonListener</name></name></implements></super> <block>{
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name>handleEndCall</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>AudioMuteButtonListener</name> <super><implements>implements <name><name>WebRtcCallControls</name><operator>.</operator><name>MuteButtonListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onToggle</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isMuted</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleSetMuteAudio</name></name><argument_list>(<argument><expr><name>isMuted</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>VideoMuteButtonListener</name> <super><implements>implements <name><name>WebRtcCallControls</name><operator>.</operator><name>MuteButtonListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onToggle</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isMuted</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleSetMuteVideo</name></name><argument_list>(<argument><expr><name>isMuted</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>CameraFlipButtonListener</name> <super><implements>implements <name><name>WebRtcCallControls</name><operator>.</operator><name>CameraFlipButtonListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onToggle</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleFlipCamera</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>SpeakerButtonListener</name> <super><implements>implements <name><name>WebRtcCallControls</name><operator>.</operator><name>SpeakerButtonListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onSpeakerChange</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isSpeaker</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>AudioManager</name></type> <name>audioManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getAudioManager</name></name><argument_list>(<argument><expr><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>setSpeakerphoneOn</name></name><argument_list>(<argument><expr><name>isSpeaker</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>isSpeaker</name> <operator>&amp;&amp;</operator> <call><name><name>audioManager</name><operator>.</operator><name>isBluetoothScoOn</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>stopBluetoothSco</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>setBluetoothScoOn</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>BluetoothButtonListener</name> <super><implements>implements <name><name>WebRtcCallControls</name><operator>.</operator><name>BluetoothButtonListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onBluetoothChange</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isBluetooth</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>AudioManager</name></type> <name>audioManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getAudioManager</name></name><argument_list>(<argument><expr><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>isBluetooth</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>startBluetoothSco</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>setBluetoothScoOn</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>stopBluetoothSco</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>audioManager</name><operator>.</operator><name>setBluetoothScoOn</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>IncomingCallActionListener</name> <super><implements>implements <name><name>WebRtcAnswerDeclineButton</name><operator>.</operator><name>AnswerDeclineListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onAnswered</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleAnswerCall</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDeclined</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>WebRtcCallActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>handleDenyCall</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+}</block></class></unit>

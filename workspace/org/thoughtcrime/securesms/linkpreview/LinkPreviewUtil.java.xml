@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\linkpreview\LinkPreviewUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>linkpreview</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>URLSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>util</name><operator>.</operator><name>Linkify</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>HttpUrl</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>LinkPreviewUtil</name> <block>{
+
+  <comment type="block" format="javadoc">/**
+   * @return All whitelisted URLs in the source text.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Link</name></argument>&gt;</argument_list></name></type> <name>findWhitelistedUrls</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>spannable</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type>         <name>found</name>     <init>= <expr><call><name><name>Linkify</name><operator>.</operator><name>addLinks</name></name><argument_list>(<argument><expr><name>spannable</name></expr></argument>, <argument><expr><name><name>Linkify</name><operator>.</operator><name>WEB_URLS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><name>found</name></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>spannable</name><operator>.</operator><name>getSpans</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>spannable</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>URLSpan</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>span</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name>Link</name><argument_list>(<argument><expr><call><name><name>span</name><operator>.</operator><name>getURL</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>spannable</name><operator>.</operator><name>getSpanStart</name></name><argument_list>(<argument><expr><name>span</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>link</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>isWhitelistedLinkUrl</name><argument_list>(<argument><expr><call><name><name>link</name><operator>.</operator><name>getUrl</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return True if the host is present in the link whitelist.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isWhitelistedLinkUrl</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>linkUrl</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>HttpUrl</name></type> <name>url</name> <init>= <expr><call><name><name>HttpUrl</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>linkUrl</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>url</name> <operator>!=</operator> <literal type="null">null</literal>                                   <operator>&amp;&amp;</operator>
+           <operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>scheme</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>              <operator>&amp;&amp;</operator>
+           <literal type="string">"https"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>scheme</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>                  <operator>&amp;&amp;</operator>
+           <call><name><name>LinkPreviewDomains</name><operator>.</operator><name>LINKS</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>host</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+           <call><name>isLegalUrl</name><argument_list>(<argument><expr><name>linkUrl</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return True if the top-level domain is present in the media whitelist.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isWhitelistedMediaUrl</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>mediaUrl</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>HttpUrl</name></type> <name>url</name> <init>= <expr><call><name><name>HttpUrl</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>mediaUrl</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>url</name> <operator>!=</operator> <literal type="null">null</literal>                                                <operator>&amp;&amp;</operator>
+           <operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>scheme</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>                           <operator>&amp;&amp;</operator>
+           <literal type="string">"https"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>scheme</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>                               <operator>&amp;&amp;</operator>
+           <call><name><name>LinkPreviewDomains</name><operator>.</operator><name>IMAGES</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>topPrivateDomain</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+           <call><name>isLegalUrl</name><argument_list>(<argument><expr><name>mediaUrl</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isLegalUrl</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>LegalUrlPatterns</name><operator>.</operator><name>LATIN</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>find</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><operator>!</operator><call><name><name>LegalUrlPatterns</name><operator>.</operator><name>CYRILLIC</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>find</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator>
+             <operator>!</operator><call><name><name>LegalUrlPatterns</name><operator>.</operator><name>GREEK</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>find</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

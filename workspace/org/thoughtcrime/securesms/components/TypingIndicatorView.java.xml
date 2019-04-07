@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\TypingIndicatorView.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>TypingIndicatorView</name> <super><extends>extends <name>LinearLayout</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>DURATION</name>   <init>= <expr><literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>PRE_DELAY</name>  <init>= <expr><literal type="number">500</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>POST_DELAY</name> <init>= <expr><literal type="number">500</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type>  <name>CYCLE_DURATION</name> <init>= <expr><literal type="number">1500</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type>  <name>DOT_DURATION</name>   <init>= <expr><literal type="number">600</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>MIN_ALPHA</name>      <init>= <expr><literal type="number">0.4f</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>MIN_SCALE</name>      <init>= <expr><literal type="number">0.75f</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isActive</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>    <name>startTime</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>dot1</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>dot2</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>dot3</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>TypingIndicatorView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>TypingIndicatorView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>(<argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>inflate</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>typing_indicator_view</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setWillNotDraw</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name>dot1</name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>typing_dot1</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>dot2</name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>typing_dot2</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>dot3</name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>typing_dot3</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>attrs</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTheme</name><argument_list>()</argument_list></call><operator>.</operator><call><name>obtainStyledAttributes</name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>TypingIndicatorView</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>        <name>tint</name>       <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>TypingIndicatorView_typingIndicator_tint</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>dot1</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><name>tint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>MULTIPLY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dot2</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><name>tint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>MULTIPLY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dot3</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><name>tint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>MULTIPLY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onDraw</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><name>isActive</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDraw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>timeInCycle</name> <init>= <expr><operator>(</operator><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>startTime</name><operator>)</operator> <operator>%</operator> <name>CYCLE_DURATION</name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>render</name><argument_list>(<argument><expr><name>dot1</name></expr></argument>, <argument><expr><name>timeInCycle</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>render</name><argument_list>(<argument><expr><name>dot2</name></expr></argument>, <argument><expr><name>timeInCycle</name></expr></argument>, <argument><expr><literal type="number">150</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>render</name><argument_list>(<argument><expr><name>dot3</name></expr></argument>, <argument><expr><name>timeInCycle</name></expr></argument>, <argument><expr><literal type="number">300</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDraw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>postInvalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>render</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>dot</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timeInCycle</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>start</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type> <name>end</name>  <init>= <expr><name>start</name> <operator>+</operator> <name>DOT_DURATION</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>peak</name> <init>= <expr><name>start</name> <operator>+</operator> <operator>(</operator><name>DOT_DURATION</name> <operator>/</operator> <literal type="number">2</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>timeInCycle</name> <argument_list type="generic">&lt; <argument><name>start</name> <operator>||</operator> <name>timeInCycle</name></argument> &gt;</argument_list></name> <name>end</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>renderDefault</name><argument_list>(<argument><expr><name>dot</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>timeInCycle</name> <operator>&lt;</operator> <name>peak</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>renderFadeIn</name><argument_list>(<argument><expr><name>dot</name></expr></argument>, <argument><expr><name>timeInCycle</name></expr></argument>, <argument><expr><name>start</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name>renderFadeOut</name><argument_list>(<argument><expr><name>dot</name></expr></argument>, <argument><expr><name>timeInCycle</name></expr></argument>, <argument><expr><name>peak</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>renderDefault</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>dot</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><name>MIN_ALPHA</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setScaleX</name></name><argument_list>(<argument><expr><name>MIN_SCALE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setScaleY</name></name><argument_list>(<argument><expr><name>MIN_SCALE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>renderFadeIn</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>dot</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timeInCycle</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>fadeInStart</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>float</name></type> <name>percent</name> <init>= <expr><call>(<name>float</name>) <argument_list>(<argument><expr><name>timeInCycle</name> <operator>-</operator> <name>fadeInStart</name></expr></argument>)</argument_list></call> <operator>/</operator> <literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><name>MIN_ALPHA</name> <operator>+</operator> <operator>(</operator><literal type="number">1</literal> <operator>-</operator> <name>MIN_ALPHA</name><operator>)</operator> <operator>*</operator> <name>percent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setScaleX</name></name><argument_list>(<argument><expr><name>MIN_SCALE</name> <operator>+</operator> <operator>(</operator><literal type="number">1</literal> <operator>-</operator> <name>MIN_SCALE</name><operator>)</operator> <operator>*</operator> <name>percent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setScaleY</name></name><argument_list>(<argument><expr><name>MIN_SCALE</name> <operator>+</operator> <operator>(</operator><literal type="number">1</literal> <operator>-</operator> <name>MIN_SCALE</name><operator>)</operator> <operator>*</operator> <name>percent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>renderFadeOut</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>dot</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timeInCycle</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>fadeOutStart</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>float</name></type> <name>percent</name> <init>= <expr><call>(<name>float</name>) <argument_list>(<argument><expr><name>timeInCycle</name> <operator>-</operator> <name>fadeOutStart</name></expr></argument>)</argument_list></call> <operator>/</operator> <literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><literal type="number">1</literal> <operator>-</operator> <operator>(</operator><literal type="number">1</literal> <operator>-</operator> <name>MIN_ALPHA</name><operator>)</operator> <operator>*</operator> <name>percent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setScaleX</name></name><argument_list>(<argument><expr><literal type="number">1</literal> <operator>-</operator> <operator>(</operator><literal type="number">1</literal> <operator>-</operator> <name>MIN_SCALE</name><operator>)</operator> <operator>*</operator> <name>percent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dot</name><operator>.</operator><name>setScaleY</name></name><argument_list>(<argument><expr><literal type="number">1</literal> <operator>-</operator> <operator>(</operator><literal type="number">1</literal> <operator>-</operator> <name>MIN_SCALE</name><operator>)</operator> <operator>*</operator> <name>percent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>startAnimation</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>isActive</name>  <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name>startTime</name> <operator>=</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>postInvalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>stopAnimation</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>isActive</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

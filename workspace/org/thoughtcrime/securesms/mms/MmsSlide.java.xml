@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\MmsSlide.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MmsSlide</name> <super><extends>extends <name>ImageSlide</name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>MmsSlide</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Attachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>String</name></type> <name>getContentDescription</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="string">"MMS"</literal></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

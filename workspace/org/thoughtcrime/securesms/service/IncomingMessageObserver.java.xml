@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\IncomingMessageObserver.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Service</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>DefaultLifecycleObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>LifecycleOwner</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ProcessLifecycleOwner</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>IBinder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>ContextCompat</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>requirements</name><operator>.</operator><name>NetworkRequirement</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>requirements</name><operator>.</operator><name>NetworkRequirementProvider</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>requirements</name><operator>.</operator><name>RequirementListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>PushContentReceiveJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>NotificationChannels</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>push</name><operator>.</operator><name>SignalServiceNetworkAccess</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidVersionException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceMessagePipe</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceMessageReceiver</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeoutException</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IncomingMessageObserver</name> <super><implements>implements <name>InjectableType</name>, <name>RequirementListener</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>IncomingMessageObserver</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier>  <name>int</name></type> <name>FOREGROUND_ID</name>            <init>= <expr><literal type="number">313399</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>REQUEST_TIMEOUT_MINUTES</name>  <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name>SignalServiceMessagePipe</name></type> <name>pipe</name>             <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name>SignalServiceMessagePipe</name></type> <name>unidentifiedPipe</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type>            <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>NetworkRequirement</name></type> <name>networkRequirement</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>appVisible</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>SignalServiceMessageReceiver</name></type> <name>receiver</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>SignalServiceNetworkAccess</name></type>   <name>networkAccess</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>IncomingMessageObserver</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>injectDependencies</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>            <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>networkRequirement</name></name> <operator>=</operator> <operator>new</operator> <call><name>NetworkRequirement</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <call><name>NetworkRequirementProvider</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>new</operator> <call><name>MessageRetrievalThread</name><argument_list>()</argument_list></call><operator>.</operator><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isFcmDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ContextCompat</name><operator>.</operator><name>startForegroundService</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>ForegroundService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>ProcessLifecycleOwner</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getLifecycle</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addObserver</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>DefaultLifecycleObserver</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onStart</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LifecycleOwner</name></type> <name>owner</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>onAppForegrounded</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onStop</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LifecycleOwner</name></type> <name>owner</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>onAppBackgrounded</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRequirementStatusChanged</name><parameter_list>()</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+      <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>onAppForegrounded</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>appVisible</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>onAppBackgrounded</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>appVisible</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>synchronized</specifier> <type><name>boolean</name></type> <name>isConnectionNecessary</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>boolean</name></type> <name>isGcmDisabled</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isFcmDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"Network requirement: %s, app visible: %s, gcm disabled: %b"</literal></expr></argument>,
+                             <argument><expr><call><name><name>networkRequirement</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>appVisible</name></expr></argument>, <argument><expr><name>isGcmDisabled</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>      <operator>&amp;&amp;</operator>
+           <call><name><name>TextSecurePreferences</name><operator>.</operator><name>isWebsocketRegistered</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+           <operator>(</operator><name>appVisible</name> <operator>||</operator> <name>isGcmDisabled</name><operator>)</operator>                        <operator>&amp;&amp;</operator>
+           <call><name><name>networkRequirement</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call>                       <operator>&amp;&amp;</operator>
+           <operator>!</operator><call><name><name>networkAccess</name><operator>.</operator><name>isCensored</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>waitForConnectionNecessary</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <while>while <condition>(<expr><operator>!</operator><call><name>isConnectionNecessary</name><argument_list>()</argument_list></call></expr>)</condition> <block type="pseudo"><expr_stmt><expr><call><name>wait</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></while>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>shutdown</name><parameter_list>(<parameter><decl><type><name>SignalServiceMessagePipe</name></type> <name>pipe</name></decl></parameter>, <parameter><decl><type><name>SignalServiceMessagePipe</name></type> <name>unidentifiedPipe</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>pipe</name><operator>.</operator><name>shutdown</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>unidentifiedPipe</name><operator>.</operator><name>shutdown</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SignalServiceMessagePipe</name></type> <name>getPipe</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>pipe</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SignalServiceMessagePipe</name></type> <name>getUnidentifiedPipe</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>unidentifiedPipe</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>MessageRetrievalThread</name> <super><extends>extends <name>Thread</name></extends> <implements>implements <name><name>Thread</name><operator>.</operator><name>UncaughtExceptionHandler</name></name></implements></super> <block>{
+
+    <constructor><name>MessageRetrievalThread</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><literal type="string">"MessageRetrievalService"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setUncaughtExceptionHandler</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+      <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Waiting for websocket state change...."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>waitForConnectionNecessary</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Making websocket connection...."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>pipe</name>             <operator>=</operator> <call><name><name>receiver</name><operator>.</operator><name>createMessagePipe</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>unidentifiedPipe</name> <operator>=</operator> <call><name><name>receiver</name><operator>.</operator><name>createUnidentifiedMessagePipe</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>SignalServiceMessagePipe</name></type> <name>localPipe</name>             <init>= <expr><name>pipe</name></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>SignalServiceMessagePipe</name></type> <name>unidentifiedLocalPipe</name> <init>= <expr><name>unidentifiedPipe</name></expr></init></decl>;</decl_stmt>
+
+        <try>try <block>{
+          <while>while <condition>(<expr><call><name>isConnectionNecessary</name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+            <try>try <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Reading message..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>localPipe</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>REQUEST_TIMEOUT_MINUTES</name></expr></argument>, <argument><expr><name><name>TimeUnit</name><operator>.</operator><name>MINUTES</name></name></expr></argument>,
+                             <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>envelope</name></decl></parameter></parameter_list> -&gt; <block>{
+                               <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Retrieved envelope! "</literal> <operator>+</operator> <call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>envelope</name><operator>.</operator><name>getSource</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                               <expr_stmt><expr><operator>new</operator> <call><name>PushContentReceiveJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>processEnvelope</name><argument_list>(<argument><expr><name>envelope</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                             }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>TimeoutException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Application level read timeout..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidVersionException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></catch></try>
+          }</block></while>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch> <finally>finally <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Shutting down pipe..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>shutdown</name><argument_list>(<argument><expr><name>localPipe</name></expr></argument>, <argument><expr><name>unidentifiedLocalPipe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></finally></try>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Looping..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>uncaughtException</name><parameter_list>(<parameter><decl><type><name>Thread</name></type> <name>t</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"*** Uncaught exception!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>ForegroundService</name> <super><extends>extends <name>Service</name></extends></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>IBinder</name></type> <name>onBind</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>onStartCommand</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>startId</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onStartCommand</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><name>flags</name></expr></argument>, <argument><expr><name>startId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationChannels</name><operator>.</operator><name>OTHER</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentTitle</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageRetrievalService_signal</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentText</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageRetrievalService_background_connection_enabled</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setPriority</name></name><argument_list>(<argument><expr><name><name>NotificationCompat</name><operator>.</operator><name>PRIORITY_MIN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setWhen</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setSmallIcon</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_signal_background_connection</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startForeground</name><argument_list>(<argument><expr><name>FOREGROUND_ID</name></expr></argument>, <argument><expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name><name>Service</name><operator>.</operator><name>START_STICKY</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

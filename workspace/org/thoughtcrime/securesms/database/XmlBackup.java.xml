@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\XmlBackup.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>xmlpull</name><operator>.</operator><name>v1</name><operator>.</operator><name>XmlPullParser</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>xmlpull</name><operator>.</operator><name>v1</name><operator>.</operator><name>XmlPullParserException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>xmlpull</name><operator>.</operator><name>v1</name><operator>.</operator><name>XmlPullParserFactory</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedWriter</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileNotFoundException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileWriter</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>text</name><operator>.</operator><name>SimpleDateFormat</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Matcher</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>XmlBackup</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PROTOCOL</name>       <init>= <expr><literal type="string">"protocol"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS</name>        <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CONTACT_NAME</name>   <init>= <expr><literal type="string">"contact_name"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DATE</name>           <init>= <expr><literal type="string">"date"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>READABLE_DATE</name>  <init>= <expr><literal type="string">"readable_date"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TYPE</name>           <init>= <expr><literal type="string">"type"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SUBJECT</name>        <init>= <expr><literal type="string">"subject"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>BODY</name>           <init>= <expr><literal type="string">"body"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SERVICE_CENTER</name> <init>= <expr><literal type="string">"service_center"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>READ</name>           <init>= <expr><literal type="string">"read"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>STATUS</name>         <init>= <expr><literal type="string">"status"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TOA</name>            <init>= <expr><literal type="string">"toa"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SC_TOA</name>         <init>= <expr><literal type="string">"sc_toa"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCKED</name>         <init>= <expr><literal type="string">"locked"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>SimpleDateFormat</name></type> <name>dateFormatter</name> <init>= <expr><operator>new</operator> <call><name>SimpleDateFormat</name><argument_list>(<argument><expr><literal type="string">"EEE, dd MMM yyyy HH:mm:ss z"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>XmlPullParser</name></type> <name>parser</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>XmlBackup</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>path</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>XmlPullParserException</name></expr></argument>, <argument><expr><name>FileNotFoundException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>parser</name></name> <operator>=</operator> <call><name><name>XmlPullParserFactory</name><operator>.</operator><name>newInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>newPullParser</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>parser</name><operator>.</operator><name>setFeature</name></name><argument_list>(<argument><expr><name><name>XmlPullParser</name><operator>.</operator><name>FEATURE_PROCESS_NAMESPACES</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>parser</name><operator>.</operator><name>setInput</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>XmlBackupItem</name></type> <name>getNext</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name>XmlPullParserException</name></expr></argument></throws> <block>{
+    <while>while <condition>(<expr><call><name><name>parser</name><operator>.</operator><name>next</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>XmlPullParser</name><operator>.</operator><name>END_DOCUMENT</name></name></expr>)</condition> <block>{
+      <if>if <condition>(<expr><call><name><name>parser</name><operator>.</operator><name>getEventType</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>XmlPullParser</name><operator>.</operator><name>START_TAG</name></name></expr>)</condition><then> <block>{
+        <continue>continue;</continue>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>name</name> <init>= <expr><call><name><name>parser</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>name</name><operator>.</operator><name>equalsIgnoreCase</name></name><argument_list>(<argument><expr><literal type="string">"sms"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <continue>continue;</continue>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>int</name></type> <name>attributeCount</name> <init>= <expr><call><name><name>parser</name><operator>.</operator><name>getAttributeCount</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>attributeCount</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <continue>continue;</continue>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>XmlBackupItem</name></type> <name>item</name> <init>= <expr><operator>new</operator> <call><name>XmlBackupItem</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name>attributeCount</name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>attributeName</name> <init>= <expr><call><name><name>parser</name><operator>.</operator><name>getAttributeName</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if      <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>PROTOCOL</name></expr></argument>      )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>protocol</name></name>      <operator>=</operator> <call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>       )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>address</name></name>       <operator>=</operator> <call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>CONTACT_NAME</name></expr></argument>  )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>contactName</name></name>   <operator>=</operator> <call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>DATE</name></expr></argument>          )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>date</name></name>          <operator>=</operator> <call><name><name>Long</name><operator>.</operator><name>parseLong</name></name><argument_list>(<argument><expr><call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>READABLE_DATE</name></expr></argument> )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>readableDate</name></name>  <operator>=</operator> <call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>TYPE</name></expr></argument>          )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>type</name></name>          <operator>=</operator> <call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>SUBJECT</name></expr></argument>       )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>subject</name></name>       <operator>=</operator> <call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>BODY</name></expr></argument>          )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>body</name></name>          <operator>=</operator> <call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>SERVICE_CENTER</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>serviceCenter</name></name> <operator>=</operator> <call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>READ</name></expr></argument>          )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>read</name></name>          <operator>=</operator> <call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+        <elseif>else <if>if <condition>(<expr><call><name><name>attributeName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>STATUS</name></expr></argument>        )</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name><name>item</name><operator>.</operator><name>status</name></name>        <operator>=</operator> <call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><call><name><name>parser</name><operator>.</operator><name>getAttributeValue</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif></if>
+      }</block></for>
+
+      <return>return <expr><name>item</name></expr>;</return>
+    }</block></while>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>XmlBackupItem</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>    <name>protocol</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>address</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>contactName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>   <name>date</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>readableDate</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>    <name>type</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>subject</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>body</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>serviceCenter</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>    <name>read</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>    <name>status</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>XmlBackupItem</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>XmlBackupItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>protocol</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>contactName</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>date</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>type</name></decl></parameter>,
+                         <parameter><decl><type><name>String</name></type> <name>subject</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>serviceCenter</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>read</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>status</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>      <operator>=</operator> <name>protocol</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name>       <operator>=</operator> <name>address</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contactName</name></name>   <operator>=</operator> <name>contactName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>date</name></name>          <operator>=</operator> <name>date</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>readableDate</name></name>  <operator>=</operator> <call><name><name>dateFormatter</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>date</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>type</name></name>          <operator>=</operator> <name>type</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subject</name></name>       <operator>=</operator> <name>subject</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>body</name></name>          <operator>=</operator> <name>body</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenter</name></name> <operator>=</operator> <name>serviceCenter</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>read</name></name>          <operator>=</operator> <name>read</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>status</name></name>        <operator>=</operator> <name>status</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getProtocol</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>protocol</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getAddress</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>address</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getContactName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>contactName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>long</name></type> <name>getDate</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>date</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getReadableDate</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>readableDate</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>type</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getSubject</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>subject</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getBody</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>body</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getServiceCenter</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>serviceCenter</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getRead</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>read</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getStatus</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>status</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Writer</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>XML_HEADER</name>      <init>= <expr><literal type="string">"&lt;?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?&gt;"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>CREATED_BY</name>      <init>= <expr><literal type="string">"&lt;!-- File Created By Signal --&gt;"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>OPEN_TAG_SMSES</name>  <init>= <expr><literal type="string">"&lt;smses count=\"%d\"&gt;"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>CLOSE_TAG_SMSES</name> <init>= <expr><literal type="string">"&lt;/smses&gt;"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>OPEN_TAG_SMS</name>    <init>= <expr><literal type="string">" &lt;sms "</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>CLOSE_EMPTYTAG</name>  <init>= <expr><literal type="string">"/&gt;"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>OPEN_ATTRIBUTE</name>  <init>= <expr><literal type="string">"=\""</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>CLOSE_ATTRIBUTE</name> <init>= <expr><literal type="string">"\" "</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>PATTERN</name>         <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"[^\u0020-\uD7FF]"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>BufferedWriter</name></type> <name>bufferedWriter</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>Writer</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>path</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <expr_stmt><expr><name>bufferedWriter</name> <operator>=</operator> <operator>new</operator> <call><name>BufferedWriter</name><argument_list>(<argument><expr><operator>new</operator> <call><name>FileWriter</name><argument_list>(<argument><expr><name>path</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>XML_HEADER</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>newLine</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>CREATED_BY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>newLine</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name><name>Locale</name><operator>.</operator><name>ROOT</name></name></expr></argument>, <argument><expr><name>OPEN_TAG_SMSES</name></expr></argument>, <argument><expr><name>count</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>writeItem</name><parameter_list>(<parameter><decl><type><name>XmlBackupItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <decl_stmt><decl><type><name>StringBuilder</name></type> <name>stringBuilder</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>OPEN_TAG_SMS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>PROTOCOL</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getProtocol</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>ADDRESS</name></expr></argument>, <argument><expr><call><name>escapeXML</name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>CONTACT_NAME</name></expr></argument>, <argument><expr><call><name>escapeXML</name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>getContactName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>DATE</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>READABLE_DATE</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getReadableDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>TYPE</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>SUBJECT</name></expr></argument>, <argument><expr><call><name>escapeXML</name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>getSubject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>BODY</name></expr></argument>, <argument><expr><call><name>escapeXML</name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>TOA</name></expr></argument>, <argument><expr><literal type="string">"null"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>SC_TOA</name></expr></argument>, <argument><expr><literal type="string">"null"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>SERVICE_CENTER</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getServiceCenter</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>READ</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getRead</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>STATUS</name></expr></argument>, <argument><expr><call><name><name>item</name><operator>.</operator><name>getStatus</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendAttribute</name><argument_list>(<argument><expr><name>stringBuilder</name></expr></argument>, <argument><expr><name>LOCKED</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>CLOSE_EMPTYTAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>newLine</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><call><name><name>stringBuilder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>appendAttribute</name><parameter_list>(<parameter><decl><type><name>StringBuilder</name></type> <name>stringBuilder</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>T</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>OPEN_ATTRIBUTE</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>CLOSE_ATTRIBUTE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>newLine</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>CLOSE_TAG_SMSES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bufferedWriter</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>String</name></type> <name>escapeXML</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>s</name></expr>;</return></block></then></if>
+
+      <decl_stmt><decl><type><name>Matcher</name></type> <name>matcher</name> <init>= <expr><call><name><name>PATTERN</name><operator>.</operator><name>matcher</name></name><argument_list>( <argument><expr><call><name><name>s</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="string">"&amp;"</literal></expr></argument>,  <argument><expr><literal type="string">"&amp;amp;"</literal></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">"&lt;"</literal></expr></argument>,  <argument><expr><literal type="string">"&amp;lt;"</literal></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">"&gt;"</literal></expr></argument>,  <argument><expr><literal type="string">"&amp;gt;"</literal></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">"\""</literal></expr></argument>, <argument><expr><literal type="string">"&amp;quot;"</literal></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">"'"</literal></expr></argument>,  <argument><expr><literal type="string">"&amp;apos;"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>StringBuffer</name></type> <name>st</name> <init>= <expr><operator>new</operator> <call><name>StringBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><call><name><name>matcher</name><operator>.</operator><name>find</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>escaped</name><init>=<expr><literal type="string">""</literal></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>char</name></type> <name>ch</name><range>: <expr><call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>toCharArray</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+          <expr_stmt><expr><name>escaped</name> <operator>+=</operator> <operator>(</operator><literal type="string">"&amp;#"</literal> <operator>+</operator> <operator>(</operator><operator>(</operator><name>int</name><operator>)</operator> <name>ch</name><operator>)</operator> <operator>+</operator> <literal type="string">";"</literal><operator>)</operator></expr>;</expr_stmt>
+        }</block></for>
+        <expr_stmt><expr><call><name><name>matcher</name><operator>.</operator><name>appendReplacement</name></name><argument_list>(<argument><expr><name>st</name></expr></argument>, <argument><expr><name>escaped</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+      <expr_stmt><expr><call><name><name>matcher</name><operator>.</operator><name>appendTail</name></name><argument_list>(<argument><expr><name>st</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>st</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+  }</block></class>
+}</block></class>
+</unit>

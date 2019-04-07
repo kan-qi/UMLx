@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\glide\ChunkedImageUrlFetcher.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>glide</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>Priority</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>DataSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>data</name><operator>.</operator><name>DataFetcher</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>giph</name><operator>.</operator><name>model</name><operator>.</operator><name>ChunkedImageUrl</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>net</name><operator>.</operator><name>ChunkedDataFetcher</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>net</name><operator>.</operator><name>RequestController</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+
+<class>class <name>ChunkedImageUrlFetcher</name> <super><implements>implements <name><name>DataFetcher</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ChunkedImageUrlFetcher</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>OkHttpClient</name></type>    <name>client</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ChunkedImageUrl</name></type> <name>url</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>RequestController</name></type> <name>requestController</name></decl>;</decl_stmt>
+
+  <constructor><name>ChunkedImageUrlFetcher</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>client</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ChunkedImageUrl</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name>  <operator>=</operator> <name>client</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>url</name></name>     <operator>=</operator> <name>url</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>loadData</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Priority</name></type> <name>priority</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>DataCallback</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <name>InputStream</name></super></argument>&gt;</argument_list></name></type> <name>callback</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ChunkedDataFetcher</name></type> <name>fetcher</name> <init>= <expr><operator>new</operator> <call><name>ChunkedDataFetcher</name><argument_list>(<argument><expr><name>client</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>requestController</name> <operator>=</operator> <call><name><name>fetcher</name><operator>.</operator><name>fetch</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>getUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>url</name><operator>.</operator><name>getSize</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>ChunkedDataFetcher</name><operator>.</operator><name>Callback</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onSuccess</name><parameter_list>(<parameter><decl><type><name>InputStream</name></type> <name>stream</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onDataReady</name></name><argument_list>(<argument><expr><name>stream</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onLoadFailed</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>cleanup</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>requestController</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>requestController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>cancel</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Canceled."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>requestController</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>requestController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></type> <name>getDataClass</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>InputStream</name><operator>.</operator><name>class</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>DataSource</name></type> <name>getDataSource</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>DataSource</name><operator>.</operator><name>REMOTE</name></name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

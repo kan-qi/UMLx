@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mediasend\MediaSendActivity.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mediasend</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ViewModelProviders</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>PassphraseRequiredActionBarActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>TransportOption</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MediaConstraints</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>scribbles</name><operator>.</operator><name>ScribbleFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicNoActionBarTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Encompasses the entire flow of sending media, starting from the selection process to the actual
+ * captioning and editing of the content.
+ *
+ * This activity is intended to be launched via {@link #startActivityForResult(Intent, int)}.
+ * It will return the {@link Media} that the user decided to send.
+ */</comment>
+<class><specifier>public</specifier> class <name>MediaSendActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends> <implements>implements <name><name>MediaPickerFolderFragment</name><operator>.</operator><name>Controller</name></name>,
+                                                                                      <name><name>MediaPickerItemFragment</name><operator>.</operator><name>Controller</name></name>,
+                                                                                      <name><name>MediaSendFragment</name><operator>.</operator><name>Controller</name></name>,
+                                                                                      <name><name>ScribbleFragment</name><operator>.</operator><name>Controller</name></name></implements></super>
+<block>{
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_MEDIA</name>     <init>= <expr><literal type="string">"media"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_MESSAGE</name>   <init>= <expr><literal type="string">"message"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_TRANSPORT</name> <init>= <expr><literal type="string">"transport"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MAX_PUSH</name> <init>= <expr><literal type="number">32</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MAX_SMS</name>  <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_ADDRESS</name>   <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_BODY</name>      <init>= <expr><literal type="string">"body"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_MEDIA</name>     <init>= <expr><literal type="string">"media"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_TRANSPORT</name> <init>= <expr><literal type="string">"transport"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG_FOLDER_PICKER</name> <init>= <expr><literal type="string">"folder_picker"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG_ITEM_PICKER</name>   <init>= <expr><literal type="string">"item_picker"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG_SEND</name>          <init>= <expr><literal type="string">"send"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicNoActionBarTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Recipient</name></type>          <name>recipient</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type>             <name>body</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TransportOption</name></type>    <name>transport</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>MediaSendViewModel</name></type> <name>viewModel</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Get an intent to launch the media send flow starting with the picker.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>getIntent</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>body</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>TransportOption</name></type> <name>transport</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>MediaSendActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_ADDRESS</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_TRANSPORT</name></expr></argument>, <argument><expr><name>transport</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_BODY</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>intent</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Get an intent to launch the media send flow with a specific list of media. Will jump right to
+   * the editor screen.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>getIntent</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                                 <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Media</name></argument>&gt;</argument_list></name></type> <name>media</name></decl></parameter>,
+                                 <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>,
+                                 <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>body</name></decl></parameter>,
+                                 <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>TransportOption</name></type> <name>transport</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><call><name>getIntent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>body</name></expr></argument>, <argument><expr><name>transport</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putParcelableArrayListExtra</name></name><argument_list>(<argument><expr><name>KEY_MEDIA</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>media</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>intent</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>mediapicker_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setResult</name><argument_list>(<argument><expr><name>RESULT_CANCELED</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>savedInstanceState</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><name>viewModel</name> <operator>=</operator> <call><name><name>ViewModelProviders</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>MediaSendViewModel</name><operator>.</operator><name>Factory</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaRepository</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name><name>MediaSendViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>recipient</name> <operator>=</operator> <call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><name>KEY_ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>body</name>      <operator>=</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><name>KEY_BODY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>transport</name> <operator>=</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>KEY_TRANSPORT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>setMediaConstraints</name></name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>transport</name><operator>.</operator><name>isSms</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name><name>MediaConstraints</name><operator>.</operator><name>getMmsMediaConstraints</name></name><argument_list>(<argument><expr><call><name><name>transport</name><operator>.</operator><name>getSimSubscriptionId</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>or</name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>
+                                                    </then><else>: <expr><call><name><name>MediaConstraints</name><operator>.</operator><name>getPushMediaConstraints</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Media</name></argument>&gt;</argument_list></name></type> <name>media</name> <init>= <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableArrayListExtra</name><argument_list>(<argument><expr><name>KEY_MEDIA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>Util</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>media</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>navigateToMediaSend</name><argument_list>(<argument><expr><name>media</name></expr></argument>, <argument><expr><name>body</name></expr></argument>, <argument><expr><name>transport</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>navigateToFolderPicker</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBackPressed</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MediaSendFragment</name></type> <name>sendFragment</name> <init>= <expr><operator>(</operator><name>MediaSendFragment</name><operator>)</operator> <call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>findFragmentByTag</name><argument_list>(<argument><expr><name>TAG_SEND</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>sendFragment</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>sendFragment</name><operator>.</operator><name>isVisible</name></name><argument_list>()</argument_list></call> <operator>||</operator> <operator>!</operator><call><name><name>sendFragment</name><operator>.</operator><name>handleBackPress</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBackPressed</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onFolderSelected</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MediaFolder</name></type> <name>folder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>onFolderSelected</name></name><argument_list>(<argument><expr><call><name><name>folder</name><operator>.</operator><name>getBucketId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>MediaPickerItemFragment</name></type> <name>fragment</name> <init>= <expr><call><name><name>MediaPickerItemFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><call><name><name>folder</name><operator>.</operator><name>getBucketId</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                           <argument><expr><call><name><name>folder</name><operator>.</operator><name>getTitle</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                           <argument><expr><ternary><condition><expr><call><name><name>transport</name><operator>.</operator><name>isSms</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><name>MAX_SMS</name></expr> </then><else>: <expr><name>MAX_PUSH</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>setCustomAnimations</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_in</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_out</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_in</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_out</name></name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_fragment_container</name></name></expr></argument>, <argument><expr><name>fragment</name></expr></argument>, <argument><expr><name>TAG_ITEM_PICKER</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>addToBackStack</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onMediaSelected</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>bucketId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name>Media</name></argument>&gt;</argument_list></name></type> <name>media</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MediaSendFragment</name></type> <name>fragment</name> <init>= <expr><call><name><name>MediaSendFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>, <argument><expr><name>transport</name></expr></argument>, <argument><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>getCurrentLocale</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>setCustomAnimations</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_in</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_out</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_in</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_out</name></name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_fragment_container</name></name></expr></argument>, <argument><expr><name>fragment</name></expr></argument>, <argument><expr><name>TAG_SEND</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>addToBackStack</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onAddMediaClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>bucketId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MediaPickerFolderFragment</name></type> <name>folderFragment</name> <init>= <expr><call><name><name>MediaPickerFolderFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>MediaPickerItemFragment</name></type>   <name>itemFragment</name>   <init>= <expr><call><name><name>MediaPickerItemFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>bucketId</name></expr></argument>,
+                                                                                   <argument><expr><literal type="string">""</literal></expr></argument>,
+                                                                                   <argument><expr><ternary><condition><expr><call><name><name>transport</name><operator>.</operator><name>isSms</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><name>MAX_SMS</name></expr> </then><else>: <expr><name>MAX_PUSH</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_fragment_container</name></name></expr></argument>, <argument><expr><name>folderFragment</name></expr></argument>, <argument><expr><name>TAG_FOLDER_PICKER</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>addToBackStack</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_fragment_container</name></name></expr></argument>, <argument><expr><name>itemFragment</name></expr></argument>, <argument><expr><name>TAG_ITEM_PICKER</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>addToBackStack</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onSendClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Media</name></argument>&gt;</argument_list></name></type> <name>media</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>TransportOption</name></type> <name>transport</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>Media</name></argument>&gt;</argument_list></name></type> <name>mediaList</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>media</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Intent</name></type>           <name>intent</name>    <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putParcelableArrayListExtra</name></name><argument_list>(<argument><expr><name>EXTRA_MEDIA</name></expr></argument>, <argument><expr><name>mediaList</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_MESSAGE</name></expr></argument>, <argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_TRANSPORT</name></expr></argument>, <argument><expr><name>transport</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setResult</name><argument_list>(<argument><expr><name>RESULT_OK</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>overridePendingTransition</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>stationary</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>camera_slide_to_bottom</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onNoMediaAvailable</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setResult</name><argument_list>(<argument><expr><name>RESULT_CANCELED</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onImageEditComplete</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>size</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>message</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name>TransportOption</name></argument>&gt;</argument_list></name></type> <name>transport</name></decl></parameter>)</parameter_list> <block>{
+    <throw>throw <expr><operator>new</operator> <call><name>UnsupportedOperationException</name><argument_list>(<argument><expr><literal type="string">"Callback unsupported."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onImageEditFailure</name><parameter_list>()</parameter_list> <block>{
+    <throw>throw <expr><operator>new</operator> <call><name>UnsupportedOperationException</name><argument_list>(<argument><expr><literal type="string">"Callback unsupported."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onTouchEventsNeeded</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>needed</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MediaSendFragment</name></type> <name>fragment</name> <init>= <expr><operator>(</operator><name>MediaSendFragment</name><operator>)</operator> <call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>findFragmentByTag</name><argument_list>(<argument><expr><name>TAG_SEND</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>onTouchEventsNeeded</name></name><argument_list>(<argument><expr><name>needed</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>navigateToMediaSend</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Media</name></argument>&gt;</argument_list></name></type> <name>media</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>, <parameter><decl><type><name>TransportOption</name></type> <name>transport</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>setInitialSelectedMedia</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>media</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>MediaSendFragment</name></type> <name>sendFragment</name> <init>= <expr><call><name><name>MediaSendFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>, <argument><expr><name>transport</name></expr></argument>, <argument><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>getCurrentLocale</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_fragment_container</name></name></expr></argument>, <argument><expr><name>sendFragment</name></expr></argument>, <argument><expr><name>TAG_SEND</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>navigateToFolderPicker</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MediaPickerFolderFragment</name></type> <name>folderFragment</name> <init>= <expr><call><name><name>MediaPickerFolderFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_fragment_container</name></name></expr></argument>, <argument><expr><name>folderFragment</name></expr></argument>, <argument><expr><name>TAG_FOLDER_PICKER</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

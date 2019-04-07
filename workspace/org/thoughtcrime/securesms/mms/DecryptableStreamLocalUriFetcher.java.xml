@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\DecryptableStreamLocalUriFetcher.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentResolver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>data</name><operator>.</operator><name>StreamLocalUriFetcher</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileNotFoundException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+
+<class>class <name>DecryptableStreamLocalUriFetcher</name> <super><extends>extends <name>StreamLocalUriFetcher</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>DecryptableStreamLocalUriFetcher</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+  <constructor><name>DecryptableStreamLocalUriFetcher</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getContentResolver</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>      <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>InputStream</name></type> <name>loadResource</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>ContentResolver</name></type> <name>contentResolver</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>FileNotFoundException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><call><name><name>MediaUtil</name><operator>.</operator><name>hasVideoThumbnail</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>thumbnail</name> <init>= <expr><call><name><name>MediaUtil</name><operator>.</operator><name>getVideoThumbnail</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>thumbnail</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>ByteArrayOutputStream</name></type> <name>baos</name> <init>= <expr><operator>new</operator> <call><name>ByteArrayOutputStream</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>thumbnail</name><operator>.</operator><name>compress</name></name><argument_list>(<argument><expr><name><name>Bitmap</name><operator>.</operator><name>CompressFormat</name><operator>.</operator><name>JPEG</name></name></expr></argument>, <argument><expr><literal type="number">100</literal></expr></argument>, <argument><expr><name>baos</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><operator>new</operator> <call><name>ByteArrayInputStream</name><argument_list>(<argument><expr><call><name><name>baos</name><operator>.</operator><name>toByteArray</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block></then></if>
+
+    <try>try <block>{
+      <return>return <expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ioe</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>ioe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <throw>throw <expr><operator>new</operator> <call><name>FileNotFoundException</name><argument_list>(<argument><expr><literal type="string">"PartAuthority couldn't load Uri resource."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

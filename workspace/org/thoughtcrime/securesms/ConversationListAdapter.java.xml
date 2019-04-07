@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\ConversationListAdapter.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>CursorRecyclerViewAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>ThreadDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>ThreadRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Conversions</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A CursorAdapter for building a list of conversation threads.
+ *
+ * @author Moxie Marlinspike
+ */</comment>
+<class>class <name>ConversationListAdapter</name> <super><extends>extends <name><name>CursorRecyclerViewAdapter</name><argument_list type="generic">&lt;<argument><name><name>ConversationListAdapter</name><operator>.</operator><name>ViewHolder</name></name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_SWITCH_ARCHIVE</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_THREAD</name>         <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_INBOX_ZERO</name>     <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>ThreadDatabase</name></type>    <name>threadDatabase</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>GlideRequests</name></type>     <name>glideRequests</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>Locale</name></type>            <name>locale</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>LayoutInflater</name></type>    <name>inflater</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>ItemClickListener</name></type> <name>clickListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>MessageDigest</name></type>     <name>digest</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>batchSet</name>  <init>= <expr><call><name><name>Collections</name><operator>.</operator><name>synchronizedSet</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>boolean</name></type>   <name>batchMode</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>typingSet</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <class><specifier>protected</specifier> <specifier>static</specifier> class <name>ViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>V</name> <extends>extends <name>View</name></extends> <operator>&amp;</operator> <name>BindableConversationListItem</name></parameter>&gt;</parameter_list> <name>ViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>V</name></type> <name>itemView</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>BindableConversationListItem</name></type> <name>getItem</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>BindableConversationListItem</name><operator>)</operator><name>itemView</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getItemId</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ThreadRecord</name></type>  <name>record</name>  <init>= <expr><call><name>getThreadRecord</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>Conversions</name><operator>.</operator><name>byteArrayToLong</name></name><argument_list>(<argument><expr><call><name><name>digest</name><operator>.</operator><name>digest</name></name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>long</name></type> <name>getFastAccessItemId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>getFastAccessItemId</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <constructor><name>ConversationListAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                          <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                          <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                          <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>,
+                          <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>ItemClickListener</name></type> <name>clickListener</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name>  <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>threadDatabase</name></name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>locale</name></name>         <operator>=</operator> <name>locale</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>inflater</name></name>       <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>clickListener</name></name>  <operator>=</operator> <name>clickListener</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>digest</name></name>         <operator>=</operator> <call><name><name>MessageDigest</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"SHA1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setHasStableIds</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> <name>nsae</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"SHA-1 missing"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>ViewHolder</name></type> <name>onCreateItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>viewType</name> <operator>==</operator> <name>MESSAGE_TYPE_SWITCH_ARCHIVE</name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>ConversationListItemAction</name></type> <name>action</name> <init>= <expr><operator>(</operator><name>ConversationListItemAction</name><operator>)</operator> <call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_list_item_action</name></name></expr></argument>,
+                                                                                        <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>action</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+        <if>if <condition>(<expr><name>clickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>clickListener</name><operator>.</operator><name>onSwitchToArchive</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><operator>new</operator> <call><name>ViewHolder</name><argument_list>(<argument><expr><name>action</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>viewType</name> <operator>==</operator> <name>MESSAGE_TYPE_INBOX_ZERO</name></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>ViewHolder</name><argument_list>(<argument><expr><operator>(</operator><name>ConversationListItemInboxZero</name><operator>)</operator><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_list_item_inbox_zero</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>ConversationListItem</name></type> <name>item</name> <init>= <expr><operator>(</operator><name>ConversationListItem</name><operator>)</operator><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_list_item_view</name></name></expr></argument>,
+                                                                               <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>item</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+        <if>if <condition>(<expr><name>clickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>clickListener</name><operator>.</operator><name>onItemClick</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>item</name><operator>.</operator><name>setOnLongClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+        <if>if <condition>(<expr><name>clickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>clickListener</name><operator>.</operator><name>onItemLongClick</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><operator>new</operator> <call><name>ViewHolder</name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onItemViewRecycled</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>getItem</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>unbind</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>getItem</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>bind</name><argument_list>(<argument><expr><call><name>getThreadRecord</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><name>typingSet</name></expr></argument>, <argument><expr><name>batchSet</name></expr></argument>, <argument><expr><name>batchMode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getItemViewType</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ThreadRecord</name></type> <name>threadRecord</name> <init>= <expr><call><name>getThreadRecord</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>threadRecord</name><operator>.</operator><name>getDistributionType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ThreadDatabase</name><operator>.</operator><name>DistributionTypes</name><operator>.</operator><name>ARCHIVE</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><name>MESSAGE_TYPE_SWITCH_ARCHIVE</name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>threadRecord</name><operator>.</operator><name>getDistributionType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ThreadDatabase</name><operator>.</operator><name>DistributionTypes</name><operator>.</operator><name>INBOX_ZERO</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><name>MESSAGE_TYPE_INBOX_ZERO</name></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><name>MESSAGE_TYPE_THREAD</name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTypingThreads</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>threadsIds</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>typingSet</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>typingSet</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>threadsIds</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>ThreadRecord</name></type> <name>getThreadRecord</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>threadDatabase</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getCurrent</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>toggleThreadInBatchSet</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>batchSet</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>batchSet</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>threadId</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>batchSet</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>getBatchSelections</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>batchSet</name></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>initializeBatchMode</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>toggle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>batchMode</name></name> <operator>=</operator> <name>toggle</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>unselectAllThreads</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>unselectAllThreads</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>batchSet</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>notifyDataSetChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>selectAllThreads</name><parameter_list>()</parameter_list> <block>{
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>long</name></type> <name>threadId</name> <init>= <expr><call><name>getThreadRecord</name><argument_list>(<argument><expr><call><name>getCursorAtPositionOrThrow</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadId</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>threadId</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>batchSet</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></for>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>notifyDataSetChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface>interface <name>ItemClickListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onItemClick</name><parameter_list>(<parameter><decl><type><name>ConversationListItem</name></type> <name>item</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onItemLongClick</name><parameter_list>(<parameter><decl><type><name>ConversationListItem</name></type> <name>item</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onSwitchToArchive</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

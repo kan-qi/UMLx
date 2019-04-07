@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\utils\UIElementsHelper.java"><comment type="block">/*
+ * Copyright (C) 2014 Saravan Pantham
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ColorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>preference</name><operator>.</operator><name>PreferenceManager</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * This class contains the static methods that return the appropriate UI
+ * elements/colors based on the selected theme (light or dark).
+ *
+ * @author Saravan Pantham
+ */</comment>
+<class><specifier>public</specifier> class <name>UIElementsHelper</name> <block>{
+
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NOW_PLAYING_COLOR</name> <init>= <expr><literal type="string">"NOW_PLAYING_COLOR"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>BLUE</name> <init>= <expr><literal type="string">"BLUE"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>RED</name> <init>= <expr><literal type="string">"RED"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>GREEN</name> <init>= <expr><literal type="string">"GREEN"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ORANGE</name> <init>= <expr><literal type="string">"ORANGE"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PURPLE</name> <init>= <expr><literal type="string">"PURPLE"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MAGENTA</name> <init>= <expr><literal type="string">"MAGENTA"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>GRAY</name> <init>= <expr><literal type="string">"GRAY"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>WHITE</name> <init>= <expr><literal type="string">"WHITE"</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>BLACK</name> <init>= <expr><literal type="string">"BLACK"</literal></expr></init></decl>;</decl_stmt>
+
+	<comment type="block" format="javadoc">/**
+	 * Returns the ActionBar color based on the selected color theme (not used
+	 * for the player).
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>Drawable</name></type> <name>getGeneralActionBarBackground</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><specifier>final</specifier> <name>SharedPreferences</name></type> <name>settings</name> <init>= <expr><call><name><name>PreferenceManager</name>
+				<operator>.</operator><name>getDefaultSharedPreferences</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+		<decl_stmt><decl><type><name>Drawable</name></type> <name>drawable</name> <init>= <expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><literal type="number">0xFF2c5aa9</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<comment type="line">//		if (settings.getString(NOW_PLAYING_COLOR, GREEN).equals(BLUE)) {</comment>
+<comment type="line">//			drawable = new ColorDrawable(0xFF0099CC);</comment>
+<comment type="line">//</comment>
+<comment type="line">//		} else if (settings.getString(NOW_PLAYING_COLOR, GREEN).equals(RED)) {</comment>
+<comment type="line">//			drawable = new ColorDrawable(0xFFB0120A);</comment>
+<comment type="line">//</comment>
+<comment type="line">//		} else if (settings.getString(NOW_PLAYING_COLOR, GREEN).equals(GREEN)) {</comment>
+<comment type="line">//			drawable = new ColorDrawable(0xFF0A7E07);</comment>
+<comment type="line">//</comment>
+<comment type="line">//		} else if (settings.getString(NOW_PLAYING_COLOR, GREEN).equals(ORANGE)) {</comment>
+<comment type="line">//			drawable = new ColorDrawable(0xFFEF6C00);</comment>
+<comment type="line">//</comment>
+<comment type="line">//		} else if (settings.getString(NOW_PLAYING_COLOR, GREEN).equals(PURPLE)) {</comment>
+<comment type="line">//			drawable = new ColorDrawable(0xFF6A1B9A);</comment>
+<comment type="line">//</comment>
+<comment type="line">//		} else if (settings.getString(NOW_PLAYING_COLOR, GREEN).equals(MAGENTA)) {</comment>
+<comment type="line">//			drawable = new ColorDrawable(0xFFC2185B);</comment>
+<comment type="line">//</comment>
+<comment type="line">//		}</comment>
+
+		<return>return <expr><name>drawable</name></expr>;</return>
+
+	}</block></function>
+
+}</block></class>
+</unit>

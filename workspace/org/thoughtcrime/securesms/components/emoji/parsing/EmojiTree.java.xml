@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\emoji\parsing\EmojiTree.java"><comment type="block" format="javadoc">/**
+ * Copyright (c) 2014-present Vincent DURMONT vdurmont@gmail.com
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>parsing</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Based in part on code from emoji-java
+ */</comment>
+<class><specifier>public</specifier> class <name>EmojiTree</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>EmojiTreeNode</name></type> <name>root</name> <init>= <expr><operator>new</operator> <call><name>EmojiTreeNode</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>char</name></type> <name>TERMINATOR</name> <init>= <expr><literal type="char">'\ufe0f'</literal></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>emojiEncoding</name></decl></parameter>, <parameter><decl><type><name>EmojiDrawInfo</name></type> <name>emoji</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>EmojiTreeNode</name></type> <name>tree</name> <init>= <expr><name>root</name></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>char</name></type> <name>c</name><range>: <expr><call><name><name>emojiEncoding</name><operator>.</operator><name>toCharArray</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>tree</name><operator>.</operator><name>hasChild</name></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>tree</name><operator>.</operator><name>addChild</name></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><name>tree</name> <operator>=</operator> <call><name><name>tree</name><operator>.</operator><name>getChild</name></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <expr_stmt><expr><call><name><name>tree</name><operator>.</operator><name>setEmoji</name></name><argument_list>(<argument><expr><name>emoji</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Matches</name></type> <name>isEmoji</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>sequence</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>startPosition</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>endPosition</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>sequence</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>Matches</name><operator>.</operator><name>POSSIBLY</name></name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>EmojiTreeNode</name></type> <name>tree</name> <init>= <expr><name>root</name></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><name>startPosition</name></expr></init></decl>;</init> <condition><expr><name>i</name><operator>&lt;</operator><name>endPosition</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>char</name></type> <name>character</name> <init>= <expr><call><name><name>sequence</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>tree</name><operator>.</operator><name>hasChild</name></name><argument_list>(<argument><expr><name>character</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><name><name>Matches</name><operator>.</operator><name>IMPOSSIBLE</name></name></expr>;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><name>tree</name> <operator>=</operator> <call><name><name>tree</name><operator>.</operator><name>getChild</name></name><argument_list>(<argument><expr><name>character</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <if>if <condition>(<expr><call><name><name>tree</name><operator>.</operator><name>isEndOfEmoji</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>Matches</name><operator>.</operator><name>EXACTLY</name></name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>sequence</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>endPosition</name><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>!=</operator> <name>TERMINATOR</name> <operator>&amp;&amp;</operator> <call><name><name>tree</name><operator>.</operator><name>hasChild</name></name><argument_list>(<argument><expr><name>TERMINATOR</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>tree</name><operator>.</operator><name>getChild</name></name><argument_list>(<argument><expr><name>TERMINATOR</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>isEndOfEmoji</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>Matches</name><operator>.</operator><name>EXACTLY</name></name></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><name><name>Matches</name><operator>.</operator><name>POSSIBLY</name></name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>EmojiDrawInfo</name></type> <name>getEmoji</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>unicode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>startPosition</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>endPostiion</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>EmojiTreeNode</name></type> <name>tree</name> <init>= <expr><name>root</name></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><name>startPosition</name></expr></init></decl>;</init> <condition><expr><name>i</name><operator>&lt;</operator><name>endPostiion</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>char</name></type> <name>character</name> <init>= <expr><call><name><name>unicode</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>tree</name><operator>.</operator><name>hasChild</name></name><argument_list>(<argument><expr><name>character</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><name>tree</name> <operator>=</operator> <call><name><name>tree</name><operator>.</operator><name>getChild</name></name><argument_list>(<argument><expr><name>character</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <if>if      <condition>(<expr><call><name><name>tree</name><operator>.</operator><name>getEmoji</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>                                                  <block type="pseudo"><return>return <expr><call><name><name>tree</name><operator>.</operator><name>getEmoji</name></name><argument_list>()</argument_list></call></expr>;</return></block></then>
+    <elseif>else <if>if <condition>(<expr><call><name><name>unicode</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>endPostiion</name><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>!=</operator> <name>TERMINATOR</name> <operator>&amp;&amp;</operator> <call><name><name>tree</name><operator>.</operator><name>hasChild</name></name><argument_list>(<argument><expr><name>TERMINATOR</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>tree</name><operator>.</operator><name>getChild</name></name><argument_list>(<argument><expr><name>TERMINATOR</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getEmoji</name><argument_list>()</argument_list></call></expr>;</return></block></then></if></elseif>
+    <else>else    <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></else></if>
+  }</block></function>
+
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>EmojiTreeNode</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>Character</name></argument>, <argument><name>EmojiTreeNode</name></argument>&gt;</argument_list></name></type> <name>children</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>EmojiDrawInfo</name></type> <name>emoji</name></decl>;</decl_stmt>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setEmoji</name><parameter_list>(<parameter><decl><type><name>EmojiDrawInfo</name></type> <name>emoji</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>emoji</name></name> <operator>=</operator> <name>emoji</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>EmojiDrawInfo</name></type> <name>getEmoji</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>emoji</name></expr>;</return>
+    }</block></function>
+
+    <function><type><name>boolean</name></type> <name>hasChild</name><parameter_list>(<parameter><decl><type><name>char</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>children</name><operator>.</operator><name>containsKey</name></name><argument_list>(<argument><expr><name>child</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><type><name>void</name></type> <name>addChild</name><parameter_list>(<parameter><decl><type><name>char</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>children</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>child</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>EmojiTreeNode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><type><name>EmojiTreeNode</name></type> <name>getChild</name><parameter_list>(<parameter><decl><type><name>char</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>children</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>child</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><type><name>boolean</name></type> <name>isEndOfEmoji</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>emoji</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <enum><specifier>public</specifier> enum <name>Matches</name> <block>{
+    <decl><name>EXACTLY</name></decl>, <decl><name>POSSIBLY</name></decl>, <decl><name>IMPOSSIBLE</name></decl>;
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>exactMatch</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>this</name> <operator>==</operator> <name>EXACTLY</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>impossibleMatch</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>this</name> <operator>==</operator> <name>IMPOSSIBLE</name></expr>;</return>
+    }</block></function>
+  }</block></enum>
+
+}</block></class>
+</unit>

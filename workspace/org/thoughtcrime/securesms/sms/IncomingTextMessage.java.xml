@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\sms\IncomingTextMessage.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>SmsMessage</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>GroupUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>messages</name><operator>.</operator><name>SignalServiceGroup</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>SignalServiceAddress</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IncomingTextMessage</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Parcelable</name><operator>.</operator><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>IncomingTextMessage</name></argument>&gt;</argument_list></name></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Parcelable</name><operator>.</operator><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>IncomingTextMessage</name></argument>&gt;</argument_list></name></name></super><argument_list>()</argument_list> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>IncomingTextMessage</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name>IncomingTextMessage</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>IncomingTextMessage</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <name><name>IncomingTextMessage</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+    }</block></function>
+  }</block></class></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>IncomingTextMessage</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>message</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>Address</name></type> <name>sender</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>     <name>senderDeviceId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>     <name>protocol</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>serviceCenterAddress</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>replyPathPresent</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>  <name>pseudoSubject</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>sentTimestampMillis</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Address</name></type> <name>groupId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>push</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>     <name>subscriptionId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>expiresInMillis</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>unidentified</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>IncomingTextMessage</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SmsMessage</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>message</name></name>              <operator>=</operator> <call><name><name>message</name><operator>.</operator><name>getDisplayMessageBody</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sender</name></name>               <operator>=</operator> <call><name><name>Address</name><operator>.</operator><name>fromExternal</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getDisplayOriginatingAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>senderDeviceId</name></name>       <operator>=</operator> <name><name>SignalServiceAddress</name><operator>.</operator><name>DEFAULT_DEVICE_ID</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>             <operator>=</operator> <call><name><name>message</name><operator>.</operator><name>getProtocolIdentifier</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenterAddress</name></name> <operator>=</operator> <call><name><name>message</name><operator>.</operator><name>getServiceCenterAddress</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>replyPathPresent</name></name>     <operator>=</operator> <call><name><name>message</name><operator>.</operator><name>isReplyPathPresent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pseudoSubject</name></name>        <operator>=</operator> <call><name><name>message</name><operator>.</operator><name>getPseudoSubject</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimestampMillis</name></name>  <operator>=</operator> <call><name><name>message</name><operator>.</operator><name>getTimestampMillis</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>       <operator>=</operator> <name>subscriptionId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresInMillis</name></name>      <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name>              <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>push</name></name>                 <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name>         <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IncomingTextMessage</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>sender</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>senderDeviceId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>sentTimestampMillis</name></decl></parameter>,
+                             <parameter><decl><type><name>String</name></type> <name>encodedBody</name></decl></parameter>, <parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>SignalServiceGroup</name></argument>&gt;</argument_list></name></type> <name>group</name></decl></parameter>,
+                             <parameter><decl><type><name>long</name></type> <name>expiresInMillis</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unidentified</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>message</name></name>              <operator>=</operator> <name>encodedBody</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sender</name></name>               <operator>=</operator> <name>sender</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>senderDeviceId</name></name>       <operator>=</operator> <name>senderDeviceId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>             <operator>=</operator> <literal type="number">31337</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenterAddress</name></name> <operator>=</operator> <literal type="string">"GCM"</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>replyPathPresent</name></name>     <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pseudoSubject</name></name>        <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimestampMillis</name></name>  <operator>=</operator> <name>sentTimestampMillis</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>push</name></name>                 <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>       <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresInMillis</name></name>      <operator>=</operator> <name>expiresInMillis</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name>         <operator>=</operator> <name>unidentified</name></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>group</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name> <operator>=</operator> <call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>GroupUtil</name><operator>.</operator><name>getEncodedId</name></name><argument_list>(<argument><expr><call><name><name>group</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getGroupId</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IncomingTextMessage</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>message</name></name>              <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sender</name></name>               <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readParcelable</name></name><argument_list>(<argument><expr><call><name><name>IncomingTextMessage</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getClassLoader</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>senderDeviceId</name></name>       <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>             <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenterAddress</name></name> <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>replyPathPresent</name></name>     <operator>=</operator> <operator>(</operator><call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal><operator>)</operator></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pseudoSubject</name></name>        <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimestampMillis</name></name>  <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readLong</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name>              <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readParcelable</name></name><argument_list>(<argument><expr><call><name><name>IncomingTextMessage</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getClassLoader</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>push</name></name>                 <operator>=</operator> <operator>(</operator><call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal><operator>)</operator></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>       <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresInMillis</name></name>      <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readLong</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name>         <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IncomingTextMessage</name><parameter_list>(<parameter><decl><type><name>IncomingTextMessage</name></type> <name>base</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>newBody</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>message</name></name>              <operator>=</operator> <name>newBody</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sender</name></name>               <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getSender</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>senderDeviceId</name></name>       <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getSenderDeviceId</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>             <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getProtocol</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenterAddress</name></name> <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getServiceCenterAddress</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>replyPathPresent</name></name>     <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>isReplyPathPresent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pseudoSubject</name></name>        <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getPseudoSubject</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimestampMillis</name></name>  <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getSentTimestampMillis</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name>              <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getGroupId</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>push</name></name>                 <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>isPush</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>       <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getSubscriptionId</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresInMillis</name></name>      <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name>         <operator>=</operator> <call><name><name>base</name><operator>.</operator><name>isUnidentified</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IncomingTextMessage</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>IncomingTextMessage</name></argument>&gt;</argument_list></name></type> <name>fragments</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>StringBuilder</name></type> <name>body</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>IncomingTextMessage</name></type> <name>message</name> <range>: <expr><name>fragments</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>body</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getMessageBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>message</name></name>              <operator>=</operator> <call><name><name>body</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sender</name></name>               <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getSender</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>senderDeviceId</name></name>       <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getSenderDeviceId</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>             <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getProtocol</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenterAddress</name></name> <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getServiceCenterAddress</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>replyPathPresent</name></name>     <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isReplyPathPresent</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pseudoSubject</name></name>        <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getPseudoSubject</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimestampMillis</name></name>  <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getSentTimestampMillis</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name>              <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroupId</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>push</name></name>                 <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isPush</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>       <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getSubscriptionId</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresInMillis</name></name>      <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getExpiresIn</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name>         <operator>=</operator> <call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isUnidentified</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>protected</specifier> <name>IncomingTextMessage</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>sender</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Address</name></type> <name>groupId</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>message</name></name>              <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sender</name></name>               <operator>=</operator> <name>sender</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>senderDeviceId</name></name>       <operator>=</operator> <name><name>SignalServiceAddress</name><operator>.</operator><name>DEFAULT_DEVICE_ID</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>protocol</name></name>             <operator>=</operator> <literal type="number">31338</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceCenterAddress</name></name> <operator>=</operator> <literal type="string">"Outgoing"</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>replyPathPresent</name></name>     <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pseudoSubject</name></name>        <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimestampMillis</name></name>  <operator>=</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>groupId</name></name>              <operator>=</operator> <name>groupId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>push</name></name>                 <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>       <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresInMillis</name></name>      <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name>         <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getSubscriptionId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>subscriptionId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getExpiresIn</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>expiresInMillis</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getSentTimestampMillis</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>sentTimestampMillis</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getPseudoSubject</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>pseudoSubject</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getMessageBody</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>message</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>IncomingTextMessage</name></type> <name>withMessageBody</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>IncomingTextMessage</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Address</name></type> <name>getSender</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>sender</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getSenderDeviceId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>senderDeviceId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getProtocol</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>protocol</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getServiceCenterAddress</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>serviceCenterAddress</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isReplyPathPresent</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>replyPathPresent</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isSecureMessage</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isPreKeyBundle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>isLegacyPreKeyBundle</name><argument_list>()</argument_list></call> <operator>||</operator> <call><name>isContentPreKeyBundle</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isLegacyPreKeyBundle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isContentPreKeyBundle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isEndSession</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isPush</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>push</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Address</name></type> <name>getGroupId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>groupId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isGroup</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isJoined</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isIdentityUpdate</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isIdentityVerified</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isIdentityDefault</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isUnidentified</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>unidentified</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>out</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeParcelable</name></name><argument_list>(<argument><expr><name>sender</name></expr></argument>, <argument><expr><name>flags</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><name>senderDeviceId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><name>protocol</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>serviceCenterAddress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>replyPathPresent</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>pseudoSubject</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeLong</name></name><argument_list>(<argument><expr><name>sentTimestampMillis</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeParcelable</name></name><argument_list>(<argument><expr><name>groupId</name></expr></argument>, <argument><expr><name>flags</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>push</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>unidentified</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

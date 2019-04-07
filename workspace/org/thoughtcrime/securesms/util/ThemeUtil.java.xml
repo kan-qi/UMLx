@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\ThemeUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>AttrRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>StyleRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>view</name><operator>.</operator><name>ContextThemeWrapper</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>TypedValue</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ThemeUtil</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDarkTheme</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getAttribute</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>theme_type</name></name></expr></argument>, <argument><expr><literal type="string">"light"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"dark"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>getThemedColor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>AttrRes</name></annotation> <name>int</name></type> <name>attr</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>TypedValue</name></type> <name>typedValue</name> <init>= <expr><operator>new</operator> <call><name>TypedValue</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Resources</name><operator>.</operator><name>Theme</name></name></type> <name>theme</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getTheme</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>theme</name><operator>.</operator><name>resolveAttribute</name></name><argument_list>(<argument><expr><name>attr</name></expr></argument>, <argument><expr><name>typedValue</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>typedValue</name><operator>.</operator><name>data</name></name></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><name><name>Color</name><operator>.</operator><name>RED</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>LayoutInflater</name></type> <name>getThemedInflater</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><annotation>@<name>StyleRes</name></annotation> <name>int</name></type> <name>theme</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Context</name></type> <name>contextThemeWrapper</name> <init>= <expr><operator>new</operator> <call><name>ContextThemeWrapper</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>theme</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>inflater</name><operator>.</operator><name>cloneInContext</name></name><argument_list>(<argument><expr><name>contextThemeWrapper</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getAttribute</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>attribute</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>defaultValue</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>TypedValue</name></type> <name>outValue</name> <init>= <expr><operator>new</operator> <call><name>TypedValue</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>context</name><operator>.</operator><name>getTheme</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>resolveAttribute</name><argument_list>(<argument><expr><name>attribute</name></expr></argument>, <argument><expr><name>outValue</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>outValue</name><operator>.</operator><name>coerceToString</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><name>defaultValue</name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+}</block></class>
+</unit>

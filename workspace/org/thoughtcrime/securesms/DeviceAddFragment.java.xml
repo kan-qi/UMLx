@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\DeviceAddFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewAnimationUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>DecelerateInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>camera</name><operator>.</operator><name>CameraView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name><operator>.</operator><name>ScanListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name><operator>.</operator><name>ScanningThread</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DeviceAddFragment</name> <super><extends>extends <name>Fragment</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ViewGroup</name></type>      <name>container</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>LinearLayout</name></type>   <name>overlay</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>      <name>devicesImage</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CameraView</name></type>     <name>scannerView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ScanningThread</name></type> <name>scanningThread</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ScanListener</name></type>   <name>scanListener</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>    <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name>inflater</name></expr></argument>, <argument><expr><name>viewGroup</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>device_add_fragment</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>overlay</name></name>      <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>container</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>overlay</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>scannerView</name></name>  <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>container</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>scanner</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>devicesImage</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>container</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>devices</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getConfiguration</name><argument_list>()</argument_list></call><operator>.</operator><name>orientation</name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>ORIENTATION_LANDSCAPE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>overlay</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>HORIZONTAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>overlay</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>container</name><operator>.</operator><name>addOnLayoutChangeListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnLayoutChangeListener</name></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+        <annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onLayoutChange</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>left</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>top</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>right</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>bottom</name></decl></parameter>,
+                                   <parameter><decl><type><name>int</name></type> <name>oldLeft</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldTop</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldRight</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldBottom</name></decl></parameter>)</parameter_list>
+        <block>{
+          <expr_stmt><expr><call><name><name>v</name><operator>.</operator><name>removeOnLayoutChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name>Animator</name></type> <name>reveal</name> <init>= <expr><call><name><name>ViewAnimationUtils</name><operator>.</operator><name>createCircularReveal</name></name><argument_list>(<argument><expr><name>v</name></expr></argument>, <argument><expr><name>right</name></expr></argument>, <argument><expr><name>bottom</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>Math</name><operator>.</operator><name>hypot</name></name><argument_list>(<argument><expr><name>right</name></expr></argument>, <argument><expr><name>bottom</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>reveal</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DecelerateInterpolator</name><argument_list>(<argument><expr><literal type="number">2f</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>reveal</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">800</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>reveal</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><name><name>this</name><operator>.</operator><name>container</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>scanningThread</name></name> <operator>=</operator> <operator>new</operator> <call><name>ScanningThread</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>setScanListener</name></name><argument_list>(<argument><expr><name>scanListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scannerView</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scannerView</name><operator>.</operator><name>setPreviewCallback</name></name><argument_list>(<argument><expr><name>scanningThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scannerView</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>stopScanning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfiguration</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfiguration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scannerView</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>newConfiguration</name><operator>.</operator><name>orientation</name></name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>ORIENTATION_LANDSCAPE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>overlay</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>HORIZONTAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>overlay</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scannerView</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scannerView</name><operator>.</operator><name>setPreviewCallback</name></name><argument_list>(<argument><expr><name>scanningThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+
+  <function><specifier>public</specifier> <type><name>ImageView</name></type> <name>getDevicesImage</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>devicesImage</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setScanListener</name><parameter_list>(<parameter><decl><type><name>ScanListener</name></type> <name>scanListener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>scanListener</name></name> <operator>=</operator> <name>scanListener</name></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>scanningThread</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>setScanListener</name></name><argument_list>(<argument><expr><name>scanListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+
+}</block></class>
+</unit>

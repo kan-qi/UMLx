@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\MmsListener.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>BroadcastReceiver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>Telephony</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MmsReceiveJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MmsListener</name> <super><extends>extends <name>BroadcastReceiver</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MmsListener</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>isRelevant</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>ApplicationMigrationService</name><operator>.</operator><name>isDatabaseImported</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>KITKAT</name></name> <operator>&amp;&amp;</operator>
+        <call><name><name>Telephony</name><operator>.</operator><name>Sms</name><operator>.</operator><name>Intents</name><operator>.</operator><name>WAP_PUSH_RECEIVED_ACTION</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+        <call><name><name>Util</name><operator>.</operator><name>isDefaultSmsProvider</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+    <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>KITKAT</name></name> <operator>&amp;&amp;</operator>
+        <call><name><name>TextSecurePreferences</name><operator>.</operator><name>isInterceptAllMmsEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+    <block>{
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onReceive</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got MMS broadcast..."</literal> <operator>+</operator> <call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>(</operator><call><name><name>Telephony</name><operator>.</operator><name>Sms</name><operator>.</operator><name>Intents</name><operator>.</operator><name>WAP_PUSH_DELIVER_ACTION</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>  <operator>&amp;&amp;</operator>
+        <call><name><name>Util</name><operator>.</operator><name>isDefaultSmsProvider</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>)</operator>                                        <operator>||</operator>
+        <operator>(</operator><call><name><name>Telephony</name><operator>.</operator><name>Sms</name><operator>.</operator><name>Intents</name><operator>.</operator><name>WAP_PUSH_RECEIVED_ACTION</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+         <call><name>isRelevant</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>)</argument_list></call><operator>)</operator></expr>)</condition><then>
+    <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Relevant!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>subscriptionId</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getExtras</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInt</name><argument_list>(<argument><expr><literal type="string">"subscription"</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MmsReceiveJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>intent</name><operator>.</operator><name>getByteArrayExtra</name></name><argument_list>(<argument><expr><literal type="string">"data"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>abortBroadcast</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+
+
+}</block></class>
+</unit>

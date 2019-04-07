@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\model\CacheInfo.java"><comment type="block">/*
+ * Copyright (C) 2012 www.amsoft.cn
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>model</name></name>;</package>
+
+<comment type="line">// TODO: Auto-generated Javadoc</comment>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+
+ */</comment>
+<class><specifier>public</specifier> class <name>CacheInfo</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>name</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>packageName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Drawable</name></type> <name>icon</name></decl>;</decl_stmt>
+    <comment type="line">//åºç¨å¤§å°</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>codeSize</name></decl>;</decl_stmt>
+    <comment type="line">//æ°æ®å¤§å°</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>dataSize</name></decl>;</decl_stmt>
+    <comment type="line">//ç¼å­å¤§å°</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>cacheSize</name></decl>;</decl_stmt>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getName</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>name</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getDataSize</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>dataSize</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getCacheSize</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>cacheSize</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getCodeSize</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>codeSize</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>Drawable</name></type> <name>getIcon</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>icon</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setName</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setPackageName</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>packageName</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>packageName</name></name> <operator>=</operator> <name>packageName</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setIcon</name><parameter_list>(<parameter><decl><type><name>Drawable</name></type> <name>icon</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>icon</name></name> <operator>=</operator> <name>icon</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setCacheSize</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>cacheSize</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cacheSize</name></name> <operator>=</operator> <name>cacheSize</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setDataSize</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>dataSize</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>dataSize</name></name> <operator>=</operator> <name>dataSize</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setCodeSize</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>codeSize</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codeSize</name></name> <operator>=</operator> <name>codeSize</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getPackageName</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>packageName</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

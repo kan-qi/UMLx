@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\linkpreview\LinkPreviewDomains.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>linkpreview</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>LinkPreviewDomains</name> <block>{
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>LINKS</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(
+      <argument><expr><literal type="string">"youtube.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"www.youtube.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"m.youtube.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"youtu.be"</literal></expr></argument>,
+      <argument><expr><literal type="string">"reddit.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"www.reddit.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"m.reddit.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"imgur.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"www.imgur.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"m.imgur.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"instagram.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"www.instagram.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"m.instagram.com"</literal></expr></argument>
+  )</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>IMAGES</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(
+      <argument><expr><literal type="string">"ytimg.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"cdninstagram.com"</literal></expr></argument>,
+      <argument><expr><literal type="string">"fbcdn.net"</literal></expr></argument>,
+      <argument><expr><literal type="string">"redd.it"</literal></expr></argument>,
+      <argument><expr><literal type="string">"imgur.com"</literal></expr></argument>
+  )</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\ContactsSyncAdapterService.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Service</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>IBinder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactsSyncAdapter</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ContactsSyncAdapterService</name> <super><extends>extends <name>Service</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name>ContactsSyncAdapter</name></type> <name>syncAdapter</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>syncAdapter</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>syncAdapter</name> <operator>=</operator> <operator>new</operator> <call><name>ContactsSyncAdapter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>IBinder</name></type> <name>onBind</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>syncAdapter</name><operator>.</operator><name>getSyncAdapterBinder</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

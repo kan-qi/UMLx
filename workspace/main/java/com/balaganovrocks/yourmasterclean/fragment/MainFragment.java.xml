@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\fragment\MainFragment.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>ActivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>PendingIntent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RemoteViews</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>MainActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>MemoryCleanActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>RubbishCleanActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>SoftwareManageActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>umeng</name><operator>.</operator><name>update</name><operator>.</operator><name>UmengUpdateAgent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>model</name><operator>.</operator><name>SDCardInfo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>AutoStartManageActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>BatterySavingActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>MainActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>MemoryCleanActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>RubbishCleanActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>ShortCutActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>SoftwareManageActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>settings</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>AppUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>StorageUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>circleprogress</name><operator>.</operator><name>ArcProgress</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name><operator>.</operator><name>Notifications</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Timer</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>TimerTask</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>InjectView</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>OnClick</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>tencent</name><operator>.</operator><name>open</name><operator>.</operator><name>utils</name><operator>.</operator><name>Global</name><operator>.</operator><name>getPackageName</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>MainFragment</name> <super><extends>extends <name>BaseFragment</name></extends></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>arc_store</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>ArcProgress</name></type> <name>arcStore</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>arc_process</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>ArcProgress</name></type> <name>arcProcess</name></decl>;</decl_stmt>
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>capacity</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>TextView</name></type> <name>capacity</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Button</name></type> <name>Rubish_clean</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Context</name></type> <name>mContext</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Button</name></type> <name>BtnSettigs</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Timer</name></type> <name>timer</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Timer</name></type> <name>timer2</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Button</name></type> <name>CleanRubbish</name></decl>;</decl_stmt>
+
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+
+        <decl_stmt><decl><type><name>View</name></type> <name>view</name> <init>= <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>fragment_main</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><name>Rubish_clean</name> <operator>=</operator> <operator>(</operator><name>Button</name><operator>)</operator> <call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>Rubish_clean</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>inject</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mContext</name> <operator>=</operator> <call><name>getActivity</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>BtnSettigs</name> <operator>=</operator> <operator>(</operator><name>Button</name><operator>)</operator> <call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>btnSettings</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>BtnSettigs</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list>
+        <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list>
+            <block>{
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name><name>v</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>settings</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// do something</comment>
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Rubish_clean</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list>
+        <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list>
+            <block>{
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name><name>v</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>RubbishCleanActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// do something</comment>
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><name>view</name></expr>;</return>
+
+
+    }</block></function>
+
+<comment type="line">//  public void notification(){</comment>
+<comment type="line">//      Intent i = new Intent(getContext(), MainActivity.class);</comment>
+<comment type="line">//      PendingIntent rootPendingIntent = PendingIntent.getBroadcast(getContext(), 0, i, 0);</comment>
+<comment type="line">//      RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification);</comment>
+<comment type="line">//      remoteViews.setTextViewText(R.id.textView, "Custom notification text");</comment>
+<comment type="line">//      remoteViews.setOnClickPendingIntent(R.id.root, rootPendingIntent);</comment>
+
+<comment type="line">//      NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())</comment>
+<comment type="line">//              .setSmallIcon(R.drawable.ic_launcher)</comment>
+<comment type="line">//              .setCustomContentView(remoteViews)</comment>
+<comment type="line">//              .setStyle(new NotificationCompat.DecoratedCustomViewStyle());</comment>
+<comment type="line">//  }</comment>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>fillData</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreated</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityCreated</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>UmengUpdateAgent</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>fillData</name><parameter_list>()</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <expr_stmt><expr><name>timer</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>timer2</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>timer</name> <operator>=</operator> <operator>new</operator> <call><name>Timer</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>timer2</name> <operator>=</operator> <operator>new</operator> <call><name>Timer</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+
+        <decl_stmt><decl><type><name>long</name></type> <name>l</name> <init>= <expr><call><name><name>AppUtil</name><operator>.</operator><name>getAvailMemory</name></name><argument_list>(<argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>long</name></type> <name>y</name> <init>= <expr><call><name><name>AppUtil</name><operator>.</operator><name>getTotalMemory</name></name><argument_list>(<argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>double</name></type> <name>x</name> <init>= <expr><operator>(</operator><operator>(</operator><operator>(</operator><name>y</name> <operator>-</operator> <name>l</name><operator>)</operator> <operator>/</operator> <operator>(</operator><name>double</name><operator>)</operator> <name>y</name><operator>)</operator> <operator>*</operator> <literal type="number">100</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+        <comment type="line">//   arcProcess.setProgress((int) x);</comment>
+
+        <expr_stmt><expr><call><name><name>arcProcess</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>timer</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>TimerTask</name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+                <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>runOnUiThread</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+
+
+                        <if>if <condition>(<expr><call><name><name>arcProcess</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>&gt;=</operator> <operator>(</operator><name>int</name><operator>)</operator> <name>x</name></expr>)</condition><then> <block>{
+                            <expr_stmt><expr><call><name><name>timer</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        }</block></then> <else>else <block>{
+                            <expr_stmt><expr><call><name><name>arcProcess</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><call><name><name>arcProcess</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                        }</block></else></if>
+
+                    }</block></function>
+                }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+        }</block></class></expr></argument>, <argument><expr><literal type="number">50</literal></expr></argument>, <argument><expr><literal type="number">20</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>SDCardInfo</name></type> <name>mSDCardInfo</name> <init>= <expr><call><name><name>StorageUtil</name><operator>.</operator><name>getSDCardInfo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>SDCardInfo</name></type> <name>mSystemInfo</name> <init>= <expr><call><name><name>StorageUtil</name><operator>.</operator><name>getSystemSpaceInfo</name></name><argument_list>(<argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>long</name></type> <name>nAvailaBlock</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>long</name></type> <name>TotalBlocks</name></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>mSDCardInfo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>nAvailaBlock</name> <operator>=</operator> <name><name>mSDCardInfo</name><operator>.</operator><name>free</name></name> <operator>+</operator> <name><name>mSystemInfo</name><operator>.</operator><name>free</name></name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>TotalBlocks</name> <operator>=</operator> <name><name>mSDCardInfo</name><operator>.</operator><name>total</name></name> <operator>+</operator> <name><name>mSystemInfo</name><operator>.</operator><name>total</name></name></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>nAvailaBlock</name> <operator>=</operator> <name><name>mSystemInfo</name><operator>.</operator><name>free</name></name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>TotalBlocks</name> <operator>=</operator> <name><name>mSystemInfo</name><operator>.</operator><name>total</name></name></expr>;</expr_stmt>
+        }</block></else></if>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>double</name></type> <name>percentStore</name> <init>= <expr><operator>(</operator><operator>(</operator><operator>(</operator><name>TotalBlocks</name> <operator>-</operator> <name>nAvailaBlock</name><operator>)</operator> <operator>/</operator> <operator>(</operator><name>double</name><operator>)</operator> <name>TotalBlocks</name><operator>)</operator> <operator>*</operator> <literal type="number">100</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>capacity</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>StorageUtil</name><operator>.</operator><name>convertStorage</name></name><argument_list>(<argument><expr><name>TotalBlocks</name> <operator>-</operator> <name>nAvailaBlock</name></expr></argument>)</argument_list></call> <operator>+</operator> <literal type="string">"/"</literal> <operator>+</operator> <call><name><name>StorageUtil</name><operator>.</operator><name>convertStorage</name></name><argument_list>(<argument><expr><name>TotalBlocks</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>arcStore</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>timer2</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>TimerTask</name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+                <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>runOnUiThread</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+
+
+                        <if>if <condition>(<expr><call><name><name>arcStore</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>&gt;=</operator> <operator>(</operator><name>int</name><operator>)</operator> <name>percentStore</name></expr>)</condition><then> <block>{
+                            <expr_stmt><expr><call><name><name>timer2</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        }</block></then> <else>else <block>{
+                            <expr_stmt><expr><call><name><name>arcStore</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><call><name><name>arcStore</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                        }</block></else></if>
+
+                    }</block></function>
+                }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+        }</block></class></expr></argument>, <argument><expr><literal type="number">50</literal></expr></argument>, <argument><expr><literal type="number">20</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+    }</block></function>
+
+    <function><annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>card1</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>void</name></type> <name>speedUp</name><parameter_list>()</parameter_list> <block>{
+       <comment type="line">// notifications();</comment>
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name><name>MemoryCleanActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></function>
+
+
+    <function><annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>card2</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>void</name></type> <name>rubbishClean</name><parameter_list>()</parameter_list> <block>{
+       <comment type="line">// notifications();</comment>
+
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name><name>RubbishCleanActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></function>
+
+    <function><annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>card3</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>void</name></type> <name>batterySaving</name><parameter_list>()</parameter_list> <block>{
+       <comment type="line">// notifications();</comment>
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name><name>BatterySavingActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"proc"</literal></expr></argument>, <argument><expr><literal type="string">"save buttery init"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>amKillProcess</name><argument_list>(<argument><expr><literal type="string">"com.balaganovrocks.yourmasterclean"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+    }</block></function>
+
+
+    <function><annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>card4</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>void</name></type> <name>SoftwareManage</name><parameter_list>()</parameter_list> <block>{
+       <comment type="line">// notifications();</comment>
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name><name>SoftwareManageActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDestroyView</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroyView</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>reset</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>amKillProcess</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>process</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>ActivityManager</name></type> <name>am</name> <init>= <expr><operator>(</operator><name>ActivityManager</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSystemService</name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>ACTIVITY_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"proc"</literal></expr></argument>, <argument><expr><literal type="string">"activity init"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ActivityManager</name><operator>.</operator><name>RunningAppProcessInfo</name></name></argument>&gt;</argument_list></name></type> <name>runningProcesses</name> <init>= <expr><call><name><name>am</name><operator>.</operator><name>getRunningAppProcesses</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"proc"</literal></expr></argument>, <argument><expr><literal type="string">""</literal> <operator>+</operator> <call><name><name>runningProcesses</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <for>for <control>(<init><decl><type><name><name>ActivityManager</name><operator>.</operator><name>RunningAppProcessInfo</name></name></type> <name>runningProcess</name> <range>: <expr><name>runningProcesses</name></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>runningProcess</name><operator>.</operator><name>processName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>process</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"proc"</literal></expr></argument>, <argument><expr><name><name>runningProcess</name><operator>.</operator><name>processName</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Process</name><operator>.</operator><name>sendSignal</name></name><argument_list>(<argument><expr><name><name>runningProcess</name><operator>.</operator><name>pid</name></name></expr></argument>, <argument><expr><name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Process</name><operator>.</operator><name>SIGNAL_KILL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></for>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>timer</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>timer2</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

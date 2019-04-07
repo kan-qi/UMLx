@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contactshare\ContactNameEditActivity.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ViewModelProviders</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>PassphraseRequiredActionBarActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicNoActionBarTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+
+<import>import static <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name><operator>.</operator><name>Contact</name><operator>.</operator><name>*</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ContactNameEditActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_NAME</name>          <init>= <expr><literal type="string">"name"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_CONTACT_INDEX</name> <init>= <expr><literal type="string">"contact_index"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicNoActionBarTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>                 <name>displayNameView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ContactNameEditViewModel</name></type> <name>viewModel</name></decl>;</decl_stmt>
+
+  <function><specifier>static</specifier> <type><name>Intent</name></type> <name>getIntent</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Name</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>contactPosition</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>ContactNameEditActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_NAME</name></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_CONTACT_INDEX</name></expr></argument>, <argument><expr><name>contactPosition</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>intent</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>, <argument><expr><name>ready</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>getIntent</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IllegalStateException</name><argument_list>(<argument><expr><literal type="string">"You must supply extras to this activity. Please use the #getIntent() method."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Name</name></type> <name>name</name> <init>= <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>KEY_NAME</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>name</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IllegalStateException</name><argument_list>(<argument><expr><literal type="string">"You must supply a name to this activity. Please use the #getIntent() method."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_contact_name_edit</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeToolbar</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeViews</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name>viewModel</name> <operator>=</operator> <call><name><name>ViewModelProviders</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name><name>ContactNameEditViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>setName</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>getDisplayName</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>observe</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>displayNameView</name><operator>::</operator><name>setText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeToolbar</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Toolbar</name></type> <name>toolbar</name> <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>toolbar</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>setSupportActionBar</name><argument_list>(<argument><expr><name>toolbar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>toolbar</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>toolbar</name><operator>.</operator><name>setNavigationIcon</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_check_white_24dp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>toolbar</name><operator>.</operator><name>setNavigationOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>resultIntent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>resultIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_NAME</name></expr></argument>, <argument><expr><call><name><name>viewModel</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>resultIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>KEY_CONTACT_INDEX</name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getIntExtra</name><argument_list>(<argument><expr><name>KEY_CONTACT_INDEX</name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setResult</name><argument_list>(<argument><expr><name>RESULT_OK</name></expr></argument>, <argument><expr><name>resultIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeViews</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Name</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>displayNameView</name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name_edit_display_name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>TextView</name></type> <name>givenName</name>   <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name_edit_given_name</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>TextView</name></type> <name>familyName</name>  <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name_edit_family_name</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>TextView</name></type> <name>middleName</name>  <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name_edit_middle_name</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>TextView</name></type> <name>prefix</name>      <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name_edit_prefix</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>TextView</name></type> <name>suffix</name>      <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name_edit_suffix</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>givenName</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getGivenName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>familyName</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getFamilyName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>middleName</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getMiddleName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>prefix</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getPrefix</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>suffix</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getSuffix</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>givenName</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SimpleTextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>updateGivenName</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>familyName</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SimpleTextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>updateFamilyName</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>middleName</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SimpleTextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>updateMiddleName</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>prefix</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SimpleTextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>updatePrefix</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>suffix</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SimpleTextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>viewModel</name><operator>.</operator><name>updateSuffix</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

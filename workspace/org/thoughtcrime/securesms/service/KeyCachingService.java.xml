@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\KeyCachingService.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>AlarmManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Notification</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>PendingIntent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Service</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Binder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>IBinder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>SystemClock</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationCompat</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RemoteViews</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ConversationListActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>DatabaseUpgradeActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>DummyActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>InvalidPassphraseException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecretUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>MessageNotifier</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>NotificationChannels</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ServiceUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Small service that stays running to keep a key cached in memory.
+ *
+ * @author Moxie Marlinspike
+ */</comment>
+
+<class><specifier>public</specifier> class <name>KeyCachingService</name> <super><extends>extends <name>Service</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>KeyCachingService</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SERVICE_RUNNING_ID</name> <init>= <expr><literal type="number">4141</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_PERMISSION</name>           <init>= <expr><literal type="string">"org.thoughtcrime.securesms.ACCESS_SECRETS"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NEW_KEY_EVENT</name>            <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.NEW_KEY_EVENT"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CLEAR_KEY_EVENT</name>          <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.CLEAR_KEY_EVENT"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCK_TOGGLED_EVENT</name>       <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.LOCK_ENABLED_EVENT"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PASSPHRASE_EXPIRED_EVENT</name> <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.PASSPHRASE_EXPIRED_EVENT"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CLEAR_KEY_ACTION</name>         <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.CLEAR_KEY"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DISABLE_ACTION</name>           <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.DISABLE"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCALE_CHANGE_EVENT</name>      <init>= <expr><literal type="string">"org.thoughtcrime.securesms.service.action.LOCALE_CHANGE_EVENT"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>IBinder</name></type> <name>binder</name>  <init>= <expr><operator>new</operator> <call><name>KeySetBinder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name>MasterSecret</name></type> <name>masterSecret</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KeyCachingService</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>boolean</name></type> <name>isLocked</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMasterSecret</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>MasterSecret</name></type> <name>getMasterSecret</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>masterSecret</name> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>(</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>)</operator></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <return>return <expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>MasterSecretUtil</name><operator>.</operator><name>UNENCRYPTED_PASSPHRASE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidPassphraseException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"KeyCachingService"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+
+    <return>return <expr><name>masterSecret</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>onAppForegrounded</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getAlarmManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>cancel</name><argument_list>(<argument><expr><call><name>buildExpirationPendingIntent</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>onAppBackgrounded</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>startTimeoutIfAppropriate</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setMasterSecret</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>MasterSecret</name></type> <name>masterSecret</name></decl></parameter>)</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name><name>KeyCachingService</name><operator>.</operator><name>class</name></name></expr>)</init> <block>{
+      <expr_stmt><expr><name><name>KeyCachingService</name><operator>.</operator><name>masterSecret</name></name> <operator>=</operator> <name>masterSecret</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>foregroundService</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>broadcastNewSecret</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startTimeoutIfAppropriate</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      
+      <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+          <if>if <condition>(<expr><operator>!</operator><call><name><name>DatabaseUpgradeActivity</name><operator>.</operator><name>isUpdate</name></name><argument_list>(<argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>updateNotification</name></name><argument_list>(<argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+          <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></function>
+      }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>onStartCommand</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>startId</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>intent</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>START_NOT_STICKY</name></expr>;</return></block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onStartCommand, "</literal> <operator>+</operator> <call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <switch>switch <condition>(<expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <case>case <expr><name>CLEAR_KEY_ACTION</name></expr>:</case>         <expr_stmt><expr><call><name>handleClearKey</name><argument_list>()</argument_list></call></expr>;</expr_stmt>        <break>break;</break>
+        <case>case <expr><name>PASSPHRASE_EXPIRED_EVENT</name></expr>:</case> <expr_stmt><expr><call><name>handleClearKey</name><argument_list>()</argument_list></call></expr>;</expr_stmt>        <break>break;</break>
+        <case>case <expr><name>DISABLE_ACTION</name></expr>:</case>           <expr_stmt><expr><call><name>handleDisableService</name><argument_list>()</argument_list></call></expr>;</expr_stmt>  <break>break;</break>
+        <case>case <expr><name>LOCALE_CHANGE_EVENT</name></expr>:</case>      <expr_stmt><expr><call><name>handleLocaleChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>   <break>break;</break>
+        <case>case <expr><name>LOCK_TOGGLED_EVENT</name></expr>:</case>       <expr_stmt><expr><call><name>handleLockToggled</name><argument_list>()</argument_list></call></expr>;</expr_stmt>     <break>break;</break>
+      }</block></switch>
+    }</block></then></if>
+
+    <return>return <expr><name>START_NOT_STICKY</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onCreate()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <decl_stmt><decl><type><name>MasterSecret</name></type> <name>masterSecret</name> <init>= <expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>MasterSecretUtil</name><operator>.</operator><name>UNENCRYPTED_PASSPHRASE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>setMasterSecret</name><argument_list>(<argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidPassphraseException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"KeyCachingService"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"KCS Is Being Destroyed!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>handleClearKey</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Workaround for Android bug:
+   * https://code.google.com/p/android/issues/detail?id=53313
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onTaskRemoved</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>rootIntent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>DummyActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>addFlags</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_NEW_TASK</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>handleClearKey</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"handleClearKey()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>KeyCachingService</name><operator>.</operator><name>masterSecret</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>CLEAR_KEY_EVENT</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setPackage</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPackageName</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>sendBroadcast</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><name>KEY_PERMISSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>updateNotification</name></name><argument_list>(<argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleLockToggled</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <try>try <block>{
+      <decl_stmt><decl><type><name>MasterSecret</name></type> <name>masterSecret</name> <init>= <expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>MasterSecretUtil</name><operator>.</operator><name>UNENCRYPTED_PASSPHRASE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>setMasterSecret</name><argument_list>(<argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidPassphraseException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleDisableService</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+        <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+    <block>{
+      <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleLocaleChanged</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>updateServiceLocale</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>foregroundService</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>startTimeoutIfAppropriate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>boolean</name></type> <name>appVisible</name>       <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>isAppVisible</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>secretSet</name>        <init>= <expr><name><name>KeyCachingService</name><operator>.</operator><name>masterSecret</name></name> <operator>!=</operator> <literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>boolean</name></type> <name>timeoutEnabled</name>   <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPassphraseTimeoutEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>passLockActive</name>   <init>= <expr><name>timeoutEnabled</name> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>long</name></type>    <name>screenTimeout</name>    <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getScreenLockTimeout</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>screenLockActive</name> <init>= <expr><name>screenTimeout</name> <operator>&gt;=</operator> <literal type="number">60</literal> <operator>&amp;&amp;</operator> <call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><name>appVisible</name> <operator>&amp;&amp;</operator> <name>secretSet</name> <operator>&amp;&amp;</operator> <operator>(</operator><name>passLockActive</name> <operator>||</operator> <name>screenLockActive</name><operator>)</operator></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>long</name></type> <name>passphraseTimeoutMinutes</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getPassphraseTimeoutInterval</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type> <name>screenLockTimeoutSeconds</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getScreenLockTimeout</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>long</name></type> <name>timeoutMillis</name></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>timeoutMillis</name> <operator>=</operator> <call><name><name>TimeUnit</name><operator>.</operator><name>MINUTES</name><operator>.</operator><name>toMillis</name></name><argument_list>(<argument><expr><name>passphraseTimeoutMinutes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+      <else>else                                                    <block type="pseudo"><expr_stmt><expr><name>timeoutMillis</name> <operator>=</operator> <call><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name><operator>.</operator><name>toMillis</name></name><argument_list>(<argument><expr><name>screenLockTimeoutSeconds</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Starting timeout: "</literal> <operator>+</operator> <name>timeoutMillis</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>AlarmManager</name></type>  <name>alarmManager</name>     <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getAlarmManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>PendingIntent</name></type> <name>expirationIntent</name> <init>= <expr><call><name>buildExpirationPendingIntent</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>alarmManager</name><operator>.</operator><name>cancel</name></name><argument_list>(<argument><expr><name>expirationIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>alarmManager</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name><name>AlarmManager</name><operator>.</operator><name>ELAPSED_REALTIME</name></name></expr></argument>, <argument><expr><call><name><name>SystemClock</name><operator>.</operator><name>elapsedRealtime</name></name><argument_list>()</argument_list></call> <operator>+</operator> <name>timeoutMillis</name></expr></argument>, <argument><expr><name>expirationIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>foregroundServiceModern</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"foregrounding KCS"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>NotificationChannels</name><operator>.</operator><name>LOCKED_STATUS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentTitle</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>KeyCachingService_passphrase_cached</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentText</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>KeyCachingService_signal_passphrase_cached</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setSmallIcon</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>icon_cached</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setWhen</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setPriority</name></name><argument_list>(<argument><expr><name><name>Notification</name><operator>.</operator><name>PRIORITY_MIN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>addAction</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_menu_lock_dark</name></name></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>KeyCachingService_lock</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>buildLockIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentIntent</name></name><argument_list>(<argument><expr><call><name>buildLaunchIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startForeground</name><argument_list>(<argument><expr><name>SERVICE_RUNNING_ID</name></expr></argument>, <argument><expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>foregroundServiceICS</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>NotificationChannels</name><operator>.</operator><name>LOCKED_STATUS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>RemoteViews</name></type> <name>remoteViews</name>            <init>= <expr><operator>new</operator> <call><name>RemoteViews</name><argument_list>(<argument><expr><call><name>getPackageName</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>key_caching_notification</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>remoteViews</name><operator>.</operator><name>setOnClickPendingIntent</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>lock_cache_icon</name></name></expr></argument>, <argument><expr><call><name>buildLockIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setSmallIcon</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>icon_cached</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContent</name></name><argument_list>(<argument><expr><name>remoteViews</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentIntent</name></name><argument_list>(<argument><expr><call><name>buildLaunchIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startForeground</name><argument_list>(<argument><expr><name>SERVICE_RUNNING_ID</name></expr></argument>, <argument><expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>foregroundServiceLegacy</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>NotificationChannels</name><operator>.</operator><name>LOCKED_STATUS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setSmallIcon</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>icon_cached</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setWhen</name></name><argument_list>(<argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentTitle</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>KeyCachingService_passphrase_cached</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentText</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>KeyCachingService_signal_passphrase_cached</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setContentIntent</name></name><argument_list>(<argument><expr><call><name>buildLaunchIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>startForeground</name><argument_list>(<argument><expr><name>SERVICE_RUNNING_ID</name></expr></argument>, <argument><expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>foregroundService</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>stopForeground</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>foregroundServiceModern</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>ICE_CREAM_SANDWICH</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>foregroundServiceICS</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name>foregroundServiceLegacy</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>broadcastNewSecret</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Broadcasting new secret..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>NEW_KEY_EVENT</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setPackage</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPackageName</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>sendBroadcast</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><name>KEY_PERMISSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>PendingIntent</name></type> <name>buildLockIntent</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name>PASSPHRASE_EXPIRED_EVENT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>PendingIntent</name><operator>.</operator><name>getService</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>PendingIntent</name></type> <name>buildLaunchIntent</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name>              <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>ConversationListActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setFlags</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TOP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>PendingIntent</name><operator>.</operator><name>getActivity</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>PendingIntent</name></type> <name>buildExpirationPendingIntent</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>expirationIntent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>PASSPHRASE_EXPIRED_EVENT</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>PendingIntent</name><operator>.</operator><name>getService</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>expirationIntent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>IBinder</name></type> <name>onBind</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>arg0</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>binder</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>public</specifier> class <name>KeySetBinder</name> <super><extends>extends <name>Binder</name></extends></super> <block>{
+    <function><specifier>public</specifier> <type><name>KeyCachingService</name></type> <name>getService</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>KeyCachingService</name><operator>.</operator><name>this</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

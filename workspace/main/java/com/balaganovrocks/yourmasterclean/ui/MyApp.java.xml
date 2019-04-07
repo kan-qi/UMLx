@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\ui\MyApp.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Application</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>yandex</name><operator>.</operator><name>metrica</name><operator>.</operator><name>YandexMetrica</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>yandex</name><operator>.</operator><name>metrica</name><operator>.</operator><name>YandexMetricaConfig</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MyApp</name> <super><extends>extends <name>Application</name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// ÐÐ½Ð¸ÑÐ¸Ð°Ð»Ð¸Ð·Ð°ÑÐ¸Ñ AppMetrica SDK</comment>
+
+        <decl_stmt><decl><type><name><name>YandexMetricaConfig</name><operator>.</operator><name>Builder</name></name></type> <name>configBuilder</name> <init>= <expr><call><name><name>YandexMetricaConfig</name><operator>.</operator><name>newConfigBuilder</name></name><argument_list>(<argument><expr><literal type="string">"180a173d-5533-4b25-98ff-2ef6301637a2"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>YandexMetrica</name><operator>.</operator><name>activate</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>configBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// ÐÑÑÐ»ÐµÐ¶Ð¸Ð²Ð°Ð½Ð¸Ðµ Ð°ÐºÑÐ¸Ð²Ð½Ð¾ÑÑÐ¸ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÐµÐ¹</comment>
+        <expr_stmt><expr><call><name><name>YandexMetrica</name><operator>.</operator><name>enableActivityAutoTracking</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name><name>YandexMetricaConfig</name><operator>.</operator><name>Builder</name></name></type> <name>configBuilder1</name> <init>= <expr><call><name><name>YandexMetricaConfig</name><operator>.</operator><name>newConfigBuilder</name></name><argument_list>(<argument><expr><literal type="string">"180a173d-5533-4b25-98ff-2ef6301637a2"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">//Ð ÐµÐ°Ð»Ð¸Ð·ÑÐ¹ÑÐµ Ð»Ð¾Ð³Ð¸ÐºÑ Ð¾Ð¿ÑÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ ÑÐ¾Ð³Ð¾, ÑÐ²Ð»ÑÐµÑÑÑ Ð»Ð¸ Ð·Ð°Ð¿ÑÑÐº Ð¿ÑÐ¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð¿ÐµÑÐ²ÑÐ¼. Ð ÐºÐ°ÑÐµÑÑÐ²Ðµ ÐºÑÐ¸ÑÐµÑÐ¸Ñ Ð²Ñ Ð¼Ð¾Ð¶ÐµÑÐµ Ð¸ÑÐ¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÑ Ð¿ÑÐ¾Ð²ÐµÑÐºÑ Ð½Ð°Ð»Ð¸ÑÐ¸Ñ ÐºÐ°ÐºÐ¸Ñ-ÑÐ¾ ÑÐ°Ð¹Ð»Ð¾Ð² (Ð½Ð°ÑÑÑÐ¾ÐµÐº, Ð±Ð°Ð· Ð´Ð°Ð½Ð½ÑÑ Ð¸ Ð´Ñ.), ÐºÐ¾ÑÐ¾ÑÑÐµ Ð¿ÑÐ¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ ÑÐ¾Ð·Ð´Ð°ÐµÑ Ð² ÑÐ²Ð¾Ð¹ Ð¿ÐµÑÐ²ÑÐ¹ Ð·Ð°Ð¿ÑÑÐº.</comment>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>isFirstApplicationLaunch</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><operator>!</operator><name>isFirstApplicationLaunch</name></expr>)</condition><then> <block>{
+            <comment type="line">//ÐÐµÑÐµÐ´Ð°Ð¹ÑÐµ Ð·Ð½Ð°ÑÐµÐ½Ð¸Ðµ true, ÐµÑÐ»Ð¸ Ð½Ðµ ÑÐ¾ÑÐ¸ÑÐµ, ÑÑÐ¾Ð±Ñ Ð´Ð°Ð½Ð½ÑÐ¹ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»Ñ Ð·Ð°ÑÑÐ¸ÑÑÐ²Ð°Ð»ÑÑ ÐºÐ°Ðº Ð½Ð¾Ð²ÑÐ¹</comment>
+            <expr_stmt><expr><call><name><name>configBuilder1</name><operator>.</operator><name>handleFirstActivationAsUpdate</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <comment type="line">//Ð¡Ð¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ð¾Ð±ÑÐµÐºÑÐ° ÑÐ°ÑÑÐ¸ÑÐµÐ½Ð½Ð¾Ð¹ ÐºÐ¾Ð½ÑÐ¸Ð³ÑÑÐ°ÑÐ¸Ð¸</comment>
+        <decl_stmt><decl><type><name>YandexMetricaConfig</name></type> <name>extendedConfig</name> <init>= <expr><call><name><name>configBuilder1</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// ÐÐ½Ð¸ÑÐ¸Ð°Ð»Ð¸Ð·Ð°ÑÐ¸Ñ AppMetrica SDK</comment>
+        <expr_stmt><expr><call><name><name>YandexMetrica</name><operator>.</operator><name>activate</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>extendedConfig</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// ÐÑÑÐ»ÐµÐ¶Ð¸Ð²Ð°Ð½Ð¸Ðµ Ð°ÐºÑÐ¸Ð²Ð½Ð¾ÑÑÐ¸ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÐµÐ¹</comment>
+        <expr_stmt><expr><call><name><name>YandexMetrica</name><operator>.</operator><name>enableActivityAutoTracking</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class></unit>

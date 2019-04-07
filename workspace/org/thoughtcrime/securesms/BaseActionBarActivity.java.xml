@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\BaseActionBarActivity.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>ActivityCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>ActivityOptionsCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>KeyEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewConfiguration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Field</name></name>;</import>
+
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>BaseActionBarActivity</name> <super><extends>extends <name>AppCompatActivity</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>BaseActionBarActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>BaseActivity</name><operator>.</operator><name>isMenuWorkaroundRequired</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>forceOverflowMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeScreenshotSecurity</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onKeyDown</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>keyCode</name></decl></parameter>, <parameter><decl><type><name>KeyEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>keyCode</name> <operator>==</operator> <name><name>KeyEvent</name><operator>.</operator><name>KEYCODE_MENU</name></name> <operator>&amp;&amp;</operator> <call><name><name>BaseActivity</name><operator>.</operator><name>isMenuWorkaroundRequired</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>||</operator> <call><name><name>super</name><operator>.</operator><name>onKeyDown</name></name><argument_list>(<argument><expr><name>keyCode</name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onKeyUp</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>keyCode</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>KeyEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>keyCode</name> <operator>==</operator> <name><name>KeyEvent</name><operator>.</operator><name>KEYCODE_MENU</name></name> <operator>&amp;&amp;</operator> <call><name><name>BaseActivity</name><operator>.</operator><name>isMenuWorkaroundRequired</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>openOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>onKeyUp</name></name><argument_list>(<argument><expr><name>keyCode</name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeScreenshotSecurity</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>ICE_CREAM_SANDWICH</name></name> <operator>&amp;&amp;</operator>
+            <call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenSecurityEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+    <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_SECURE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>clearFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_SECURE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Modified from: http://stackoverflow.com/a/13098824
+   */</comment>
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>forceOverflowMenu</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>ViewConfiguration</name></type> <name>config</name>       <init>= <expr><call><name><name>ViewConfiguration</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Field</name></type>             <name>menuKeyField</name> <init>= <expr><call><name><name>ViewConfiguration</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getDeclaredField</name></name></name><argument_list>(<argument><expr><literal type="string">"sHasPermanentMenuKey"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if<condition>(<expr><name>menuKeyField</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>menuKeyField</name><operator>.</operator><name>setAccessible</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>menuKeyField</name><operator>.</operator><name>setBoolean</name></name><argument_list>(<argument><expr><name>config</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalAccessException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to force overflow menu."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchFieldException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to force overflow menu."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>startActivitySceneTransition</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>sharedView</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>transitionName</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Bundle</name></type> <name>bundle</name> <init>= <expr><call><name><name>ActivityOptionsCompat</name><operator>.</operator><name>makeSceneTransitionAnimation</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>sharedView</name></expr></argument>, <argument><expr><name>transitionName</name></expr></argument>)</argument_list></call>
+                                         <operator>.</operator><call><name>toBundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>ActivityCompat</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>, <argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>setStatusBarColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setStatusBarColor</name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+}</block></class>
+</unit>

@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\camera\CameraView.java"><comment type="block" format="javadoc">/***
+ Copyright (c) 2013-2014 CommonsWare, LLC
+ Portions Copyright (C) 2007 The Android Open Source Project
+
+ Licensed under the Apache License, Version 2.0 (the "License"); you may
+ not use this file except in compliance with the License. You may obtain
+ a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>camera</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ActivityInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Rect</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>Camera</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>Camera</name><operator>.</operator><name>CameraInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>Camera</name><operator>.</operator><name>Parameters</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>Camera</name><operator>.</operator><name>Size</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>OrientationEventListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>Job</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>CameraView</name> <super><extends>extends <name>ViewGroup</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>CameraView</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CameraSurfaceView</name></type>   <name>surface</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>OnOrientationChange</name></type> <name>onOrientationChange</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>volatile</specifier> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name>Camera</name></argument>&gt;</argument_list></name></type> <name>camera</name>             <init>= <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>volatile</specifier> <name>int</name></type>              <name>cameraId</name>           <init>= <expr><name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_BACK</name></name></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>volatile</specifier> <name>int</name></type>              <name>displayOrientation</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation>  <type><name>State</name></type>                    <name>state</name> <init>= <expr><name><name>State</name><operator>.</operator><name>PAUSED</name></name></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Size</name></type>                     <name>previewSize</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation>  <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CameraViewListener</name></argument>&gt;</argument_list></name></type> <name>listeners</name> <init>= <expr><call><name><name>Collections</name><operator>.</operator><name>synchronizedList</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>CameraViewListener</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>           <type><name>int</name></type>                      <name>outputOrientation</name>  <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CameraView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>CameraView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>CameraView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setBackgroundColor</name><argument_list>(<argument><expr><name><name>Color</name><operator>.</operator><name>BLACK</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>attrs</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CameraView</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>        <name>camera</name>     <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CameraView_camera</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if      <condition>(<expr><name>camera</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then>    <block type="pseudo"><expr_stmt><expr><name>cameraId</name> <operator>=</operator> <name>camera</name></expr>;</expr_stmt></block></then>
+      <elseif>else <if>if <condition>(<expr><call><name>isMultiCamera</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>cameraId</name> <operator>=</operator> <call><name><name>TextSecurePreferences</name><operator>.</operator><name>getDirectCaptureCameraId</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif></if>
+
+      <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><name>surface</name>             <operator>=</operator> <operator>new</operator> <call><name>CameraSurfaceView</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>onOrientationChange</name> <operator>=</operator> <operator>new</operator> <call><name>OnOrientationChange</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>addView</name><argument_list>(<argument><expr><name>surface</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>ICE_CREAM_SANDWICH</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>state</name> <operator>!=</operator> <name><name>State</name><operator>.</operator><name>PAUSED</name></name></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+    <expr_stmt><expr><name>state</name> <operator>=</operator> <name><name>State</name><operator>.</operator><name>RESUMED</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onResume() queued"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>enqueueTask</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>SerialAsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier>
+      <annotation>@<name>Nullable</name></annotation>
+      <type><name>Void</name></type> <name>onRunBackground</name><parameter_list>()</parameter_list> <block>{
+        <try>try <block>{
+          <decl_stmt><decl><type><name>long</name></type> <name>openStartMillis</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><name>camera</name> <operator>=</operator> <call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><call><name><name>Camera</name><operator>.</operator><name>open</name></name><argument_list>(<argument><expr><name>cameraId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"camera.open() -&gt; "</literal> <operator>+</operator> <operator>(</operator><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>openStartMillis</name><operator>)</operator> <operator>+</operator> <literal type="string">"ms"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <synchronized>synchronized <init>(<expr><name><name>CameraView</name><operator>.</operator><name>this</name></name></expr>)</init> <block>{
+            <expr_stmt><expr><call><name><name>CameraView</name><operator>.</operator><name>this</name><operator>.</operator><name>notifyAll</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></synchronized>
+          <if>if <condition>(<expr><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>onCameraReady</name><argument_list>(<argument><expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostMain</name><parameter_list>(<parameter><decl><type><name>Void</name></type> <name>avoid</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"tried to open camera but got null"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <for>for <control>(<init><decl><type><name>CameraViewListener</name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+            <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onCameraFail</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></for>
+          <return>return;</return>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRequestedOrientation</name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_UNSPECIFIED</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>onOrientationChange</name><operator>.</operator><name>enable</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onResume() completed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>state</name> <operator>==</operator> <name><name>State</name><operator>.</operator><name>PAUSED</name></name></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+    <expr_stmt><expr><name>state</name> <operator>=</operator> <name><name>State</name><operator>.</operator><name>PAUSED</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onPause() queued"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>enqueueTask</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>SerialAsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <decl_stmt><decl><specifier>private</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>Camera</name></argument>&gt;</argument_list></name></type> <name>cameraToDestroy</name></decl>;</decl_stmt>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPreMain</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>cameraToDestroy</name> <operator>=</operator> <name>camera</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>camera</name> <operator>=</operator> <call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Void</name></type> <name>onRunBackground</name><parameter_list>()</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name><name>cameraToDestroy</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <try>try <block>{
+            <expr_stmt><expr><call><name>stopPreview</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>cameraToDestroy</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setPreviewCallback</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>cameraToDestroy</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>release</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"released old camera instance"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch></try>
+        }</block></then></if>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation> <specifier>protected</specifier> <type><name>void</name></type> <name>onPostMain</name><parameter_list>(<parameter><decl><type><name>Void</name></type> <name>avoid</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>onOrientationChange</name><operator>.</operator><name>disable</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>displayOrientation</name> <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>outputOrientation</name> <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>removeView</name><argument_list>(<argument><expr><name>surface</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>addView</name><argument_list>(<argument><expr><name>surface</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onPause() completed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <for>for <control>(<init><decl><type><name>CameraViewListener</name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onCameraStop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isStarted</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>state</name> <operator>!=</operator> <name><name>State</name><operator>.</operator><name>PAUSED</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"SuspiciousNameCombination"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onLayout</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>changed</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>l</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>t</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>r</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>  <name>width</name>         <init>= <expr><name>r</name> <operator>-</operator> <name>l</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>  <name>height</name>        <init>= <expr><name>b</name> <operator>-</operator> <name>t</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>  <name>previewWidth</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>  <name>previewHeight</name></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <name>previewSize</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name>displayOrientation</name> <operator>==</operator> <literal type="number">90</literal> <operator>||</operator> <name>displayOrientation</name> <operator>==</operator> <literal type="number">270</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>previewWidth</name>  <operator>=</operator> <name><name>previewSize</name><operator>.</operator><name>height</name></name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>previewHeight</name> <operator>=</operator> <name><name>previewSize</name><operator>.</operator><name>width</name></name></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><name>previewWidth</name>  <operator>=</operator> <name><name>previewSize</name><operator>.</operator><name>width</name></name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>previewHeight</name> <operator>=</operator> <name><name>previewSize</name><operator>.</operator><name>height</name></name></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name>previewWidth</name>  <operator>=</operator> <name>width</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name>previewHeight</name> <operator>=</operator> <name>height</name></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <if>if <condition>(<expr><name>previewHeight</name> <operator>==</operator> <literal type="number">0</literal> <operator>||</operator> <name>previewWidth</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"skipping layout due to zero-width/height preview size"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>width</name> <operator>*</operator> <name>previewHeight</name> <operator>&gt;</operator> <name>height</name> <operator>*</operator> <name>previewWidth</name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>scaledChildHeight</name> <init>= <expr><name>previewHeight</name> <operator>*</operator> <name>width</name> <operator>/</operator> <name>previewWidth</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>surface</name><operator>.</operator><name>layout</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><operator>(</operator><name>height</name> <operator>-</operator> <name>scaledChildHeight</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><operator>(</operator><name>height</name> <operator>+</operator> <name>scaledChildHeight</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>scaledChildWidth</name> <init>= <expr><name>previewWidth</name> <operator>*</operator> <name>height</name> <operator>/</operator> <name>previewHeight</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>surface</name><operator>.</operator><name>layout</name></name><argument_list>(<argument><expr><operator>(</operator><name>width</name> <operator>-</operator> <name>scaledChildWidth</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><operator>(</operator><name>width</name> <operator>+</operator> <name>scaledChildWidth</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onSizeChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>w</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>h</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldw</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldh</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onSizeChanged("</literal> <operator>+</operator> <name>oldw</name> <operator>+</operator> <literal type="string">"x"</literal> <operator>+</operator> <name>oldh</name> <operator>+</operator> <literal type="string">" -&gt; "</literal> <operator>+</operator> <name>w</name> <operator>+</operator> <literal type="string">"x"</literal> <operator>+</operator> <name>h</name> <operator>+</operator> <literal type="string">")"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onSizeChanged</name></name><argument_list>(<argument><expr><name>w</name></expr></argument>, <argument><expr><name>h</name></expr></argument>, <argument><expr><name>oldw</name></expr></argument>, <argument><expr><name>oldh</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>startPreview</name><argument_list>(<argument><expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParameters</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>CameraViewListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>listeners</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setPreviewCallback</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>PreviewCallback</name></type> <name>previewCallback</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>enqueueTask</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>PostInitializationTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostMain</name><parameter_list>(<parameter><decl><type><name>Void</name></type> <name>avoid</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setPreviewCallback</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Camera</name><operator>.</operator><name>PreviewCallback</name></name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onPreviewFrame</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>data</name></decl></parameter>, <parameter><decl><type><name>Camera</name></type> <name>camera</name></decl></parameter>)</parameter_list> <block>{
+              <if>if <condition>(<expr><operator>!</operator><call><name><name>CameraView</name><operator>.</operator><name>this</name><operator>.</operator><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                <return>return;</return>
+              }</block></then></if>
+
+              <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>  <name>rotation</name>    <init>= <expr><call><name>getCameraPictureOrientation</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+              <decl_stmt><decl><type><specifier>final</specifier> <name>Size</name></type> <name>previewSize</name> <init>= <expr><call><name><name>camera</name><operator>.</operator><name>getParameters</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPreviewSize</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+              <if>if <condition>(<expr><name>data</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>previewCallback</name><operator>.</operator><name>onPreviewFrame</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PreviewFrame</name><argument_list>(<argument><expr><name>data</name></expr></argument>, <argument><expr><name><name>previewSize</name><operator>.</operator><name>width</name></name></expr></argument>, <argument><expr><name><name>previewSize</name><operator>.</operator><name>height</name></name></expr></argument>, <argument><expr><name>rotation</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              }</block></then></if>
+            }</block></function>
+          }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isMultiCamera</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Camera</name><operator>.</operator><name>getNumberOfCameras</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">1</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isRearCamera</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>cameraId</name> <operator>==</operator> <name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_BACK</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>flipCamera</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>Camera</name><operator>.</operator><name>getNumberOfCameras</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>cameraId</name> <operator>=</operator> <ternary><condition><expr><name>cameraId</name> <operator>==</operator> <name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_BACK</name></name></expr>
+                 ?</condition><then> <expr><name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_FRONT</name></name></expr>
+                 </then><else>: <expr><name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_BACK</name></name></expr></else></ternary></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>onPause</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>onResume</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setDirectCaptureCameraId</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>cameraId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">14</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>onCameraReady</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Camera</name></type> <name>camera</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Parameters</name></type> <name>parameters</name> <init>= <expr><call><name><name>camera</name><operator>.</operator><name>getParameters</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">14</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>parameters</name><operator>.</operator><name>setRecordingHint</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>focusModes</name> <init>= <expr><call><name><name>parameters</name><operator>.</operator><name>getSupportedFocusModes</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><call><name><name>focusModes</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name><name>Parameters</name><operator>.</operator><name>FOCUS_MODE_CONTINUOUS_PICTURE</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>parameters</name><operator>.</operator><name>setFocusMode</name></name><argument_list>(<argument><expr><name><name>Parameters</name><operator>.</operator><name>FOCUS_MODE_CONTINUOUS_PICTURE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>focusModes</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name><name>Parameters</name><operator>.</operator><name>FOCUS_MODE_CONTINUOUS_VIDEO</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>parameters</name><operator>.</operator><name>setFocusMode</name></name><argument_list>(<argument><expr><name><name>Parameters</name><operator>.</operator><name>FOCUS_MODE_CONTINUOUS_VIDEO</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+    }</block></then></if>
+
+    <expr_stmt><expr><name>displayOrientation</name> <operator>=</operator> <call><name><name>CameraUtils</name><operator>.</operator><name>getCameraDisplayOrientation</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getCameraInfo</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>setDisplayOrientation</name></name><argument_list>(<argument><expr><name>displayOrientation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>setParameters</name></name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>enqueueTask</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>PostInitializationTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Void</name></type> <name>onRunBackground</name><parameter_list>()</parameter_list> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>setPreviewDisplay</name></name><argument_list>(<argument><expr><call><name><name>surface</name><operator>.</operator><name>getHolder</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>startPreview</name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"couldn't set preview display"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>startPreview</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Parameters</name></type> <name>parameters</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Camera</name></type>     <name>camera</name>               <init>= <expr><call><name><name>this</name><operator>.</operator><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Size</name></type>       <name>preferredPreviewSize</name> <init>= <expr><call><name>getPreferredPreviewSize</name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>preferredPreviewSize</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>parameters</name><operator>.</operator><name>getPreviewSize</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>preferredPreviewSize</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"starting preview with size "</literal> <operator>+</operator> <name><name>preferredPreviewSize</name><operator>.</operator><name>width</name></name> <operator>+</operator> <literal type="string">"x"</literal> <operator>+</operator> <name><name>preferredPreviewSize</name><operator>.</operator><name>height</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <if>if <condition>(<expr><name>state</name> <operator>==</operator> <name><name>State</name><operator>.</operator><name>ACTIVE</name></name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>stopPreview</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <expr_stmt><expr><name>previewSize</name> <operator>=</operator> <name>preferredPreviewSize</name></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>parameters</name><operator>.</operator><name>setPreviewSize</name></name><argument_list>(<argument><expr><name><name>preferredPreviewSize</name><operator>.</operator><name>width</name></name></expr></argument>, <argument><expr><name><name>preferredPreviewSize</name><operator>.</operator><name>height</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>setParameters</name></name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><name>previewSize</name> <operator>=</operator> <call><name><name>parameters</name><operator>.</operator><name>getPreviewSize</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+        <decl_stmt><decl><type><name>long</name></type> <name>previewStartMillis</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>startPreview</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"camera.startPreview() -&gt; "</literal> <operator>+</operator> <operator>(</operator><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>previewStartMillis</name><operator>)</operator> <operator>+</operator> <literal type="string">"ms"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>state</name> <operator>=</operator> <name><name>State</name><operator>.</operator><name>ACTIVE</name></name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+            <expr_stmt><expr><call><name>requestLayout</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <for>for <control>(<init><decl><type><name>CameraViewListener</name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+              <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onCameraStart</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+          }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>stopPreview</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>stopPreview</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>state</name> <operator>=</operator> <name><name>State</name><operator>.</operator><name>RESUMED</name></name></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+  }</block></function>
+
+
+  <function><specifier>private</specifier> <type><name>Size</name></type> <name>getPreferredPreviewSize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Parameters</name></type> <name>parameters</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>CameraUtils</name><operator>.</operator><name>getPreferredPreviewSize</name></name><argument_list>(<argument><expr><name>displayOrientation</name></expr></argument>,
+                                               <argument><expr><call><name>getMeasuredWidth</name><argument_list>()</argument_list></call></expr></argument>,
+                                               <argument><expr><call><name>getMeasuredHeight</name><argument_list>()</argument_list></call></expr></argument>,
+                                               <argument><expr><name>parameters</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getCameraPictureOrientation</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRequestedOrientation</name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_UNSPECIFIED</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>outputOrientation</name> <operator>=</operator> <call><name>getCameraPictureRotation</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getWindowManager</name><argument_list>()</argument_list></call>
+                                                                <operator>.</operator><call><name>getDefaultDisplay</name><argument_list>()</argument_list></call>
+                                                                <operator>.</operator><call><name>getOrientation</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>getCameraInfo</name><argument_list>()</argument_list></call><operator>.</operator><name>facing</name> <operator>==</operator> <name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_FRONT</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>outputOrientation</name> <operator>=</operator> <operator>(</operator><literal type="number">360</literal> <operator>-</operator> <name>displayOrientation</name><operator>)</operator> <operator>%</operator> <literal type="number">360</literal></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><name>outputOrientation</name> <operator>=</operator> <name>displayOrientation</name></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <return>return <expr><name>outputOrientation</name></expr>;</return>
+  }</block></function>
+
+  <comment type="line">// https://github.com/signalapp/Signal-Android/issues/4715</comment>
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>isTroublemaker</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>getCameraInfo</name><argument_list>()</argument_list></call><operator>.</operator><name>facing</name> <operator>==</operator> <name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_FRONT</name></name> <operator>&amp;&amp;</operator>
+           <literal type="string">"JWR66Y"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>DISPLAY</name></name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+           <literal type="string">"yakju"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>PRODUCT</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>CameraInfo</name></type> <name>getCameraInfo</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CameraInfo</name></type> <name>info</name> <init>= <expr><operator>new</operator> <call><name><name>Camera</name><operator>.</operator><name>CameraInfo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>Camera</name><operator>.</operator><name>getCameraInfo</name></name><argument_list>(<argument><expr><name>cameraId</name></expr></argument>, <argument><expr><name>info</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>info</name></expr>;</return>
+  }</block></function>
+
+  <comment type="line">// XXX this sucks</comment>
+  <function><specifier>private</specifier> <type><name>Activity</name></type> <name>getActivity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>Activity</name><operator>)</operator><call><name>getContext</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getCameraPictureRotation</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>orientation</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CameraInfo</name></type> <name>info</name> <init>= <expr><call><name>getCameraInfo</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>        <name>rotation</name></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>orientation</name> <operator>=</operator> <operator>(</operator><name>orientation</name> <operator>+</operator> <literal type="number">45</literal><operator>)</operator> <operator>/</operator> <literal type="number">90</literal> <operator>*</operator> <literal type="number">90</literal></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>info</name><operator>.</operator><name>facing</name></name> <operator>==</operator> <name><name>Camera</name><operator>.</operator><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_FRONT</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>rotation</name> <operator>=</operator> <operator>(</operator><name><name>info</name><operator>.</operator><name>orientation</name></name> <operator>-</operator> <name>orientation</name> <operator>+</operator> <literal type="number">360</literal><operator>)</operator> <operator>%</operator> <literal type="number">360</literal></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name>rotation</name> <operator>=</operator> <operator>(</operator><name><name>info</name><operator>.</operator><name>orientation</name></name> <operator>+</operator> <name>orientation</name><operator>)</operator> <operator>%</operator> <literal type="number">360</literal></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <return>return <expr><name>rotation</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>OnOrientationChange</name> <super><extends>extends <name>OrientationEventListener</name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <name>OnOrientationChange</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>disable</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onOrientationChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>orientation</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <name>orientation</name> <operator>!=</operator> <name>ORIENTATION_UNKNOWN</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>newOutputOrientation</name> <init>= <expr><call><name>getCameraPictureRotation</name><argument_list>(<argument><expr><name>orientation</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>newOutputOrientation</name> <operator>!=</operator> <name>outputOrientation</name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name>outputOrientation</name> <operator>=</operator> <name>newOutputOrientation</name></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name><name>Camera</name><operator>.</operator><name>Parameters</name></name></type> <name>params</name> <init>= <expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParameters</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <expr_stmt><expr><call><name><name>params</name><operator>.</operator><name>setRotation</name></name><argument_list>(<argument><expr><name>outputOrientation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <try>try <block>{
+            <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setParameters</name><argument_list>(<argument><expr><name>params</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block>
+          <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Exception updating camera parameters in orientation change"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch></try>
+        }</block></then></if>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takePicture</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>previewRect</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParameters</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"camera not in capture-ready state"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>camera</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setOneShotPreviewCallback</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Camera</name><operator>.</operator><name>PreviewCallback</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onPreviewFrame</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>data</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Camera</name></type> <name>camera</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>  <name>rotation</name>     <init>= <expr><call><name>getCameraPictureOrientation</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Size</name></type> <name>previewSize</name>  <init>= <expr><call><name><name>camera</name><operator>.</operator><name>getParameters</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPreviewSize</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>croppingRect</name> <init>= <expr><call><name>getCroppedRect</name><argument_list>(<argument><expr><name>previewSize</name></expr></argument>, <argument><expr><name>previewRect</name></expr></argument>, <argument><expr><name>rotation</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"previewSize: "</literal> <operator>+</operator> <name><name>previewSize</name><operator>.</operator><name>width</name></name> <operator>+</operator> <literal type="string">"x"</literal> <operator>+</operator> <name><name>previewSize</name><operator>.</operator><name>height</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"data bytes: "</literal> <operator>+</operator> <name><name>data</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"previewFormat: "</literal> <operator>+</operator> <call><name><name>camera</name><operator>.</operator><name>getParameters</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPreviewFormat</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"croppingRect: "</literal> <operator>+</operator> <call><name><name>croppingRect</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"rotation: "</literal> <operator>+</operator> <name>rotation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><operator>new</operator> <call><name>CaptureTask</name><argument_list>(<argument><expr><name>previewSize</name></expr></argument>, <argument><expr><name>rotation</name></expr></argument>, <argument><expr><name>croppingRect</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Rect</name></type> <name>getCroppedRect</name><parameter_list>(<parameter><decl><type><name>Size</name></type> <name>cameraPreviewSize</name></decl></parameter>, <parameter><decl><type><name>Rect</name></type> <name>visibleRect</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>rotation</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>previewWidth</name>  <init>= <expr><name><name>cameraPreviewSize</name><operator>.</operator><name>width</name></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>previewHeight</name> <init>= <expr><name><name>cameraPreviewSize</name><operator>.</operator><name>height</name></name></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>rotation</name> <operator>%</operator> <literal type="number">180</literal> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>rotateRect</name><argument_list>(<argument><expr><name>visibleRect</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+    <decl_stmt><decl><type><name>float</name></type> <name>scale</name> <init>= <expr><operator>(</operator><name>float</name><operator>)</operator> <name>previewWidth</name> <operator>/</operator> <call><name><name>visibleRect</name><operator>.</operator><name>width</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>visibleRect</name><operator>.</operator><name>height</name></name><argument_list>()</argument_list></call> <operator>*</operator> <name>scale</name> <operator>&gt;</operator> <name>previewHeight</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>scale</name> <operator>=</operator> <operator>(</operator><name>float</name><operator>)</operator> <name>previewHeight</name> <operator>/</operator> <call><name><name>visibleRect</name><operator>.</operator><name>height</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>newWidth</name>  <init>= <expr><call><name><name>visibleRect</name><operator>.</operator><name>width</name></name><argument_list>()</argument_list></call>  <operator>*</operator> <name>scale</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>newHeight</name> <init>= <expr><call><name><name>visibleRect</name><operator>.</operator><name>height</name></name><argument_list>()</argument_list></call> <operator>*</operator> <name>scale</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>centerX</name>   <init>= <expr><ternary><condition><expr><operator>(</operator><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <literal type="number">14</literal> <operator>||</operator> <call><name>isTroublemaker</name><argument_list>()</argument_list></call><operator>)</operator></expr> ?</condition><then> <expr><name>previewWidth</name> <operator>-</operator> <name>newWidth</name> <operator>/</operator> <literal type="number">2</literal></expr> </then><else>: <expr><name>previewWidth</name> <operator>/</operator> <literal type="number">2</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>centerY</name>   <init>= <expr><name>previewHeight</name> <operator>/</operator> <literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>visibleRect</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>centerX</name> <operator>-</operator> <name>newWidth</name>  <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>,
+                    <argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>centerY</name> <operator>-</operator> <name>newHeight</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>,
+                    <argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>centerX</name> <operator>+</operator> <name>newWidth</name>  <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>,
+                    <argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>centerY</name> <operator>+</operator> <name>newHeight</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>rotation</name> <operator>%</operator> <literal type="number">180</literal> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>rotateRect</name><argument_list>(<argument><expr><name>visibleRect</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    <return>return <expr><name>visibleRect</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"SuspiciousNameCombination"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>rotateRect</name><parameter_list>(<parameter><decl><type><name>Rect</name></type> <name>rect</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>rect</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name><name>rect</name><operator>.</operator><name>top</name></name></expr></argument>, <argument><expr><name><name>rect</name><operator>.</operator><name>left</name></name></expr></argument>, <argument><expr><name><name>rect</name><operator>.</operator><name>bottom</name></name></expr></argument>, <argument><expr><name><name>rect</name><operator>.</operator><name>right</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>enqueueTask</name><parameter_list>(<parameter><decl><type><name>SerialAsyncTask</name></type> <name>job</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>AsyncTask</name><operator>.</operator><name>SERIAL_EXECUTOR</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><name>job</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>abstract</specifier> class <name><name>SerialAsyncTask</name><parameter_list>&lt;<parameter><name>Result</name></parameter>&gt;</parameter_list></name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name>onWait</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"skipping task, preconditions not met in onWait()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMainSync</name></name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>onPreMain</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>Result</name></type> <name>result</name> <init>= <expr><call><name>onRunBackground</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMainSync</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name>onPostMain</name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>boolean</name></type> <name>onWait</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="boolean">true</literal></expr>;</return> }</block></function>
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>onPreMain</name><parameter_list>()</parameter_list> <block>{}</block></function>
+    <function><specifier>protected</specifier> <type><name>Result</name></type> <name>onRunBackground</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="null">null</literal></expr>;</return> }</block></function>
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>onPostMain</name><parameter_list>(<parameter><decl><type><name>Result</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>abstract</specifier> class <name><name>PostInitializationTask</name><parameter_list>&lt;<parameter><name>Result</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>SerialAsyncTask</name><argument_list type="generic">&lt;<argument><name>Result</name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation> <specifier>protected</specifier> <type><name>boolean</name></type> <name>onWait</name><parameter_list>()</parameter_list> <block>{
+      <synchronized>synchronized <init>(<expr><name><name>CameraView</name><operator>.</operator><name>this</name></name></expr>)</init> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>camera</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></then></if>
+        <while>while <condition>(<expr><call><name>getMeasuredHeight</name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal> <operator>||</operator> <call><name>getMeasuredWidth</name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal> <operator>||</operator> <operator>!</operator><call><name><name>surface</name><operator>.</operator><name>isReady</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"waiting. surface ready? %s"</literal></expr></argument>, <argument><expr><call><name><name>surface</name><operator>.</operator><name>isReady</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>wait</name></name><argument_list>(<argument><expr><name><name>CameraView</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></while>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></synchronized>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>CaptureTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name><name>byte</name><index>[]</index></name></argument>, <argument><name>Void</name></argument>, <argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Size</name></type> <name>previewSize</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>  <name>rotation</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Rect</name></type> <name>croppingRect</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>CaptureTask</name><parameter_list>(<parameter><decl><type><name>Size</name></type> <name>previewSize</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>rotation</name></decl></parameter>, <parameter><decl><type><name>Rect</name></type> <name>croppingRect</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>previewSize</name></name>  <operator>=</operator> <name>previewSize</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>rotation</name></name>     <operator>=</operator> <name>rotation</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>croppingRect</name></name> <operator>=</operator> <name>croppingRect</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>data</name> <init>= <expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <try>try <block>{
+        <return>return <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>createFromNV21</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>,
+                                         <argument><expr><name><name>previewSize</name><operator>.</operator><name>width</name></name></expr></argument>,
+                                         <argument><expr><name><name>previewSize</name><operator>.</operator><name>height</name></name></expr></argument>,
+                                         <argument><expr><name>rotation</name></expr></argument>,
+                                         <argument><expr><name>croppingRect</name></expr></argument>,
+                                         <argument><expr><name>cameraId</name> <operator>==</operator> <name><name>CameraInfo</name><operator>.</operator><name>CAMERA_FACING_FRONT</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>imageBytes</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>imageBytes</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <for>for <control>(<init><decl><type><name>CameraViewListener</name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+          <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onImageCapture</name></name><argument_list>(<argument><expr><name>imageBytes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>PreconditionsNotMetException</name> <super><extends>extends <name>Exception</name></extends></super> <block>{}</block></class>
+
+  <interface><specifier>public</specifier> interface <name>CameraViewListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onImageCapture</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>imageBytes</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onCameraFail</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onCameraStart</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onCameraStop</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface><specifier>public</specifier> interface <name>PreviewCallback</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onPreviewFrame</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PreviewFrame</name></type> <name>frame</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>PreviewFrame</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>data</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier>          <name>int</name></type>    <name>width</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier>          <name>int</name></type>    <name>height</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier>          <name>int</name></type>    <name>orientation</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>PreviewFrame</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>data</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>orientation</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>data</name></name>        <operator>=</operator> <name>data</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name>       <operator>=</operator> <name>width</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name>      <operator>=</operator> <name>height</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>orientation</name></name> <operator>=</operator> <name>orientation</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>byte</name><index>[]</index></name></type> <name>getData</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>data</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getWidth</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>width</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getHeight</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>height</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getOrientation</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>orientation</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <enum><specifier>private</specifier> enum <name>State</name> <block>{
+    <decl><name>PAUSED</name></decl>, <decl><name>RESUMED</name></decl>, <decl><name>ACTIVE</name></decl>
+  }</block></enum>
+}</block></class>
+</unit>

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\MmsSmsColumns.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+<interface><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"UnnecessaryInterfaceModifier"</literal></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> interface <name>MmsSmsColumns</name> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>                       <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NORMALIZED_DATE_SENT</name>     <init>= <expr><literal type="string">"date_sent"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NORMALIZED_DATE_RECEIVED</name> <init>= <expr><literal type="string">"date_received"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>THREAD_ID</name>                <init>= <expr><literal type="string">"thread_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>READ</name>                     <init>= <expr><literal type="string">"read"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>BODY</name>                     <init>= <expr><literal type="string">"body"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS</name>                  <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS_DEVICE_ID</name>        <init>= <expr><literal type="string">"address_device_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DELIVERY_RECEIPT_COUNT</name>   <init>= <expr><literal type="string">"delivery_receipt_count"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>READ_RECEIPT_COUNT</name>       <init>= <expr><literal type="string">"read_receipt_count"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MISMATCHED_IDENTITIES</name>    <init>= <expr><literal type="string">"mismatched_identities"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNIQUE_ROW_ID</name>            <init>= <expr><literal type="string">"unique_row_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SUBSCRIPTION_ID</name>          <init>= <expr><literal type="string">"subscription_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXPIRES_IN</name>               <init>= <expr><literal type="string">"expires_in"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXPIRE_STARTED</name>           <init>= <expr><literal type="string">"expire_started"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NOTIFIED</name>                 <init>= <expr><literal type="string">"notified"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNIDENTIFIED</name>             <init>= <expr><literal type="string">"unidentified"</literal></expr></init></decl>;</decl_stmt>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Types</name> <block>{
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>TOTAL_MASK</name> <init>= <expr><literal type="number">0xFFFFFFFF</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Base Types</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_TYPE_MASK</name>                     <init>= <expr><literal type="number">0x1F</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>INCOMING_CALL_TYPE</name>                 <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>OUTGOING_CALL_TYPE</name>                 <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>MISSED_CALL_TYPE</name>                   <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>JOINED_TYPE</name>                        <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_INBOX_TYPE</name>                    <init>= <expr><literal type="number">20</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_OUTBOX_TYPE</name>                   <init>= <expr><literal type="number">21</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_SENDING_TYPE</name>                  <init>= <expr><literal type="number">22</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_SENT_TYPE</name>                     <init>= <expr><literal type="number">23</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_SENT_FAILED_TYPE</name>              <init>= <expr><literal type="number">24</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_PENDING_SECURE_SMS_FALLBACK</name>   <init>= <expr><literal type="number">25</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_PENDING_INSECURE_SMS_FALLBACK</name> <init>= <expr><literal type="number">26</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier>    <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>BASE_DRAFT_TYPE</name>                    <init>= <expr><literal type="number">27</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>long</name><index>[]</index></name></type> <name>OUTGOING_MESSAGE_TYPES</name> <init>= <expr><block>{<expr><name>BASE_OUTBOX_TYPE</name></expr>, <expr><name>BASE_SENT_TYPE</name></expr>,
+                                                            <expr><name>BASE_SENDING_TYPE</name></expr>, <expr><name>BASE_SENT_FAILED_TYPE</name></expr>,
+                                                            <expr><name>BASE_PENDING_SECURE_SMS_FALLBACK</name></expr>,
+                                                            <expr><name>BASE_PENDING_INSECURE_SMS_FALLBACK</name></expr>,
+                                                            <expr><name>OUTGOING_CALL_TYPE</name></expr>}</block></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Message attributes</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>MESSAGE_ATTRIBUTE_MASK</name> <init>= <expr><literal type="number">0xE0</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>MESSAGE_FORCE_SMS_BIT</name>  <init>= <expr><literal type="number">0x40</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Key Exchange Information</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_MASK</name>                  <init>= <expr><literal type="number">0xFF00</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_BIT</name>                   <init>= <expr><literal type="number">0x8000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_IDENTITY_VERIFIED_BIT</name> <init>= <expr><literal type="number">0x4000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_IDENTITY_DEFAULT_BIT</name>  <init>= <expr><literal type="number">0x2000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_CORRUPTED_BIT</name>         <init>= <expr><literal type="number">0x1000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_INVALID_VERSION_BIT</name>   <init>= <expr><literal type="number">0x800</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_BUNDLE_BIT</name>            <init>= <expr><literal type="number">0x400</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_IDENTITY_UPDATE_BIT</name>   <init>= <expr><literal type="number">0x200</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KEY_EXCHANGE_CONTENT_FORMAT</name>        <init>= <expr><literal type="number">0x100</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Secure Message Information</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>SECURE_MESSAGE_BIT</name> <init>= <expr><literal type="number">0x800000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>END_SESSION_BIT</name>    <init>= <expr><literal type="number">0x400000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>PUSH_MESSAGE_BIT</name>   <init>= <expr><literal type="number">0x200000</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Group Message Information</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>GROUP_UPDATE_BIT</name>            <init>= <expr><literal type="number">0x10000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>GROUP_QUIT_BIT</name>              <init>= <expr><literal type="number">0x20000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>EXPIRATION_TIMER_UPDATE_BIT</name> <init>= <expr><literal type="number">0x40000</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Encrypted Storage Information XXX</comment>
+    <decl_stmt><decl><specifier>public</specifier>    <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ENCRYPTION_MASK</name>                  <init>= <expr><literal type="number">0xFF000000</literal></expr></init></decl>;</decl_stmt>
+    <comment type="line">// public    static final long ENCRYPTION_SYMMETRIC_BIT         = 0x80000000; Deprecated</comment>
+    <comment type="line">// protected static final long ENCRYPTION_ASYMMETRIC_BIT        = 0x40000000; Deprecated</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ENCRYPTION_REMOTE_BIT</name>            <init>= <expr><literal type="number">0x20000000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ENCRYPTION_REMOTE_FAILED_BIT</name>     <init>= <expr><literal type="number">0x10000000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ENCRYPTION_REMOTE_NO_SESSION_BIT</name> <init>= <expr><literal type="number">0x08000000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ENCRYPTION_REMOTE_DUPLICATE_BIT</name>  <init>= <expr><literal type="number">0x04000000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ENCRYPTION_REMOTE_LEGACY_BIT</name>     <init>= <expr><literal type="number">0x02000000</literal></expr></init></decl>;</decl_stmt>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDraftMessageType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_DRAFT_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isFailedMessageType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_SENT_FAILED_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isOutgoingMessageType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <for>for <control>(<init><decl><type><name>long</name></type> <name>outgoingType</name> <range>: <expr><name>OUTGOING_MESSAGE_TYPES</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>outgoingType</name></expr>)</condition><then>
+          <block type="pseudo"><return>return <expr><literal type="boolean">true</literal></expr>;</return></block></then></if>
+      }</block></for>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>getOutgoingEncryptedMessageType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>Types</name><operator>.</operator><name>BASE_SENDING_TYPE</name></name> <operator>|</operator> <name><name>Types</name><operator>.</operator><name>SECURE_MESSAGE_BIT</name></name> <operator>|</operator> <name><name>Types</name><operator>.</operator><name>PUSH_MESSAGE_BIT</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>getOutgoingSmsMessageType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>Types</name><operator>.</operator><name>BASE_SENDING_TYPE</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isForcedSms</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>MESSAGE_FORCE_SMS_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPendingMessageType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return
+          <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_OUTBOX_TYPE</name> <operator>||</operator>
+          <operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_SENDING_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isSentType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_SENT_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPendingSmsFallbackType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_PENDING_INSECURE_SMS_FALLBACK</name> <operator>||</operator>
+             <operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_PENDING_SECURE_SMS_FALLBACK</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPendingSecureSmsFallbackType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_PENDING_SECURE_SMS_FALLBACK</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPendingInsecureSmsFallbackType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_PENDING_INSECURE_SMS_FALLBACK</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isInboxType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>BASE_INBOX_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isJoinedType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>BASE_TYPE_MASK</name><operator>)</operator> <operator>==</operator> <name>JOINED_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isSecureType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>SECURE_MESSAGE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPushType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>PUSH_MESSAGE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isEndSessionType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>END_SESSION_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isKeyExchangeType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isIdentityVerified</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_IDENTITY_VERIFIED_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isIdentityDefault</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_IDENTITY_DEFAULT_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isCorruptedKeyExchange</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_CORRUPTED_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isInvalidVersionKeyExchange</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_INVALID_VERSION_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isBundleKeyExchange</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_BUNDLE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isContentBundleKeyExchange</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_CONTENT_FORMAT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isIdentityUpdate</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>KEY_EXCHANGE_IDENTITY_UPDATE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isCallLog</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><name>type</name> <operator>==</operator> <name>INCOMING_CALL_TYPE</name> <operator>||</operator> <name>type</name> <operator>==</operator> <name>OUTGOING_CALL_TYPE</name> <operator>||</operator> <name>type</name> <operator>==</operator> <name>MISSED_CALL_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isExpirationTimerUpdate</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>EXPIRATION_TIMER_UPDATE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isIncomingCall</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><name>type</name> <operator>==</operator> <name>INCOMING_CALL_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isOutgoingCall</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><name>type</name> <operator>==</operator> <name>OUTGOING_CALL_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isMissedCall</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><name>type</name> <operator>==</operator> <name>MISSED_CALL_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isGroupUpdate</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>GROUP_UPDATE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isGroupQuit</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>GROUP_QUIT_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isFailedDecryptType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>ENCRYPTION_REMOTE_FAILED_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDuplicateMessageType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>ENCRYPTION_REMOTE_DUPLICATE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDecryptInProgressType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <literal type="number">0x40000000</literal><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return> <comment type="line">// Inline deprecated asymmetric encryption type</comment>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isNoRemoteSessionType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>ENCRYPTION_REMOTE_NO_SESSION_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isLegacyType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>type</name> <operator>&amp;</operator> <name>ENCRYPTION_REMOTE_LEGACY_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal> <operator>||</operator>
+             <operator>(</operator><name>type</name> <operator>&amp;</operator> <name>ENCRYPTION_REMOTE_BIT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>translateFromSystemBaseType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>theirType</name></decl></parameter>)</parameter_list> <block>{
+<comment type="line">//    public static final int NONE_TYPE           = 0;</comment>
+<comment type="line">//    public static final int INBOX_TYPE          = 1;</comment>
+<comment type="line">//    public static final int SENT_TYPE           = 2;</comment>
+<comment type="line">//    public static final int SENT_PENDING        = 4;</comment>
+<comment type="line">//    public static final int FAILED_TYPE         = 5;</comment>
+
+      <switch>switch <condition>(<expr><operator>(</operator><name>int</name><operator>)</operator><name>theirType</name></expr>)</condition> <block>{
+        <case>case <expr><literal type="number">1</literal></expr>:</case> <return>return <expr><name>BASE_INBOX_TYPE</name></expr>;</return>
+        <case>case <expr><literal type="number">2</literal></expr>:</case> <return>return <expr><name>BASE_SENT_TYPE</name></expr>;</return>
+        <case>case <expr><literal type="number">3</literal></expr>:</case> <return>return <expr><name>BASE_DRAFT_TYPE</name></expr>;</return>
+        <case>case <expr><literal type="number">4</literal></expr>:</case> <return>return <expr><name>BASE_OUTBOX_TYPE</name></expr>;</return>
+        <case>case <expr><literal type="number">5</literal></expr>:</case> <return>return <expr><name>BASE_SENT_FAILED_TYPE</name></expr>;</return>
+        <case>case <expr><literal type="number">6</literal></expr>:</case> <return>return <expr><name>BASE_OUTBOX_TYPE</name></expr>;</return>
+      }</block></switch>
+
+      <return>return <expr><name>BASE_INBOX_TYPE</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>translateToSystemBaseType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <if>if      <condition>(<expr><call><name>isInboxType</name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>)</condition><then>           <block type="pseudo"><return>return <expr><literal type="number">1</literal></expr>;</return></block></then>
+      <elseif>else <if>if <condition>(<expr><call><name>isOutgoingMessageType</name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">2</literal></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><call><name>isFailedMessageType</name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>)</condition><then>   <block type="pseudo"><return>return <expr><literal type="number">5</literal></expr>;</return></block></then></if></elseif></if>
+
+      <return>return <expr><literal type="number">1</literal></expr>;</return>
+    }</block></function>
+
+
+<comment type="line">//</comment>
+<comment type="line">//</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static final int NONE_TYPE           = 0;</comment>
+<comment type="line">//    public static final int INBOX_TYPE          = 1;</comment>
+<comment type="line">//    public static final int SENT_TYPE           = 2;</comment>
+<comment type="line">//    public static final int SENT_PENDING        = 4;</comment>
+<comment type="line">//    public static final int FAILED_TYPE         = 5;</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static final int OUTBOX_TYPE = 43;  // Messages are stored local encrypted and need delivery.</comment>
+<comment type="line">//</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static final int ENCRYPTING_TYPE      = 42;  // Messages are stored local encrypted and need async encryption and delivery.</comment>
+<comment type="line">//    public static final int SECURE_SENT_TYPE     = 44;  // Messages were sent with async encryption.</comment>
+<comment type="line">//    public static final int SECURE_RECEIVED_TYPE = 45;  // Messages were received with async decryption.</comment>
+<comment type="line">//    public static final int FAILED_DECRYPT_TYPE  = 46;  // Messages were received with async encryption and failed to decrypt.</comment>
+<comment type="line">//    public static final int DECRYPTING_TYPE      = 47;  // Messages are in the process of being asymmetricaly decrypted.</comment>
+<comment type="line">//    public static final int NO_SESSION_TYPE      = 48;  // Messages were received with async encryption but there is no session yet.</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static final int OUTGOING_KEY_EXCHANGE_TYPE  = 49;</comment>
+<comment type="line">//    public static final int INCOMING_KEY_EXCHANGE_TYPE  = 50;</comment>
+<comment type="line">//    public static final int STALE_KEY_EXCHANGE_TYPE     = 51;</comment>
+<comment type="line">//    public static final int PROCESSED_KEY_EXCHANGE_TYPE = 52;</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static final int[] OUTGOING_MESSAGE_TYPES = {SENT_TYPE, SENT_PENDING, ENCRYPTING_TYPE,</comment>
+<comment type="line">//                                                        OUTBOX_TYPE, SECURE_SENT_TYPE,</comment>
+<comment type="line">//                                                        FAILED_TYPE, OUTGOING_KEY_EXCHANGE_TYPE};</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static boolean isFailedMessageType(long type) {</comment>
+<comment type="line">//      return type == FAILED_TYPE;</comment>
+<comment type="line">//    }</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static boolean isOutgoingMessageType(long type) {</comment>
+<comment type="line">//      for (int outgoingType : OUTGOING_MESSAGE_TYPES) {</comment>
+<comment type="line">//        if (type == outgoingType)</comment>
+<comment type="line">//          return true;</comment>
+<comment type="line">//      }</comment>
+<comment type="line">//</comment>
+<comment type="line">//      return false;</comment>
+<comment type="line">//    }</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static boolean isPendingMessageType(long type) {</comment>
+<comment type="line">//      return type == SENT_PENDING || type == ENCRYPTING_TYPE || type == OUTBOX_TYPE;</comment>
+<comment type="line">//    }</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static boolean isSecureType(long type) {</comment>
+<comment type="line">//      return</comment>
+<comment type="line">//          type == SECURE_SENT_TYPE     || type == ENCRYPTING_TYPE ||</comment>
+<comment type="line">//          type == SECURE_RECEIVED_TYPE || type == DECRYPTING_TYPE;</comment>
+<comment type="line">//    }</comment>
+<comment type="line">//</comment>
+<comment type="line">//    public static boolean isKeyExchangeType(long type) {</comment>
+<comment type="line">//      return type == OUTGOING_KEY_EXCHANGE_TYPE || type == INCOMING_KEY_EXCHANGE_TYPE;</comment>
+<comment type="line">//    }</comment>
+  }</block></class>
+
+
+}</block></interface>
+</unit>

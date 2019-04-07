@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\webrtc\audio\IncomingRinger.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>audio</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>AudioManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaPlayer</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Vibrator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ServiceUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IncomingRinger</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>IncomingRinger</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>long</name><index>[]</index></name></type> <name>VIBRATE_PATTERN</name> <init>= <expr><block>{<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1000</literal></expr>, <expr><literal type="number">1000</literal></expr>}</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Vibrator</name></type> <name>vibrator</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>MediaPlayer</name></type> <name>player</name></decl>;</decl_stmt>
+
+  <constructor><name>IncomingRinger</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>  <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>vibrator</name></name> <operator>=</operator> <operator>(</operator><name>Vibrator</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>VIBRATOR_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>start</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>vibrate</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AudioManager</name></type> <name>audioManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getAudioManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>player</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>player</name><operator>.</operator><name>release</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    <if>if <condition>(<expr><name>uri</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>    <block type="pseudo"><expr_stmt><expr><name>player</name> <operator>=</operator> <call><name>createPlayer</name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>ringerMode</name> <init>= <expr><call><name><name>audioManager</name><operator>.</operator><name>getRingerMode</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name>shouldVibrate</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>player</name></expr></argument>, <argument><expr><name>ringerMode</name></expr></argument>, <argument><expr><name>vibrate</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Starting vibration"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>vibrator</name><operator>.</operator><name>vibrate</name></name><argument_list>(<argument><expr><name>VIBRATE_PATTERN</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>player</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>ringerMode</name> <operator>==</operator> <name><name>AudioManager</name><operator>.</operator><name>RINGER_MODE_NORMAL</name></name></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>player</name><operator>.</operator><name>isPlaying</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>player</name><operator>.</operator><name>prepare</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>player</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Playing ringtone now..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Ringtone is already playing, declining to restart."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalStateException</name></type> | <type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>player</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Not ringing, mode: "</literal> <operator>+</operator> <name>ringerMode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>stop</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>player</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Stopping ringer"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>player</name><operator>.</operator><name>release</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>player</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Cancelling vibrator"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>vibrator</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>shouldVibrate</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>MediaPlayer</name></type> <name>player</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>ringerMode</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>vibrate</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>player</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><call><name>shouldVibrateNew</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>ringerMode</name></expr></argument>, <argument><expr><name>vibrate</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><call><name>shouldVibrateOld</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>vibrate</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>boolean</name></type> <name>shouldVibrateNew</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>ringerMode</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>vibrate</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Vibrator</name></type> <name>vibrator</name> <init>= <expr><operator>(</operator><name>Vibrator</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>VIBRATOR_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>vibrator</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>vibrator</name><operator>.</operator><name>hasVibrator</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>vibrate</name></expr>)</condition><then> <block>{
+      <return>return <expr><name>ringerMode</name> <operator>!=</operator> <name><name>AudioManager</name><operator>.</operator><name>RINGER_MODE_SILENT</name></name></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><name>ringerMode</name> <operator>==</operator> <name><name>AudioManager</name><operator>.</operator><name>RINGER_MODE_VIBRATE</name></name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>shouldVibrateOld</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>vibrate</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AudioManager</name></type> <name>audioManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getAudioManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>vibrate</name> <operator>&amp;&amp;</operator> <call><name><name>audioManager</name><operator>.</operator><name>shouldVibrate</name></name><argument_list>(<argument><expr><name><name>AudioManager</name><operator>.</operator><name>VIBRATE_TYPE_RINGER</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>MediaPlayer</name></type> <name>createPlayer</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>ringtoneUri</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>MediaPlayer</name></type> <name>mediaPlayer</name> <init>= <expr><operator>new</operator> <call><name>MediaPlayer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>mediaPlayer</name><operator>.</operator><name>setOnErrorListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaPlayerErrorListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mediaPlayer</name><operator>.</operator><name>setDataSource</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>ringtoneUri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mediaPlayer</name><operator>.</operator><name>setLooping</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mediaPlayer</name><operator>.</operator><name>setAudioStreamType</name></name><argument_list>(<argument><expr><name><name>AudioManager</name><operator>.</operator><name>STREAM_RING</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>mediaPlayer</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to create player for incoming call ringer"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+
+  <class><specifier>private</specifier> class <name>MediaPlayerErrorListener</name> <super><implements>implements <name><name>MediaPlayer</name><operator>.</operator><name>OnErrorListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onError</name><parameter_list>(<parameter><decl><type><name>MediaPlayer</name></type> <name>mp</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>what</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>extra</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onError("</literal> <operator>+</operator> <name>mp</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>what</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>extra</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>player</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

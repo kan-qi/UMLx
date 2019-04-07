@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\ui\ChangeLanguage.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RadioButton</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ChangeLanguage</name> <super><extends>extends <name>Activity</name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_change_language</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>RadioButton</name></type> <name>rbtnRussian</name> <init>= <expr><operator>(</operator><name>RadioButton</name><operator>)</operator><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>rbtnRussian</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>rbtnRussian</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>radioButtonClickListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>RadioButton</name></type> <name>rbtnEnglish</name> <init>= <expr><operator>(</operator><name>RadioButton</name><operator>)</operator><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>rbtnEnglish</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>rbtnEnglish</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>radioButtonClickListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>RadioButton</name></type> <name>rbtnSpanish</name> <init>= <expr><operator>(</operator><name>RadioButton</name><operator>)</operator><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>rbtnSpanish</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>rbtnSpanish</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>radioButtonClickListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <decl_stmt><decl><type><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></type> <name>radioButtonClickListener</name> <init>= <expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>RadioButton</name></type> <name>rb</name> <init>= <expr><operator>(</operator><name>RadioButton</name><operator>)</operator><name>v</name></expr></init></decl>;</decl_stmt>
+            <switch>switch <condition>(<expr><call><name><name>rb</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+                <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>rbtnRussian</name></name></expr>:</case>
+
+                    <break>break;</break>
+                <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>rbtnEnglish</name></name></expr>:</case>
+
+                    <break>break;</break>
+                <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>rbtnSpanish</name></name></expr>:</case>
+
+                    <break>break;</break>
+
+                <default>default:</default>
+                    <break>break;</break>
+            }</block></switch>
+        }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>

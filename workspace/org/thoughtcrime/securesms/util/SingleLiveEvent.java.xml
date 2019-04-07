@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\SingleLiveEvent.java"><comment type="block">/*
+ *  Copyright 2017 Google Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>LifecycleOwner</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>MutableLiveData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>Observer</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>MainThread</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>atomic</name><operator>.</operator><name>AtomicBoolean</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A lifecycle-aware observable that sends only new updates after subscription, used for events like
+ * navigation and Snackbar messages.
+ * &lt;p&gt;
+ * This avoids a common problem with events: on configuration change (like rotation) an update
+ * can be emitted if the observer is active. This LiveData only calls the observable if there's an
+ * explicit call to setValue() or call().
+ * &lt;p&gt;
+ * Note that only one observer is going to be notified of changes.
+ */</comment>
+<class><specifier>public</specifier> class <name><name>SingleLiveEvent</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>MutableLiveData</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SingleLiveEvent</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AtomicBoolean</name></type> <name>mPending</name> <init>= <expr><operator>new</operator> <call><name>AtomicBoolean</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>MainThread</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>observe</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LifecycleOwner</name></type> <name>owner</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <specifier>final</specifier> <name><name>Observer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>observer</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>hasActiveObservers</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Multiple observers registered but only one will be notified of changes."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <comment type="line">// Observe the internal MutableLiveData</comment>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>observe</name></name><argument_list>(<argument><expr><name>owner</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>t</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><call><name><name>mPending</name><operator>.</operator><name>compareAndSet</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>observer</name><operator>.</operator><name>onChanged</name></name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>MainThread</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setValue</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>T</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>mPending</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Used for cases where T is Void, to make calls cleaner.
+   */</comment>
+  <function><annotation>@<name>MainThread</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>call</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setValue</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

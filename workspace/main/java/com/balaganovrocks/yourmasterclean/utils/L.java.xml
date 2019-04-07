@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\utils\L.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Logç»ä¸ç®¡çç±»
+ * 
+ * @author way
+ * 
+ */</comment>
+<class><specifier>public</specifier> class <name>L</name> <block>{
+	<decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDebug</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt><comment type="line">// æ¯å¦éè¦æå°bugï¼</comment>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"sage"</literal></expr></init></decl>;</decl_stmt>
+
+	<comment type="line">// ä¸é¢åä¸ªæ¯é»è®¤tagçå½æ°</comment>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>v</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<comment type="line">// ä¸é¢æ¯ä¼ å¥ç±»åæå°log</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>_class</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><call><name><name>_class</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>_class</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><call><name><name>_class</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>_class</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><call><name><name>_class</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>_class</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><call><name><name>_class</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<comment type="line">// ä¸é¢æ¯ä¼ å¥èªå®ä¹tagçå½æ°</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><name>isDebug</name></expr>)</condition><then>
+			<block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+	}</block></function>
+}</block></class>
+</unit>

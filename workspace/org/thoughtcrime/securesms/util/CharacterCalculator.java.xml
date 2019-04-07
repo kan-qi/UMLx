@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\CharacterCalculator.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2015 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>CharacterCalculator</name> <block>{
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>CharacterState</name></type> <name>calculateCharacters</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>messageBody</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharacterCalculator</name></type> <name>readFromParcel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><call><name><name>in</name><operator>.</operator><name>readInt</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><literal type="number">1</literal></expr>:</case>  <return>return <expr><operator>new</operator> <call><name>SmsCharacterCalculator</name><argument_list>()</argument_list></call></expr>;</return>
+      <case>case <expr><literal type="number">2</literal></expr>:</case>  <return>return <expr><operator>new</operator> <call><name>MmsCharacterCalculator</name><argument_list>()</argument_list></call></expr>;</return>
+      <case>case <expr><literal type="number">3</literal></expr>:</case>  <return>return <expr><operator>new</operator> <call><name>PushCharacterCalculator</name><argument_list>()</argument_list></call></expr>;</return>
+      <default>default:</default> <throw>throw <expr><operator>new</operator> <call><name>IllegalArgumentException</name><argument_list>(<argument><expr><literal type="string">"Read an unsupported value for a calculator."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></switch>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>CharacterCalculator</name></type> <name>calculator</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>calculator</name> <operator>instanceof</operator> <name>SmsCharacterCalculator</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>calculator</name> <operator>instanceof</operator> <name>MmsCharacterCalculator</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>calculator</name> <operator>instanceof</operator> <name>PushCharacterCalculator</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeInt</name></name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IllegalArgumentException</name><argument_list>(<argument><expr><literal type="string">"Tried to write an unsupported calculator to a parcel."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></else></if>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>CharacterState</name> <block>{
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>charactersRemaining</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>messagesSpent</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>maxTotalMessageSize</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>maxPrimaryMessageSize</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>CharacterState</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>messagesSpent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>charactersRemaining</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>maxTotalMessageSize</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>maxPrimaryMessageSize</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messagesSpent</name></name>         <operator>=</operator> <name>messagesSpent</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>charactersRemaining</name></name>   <operator>=</operator> <name>charactersRemaining</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>maxTotalMessageSize</name></name>   <operator>=</operator> <name>maxTotalMessageSize</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>maxPrimaryMessageSize</name></name> <operator>=</operator> <name>maxPrimaryMessageSize</name></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+}</block></class>
+
+</unit>

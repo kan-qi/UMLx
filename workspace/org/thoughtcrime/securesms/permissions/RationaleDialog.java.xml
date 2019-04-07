@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\permissions\RationaleDialog.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>DrawableRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>TypedValue</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>RationaleDialog</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></type> <name>createFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><annotation>@<name>DrawableRes</name></annotation> <name>int</name><modifier>...</modifier></type> <name>drawables</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>View</name></type>      <name>view</name>   <init>= <expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>permissions_rationale_dialog</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ViewGroup</name></type> <name>header</name> <init>= <expr><call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>header_container</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>TextView</name></type>  <name>text</name>   <init>= <expr><call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>message</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name><name>drawables</name><operator>.</operator><name>length</name></name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>ImageView</name></type> <name>imageView</name> <init>= <expr><operator>new</operator> <call><name>ImageView</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>imageView</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name><name>drawables</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>imageView</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>LayoutParams</name><argument_list>(<argument><expr><name><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>, <argument><expr><name><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>header</name><operator>.</operator><name>addView</name></name><argument_list>(<argument><expr><name>imageView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>i</name> <operator>!=</operator> <name><name>drawables</name><operator>.</operator><name>length</name></name> <operator>-</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>TextView</name></type> <name>plus</name> <init>= <expr><operator>new</operator> <call><name>TextView</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>plus</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">"+"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>plus</name><operator>.</operator><name>setTextSize</name></name><argument_list>(<argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_SP</name></name></expr></argument>, <argument><expr><literal type="number">40</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>plus</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>LayoutParams</name></type> <name>layoutParams</name> <init>= <expr><operator>new</operator> <call><name>LayoutParams</name><argument_list>(<argument><expr><name><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>, <argument><expr><name><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>layoutParams</name><operator>.</operator><name>setMargins</name></name><argument_list>(<argument><expr><call><name><name>ViewUtil</name><operator>.</operator><name>dpToPx</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="number">20</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>ViewUtil</name><operator>.</operator><name>dpToPx</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="number">20</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>plus</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><name>layoutParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>header</name><operator>.</operator><name>addView</name></name><argument_list>(<argument><expr><name>plus</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+
+    <expr_stmt><expr><call><name><name>text</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>style</name><operator>.</operator><name>RationaleDialog</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setView</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

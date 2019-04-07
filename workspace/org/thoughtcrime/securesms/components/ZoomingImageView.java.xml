@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\ZoomingImageView.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>request</name><operator>.</operator><name>target</name><operator>.</operator><name>Target</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>davemorrissey</name><operator>.</operator><name>labs</name><operator>.</operator><name>subscaleview</name><operator>.</operator><name>ImageSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>davemorrissey</name><operator>.</operator><name>labs</name><operator>.</operator><name>subscaleview</name><operator>.</operator><name>SubsamplingScaleImageView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>davemorrissey</name><operator>.</operator><name>labs</name><operator>.</operator><name>subscaleview</name><operator>.</operator><name>decoder</name><operator>.</operator><name>DecoderFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>chrisbanes</name><operator>.</operator><name>photoview</name><operator>.</operator><name>PhotoView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>subsampling</name><operator>.</operator><name>AttachmentBitmapDecoder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>subsampling</name><operator>.</operator><name>AttachmentRegionDecoder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>DecryptableStreamUriLoader</name><operator>.</operator><name>DecryptableUri</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartAuthority</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapDecodingException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>ZoomingImageView</name> <super><extends>extends <name>FrameLayout</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ZoomingImageView</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>PhotoView</name></type>                 <name>photoView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SubsamplingScaleImageView</name></type> <name>subsamplingImageView</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ZoomingImageView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ZoomingImageView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ZoomingImageView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>inflate</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>zooming_image_view</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>photoView</name></name>            <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>image_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subsamplingImageView</name></name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>subsampling_image_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subsamplingImageView</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>SubsamplingScaleImageView</name><operator>.</operator><name>ORIENTATION_USE_EXIF</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setImageUri</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>contentType</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name>        <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>     <name>maxTextureSize</name> <init>= <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>getMaxTextureSize</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Max texture size: "</literal> <operator>+</operator> <name>maxTextureSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name><name>MediaUtil</name><operator>.</operator><name>isGif</name></name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+        <try>try <block>{
+          <decl_stmt><decl><type><name>InputStream</name></type> <name>inputStream</name> <init>= <expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <return>return <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>getDimensions</name></name><argument_list>(<argument><expr><name>inputStream</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> | <type><name>BitmapDecodingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></catch></try>
+      }</block></function>
+
+      <function><specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>dimensions</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Dimensions: "</literal> <operator>+</operator> <operator>(</operator><ternary><condition><expr><name>dimensions</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">"(null)"</literal></expr> </then><else>: <expr><name><name>dimensions</name><operator>.</operator><name>first</name></name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name><name>dimensions</name><operator>.</operator><name>second</name></name></expr></else></ternary><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>dimensions</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>(</operator><name><name>dimensions</name><operator>.</operator><name>first</name></name> <operator>&lt;=</operator> <name>maxTextureSize</name> <operator>&amp;&amp;</operator> <name><name>dimensions</name><operator>.</operator><name>second</name></name> <operator>&lt;=</operator> <name>maxTextureSize</name><operator>)</operator></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Loading in standard image view..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>setImageViewUri</name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Loading in subsampling image view..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>setSubsamplingImageViewUri</name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setImageViewUri</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>photoView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>subsamplingImageView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>load</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DecryptableUri</name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>dontTransform</name><argument_list>()</argument_list></call>
+                 <operator>.</operator><call><name>override</name><argument_list>(<argument><expr><name><name>Target</name><operator>.</operator><name>SIZE_ORIGINAL</name></name></expr></argument>, <argument><expr><name><name>Target</name><operator>.</operator><name>SIZE_ORIGINAL</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>photoView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setSubsamplingImageViewUri</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>subsamplingImageView</name><operator>.</operator><name>setBitmapDecoderFactory</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AttachmentBitmapDecoderFactory</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>subsamplingImageView</name><operator>.</operator><name>setRegionDecoderFactory</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AttachmentRegionDecoderFactory</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>subsamplingImageView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>photoView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>subsamplingImageView</name><operator>.</operator><name>setImage</name></name><argument_list>(<argument><expr><call><name><name>ImageSource</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>cleanup</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>photoView</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>subsamplingImageView</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>AttachmentBitmapDecoderFactory</name> <super><implements>implements <name><name>DecoderFactory</name><argument_list type="generic">&lt;<argument><name>AttachmentBitmapDecoder</name></argument>&gt;</argument_list></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>AttachmentBitmapDecoder</name></type> <name>make</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IllegalAccessException</name></expr></argument>, <argument><expr><name>InstantiationException</name></expr></argument></throws> <block>{
+      <return>return <expr><operator>new</operator> <call><name>AttachmentBitmapDecoder</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>AttachmentRegionDecoderFactory</name> <super><implements>implements <name><name>DecoderFactory</name><argument_list type="generic">&lt;<argument><name>AttachmentRegionDecoder</name></argument>&gt;</argument_list></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>AttachmentRegionDecoder</name></type> <name>make</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IllegalAccessException</name></expr></argument>, <argument><expr><name>InstantiationException</name></expr></argument></throws> <block>{
+      <return>return <expr><operator>new</operator> <call><name>AttachmentRegionDecoder</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

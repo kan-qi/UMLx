@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\preferences\widgets\ProgressPreference.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>widgets</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>PreferenceViewHolder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ProgressPreference</name> <super><extends>extends <name>Preference</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>        <name>container</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>    <name>progressText</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ProgressPreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ProgressPreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ProgressPreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ProgressPreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setWidgetLayoutResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>preference_widget_progress</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><name>PreferenceViewHolder</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBindViewHolder</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>    <operator>=</operator> <call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>progressText</name></name> <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>progress_text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>container</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProgress</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>progressText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ProgressPreference_d_messages_so_far</name></name></expr></argument>, <argument><expr><name>count</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProgressVisible</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>visible</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>visible</name></expr> ?</condition><then> <expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr> </then><else>: <expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+}</block></class>
+</unit>

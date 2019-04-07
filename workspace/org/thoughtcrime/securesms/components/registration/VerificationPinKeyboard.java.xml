@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\registration\VerificationPinKeyboard.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>registration</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>inputmethodservice</name><operator>.</operator><name>Keyboard</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>inputmethodservice</name><operator>.</operator><name>KeyboardView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RequiresApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>OvershootInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>ScaleAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>TranslateAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ProgressBar</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ListenableFuture</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>SettableFuture</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>VerificationPinKeyboard</name> <super><extends>extends <name>FrameLayout</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>KeyboardView</name></type> <name>keyboardView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ProgressBar</name></type>  <name>progressBar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>    <name>successView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>    <name>failureView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>    <name>lockedView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>OnKeyPressListener</name></type> <name>listener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>VerificationPinKeyboard</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>VerificationPinKeyboard</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>VerificationPinKeyboard</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><annotation>@<name>RequiresApi</name><argument_list>(<argument><expr><name>api</name> <operator>=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>VerificationPinKeyboard</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>inflate</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>verification_pin_keyboard_view</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>keyboardView</name></name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>keyboard_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>progressBar</name></name>  <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>progress</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>successView</name></name>  <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>success</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>failureView</name></name>  <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>failure</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lockedView</name></name>   <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>locked</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>keyboardView</name><operator>.</operator><name>setPreviewEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>keyboardView</name><operator>.</operator><name>setKeyboard</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Keyboard</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>xml</name><operator>.</operator><name>pin_keyboard</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>keyboardView</name><operator>.</operator><name>setOnKeyboardActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>KeyboardView</name><operator>.</operator><name>OnKeyboardActionListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onPress</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>primaryCode</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onKeyPress</name></name><argument_list>(<argument><expr><name>primaryCode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onRelease</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>primaryCode</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onKey</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>primaryCode</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type> <name>keyCodes</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onText</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>swipeLeft</name><parameter_list>()</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>swipeRight</name><parameter_list>()</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>swipeDown</name><parameter_list>()</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>swipeUp</name><parameter_list>()</parameter_list> <block>{}</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>displayKeyboard</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setOnKeyPressListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>OnKeyPressListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>displayKeyboard</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>keyboardView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lockedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>displayProgress</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>keyboardView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lockedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>ListenableFuture</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>displaySuccess</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>SettableFuture</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name><name>SettableFuture</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>keyboardView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lockedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successView</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>ScaleAnimation</name></type> <name>scaleAnimation</name> <init>= <expr><operator>new</operator> <call><name>ScaleAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>,
+                                                       <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>,
+                                                       <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OvershootInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">800</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setAnimationListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animation</name><operator>.</operator><name>AnimationListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>animateIn</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>successView</name></name></expr></argument>, <argument><expr><name>scaleAnimation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>ListenableFuture</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>displayFailure</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>SettableFuture</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name><name>SettableFuture</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>keyboardView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lockedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>red_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>TranslateAnimation</name></type> <name>shake</name> <init>= <expr><operator>new</operator> <call><name>TranslateAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">30</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>shake</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>shake</name><operator>.</operator><name>setRepeatCount</name></name><argument_list>(<argument><expr><literal type="number">7</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>shake</name><operator>.</operator><name>setAnimationListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animation</name><operator>.</operator><name>AnimationListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><name>shake</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>ListenableFuture</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>displayLocked</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>SettableFuture</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name><name>SettableFuture</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>keyboardView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>progressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>failureView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lockedView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lockedView</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>ScaleAnimation</name></type> <name>scaleAnimation</name> <init>= <expr><operator>new</operator> <call><name>ScaleAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>,
+                                                       <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>,
+                                                       <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OvershootInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">800</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setAnimationListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animation</name><operator>.</operator><name>AnimationListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>animateIn</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lockedView</name></name></expr></argument>, <argument><expr><name>scaleAnimation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>OnKeyPressListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onKeyPress</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>keyCode</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

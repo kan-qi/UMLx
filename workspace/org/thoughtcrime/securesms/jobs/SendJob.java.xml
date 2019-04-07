@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\SendJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>TextSecureExpiredException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MediaConstraints</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MediaStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MmsException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>transport</name><operator>.</operator><name>UndeliverableMessageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>SendJob</name> <super><extends>extends <name>ContextJob</name></extends></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SendJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>SendJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>SendJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>JobParameters</name></type> <name>parameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>parameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>getDescription</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>SendJob_sending_a_message</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><call><name><name>Util</name><operator>.</operator><name>getDaysTillBuildExpiry</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>TextSecureExpiredException</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"TextSecure expired (build %d, now %d)"</literal></expr></argument>,
+                                                         <argument><expr><name><name>BuildConfig</name><operator>.</operator><name>BUILD_TIMESTAMP</name></name></expr></argument>,
+                                                         <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Starting message send attempt"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>onSend</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Message send completed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>onSend</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws>;</function_decl>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>markAttachmentsUploaded</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>attachments</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AttachmentDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>Attachment</name></type> <name>attachment</name> <range>: <expr><name>attachments</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>markAttachmentUploaded</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>scaleAndStripExifFromAttachments</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MediaConstraints</name></type> <name>constraints</name></decl></parameter>,
+                                                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>attachments</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>AttachmentDatabase</name></type> <name>attachmentDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type>   <name>results</name>            <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>Attachment</name></type> <name>attachment</name> <range>: <expr><name>attachments</name></expr></range></decl></init>)</control> <block>{
+      <try>try <block>{
+        <if>if <condition>(<expr><call><name><name>constraints</name><operator>.</operator><name>isSatisfied</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <if>if <condition>(<expr><call><name><name>MediaUtil</name><operator>.</operator><name>isJpeg</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name>MediaStream</name></type> <name>stripped</name> <init>= <expr><call><name><name>constraints</name><operator>.</operator><name>getResizedMedia</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>attachmentDatabase</name><operator>.</operator><name>updateAttachmentData</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>, <argument><expr><name>stripped</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></else></if>
+        }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>constraints</name><operator>.</operator><name>canResize</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>MediaStream</name></type> <name>resized</name> <init>= <expr><call><name><name>constraints</name><operator>.</operator><name>getResizedMedia</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>attachmentDatabase</name><operator>.</operator><name>updateAttachmentData</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>, <argument><expr><name>resized</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif> <else>else <block>{
+          <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"Size constraints could not be met!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></else></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> | <type><name>MmsException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></for>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>log</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="string">"["</literal> <operator>+</operator> <call><name>getId</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"] "</literal> <operator>+</operator> <name>message</name> <operator>+</operator> <call><name>logSuffix</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>warn</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>warn</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>warn</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>warn</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>warn</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="string">"["</literal> <operator>+</operator> <call><name>getId</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"] "</literal> <operator>+</operator> <name>message</name> <operator>+</operator> <call><name>logSuffix</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

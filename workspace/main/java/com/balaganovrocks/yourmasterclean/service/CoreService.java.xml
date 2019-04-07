@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\service\CoreService.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>ActivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Service</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ApplicationInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Binder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>IBinder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>format</name><operator>.</operator><name>Formatter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>bean</name><operator>.</operator><name>AppProcessInfo</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Method</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CoreService</name> <super><extends>extends <name>Service</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ACTION_CLEAN_AND_EXIT</name> <init>= <expr><literal type="string">"com.balaganovrocks.service.cleaner.CLEAN_AND_EXIT"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"CleanerService"</literal></expr></init></decl>;</decl_stmt>
+
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>OnPeocessActionListener</name></type> <name>mOnActionListener</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>mIsScanning</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>mIsCleaning</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>ActivityManager</name></type> <name>activityManager</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>list</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>PackageManager</name></type> <name>packageManager</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Context</name></type> <name>mContext</name></decl>;</decl_stmt>
+
+
+    <interface><specifier>public</specifier> <specifier>static</specifier> interface <name>OnPeocessActionListener</name> <block>{
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onScanStarted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onScanProgressUpdated</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>current</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>max</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onScanCompleted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>apps</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onCleanStarted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onCleanCompleted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>cacheSize</name></decl></parameter>)</parameter_list>;</function_decl>
+    }</block></interface>
+
+    <class><specifier>public</specifier> class <name>ProcessServiceBinder</name> <super><extends>extends <name>Binder</name></extends></super> <block>{
+
+        <function><specifier>public</specifier> <type><name>CoreService</name></type> <name>getService</name><parameter_list>()</parameter_list> <block>{
+            <return>return <expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr>;</return>
+        }</block></function>
+    }</block></class>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ProcessServiceBinder</name></type> <name>mBinder</name> <init>= <expr><operator>new</operator> <call><name>ProcessServiceBinder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>IBinder</name></type> <name>onBind</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><name>mBinder</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>mContext</name> <operator>=</operator> <call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <try>try <block>{
+            <expr_stmt><expr><name>activityManager</name> <operator>=</operator> <operator>(</operator><name>ActivityManager</name><operator>)</operator>
+                    <call><name>getSystemService</name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>ACTIVITY_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>packageManager</name> <operator>=</operator> <call><name>getApplicationContext</name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>getPackageManager</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+
+        }</block></catch></try>
+
+
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>onStartCommand</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>startId</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>action</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>action</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <if>if <condition>(<expr><call><name><name>action</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>ACTION_CLEAN_AND_EXIT</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name>setOnActionListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>OnPeocessActionListener</name></super><argument_list>()</argument_list> <block>{
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>onScanStarted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+
+                    }</block></function>
+
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>onScanProgressUpdated</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>current</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>max</name></decl></parameter>)</parameter_list> <block>{
+
+                    }</block></function>
+
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>onScanCompleted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>apps</name></decl></parameter>)</parameter_list> <block>{
+                        <comment type="line">//   if (getCacheSize() &gt; 0) {</comment>
+                        <comment type="line">//     cleanCache();</comment>
+                        <comment type="line">// }</comment>
+                    }</block></function>
+
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>onCleanStarted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+
+                    }</block></function>
+
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>onCleanCompleted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>cacheSize</name></decl></parameter>)</parameter_list> <block>{
+                        <decl_stmt><decl><type><name>String</name></type> <name>msg</name> <init>= <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cleaned</name></name></expr></argument>, <argument><expr><call><name><name>Formatter</name><operator>.</operator><name>formatShortFileSize</name></name><argument_list>(
+                                <argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>cacheSize</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+                        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>msg</name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+                        <expr_stmt><expr><operator>new</operator> <call><name>Handler</name><argument_list>()</argument_list></call><operator>.</operator><call><name>postDelayed</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+                            <function><annotation>@<name>Override</name></annotation>
+                            <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+                                <expr_stmt><expr><call><name>stopSelf</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                            }</block></function>
+                        }</block></class></expr></argument>, <argument><expr><literal type="number">5000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block></function>
+                }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                <expr_stmt><expr><call><name>scanRunProcess</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></then></if>
+
+        <return>return <expr><name>START_NOT_STICKY</name></expr>;</return>
+    }</block></function>
+
+
+    <class><specifier>private</specifier> class <name>TaskScan</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Integer</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+        <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mAppCount</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onPreExecute</name><parameter_list>()</parameter_list> <block>{
+            <if>if <condition>(<expr><name>mOnActionListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mOnActionListener</name><operator>.</operator><name>onScanStarted</name></name><argument_list>(<argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name>list</name> <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>ApplicationInfo</name></type> <name>appInfo</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>AppProcessInfo</name></type> <name>abAppProcessInfo</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+            <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ActivityManager</name><operator>.</operator><name>RunningAppProcessInfo</name></name></argument>&gt;</argument_list></name></type> <name>appProcessList</name> <init>= <expr><call><name><name>activityManager</name>
+                    <operator>.</operator><name>getRunningAppProcesses</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name>publishProgress</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>appProcessList</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <for>for <control>(<init><decl><type><name><name>ActivityManager</name><operator>.</operator><name>RunningAppProcessInfo</name></name></type> <name>appProcessInfo</name> <range>: <expr><name>appProcessList</name></expr></range></decl></init>)</control> <block>{
+                <expr_stmt><expr><call><name>publishProgress</name><argument_list>(<argument><expr><operator>++</operator><name>mAppCount</name></expr></argument>, <argument><expr><call><name><name>appProcessList</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>abAppProcessInfo</name> <operator>=</operator> <operator>new</operator> <call><name>AppProcessInfo</name><argument_list>(
+                        <argument><expr><name><name>appProcessInfo</name><operator>.</operator><name>processName</name></name></expr></argument>, <argument><expr><name><name>appProcessInfo</name><operator>.</operator><name>pid</name></name></expr></argument>,
+                        <argument><expr><name><name>appProcessInfo</name><operator>.</operator><name>uid</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <try>try <block>{
+                    <expr_stmt><expr><name>appInfo</name> <operator>=</operator> <call><name><name>packageManager</name><operator>.</operator><name>getApplicationInfo</name></name><argument_list>(<argument><expr><name><name>appProcessInfo</name><operator>.</operator><name>processName</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+                    <if>if <condition>(<expr><operator>(</operator><name><name>appInfo</name><operator>.</operator><name>flags</name></name> <operator>&amp;</operator> <name><name>ApplicationInfo</name><operator>.</operator><name>FLAG_SYSTEM</name></name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                        <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>isSystem</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+                    }</block></then> <else>else <block>{
+                        <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>isSystem</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+                    }</block></else></if>
+                    <decl_stmt><decl><type><name>Drawable</name></type> <name>icon</name> <init>= <expr><call><name><name>appInfo</name><operator>.</operator><name>loadIcon</name></name><argument_list>(<argument><expr><name>packageManager</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <decl_stmt><decl><type><name>String</name></type> <name>appName</name> <init>= <expr><call><name><name>appInfo</name><operator>.</operator><name>loadLabel</name></name><argument_list>(<argument><expr><name>packageManager</name></expr></argument>)</argument_list></call>
+                            <operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>icon</name></name> <operator>=</operator> <name>icon</name></expr>;</expr_stmt>
+                    <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>appName</name></name> <operator>=</operator> <name>appName</name></expr>;</expr_stmt>
+                }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                    <comment type="line">//   e.printStackTrace();</comment>
+
+                    <comment type="line">// :æå¡çå½å</comment>
+
+                    <if>if <condition>(<expr><call><name><name>appProcessInfo</name><operator>.</operator><name>processName</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="string">":"</literal></expr></argument>)</argument_list></call> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+                        <expr_stmt><expr><name>appInfo</name> <operator>=</operator> <call><name>getApplicationInfo</name><argument_list>(<argument><expr><call><name><name>appProcessInfo</name><operator>.</operator><name>processName</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">":"</literal></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                        <if>if <condition>(<expr><name>appInfo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                            <decl_stmt><decl><type><name>Drawable</name></type> <name>icon</name> <init>= <expr><call><name><name>appInfo</name><operator>.</operator><name>loadIcon</name></name><argument_list>(<argument><expr><name>packageManager</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                            <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>icon</name></name> <operator>=</operator> <name>icon</name></expr>;</expr_stmt>
+                        }</block></then><else>else<block>{
+                            <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>icon</name></name> <operator>=</operator> <call><name><name>mContext</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_launcher</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                        }</block></else></if>
+
+                    }</block></then><else>else<block>{
+                        <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>icon</name></name> <operator>=</operator> <call><name><name>mContext</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_launcher</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block></else></if>
+                    <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>isSystem</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+                    <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>appName</name></name> <operator>=</operator> <name><name>appProcessInfo</name><operator>.</operator><name>processName</name></name></expr>;</expr_stmt>
+                }</block></catch></try>
+
+
+                <decl_stmt><decl><type><name>long</name></type> <name>memsize</name> <init>= <expr><call><name><name>activityManager</name><operator>.</operator><name>getProcessMemoryInfo</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>int</name><index>[]</index></name><block>{<expr><name><name>appProcessInfo</name><operator>.</operator><name>pid</name></name></expr>}</block></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index><operator>.</operator><call><name>getTotalPrivateDirty</name><argument_list>()</argument_list></call> <operator>*</operator> <literal type="number">1024</literal></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><name><name>abAppProcessInfo</name><operator>.</operator><name>memory</name></name> <operator>=</operator> <name>memsize</name></expr>;</expr_stmt>
+
+                <expr_stmt><expr><call><name><name>list</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>abAppProcessInfo</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+
+
+            <return>return <expr><name>list</name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onProgressUpdate</name><parameter_list>(<parameter><decl><type><name>Integer</name><modifier>...</modifier></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+            <if>if <condition>(<expr><name>mOnActionListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mOnActionListener</name><operator>.</operator><name>onScanProgressUpdated</name></name><argument_list>(<argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name><name>values</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>values</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+            <if>if <condition>(<expr><name>mOnActionListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mOnActionListener</name><operator>.</operator><name>onScanCompleted</name></name><argument_list>(<argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+
+            <expr_stmt><expr><name>mIsScanning</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        }</block></function>
+    }</block></class>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>scanRunProcess</name><parameter_list>()</parameter_list> <block>{
+        <comment type="line">// mIsScanning = true;</comment>
+
+        <expr_stmt><expr><operator>new</operator> <call><name>TaskScan</name><argument_list>()</argument_list></call><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>killBackgroundProcesses</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>processName</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// mIsScanning = true;</comment>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>packageName</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <try>try <block>{
+            <if>if <condition>(<expr><call><name><name>processName</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="string">":"</literal></expr></argument>)</argument_list></call> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>packageName</name> <operator>=</operator> <name>processName</name></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><name>packageName</name> <operator>=</operator> <call><name><name>processName</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">":"</literal></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index></expr>;</expr_stmt>
+            }</block></else></if>
+
+            <expr_stmt><expr><call><name><name>activityManager</name><operator>.</operator><name>killBackgroundProcesses</name></name><argument_list>(<argument><expr><name>packageName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <comment type="line">//</comment>
+            <decl_stmt><decl><type><name>Method</name></type> <name>forceStopPackage</name> <init>= <expr><call><name><name>activityManager</name><operator>.</operator><name>getClass</name></name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>getDeclaredMethod</name><argument_list>(<argument><expr><literal type="string">"forceStopPackage"</literal></expr></argument>, <argument><expr><name><name>String</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>forceStopPackage</name><operator>.</operator><name>setAccessible</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>forceStopPackage</name><operator>.</operator><name>invoke</name></name><argument_list>(<argument><expr><name>activityManager</name></expr></argument>, <argument><expr><name>packageName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+
+    }</block></function>
+
+
+    <class><specifier>private</specifier> class <name>TaskClean</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Long</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onPreExecute</name><parameter_list>()</parameter_list> <block>{
+            <if>if <condition>(<expr><name>mOnActionListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mOnActionListener</name><operator>.</operator><name>onCleanStarted</name></name><argument_list>(<argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>Long</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>long</name></type> <name>beforeMemory</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>long</name></type> <name>endMemory</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name><name>ActivityManager</name><operator>.</operator><name>MemoryInfo</name></name></type> <name>memoryInfo</name> <init>= <expr><operator>new</operator> <call><name><name>ActivityManager</name><operator>.</operator><name>MemoryInfo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>activityManager</name><operator>.</operator><name>getMemoryInfo</name></name><argument_list>(<argument><expr><name>memoryInfo</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>beforeMemory</name> <operator>=</operator> <name><name>memoryInfo</name><operator>.</operator><name>availMem</name></name></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ActivityManager</name><operator>.</operator><name>RunningAppProcessInfo</name></name></argument>&gt;</argument_list></name></type> <name>appProcessList</name> <init>= <expr><call><name><name>activityManager</name>
+                    <operator>.</operator><name>getRunningAppProcesses</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <for>for <control>(<init><decl><type><name><name>ActivityManager</name><operator>.</operator><name>RunningAppProcessInfo</name></name></type> <name>info</name> <range>: <expr><name>appProcessList</name></expr></range></decl></init>)</control> <block>{
+                <expr_stmt><expr><call><name>killBackgroundProcesses</name><argument_list>(<argument><expr><name><name>info</name><operator>.</operator><name>processName</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+            <expr_stmt><expr><call><name><name>activityManager</name><operator>.</operator><name>getMemoryInfo</name></name><argument_list>(<argument><expr><name>memoryInfo</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>endMemory</name> <operator>=</operator> <name><name>memoryInfo</name><operator>.</operator><name>availMem</name></name></expr>;</expr_stmt>
+            <return>return <expr><name>endMemory</name> <operator>-</operator> <name>beforeMemory</name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+
+
+            <if>if <condition>(<expr><name>mOnActionListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mOnActionListener</name><operator>.</operator><name>onCleanCompleted</name></name><argument_list>(<argument><expr><name><name>CoreService</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+
+
+        }</block></function>
+    }</block></class>
+
+
+    <function><specifier>public</specifier> <type><name>long</name></type> <name>getAvailMemory</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// è·åandroidå½åå¯ç¨åå­å¤§å°</comment>
+        <decl_stmt><decl><type><name><name>ActivityManager</name><operator>.</operator><name>MemoryInfo</name></name></type> <name>memoryInfo</name> <init>= <expr><operator>new</operator> <call><name><name>ActivityManager</name><operator>.</operator><name>MemoryInfo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>activityManager</name><operator>.</operator><name>getMemoryInfo</name></name><argument_list>(<argument><expr><name>memoryInfo</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// å½åç³»ç»å¯ç¨åå­ ,å°è·å¾çåå­å¤§å°è§æ ¼å</comment>
+
+        <return>return <expr><name><name>memoryInfo</name><operator>.</operator><name>availMem</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>cleanAllProcess</name><parameter_list>()</parameter_list> <block>{
+        <comment type="line">//  mIsCleaning = true;</comment>
+
+        <expr_stmt><expr><operator>new</operator> <call><name>TaskClean</name><argument_list>()</argument_list></call><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setOnActionListener</name><parameter_list>(<parameter><decl><type><name>OnPeocessActionListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mOnActionListener</name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>ApplicationInfo</name></type> <name>getApplicationInfo</name><parameter_list>( <parameter><decl><type><name>String</name></type> <name>processName</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>processName</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>ApplicationInfo</name></argument>&gt;</argument_list></name></type> <name>appList</name> <init>= <expr><call><name><name>packageManager</name>
+                <operator>.</operator><name>getInstalledApplications</name></name><argument_list>(<argument><expr><name><name>PackageManager</name><operator>.</operator><name>GET_UNINSTALLED_PACKAGES</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>ApplicationInfo</name></type> <name>appInfo</name> <range>: <expr><name>appList</name></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><call><name><name>processName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>appInfo</name><operator>.</operator><name>processName</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <return>return <expr><name>appInfo</name></expr>;</return>
+            }</block></then></if>
+        }</block></for>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isScanning</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mIsScanning</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isCleaning</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mIsCleaning</name></expr>;</return>
+    }</block></function>
+
+
+}</block></class>
+</unit>

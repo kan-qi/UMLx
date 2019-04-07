@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\preferences\widgets\ProfilePreference.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>widgets</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RequiresApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>PreferenceViewHolder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ProfileContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ResourceContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ProfilePreference</name> <super><extends>extends <name>Preference</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>avatarView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>  <name>profileNameView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>  <name>profileNumberView</name></decl>;</decl_stmt>
+
+  <constructor><annotation>@<name>RequiresApi</name><argument_list>(<argument><expr><name>api</name> <operator>=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>ProfilePreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ProfilePreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ProfilePreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ProfilePreference</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setLayoutResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>profile_preference_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><name>PreferenceViewHolder</name></type> <name>viewHolder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBindViewHolder</name></name><argument_list>(<argument><expr><name>viewHolder</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>avatarView</name>        <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator><call><name><name>viewHolder</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>avatar</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>profileNameView</name>   <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator><call><name><name>viewHolder</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>profile_name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>profileNumberView</name> <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator><call><name><name>viewHolder</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>number</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>refresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>refresh</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>profileNumberView</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Address</name></type> <name>localAddress</name> <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type>  <name>profileName</name>  <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getProfileName</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ProfileContactPhoto</name><argument_list>(<argument><expr><name>localAddress</name></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getProfileAvatarId</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>error</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ResourceContactPhoto</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_camera_alt_white_24dp</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asDrawable</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>grey_400</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>circleCrop</name><argument_list>()</argument_list></call>
+            <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>ALL</name></name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>avatarView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>profileNameView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>profileNumberView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>localAddress</name><operator>.</operator><name>toPhoneString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

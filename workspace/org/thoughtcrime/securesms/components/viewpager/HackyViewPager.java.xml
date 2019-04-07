@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\viewpager\HackyViewPager.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>viewpager</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewPager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Hacky fix for http://code.google.com/p/android/issues/detail?id=18990
+ * &lt;p/&gt;
+ * ScaleGestureDetector seems to mess up the touch events, which means that
+ * ViewGroups which make use of onInterceptTouchEvent throw a lot of
+ * IllegalArgumentException: pointerIndex out of range.
+ * &lt;p/&gt;
+ * There's not much I can do in my code for now, but we can mask the result by
+ * just catching the problem and ignoring it.
+ *
+ * @author Chris Banes
+ */</comment>
+<class><specifier>public</specifier> class <name>HackyViewPager</name> <super><extends>extends <name>ViewPager</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>HackyViewPager</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>HackyViewPager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>HackyViewPager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onInterceptTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>ev</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>onInterceptTouchEvent</name></name><argument_list>(<argument><expr><name>ev</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalArgumentException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+}</block></class></unit>

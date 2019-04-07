@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\preferences\AppProtectionPreferenceFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>KeyguardManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>CheckBoxPreference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationPreferencesActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BlockedContactsActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>PassphraseChangeActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>SwitchPreferenceCompat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecretUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MultiDeviceConfigurationUpdateJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MultiDeviceReadReceiptUpdateJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>RefreshAttributesJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>lock</name><operator>.</operator><name>RegistrationLockDialog</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>KeyCachingService</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>CommunicationActions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceAccountManager</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>mobi</name><operator>.</operator><name>upod</name><operator>.</operator><name>timedurationpicker</name><operator>.</operator><name>TimeDurationPickerDialog</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AppProtectionPreferenceFragment</name> <super><extends>extends <name>CorrectedPreferenceFragment</name></extends> <implements>implements <name>InjectableType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_BLOCKED</name>        <init>= <expr><literal type="string">"preference_category_blocked"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_UNIDENTIFIED_LEARN_MORE</name> <init>= <expr><literal type="string">"pref_unidentified_learn_more"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CheckBoxPreference</name></type> <name>disablePassphrase</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+  <type><name>SignalServiceAccountManager</name></type> <name>accountManager</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onAttach</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAttach</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>injectDependencies</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>paramBundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>paramBundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name>disablePassphrase</name> <operator>=</operator> <operator>(</operator><name>CheckBoxPreference</name><operator>)</operator> <call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><literal type="string">"pref_enable_passphrase_temporary"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>REGISTRATION_LOCK_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>AccountLockClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ScreenLockListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK_TIMEOUT</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ScreenLockTimeoutListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CHANGE_PASSPHRASE_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ChangePassphraseClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>PASSPHRASE_TIMEOUT_INTERVAL_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>PassphraseIntervalClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>READ_RECEIPTS_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ReadReceiptToggleListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>TYPING_INDICATORS</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>TypingIndicatorsToggleListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>LINK_PREVIEWS</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>LinkPreviewToggleListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_BLOCKED</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BlockedContactsClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SHOW_UNIDENTIFIED_DELIVERY_INDICATORS</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ShowUnidentifiedDeliveryIndicatorsChangedListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>UNIVERSAL_UNIDENTIFIED_ACCESS</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>UniversalUnidentifiedAccessChangedListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_UNIDENTIFIED_LEARN_MORE</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>UnidentifiedLearnMoreClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>disablePassphrase</name><operator>.</operator><name>setOnPreferenceChangeListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DisablePassphraseClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeVisibility</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreatePreferences</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>rootKey</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>addPreferencesFromResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>xml</name><operator>.</operator><name>preferences_app_protection</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ApplicationPreferencesActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__privacy</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>initializePassphraseTimeoutSummary</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then>
+    <else>else                                                         <block type="pseudo"><expr_stmt><expr><call><name>initializeScreenLockTimeoutSummary</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+    <expr_stmt><expr><call><name><name>disablePassphrase</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializePassphraseTimeoutSummary</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>timeoutMinutes</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getPassphraseTimeoutInterval</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>PASSPHRASE_TIMEOUT_INTERVAL_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getQuantityString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>plurals</name><operator>.</operator><name>AppProtectionPreferenceFragment_minutes</name></name></expr></argument>, <argument><expr><name>timeoutMinutes</name></expr></argument>, <argument><expr><name>timeoutMinutes</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeScreenLockTimeoutSummary</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type> <name>timeoutSeconds</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getScreenLockTimeout</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>hours</name>          <init>= <expr><call><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name><operator>.</operator><name>toHours</name></name><argument_list>(<argument><expr><name>timeoutSeconds</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>minutes</name>        <init>= <expr><call><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name><operator>.</operator><name>toMinutes</name></name><argument_list>(<argument><expr><name>timeoutSeconds</name></expr></argument>)</argument_list></call> <operator>-</operator> <operator>(</operator><call><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name><operator>.</operator><name>toHours</name></name><argument_list>(<argument><expr><name>timeoutSeconds</name></expr></argument>)</argument_list></call> <operator>*</operator> <literal type="number">60</literal>  <operator>)</operator></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>seconds</name>        <init>= <expr><call><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name><operator>.</operator><name>toSeconds</name></name><argument_list>(<argument><expr><name>timeoutSeconds</name></expr></argument>)</argument_list></call> <operator>-</operator> <operator>(</operator><call><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name><operator>.</operator><name>toMinutes</name></name><argument_list>(<argument><expr><name>timeoutSeconds</name></expr></argument>)</argument_list></call> <operator>*</operator> <literal type="number">60</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK_TIMEOUT</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><ternary><condition><expr><name>timeoutSeconds</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>AppProtectionPreferenceFragment_none</name></name></expr></argument>)</argument_list></call></expr> </then><else>:
+                                          <expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"%02d:%02d:%02d"</literal></expr></argument>, <argument><expr><name>hours</name></expr></argument>, <argument><expr><name>minutes</name></expr></argument>, <argument><expr><name>seconds</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeVisibility</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><literal type="string">"pref_enable_passphrase_temporary"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisible</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CHANGE_PASSPHRASE_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisible</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>PASSPHRASE_TIMEOUT_INTERVAL_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisible</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>PASSPHRASE_TIMEOUT_PREF</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisible</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>KeyguardManager</name></type> <name>keyguardManager</name> <init>= <expr><operator>(</operator><name>KeyguardManager</name><operator>)</operator><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSystemService</name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>KEYGUARD_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <literal type="number">16</literal> <operator>||</operator> <operator>!</operator><call><name><name>keyguardManager</name><operator>.</operator><name>isKeyguardSecure</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><operator>(</operator><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>setChecked</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setEnabled</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisible</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_LOCK_TIMEOUT</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisible</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>ScreenLockListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>enabled</name> <init>= <expr><operator>(</operator><name>Boolean</name><operator>)</operator><name>newValue</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setScreenLockEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>LOCK_TOGGLED_EVENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>ScreenLockTimeoutListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>TimeDurationPickerDialog</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>view</name></decl></parameter>, <parameter><decl><name>duration</name></decl></parameter>)</parameter_list> -&gt; <block>{
+        <if>if <condition>(<expr><name>duration</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setScreenLockTimeout</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <decl_stmt><decl><type><name>long</name></type> <name>timeoutSeconds</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name><name>TimeUnit</name><operator>.</operator><name>MILLISECONDS</name><operator>.</operator><name>toSeconds</name></name><argument_list>(<argument><expr><name>duration</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">60</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setScreenLockTimeout</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>timeoutSeconds</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+
+        <expr_stmt><expr><call><name>initializeScreenLockTimeoutSummary</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></lambda></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>AccountLockClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>(</operator><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><name>preference</name><operator>)</operator><operator>.</operator><call><name>isChecked</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>RegistrationLockDialog</name><operator>.</operator><name>showRegistrationUnlockPrompt</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><name>preference</name></expr></argument>, <argument><expr><name>accountManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>RegistrationLockDialog</name><operator>.</operator><name>showRegistrationLockPrompt</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><name>preference</name></expr></argument>, <argument><expr><name>accountManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>BlockedContactsClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>BlockedContactsActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>ReadReceiptToggleListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>enabled</name> <init>= <expr><operator>(</operator><name>boolean</name><operator>)</operator><name>newValue</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceConfigurationUpdateJob</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><name>enabled</name></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isTypingIndicatorsEnabled</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isShowUnidentifiedDeliveryIndicatorsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isLinkPreviewsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>TypingIndicatorsToggleListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>enabled</name> <init>= <expr><operator>(</operator><name>boolean</name><operator>)</operator><name>newValue</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceConfigurationUpdateJob</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isReadReceiptsEnabled</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><name>enabled</name></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isShowUnidentifiedDeliveryIndicatorsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isLinkPreviewsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><name>enabled</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getTypingStatusRepository</name><argument_list>()</argument_list></call><operator>.</operator><call><name>clear</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>LinkPreviewToggleListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>enabled</name> <init>= <expr><operator>(</operator><name>boolean</name><operator>)</operator><name>newValue</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceConfigurationUpdateJob</name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isReadReceiptsEnabled</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isTypingIndicatorsEnabled</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isShowUnidentifiedDeliveryIndicatorsEnabled</name></name><argument_list>(<argument><expr><call><name>requireContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>getSummary</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>    <name>privacySummaryResId</name> <init>= <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_privacy_summary</name></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>onRes</name>               <init>= <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_on</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>offRes</name>              <init>= <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_off</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isRegistrationtLockEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>privacySummaryResId</name></expr></argument>, <argument><expr><name>offRes</name></expr></argument>, <argument><expr><name>onRes</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>privacySummaryResId</name></expr></argument>, <argument><expr><name>offRes</name></expr></argument>, <argument><expr><name>offRes</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block></then> <else>else <block>{
+      <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isRegistrationtLockEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>privacySummaryResId</name></expr></argument>, <argument><expr><name>onRes</name></expr></argument>, <argument><expr><name>onRes</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>privacySummaryResId</name></expr></argument>, <argument><expr><name>onRes</name></expr></argument>, <argument><expr><name>offRes</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block></else></if>
+  }</block></function>
+
+  <comment type="line">// Derecated</comment>
+
+  <class><specifier>private</specifier> class <name>ChangePassphraseClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>isPassphraseInitialized</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>PassphraseChangeActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>,
+                       <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet</name></name></expr></argument>,
+                       <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>PassphraseIntervalClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>TimeDurationPickerDialog</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>view</name></decl></parameter>, <parameter><decl><name>duration</name></decl></parameter>)</parameter_list> -&gt; <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>timeoutMinutes</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><operator>(</operator><name>int</name><operator>)</operator><call><name><name>TimeUnit</name><operator>.</operator><name>MILLISECONDS</name><operator>.</operator><name>toMinutes</name></name><argument_list>(<argument><expr><name>duration</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setPassphraseTimeoutInterval</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>timeoutMinutes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>initializePassphraseTimeoutSummary</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      }</block></lambda></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>DisablePassphraseClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>(</operator><operator>(</operator><name>CheckBoxPreference</name><operator>)</operator><name>preference</name><operator>)</operator><operator>.</operator><call><name>isChecked</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_disable_passphrase</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setMessage</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_this_will_permanently_unlock_signal_and_message_notifications</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setIconAttribute</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>dialog_alert_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setPositiveButton</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_disable</name></name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>dialog</name></decl></parameter>, <parameter><decl><name>which</name></decl></parameter>)</parameter_list> -&gt; <block>{
+          <expr_stmt><expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>changeMasterSecretPassphrase</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>,
+                                                        <argument><expr><call><name><name>KeyCachingService</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                        <argument><expr><name><name>MasterSecretUtil</name><operator>.</operator><name>UNENCRYPTED_PASSPHRASE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setPasswordDisabled</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><operator>(</operator><operator>(</operator><name>CheckBoxPreference</name><operator>)</operator><name>preference</name><operator>)</operator><operator>.</operator><call><name>setChecked</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>DISABLE_ACTION</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name>initializeVisibility</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setNegativeButton</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>PassphraseChangeActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>ShowUnidentifiedDeliveryIndicatorsChangedListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>enabled</name> <init>= <expr><operator>(</operator><name>boolean</name><operator>)</operator> <name>newValue</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceConfigurationUpdateJob</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isReadReceiptsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isTypingIndicatorsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                   <argument><expr><name>enabled</name></expr></argument>,
+                                                                   <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isLinkPreviewsEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>UniversalUnidentifiedAccessChangedListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>o</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RefreshAttributesJob</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>UnidentifiedLearnMoreClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>CommunicationActions</name><operator>.</operator><name>openBrowserLink</name></name><argument_list>(<argument><expr><call><name><name>preference</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"https://signal.org/blog/sealed-sender/"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

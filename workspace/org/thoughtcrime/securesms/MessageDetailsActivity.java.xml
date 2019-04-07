@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\MessageDetailsActivity.java"><comment type="block">/*
+ * Copyright (C) 2015 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ClipData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ClipboardManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ColorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>LoaderManager</name><operator>.</operator><name>LoaderCallbacks</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>Loader</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name><operator>.</operator><name>ConversationItem</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>MessageDetailsRecipientAdapter</name><operator>.</operator><name>RecipientDeliveryStatus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupReceiptDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupReceiptDatabase</name><operator>.</operator><name>GroupReceiptInfo</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsSmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>SmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name><operator>.</operator><name>MessageDetailsLoader</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>MessageNotifier</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>RecipientModifiedListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name><operator>.</operator><name>MessageSender</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DateUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ExpirationUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>ref</name><operator>.</operator><name>WeakReference</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>sql</name><operator>.</operator><name>Date</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>text</name><operator>.</operator><name>SimpleDateFormat</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * @author Jake McGinty
+ */</comment>
+<class><specifier>public</specifier> class <name>MessageDetailsActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends> <implements>implements <name><name>LoaderCallbacks</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name>, <name>RecipientModifiedListener</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MessageDetailsActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>MESSAGE_ID_EXTRA</name>     <init>= <expr><literal type="string">"message_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>THREAD_ID_EXTRA</name>      <init>= <expr><literal type="string">"thread_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>IS_PUSH_GROUP_EXTRA</name>  <init>= <expr><literal type="string">"is_push_group"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TYPE_EXTRA</name>           <init>= <expr><literal type="string">"type"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>ADDRESS_EXTRA</name>        <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>GlideRequests</name></type>    <name>glideRequests</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>             <name>threadId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type>          <name>isPushGroup</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ConversationItem</name></type> <name>conversationItem</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ViewGroup</name></type>        <name>itemParent</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>             <name>metadataContainer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>             <name>expiresContainer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>         <name>errorText</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>             <name>resendButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>         <name>sentDate</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>         <name>receivedDate</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>         <name>expiresInText</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>             <name>receivedContainer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>         <name>transport</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>         <name>toFrom</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ListView</name></type>         <name>recipientsList</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>LayoutInflater</name></type>   <name>inflater</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicTheme</name></type>     <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicLanguage</name></type>  <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>running</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>message_details_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>running</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeActionBar</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getSupportLoaderManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>initLoader</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <assert>assert <expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>AndroidManifest__message_details</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>setVisibleThread</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>setVisibleThread</name></name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1L</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>running</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeActionBar</name><parameter_list>()</parameter_list> <block>{
+    <assert>assert <expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>ADDRESS_EXTRA</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setActionBarColor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setActionBarColor</name><parameter_list>(<parameter><decl><type><name>MaterialColor</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <assert>assert <expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><call><name><name>color</name><operator>.</operator><name>toActionBarColor</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setStatusBarColor</name><argument_list>(<argument><expr><call><name><name>color</name><operator>.</operator><name>toStatusBarColor</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onModified</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name>setActionBarColor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>inflater</name>       <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>View</name></type> <name>header</name> <init>= <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>message_details_header</name></name></expr></argument>, <argument><expr><name>recipientsList</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>threadId</name>          <operator>=</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getLongExtra</name><argument_list>(<argument><expr><name>THREAD_ID_EXTRA</name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>isPushGroup</name>       <operator>=</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBooleanExtra</name><argument_list>(<argument><expr><name>IS_PUSH_GROUP_EXTRA</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>glideRequests</name>     <operator>=</operator> <call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>itemParent</name>        <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>item_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>recipientsList</name>    <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>recipients_list</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>metadataContainer</name> <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>metadata_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>errorText</name>         <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>error_text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>resendButton</name>      <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>resend_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>sentDate</name>          <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>sent_time</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>receivedContainer</name> <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>received_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>receivedDate</name>      <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>received_time</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>transport</name>         <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>transport</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>toFrom</name>            <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>tofrom</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>expiresContainer</name>  <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>expires_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>expiresInText</name>     <operator>=</operator> <call><name><name>header</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>expires_in</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipientsList</name><operator>.</operator><name>setHeaderDividersEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipientsList</name><operator>.</operator><name>addHeaderView</name></name><argument_list>(<argument><expr><name>header</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateTransport</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>transportText</name></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>messageRecord</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>transportText</name> <operator>=</operator> <literal type="string">"-"</literal></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isPending</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>transportText</name> <operator>=</operator> <call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationFragment_pending</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isPush</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>transportText</name> <operator>=</operator> <call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationFragment_push</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>transportText</name> <operator>=</operator> <call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationFragment_mms</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><name>transportText</name> <operator>=</operator> <call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationFragment_sms</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>transport</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>transportText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateTime</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>sentDate</name><operator>.</operator><name>setOnLongClickListener</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>receivedDate</name><operator>.</operator><name>setOnLongClickListener</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isPending</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>messageRecord</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>sentDate</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">"-"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>receivedContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><name>Locale</name></type>           <name>dateLocale</name>    <init>= <expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>getCurrentLocale</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SimpleDateFormat</name></type> <name>dateFormatter</name> <init>= <expr><call><name><name>DateUtils</name><operator>.</operator><name>getDetailedDateFormatter</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>dateLocale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>sentDate</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>dateFormatter</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateSent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>sentDate</name><operator>.</operator><name>setOnLongClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+        <expr_stmt><expr><call><name>copyToClipboard</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateSent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateReceived</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getDateSent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>receivedDate</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>dateFormatter</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateReceived</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>receivedDate</name><operator>.</operator><name>setOnLongClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+          <expr_stmt><expr><call><name>copyToClipboard</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateReceived</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>receivedContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>receivedContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateExpirationTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal> <operator>||</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getExpireStarted</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>expiresContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>expiresContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>long</name></type> <name>elapsed</name>   <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getExpireStarted</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>long</name></type> <name>remaining</name> <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>elapsed</name></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>duration</name> <init>= <expr><call><name><name>ExpirationUtil</name><operator>.</operator><name>getExpirationDisplayValue</name></name><argument_list>(<argument><expr><name><name>MessageDetailsActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call>(<name>int</name>)<argument_list>(<argument><expr><name>remaining</name> <operator>/</operator> <literal type="number">1000</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>expiresInText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>duration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>running</name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMainDelayed</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateRecipients</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>RecipientDeliveryStatus</name></argument>&gt;</argument_list></name></type> <name>recipients</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>toFromRes</name></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>messageRecord</name><operator>.</operator><name>isPush</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>toFromRes</name> <operator>=</operator> <name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>message_details_header__with</name></name></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>toFromRes</name> <operator>=</operator> <name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>message_details_header__to</name></name></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><name>toFromRes</name> <operator>=</operator> <name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>message_details_header__from</name></name></expr>;</expr_stmt>
+    }</block></else></if>
+    <expr_stmt><expr><call><name><name>toFrom</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>toFromRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>conversationItem</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>, <argument><expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>getCurrentLocale</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipientsList</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>MessageDetailsRecipientAdapter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>messageRecord</name></expr></argument>, <argument><expr><name>recipients</name></expr></argument>, <argument><expr><name>isPushGroup</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>inflateMessageViewIfAbsent</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>conversationItem</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isGroupAction</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>conversationItem</name> <operator>=</operator> <operator>(</operator><name>ConversationItem</name><operator>)</operator> <call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_update</name></name></expr></argument>, <argument><expr><name>itemParent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>conversationItem</name> <operator>=</operator> <operator>(</operator><name>ConversationItem</name><operator>)</operator> <call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_sent</name></name></expr></argument>, <argument><expr><name>itemParent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif> <else>else <block>{
+        <expr_stmt><expr><name>conversationItem</name> <operator>=</operator> <operator>(</operator><name>ConversationItem</name><operator>)</operator> <call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_received</name></name></expr></argument>, <argument><expr><name>itemParent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+      <expr_stmt><expr><call><name><name>itemParent</name><operator>.</operator><name>addView</name></name><argument_list>(<argument><expr><name>conversationItem</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>MessageRecord</name></type> <name>getMessageRecord</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>type</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>MmsSmsDatabase</name><operator>.</operator><name>SMS_TRANSPORT</name></name></expr>:</case>
+        <decl_stmt><decl><type><name>SmsDatabase</name></type>        <name>smsDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>SmsDatabase</name><operator>.</operator><name>Reader</name></name></type> <name>reader</name>      <init>= <expr><call><name><name>smsDatabase</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>reader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>MmsSmsDatabase</name><operator>.</operator><name>MMS_TRANSPORT</name></name></expr>:</case>
+        <decl_stmt><decl><type><name>MmsDatabase</name></type>        <name>mmsDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>MmsDatabase</name><operator>.</operator><name>Reader</name></name></type> <name>mmsReader</name>   <init>= <expr><call><name><name>mmsDatabase</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>mmsReader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call></expr>;</return>
+      <default>default:</default>
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"no valid message type specified"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></switch>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>copyToClipboard</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ClipboardManager</name><operator>)</operator> <call><name>getSystemService</name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>CLIPBOARD_SERVICE</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>setPrimaryClip</name><argument_list>(<argument><expr><call><name><name>ClipData</name><operator>.</operator><name>newPlainText</name></name><argument_list>(<argument><expr><literal type="string">"text"</literal></expr></argument>, <argument><expr><name>text</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type> <name>onCreateLoader</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>MessageDetailsLoader</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><name>TYPE_EXTRA</name></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getLongExtra</name><argument_list>(<argument><expr><name>MESSAGE_ID_EXTRA</name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLoadFinished</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Loader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>, <parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MessageRecord</name></type> <name>messageRecord</name> <init>= <expr><call><name>getMessageRecord</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><name>TYPE_EXTRA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>messageRecord</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>MessageRecipientAsyncTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLoaderReset</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Loader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>recipientsList</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case> <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <class><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> class <name>MessageRecipientAsyncTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>,<argument><name>Void</name></argument>,<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>RecipientDeliveryStatus</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>WeakReference</name><argument_list type="generic">&lt;<argument><name>Context</name></argument>&gt;</argument_list></name></type> <name>weakContext</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MessageRecord</name></type>          <name>messageRecord</name></decl>;</decl_stmt>
+
+    <constructor><name>MessageRecipientAsyncTask</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>weakContext</name></name>   <operator>=</operator> <operator>new</operator> <call><name><name>WeakReference</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageRecord</name></name> <operator>=</operator> <name>messageRecord</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>protected</specifier> <type><name>Context</name></type> <name>getContext</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>weakContext</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>RecipientDeliveryStatus</name></argument>&gt;</argument_list></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>voids</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Context</name></type> <name>context</name> <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>context</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"associated context is destroyed, finishing early"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>RecipientDeliveryStatus</name></argument>&gt;</argument_list></name></type> <name>recipients</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>messageRecord</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isGroupRecipient</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>recipients</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RecipientDeliveryStatus</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getStatusFor</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getDeliveryReceiptCount</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getReadReceiptCount</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>isPending</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>isUnidentified</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GroupReceiptInfo</name></argument>&gt;</argument_list></name></type> <name>receiptInfoList</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupReceiptDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroupReceiptInfo</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>receiptInfoList</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>group</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroupMembers</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toGroupString</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>recipient</name> <range>: <expr><name>group</name></expr></range></decl></init>)</control> <block>{
+            <expr_stmt><expr><call><name><name>recipients</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RecipientDeliveryStatus</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>UNKNOWN</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></for>
+        }</block></then> <else>else <block>{
+          <for>for <control>(<init><decl><type><name>GroupReceiptInfo</name></type> <name>info</name> <range>: <expr><name>receiptInfoList</name></expr></range></decl></init>)</control> <block>{
+            <expr_stmt><expr><call><name><name>recipients</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RecipientDeliveryStatus</name><argument_list>(<argument><expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>info</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>,
+                                                       <argument><expr><call><name>getStatusFor</name><argument_list>(<argument><expr><call><name><name>info</name><operator>.</operator><name>getStatus</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>isPending</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                       <argument><expr><call><name><name>info</name><operator>.</operator><name>isUnidentified</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                       <argument><expr><call><name><name>info</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></for>
+        }</block></else></if>
+      }</block></else></if>
+
+      <return>return <expr><name>recipients</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>RecipientDeliveryStatus</name></argument>&gt;</argument_list></name></type> <name>recipients</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name>getContext</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"AsyncTask finished with a destroyed context, leaving early."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name>inflateMessageViewIfAbsent</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>updateRecipients</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>recipients</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>boolean</name></type> <name>isGroupNetworkFailure</name>      <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>messageRecord</name><operator>.</operator><name>getNetworkFailures</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>boolean</name></type> <name>isIndividualNetworkFailure</name> <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><name>isPushGroup</name> <operator>&amp;&amp;</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getIdentityKeyMismatches</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>isGroupNetworkFailure</name> <operator>||</operator> <name>isIndividualNetworkFailure</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>errorText</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>onResendClicked</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>metadataContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isFailed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>errorText</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>metadataContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif> <else>else <block>{
+        <expr_stmt><expr><call><name>updateTransport</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>updateTime</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>updateExpirationTime</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>errorText</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>metadataContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name></name></type> <name>getStatusFor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>deliveryReceiptCount</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>readReceiptCount</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>pending</name></decl></parameter>)</parameter_list> <block>{
+      <if>if      <condition>(<expr><name>readReceiptCount</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then>     <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>READ</name></name></expr>;</return></block></then>
+      <elseif>else <if>if <condition>(<expr><name>deliveryReceiptCount</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>DELIVERED</name></name></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><operator>!</operator><name>pending</name></expr>)</condition><then>                 <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>SENT</name></name></expr>;</return></block></then></if></elseif>
+      <else>else                               <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>PENDING</name></name></expr>;</return></block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name></name></type> <name>getStatusFor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>groupStatus</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>pending</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>failed</name></decl></parameter>)</parameter_list> <block>{
+      <if>if      <condition>(<expr><name>groupStatus</name> <operator>==</operator> <name><name>GroupReceiptDatabase</name><operator>.</operator><name>STATUS_READ</name></name></expr>)</condition><then>                    <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>READ</name></name></expr>;</return></block></then>
+      <elseif>else <if>if <condition>(<expr><name>groupStatus</name> <operator>==</operator> <name><name>GroupReceiptDatabase</name><operator>.</operator><name>STATUS_DELIVERED</name></name></expr>)</condition><then>               <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>DELIVERED</name></name></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name>groupStatus</name> <operator>==</operator> <name><name>GroupReceiptDatabase</name><operator>.</operator><name>STATUS_UNDELIVERED</name></name> <operator>&amp;&amp;</operator> <name>failed</name></expr>)</condition><then>   <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>UNKNOWN</name></name></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name>groupStatus</name> <operator>==</operator> <name><name>GroupReceiptDatabase</name><operator>.</operator><name>STATUS_UNDELIVERED</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><name>pending</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>SENT</name></name></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name>groupStatus</name> <operator>==</operator> <name><name>GroupReceiptDatabase</name><operator>.</operator><name>STATUS_UNDELIVERED</name></name></expr>)</condition><then>             <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>PENDING</name></name></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name>groupStatus</name> <operator>==</operator> <name><name>GroupReceiptDatabase</name><operator>.</operator><name>STATUS_UNKNOWN</name></name></expr>)</condition><then>                 <block type="pseudo"><return>return <expr><name><name>RecipientDeliveryStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>UNKNOWN</name></name></expr>;</return></block></then></if></elseif></if>
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>onResendClicked</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>MessageSender</name><operator>.</operator><name>resend</name></name><argument_list>(<argument><expr><name><name>MessageDetailsActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>resendButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

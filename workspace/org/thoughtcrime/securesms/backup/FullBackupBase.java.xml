@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\backup\FullBackupBase.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>backup</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>EventBus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>ByteUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>FullBackupBase</name> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>FullBackupBase</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <class><specifier>static</specifier> class <name>BackupStream</name> <block>{
+    <function><specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>byte</name><index>[]</index></name></type> <name>getBackupKey</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>passphrase</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>salt</name></decl></parameter>)</parameter_list> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>post</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BackupEvent</name><argument_list>(<argument><expr><name><name>BackupEvent</name><operator>.</operator><name>Type</name><operator>.</operator><name>PROGRESS</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>MessageDigest</name></type> <name>digest</name> <init>= <expr><call><name><name>MessageDigest</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"SHA-512"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>        <name>input</name>  <init>= <expr><call><name><name>passphrase</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="string">" "</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>        <name>hash</name>   <init>= <expr><name>input</name></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>salt</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>digest</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>salt</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><literal type="number">250000</literal></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+          <if>if <condition>(<expr><name>i</name> <operator>%</operator> <literal type="number">1000</literal> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>post</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BackupEvent</name><argument_list>(<argument><expr><name><name>BackupEvent</name><operator>.</operator><name>Type</name><operator>.</operator><name>PROGRESS</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <expr_stmt><expr><call><name><name>digest</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>hash</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>hash</name> <operator>=</operator> <call><name><name>digest</name><operator>.</operator><name>digest</name></name><argument_list>(<argument><expr><name>input</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+
+        <return>return <expr><call><name><name>ByteUtil</name><operator>.</operator><name>trim</name></name><argument_list>(<argument><expr><name>hash</name></expr></argument>, <argument><expr><literal type="number">32</literal></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>BackupEvent</name> <block>{
+    <enum><specifier>public</specifier> enum <name>Type</name> <block>{
+      <decl><name>PROGRESS</name></decl>,
+      <decl><name>FINISHED</name></decl>
+    }</block></enum>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Type</name></type> <name>type</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>count</name></decl>;</decl_stmt>
+
+    <constructor><name>BackupEvent</name><parameter_list>(<parameter><decl><type><name>Type</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>type</name></name>  <operator>=</operator> <name>type</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>count</name></name> <operator>=</operator> <name>count</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>Type</name></type> <name>getType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>type</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>count</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

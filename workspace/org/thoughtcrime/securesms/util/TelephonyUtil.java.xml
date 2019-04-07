@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\TelephonyUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>ConnectivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>TelephonyManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>TelephonyUtil</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>TelephonyUtil</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>TelephonyManager</name></type> <name>getManager</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>TelephonyManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>TELEPHONY_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getMccMnc</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>TelephonyManager</name></type> <name>tm</name> <init>= <expr><operator>(</operator><name>TelephonyManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>TELEPHONY_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>configMcc</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getConfiguration</name><argument_list>()</argument_list></call><operator>.</operator><name>mcc</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>configMnc</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getConfiguration</name><argument_list>()</argument_list></call><operator>.</operator><name>mnc</name></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>tm</name><operator>.</operator><name>getSimState</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>TelephonyManager</name><operator>.</operator><name>SIM_STATE_READY</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Choosing MCC+MNC info from TelephonyManager.getSimOperator()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>tm</name><operator>.</operator><name>getSimOperator</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>tm</name><operator>.</operator><name>getPhoneType</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>TelephonyManager</name><operator>.</operator><name>PHONE_TYPE_CDMA</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Choosing MCC+MNC info from TelephonyManager.getNetworkOperator()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>tm</name><operator>.</operator><name>getNetworkOperator</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>configMcc</name> <operator>!=</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>configMnc</name> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Choosing MCC+MNC info from current context's Configuration"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name><name>Locale</name><operator>.</operator><name>ROOT</name></name></expr></argument>, <argument><expr><literal type="string">"%03d%d"</literal></expr></argument>,
+          <argument><expr><name>configMcc</name></expr></argument>,
+          <argument><expr><ternary><condition><expr><name>configMnc</name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>MNC_ZERO</name></name></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><name>configMnc</name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getApn</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>ConnectivityManager</name></type> <name>cm</name> <init>= <expr><operator>(</operator><name>ConnectivityManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>CONNECTIVITY_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>cm</name><operator>.</operator><name>getNetworkInfo</name></name><argument_list>(<argument><expr><name><name>ConnectivityManager</name><operator>.</operator><name>TYPE_MOBILE_MMS</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getExtraInfo</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

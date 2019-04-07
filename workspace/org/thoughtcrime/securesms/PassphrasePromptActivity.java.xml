@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\PassphrasePromptActivity.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>KeyguardManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>hardware</name><operator>.</operator><name>fingerprint</name><operator>.</operator><name>FingerprintManagerCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>os</name><operator>.</operator><name>CancellationSignal</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Editable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>InputType</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spanned</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>RelativeSizeSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>TypefaceSpan</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>KeyEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name><operator>.</operator><name>OnClickListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>BounceInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>TranslateAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>inputmethod</name><operator>.</operator><name>EditorInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>EditText</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageButton</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>animation</name><operator>.</operator><name>AnimationCompleteListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>AnimatingToggle</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>InvalidPassphraseException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecretUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicIntroTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity that prompts for a user's passphrase.
+ *
+ * @author Moxie Marlinspike
+ */</comment>
+<class><specifier>public</specifier> class <name>PassphrasePromptActivity</name> <super><extends>extends <name>PassphraseActivity</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>PassphrasePromptActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicIntroTheme</name></type> <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicIntroTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicLanguage</name></type>   <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>            <name>passphraseAuthContainer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>       <name>fingerprintPrompt</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>        <name>lockScreenButton</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EditText</name></type>        <name>passphraseText</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageButton</name></type>     <name>showButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageButton</name></type>     <name>hideButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>AnimatingToggle</name></type> <name>visibilityToggle</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>FingerprintManagerCompat</name></type> <name>fingerprintManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CancellationSignal</name></type>       <name>fingerprintCancellationSignal</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>FingerprintListener</name></type>      <name>fingerprintListener</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>authenticated</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>failure</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onCreate()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_TRANSLUCENT_STATUS</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addFlags</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_TRANSLUCENT_NAVIGATION</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>prompt_passphrase_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setLockTypeVisibility</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><name>authenticated</name> <operator>&amp;&amp;</operator> <operator>!</operator><name>failure</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>resumeScreenLock</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><name>failure</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>pauseScreenLock</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onNewIntent</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onNewIntent</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setIntent</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onPrepareOptionsMenu</name><parameter_list>(<parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MenuInflater</name></type> <name>inflater</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>getMenuInflater</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>menu</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>log_submit</name></name></expr></argument>, <argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPrepareOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+    <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_submit_debug_logs</name></name></expr>:</case> <expr_stmt><expr><call><name>handleLogSubmit</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultcode</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>requestCode</name> <operator>!=</operator> <literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <if>if <condition>(<expr><name>resultcode</name> <operator>==</operator> <name>RESULT_OK</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>handleAuthenticated</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Authentication failed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>failure</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleLogSubmit</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>LogSubmitActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handlePassphrase</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Editable</name></type> <name>text</name>             <init>= <expr><call><name><name>passphraseText</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>passphrase</name>         <init>= <expr><operator>(</operator><ternary><condition><expr><name>text</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">""</literal></expr> </then><else>: <expr><call><name><name>text</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MasterSecret</name></type> <name>masterSecret</name> <init>= <expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>passphrase</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name>setMasterSecret</name><argument_list>(<argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidPassphraseException</name></type> <name>ipe</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setError</name></name><argument_list>(
+              <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>PassphrasePromptActivity_invalid_passphrase_exclamation</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleAuthenticated</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <expr_stmt><expr><name>authenticated</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+      
+      <decl_stmt><decl><type><name>MasterSecret</name></type> <name>masterSecret</name> <init>= <expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>MasterSecretUtil</name><operator>.</operator><name>UNENCRYPTED_PASSPHRASE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>setMasterSecret</name><argument_list>(<argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidPassphraseException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setPassphraseVisibility</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>visibility</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>cursorPosition</name> <init>= <expr><call><name><name>passphraseText</name><operator>.</operator><name>getSelectionStart</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>visibility</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setInputType</name></name><argument_list>(<argument><expr><name><name>InputType</name><operator>.</operator><name>TYPE_CLASS_TEXT</name></name> <operator>|</operator>
+                                  <name><name>InputType</name><operator>.</operator><name>TYPE_TEXT_VARIATION_VISIBLE_PASSWORD</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setInputType</name></name><argument_list>(<argument><expr><name><name>InputType</name><operator>.</operator><name>TYPE_CLASS_TEXT</name></name> <operator>|</operator>
+                                  <name><name>InputType</name><operator>.</operator><name>TYPE_TEXT_VARIATION_PASSWORD</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+    <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setSelection</name></name><argument_list>(<argument><expr><name>cursorPosition</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+
+    <decl_stmt><decl><type><name>ImageButton</name></type> <name>okButton</name> <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>ok_button</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Toolbar</name></type>     <name>toolbar</name>  <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>toolbar</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>showButton</name>                    <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>passphrase_visibility</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>hideButton</name>                    <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>passphrase_visibility_off</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>visibilityToggle</name>              <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>button_toggle</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>passphraseText</name>                <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>passphrase_edit</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>passphraseAuthContainer</name>       <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>password_auth_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>fingerprintPrompt</name>             <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>fingerprint_auth_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>lockScreenButton</name>              <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>lock_screen_auth_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>fingerprintManager</name>            <operator>=</operator> <call><name><name>FingerprintManagerCompat</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>fingerprintCancellationSignal</name> <operator>=</operator> <operator>new</operator> <call><name>CancellationSignal</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>fingerprintListener</name>           <operator>=</operator> <operator>new</operator> <call><name>FingerprintListener</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setSupportActionBar</name><argument_list>(<argument><expr><name>toolbar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>hint</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><literal type="string">"  "</literal> <operator>+</operator> <call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>PassphrasePromptActivity_enter_passphrase</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>hint</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RelativeSizeSpan</name><argument_list>(<argument><expr><literal type="number">0.9f</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>hint</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spanned</name><operator>.</operator><name>SPAN_INCLUSIVE_INCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>hint</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>TypefaceSpan</name><argument_list>(<argument><expr><literal type="string">"sans-serif"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>hint</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spanned</name><operator>.</operator><name>SPAN_INCLUSIVE_INCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setHint</name></name><argument_list>(<argument><expr><name>hint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>okButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OkButtonClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>showButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ShowButtonOnClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>hideButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>HideButtonOnClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setOnEditorActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PassphraseActionListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>passphraseText</name><operator>.</operator><name>setImeActionLabel</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>prompt_passphrase_activity__unlock</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                     <argument><expr><name><name>EditorInfo</name><operator>.</operator><name>IME_ACTION_DONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_fingerprint_white_48dp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>signal_primary</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>lockScreenButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>resumeScreenLock</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setLockTypeVisibility</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isScreenLockEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>passphraseAuthContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>fingerprintManager</name><operator>.</operator><name>isHardwareDetected</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>fingerprintManager</name><operator>.</operator><name>hasEnrolledFingerprints</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>lockScreenButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>lockScreenButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>passphraseAuthContainer</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>lockScreenButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>resumeScreenLock</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>KeyguardManager</name></type> <name>keyguardManager</name> <init>= <expr><operator>(</operator><name>KeyguardManager</name><operator>)</operator> <call><name>getSystemService</name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>KEYGUARD_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <assert>assert <expr><name>keyguardManager</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>keyguardManager</name><operator>.</operator><name>isKeyguardSecure</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument> ,<argument><expr><literal type="string">"Keyguard not secure..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>handleAuthenticated</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">16</literal> <operator>&amp;&amp;</operator> <call><name><name>fingerprintManager</name><operator>.</operator><name>isHardwareDetected</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>fingerprintManager</name><operator>.</operator><name>hasEnrolledFingerprints</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Listening for fingerprints..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>fingerprintCancellationSignal</name> <operator>=</operator> <operator>new</operator> <call><name>CancellationSignal</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fingerprintManager</name><operator>.</operator><name>authenticate</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>fingerprintCancellationSignal</name></expr></argument>, <argument><expr><name>fingerprintListener</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">21</literal></expr>)</condition><then><block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"firing intent..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><call><name><name>keyguardManager</name><operator>.</operator><name>createConfirmDeviceCredentialIntent</name></name><argument_list>(<argument><expr><literal type="string">"Unlock Signal"</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Not compatible..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>handleAuthenticated</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>pauseScreenLock</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">16</literal> <operator>&amp;&amp;</operator> <name>fingerprintCancellationSignal</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>fingerprintCancellationSignal</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>PassphraseActionListener</name> <super><implements>implements <name><name>TextView</name><operator>.</operator><name>OnEditorActionListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onEditorAction</name><parameter_list>(<parameter><decl><type><name>TextView</name></type> <name>exampleView</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>actionId</name></decl></parameter>, <parameter><decl><type><name>KeyEvent</name></type> <name>keyEvent</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>(</operator><name>keyEvent</name> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>actionId</name> <operator>==</operator> <name><name>EditorInfo</name><operator>.</operator><name>IME_ACTION_DONE</name></name><operator>)</operator> <operator>||</operator>
+          <operator>(</operator><name>keyEvent</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>keyEvent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>KeyEvent</name><operator>.</operator><name>ACTION_DOWN</name></name> <operator>&amp;&amp;</operator>
+              <operator>(</operator><name>actionId</name> <operator>==</operator> <name><name>EditorInfo</name><operator>.</operator><name>IME_NULL</name></name><operator>)</operator><operator>)</operator></expr>)</condition><then>
+      <block>{
+        <expr_stmt><expr><call><name>handlePassphrase</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></then> <elseif>else <if>if <condition>(<expr><name>keyEvent</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>keyEvent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>KeyEvent</name><operator>.</operator><name>ACTION_UP</name></name> <operator>&amp;&amp;</operator>
+                 <name>actionId</name> <operator>==</operator> <name><name>EditorInfo</name><operator>.</operator><name>IME_NULL</name></name></expr>)</condition><then>
+      <block>{
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></then></if></elseif></if>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>OkButtonClickListener</name> <super><implements>implements <name>OnClickListener</name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>handlePassphrase</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>ShowButtonOnClickListener</name> <super><implements>implements <name>OnClickListener</name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>visibilityToggle</name><operator>.</operator><name>display</name></name><argument_list>(<argument><expr><name>hideButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setPassphraseVisibility</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>HideButtonOnClickListener</name> <super><implements>implements <name>OnClickListener</name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>visibilityToggle</name><operator>.</operator><name>display</name></name><argument_list>(<argument><expr><name>showButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setPassphraseVisibility</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>cleanup</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>passphraseText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>gc</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>FingerprintListener</name> <super><extends>extends <name><name>FingerprintManagerCompat</name><operator>.</operator><name>AuthenticationCallback</name></name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onAuthenticationError</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>errMsgId</name></decl></parameter>, <parameter><decl><type><name>CharSequence</name></type> <name>errString</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Authentication error: "</literal> <operator>+</operator> <name>errMsgId</name> <operator>+</operator> <literal type="string">" "</literal> <operator>+</operator> <name>errString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>onAuthenticationFailed</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onAuthenticationSucceeded</name><parameter_list>(<parameter><decl><type><name><name>FingerprintManagerCompat</name><operator>.</operator><name>AuthenticationResult</name></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onAuthenticationSucceeded"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_check_white_48dp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>animate</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setInterpolator</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BounceInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>scaleX</name><argument_list>(<argument><expr><literal type="number">1.1f</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>scaleY</name><argument_list>(<argument><expr><literal type="number">1.1f</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>setDuration</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>setListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>AnimationCompleteListener</name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name>handleAuthenticated</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_fingerprint_white_48dp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>signal_primary</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call><operator>.</operator><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onAuthenticationFailed</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onAuthenticatoinFailed()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><name><name>FingerprintManagerCompat</name><operator>.</operator><name>AuthenticationCallback</name></name></type> <name>callback</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_close_white_48dp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>red_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>TranslateAnimation</name></type> <name>shake</name> <init>= <expr><operator>new</operator> <call><name>TranslateAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">30</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>shake</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>shake</name><operator>.</operator><name>setRepeatCount</name></name><argument_list>(<argument><expr><literal type="number">7</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>shake</name><operator>.</operator><name>setAnimationListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animation</name><operator>.</operator><name>AnimationListener</name></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_fingerprint_white_48dp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>signal_primary</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>fingerprintPrompt</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><name>shake</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+  }</block></class>
+}</block></class>
+</unit>

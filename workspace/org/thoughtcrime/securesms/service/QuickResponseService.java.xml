@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\QuickResponseService.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>IntentService</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>TelephonyManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name><operator>.</operator><name>MessageSender</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name><operator>.</operator><name>OutgoingTextMessage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Rfc5724Uri</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URISyntaxException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URLDecoder</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>QuickResponseService</name> <super><extends>extends <name>IntentService</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>QuickResponseService</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>QuickResponseService</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><literal type="string">"QuickResponseService"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onHandleIntent</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TelephonyManager</name><operator>.</operator><name>ACTION_RESPOND_VIA_MESSAGE</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Received unknown intent: "</literal> <operator>+</operator> <call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KeyCachingService</name><operator>.</operator><name>isLocked</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got quick response request when locked..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>QuickResponseService_quick_response_unavailable_when_Signal_is_locked</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Rfc5724Uri</name></type> <name>uri</name>        <init>= <expr><operator>new</operator> <call><name>Rfc5724Uri</name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getDataString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type>     <name>content</name>    <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>EXTRA_TEXT</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type>     <name>number</name>     <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>number</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><literal type="string">"%"</literal></expr></argument>)</argument_list></call></expr>)</condition><then><block>{
+        <expr_stmt><expr><name>number</name> <operator>=</operator> <call><name><name>URLDecoder</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>Address</name></type>   <name>address</name>        <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromExternal</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>number</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name>      <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>       <name>subscriptionId</name> <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getDefaultSubscriptionId</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>or</name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>      <name>expiresIn</name>      <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getExpireMessages</name></name><argument_list>()</argument_list></call> <operator>*</operator> <literal type="number">1000L</literal></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>content</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>MessageSender</name><operator>.</operator><name>send</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>OutgoingTextMessage</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>content</name></expr></argument>, <argument><expr><name>expiresIn</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>URISyntaxException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>QuickResponseService_problem_sending_message</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

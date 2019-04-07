@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\MediaOverviewActivity.java"><comment type="block">/*
+ * Copyright (C) 2015 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>design</name><operator>.</operator><name>widget</name><operator>.</operator><name>TabLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentStatePagerAdapter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>LoaderManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>Loader</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewPager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>view</name><operator>.</operator><name>ActionMode</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>DividerItemDecoration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayoutManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Window</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>codewaves</name><operator>.</operator><name>stickyheadergrid</name><operator>.</operator><name>StickyHeaderGridLayoutManager</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>CursorRecyclerViewAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MediaDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name><operator>.</operator><name>BucketedThreadMediaLoader</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name><operator>.</operator><name>BucketedThreadMediaLoader</name><operator>.</operator><name>BucketedThreadMedia</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name><operator>.</operator><name>ThreadMediaLoader</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>AttachmentUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicNoActionBarTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>SaveAttachmentTask</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>StickyHeaderDecoration</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>task</name><operator>.</operator><name>ProgressDialogAsyncTask</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity for displaying media attachments in-app
+ */</comment>
+<class><specifier>public</specifier> class <name>MediaOverviewActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MediaOverviewActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS_EXTRA</name>   <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicNoActionBarTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Toolbar</name></type>      <name>toolbar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TabLayout</name></type>    <name>tabLayout</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ViewPager</name></type>    <name>viewPager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Recipient</name></type>    <name>recipient</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>media_overview_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeToolbar</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>tabLayout</name><operator>.</operator><name>setupWithViewPager</name></name><argument_list>(<argument><expr><name>viewPager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewPager</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaOverviewPagerAdapter</name><argument_list>(<argument><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case> <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Address</name></type> <name>address</name> <init>= <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>ADDRESS_EXTRA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewPager</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>pager</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>toolbar</name></name>   <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>toolbar</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>tabLayout</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>tab_layout</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name> <operator>=</operator> <call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeToolbar</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSupportActionBar</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>toolbar</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>recipient</name></decl></parameter></parameter_list> -&gt; <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onEnterMultiSelect</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>tabLayout</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>viewPager</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onExitMultiSelect</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>tabLayout</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>viewPager</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>MediaOverviewPagerAdapter</name> <super><extends>extends <name>FragmentStatePagerAdapter</name></extends></super> <block>{
+
+    <constructor><name>MediaOverviewPagerAdapter</name><parameter_list>(<parameter><decl><type><name>FragmentManager</name></type> <name>fragmentManager</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>fragmentManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Fragment</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name></decl>;</decl_stmt>
+
+      <if>if      <condition>(<expr><name>position</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>MediaOverviewGalleryFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then>
+      <elseif>else <if>if <condition>(<expr><name>position</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>MediaOverviewDocumentsFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if></elseif>
+      <else>else                    <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw></block></else></if>
+
+      <decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name><name>MediaOverviewGalleryFragment</name><operator>.</operator><name>ADDRESS_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putSerializable</name></name><argument_list>(<argument><expr><name><name>MediaOverviewGalleryFragment</name><operator>.</operator><name>LOCALE_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>getCurrentLocale</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>fragment</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="number">2</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>CharSequence</name></type> <name>getPageTitle</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <if>if      <condition>(<expr><name>position</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaOverviewActivity_Media</name></name></expr></argument>)</argument_list></call></expr>;</return></block></then>
+      <elseif>else <if>if <condition>(<expr><name>position</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaOverviewActivity_Documents</name></name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+      <else>else                    <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw></block></else></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>abstract</specifier> class <name><name>MediaOverviewFragment</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name>Fragment</name></extends> <implements>implements <name><name>LoaderManager</name><operator>.</operator><name><name>LoaderCallbacks</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS_EXTRA</name> <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCALE_EXTRA</name>  <init>= <expr><literal type="string">"locale_extra"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>TextView</name></type>     <name>noMedia</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>Recipient</name></type>    <name>recipient</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>RecyclerView</name></type> <name>recyclerView</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>Locale</name></type>       <name>locale</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>String</name></type>       <name>address</name>      <init>= <expr><call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name>ADDRESS_EXTRA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Locale</name></type>       <name>locale</name>       <init>= <expr><operator>(</operator><name>Locale</name><operator>)</operator><call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSerializable</name><argument_list>(<argument><expr><name>LOCALE_EXTRA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>address</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>      <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw></block></then></if>
+      <if>if <condition>(<expr><name>locale</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>       <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw></block></then></if>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>    <operator>=</operator> <call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>address</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>locale</name></name>       <operator>=</operator> <name>locale</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>getLoaderManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>initLoader</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>MediaOverviewGalleryFragment</name>
+      <super><extends>extends <name><name>MediaOverviewFragment</name><argument_list type="generic">&lt;<argument><name>BucketedThreadMedia</name></argument>&gt;</argument_list></name></extends>
+      <implements>implements <name><name>MediaGalleryAdapter</name><operator>.</operator><name>ItemClickListener</name></name></implements></super>
+  <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>StickyHeaderGridLayoutManager</name></type> <name>gridManager</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ActionMode</name></type>                    <name>actionMode</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ActionModeCallback</name></type>            <name>actionModeCallback</name> <init>= <expr><operator>new</operator> <call><name>ActionModeCallback</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>View</name></type> <name>view</name> <init>= <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>media_overview_gallery_fragment</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recyclerView</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>media_grid</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>noMedia</name></name>      <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>no_images</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>gridManager</name></name>  <operator>=</operator> <operator>new</operator> <call><name>StickyHeaderGridLayoutManager</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInteger</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>integer</name><operator>.</operator><name>media_overview_cols</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaGalleryAdapter</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                           <argument><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>,
+                                                           <argument><expr><operator>new</operator> <call><name>BucketedThreadMedia</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                           <argument><expr><name>locale</name></expr></argument>,
+                                                           <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setLayoutManager</name></name><argument_list>(<argument><expr><name>gridManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setHasFixedSize</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>view</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfig</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfig</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name>gridManager</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>gridManager</name></name> <operator>=</operator> <operator>new</operator> <call><name>StickyHeaderGridLayoutManager</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInteger</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>integer</name><operator>.</operator><name>media_overview_cols</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setLayoutManager</name></name><argument_list>(<argument><expr><name>gridManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>BucketedThreadMedia</name></argument>&gt;</argument_list></name></type> <name>onCreateLoader</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name>BucketedThreadMediaLoader</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onLoadFinished</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>BucketedThreadMedia</name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>, <parameter><decl><type><name>BucketedThreadMedia</name></type> <name>bucketedThreadMedia</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MediaGalleryAdapter</name><operator>)</operator> <call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>setMedia</name><argument_list>(<argument><expr><name>bucketedThreadMedia</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MediaGalleryAdapter</name><operator>)</operator> <call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>notifyAllSectionsDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>noMedia</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getItemCount</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr> </then><else>: <expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onLoaderReset</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>BucketedThreadMedia</name></argument>&gt;</argument_list></name></type> <name>cursorLoader</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MediaGalleryAdapter</name><operator>)</operator> <call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>setMedia</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BucketedThreadMedia</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onMediaClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>actionMode</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>handleMediaMultiSelectClick</name><argument_list>(<argument><expr><name>mediaRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name>handleMediaPreviewClick</name><argument_list>(<argument><expr><name>mediaRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>handleMediaMultiSelectClick</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>MediaGalleryAdapter</name></type> <name>adapter</name> <init>= <expr><call><name>getListAdapter</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>toggleSelection</name></name><argument_list>(<argument><expr><name>mediaRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><call><name><name>adapter</name><operator>.</operator><name>getSelectedMediaCount</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>actionMode</name><operator>.</operator><name>finish</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>actionMode</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>adapter</name><operator>.</operator><name>getSelectedMediaCount</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>handleMediaPreviewClick</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDataUri</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <return>return;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>Context</name></type> <name>context</name> <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>context</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <return>return;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>MediaPreviewActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>MediaPreviewActivity</name><operator>.</operator><name>DATE_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>MediaPreviewActivity</name><operator>.</operator><name>SIZE_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>MediaPreviewActivity</name><operator>.</operator><name>ADDRESS_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>MediaPreviewActivity</name><operator>.</operator><name>OUTGOING_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>MediaPreviewActivity</name><operator>.</operator><name>LEFT_IS_RECENT_EXTRA</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setDataAndType</name></name><argument_list>(<argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDataUri</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onMediaLongClicked</name><parameter_list>(<parameter><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>actionMode</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MediaGalleryAdapter</name><operator>)</operator> <call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>toggleSelection</name><argument_list>(<argument><expr><name>mediaRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>enterMultiSelect</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"CodeBlock2Expr"</literal></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><block>{<expr><literal type="string">"InlinedApi"</literal></expr>,<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>}</block></expr></argument>)</argument_list></annotation>
+    <specifier>private</specifier> <type><name>void</name></type> <name>handleSaveMedia</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></argument>&gt;</argument_list></name></type> <name>mediaRecords</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name> <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>SaveAttachmentTask</name><operator>.</operator><name>showWarningDialog</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>dialogInterface</name></decl></parameter>, <parameter><decl><name>which</name></decl></parameter>)</parameter_list> -&gt; <block>{
+        <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_EXTERNAL_STORAGE</name></name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>READ_EXTERNAL_STORAGE</name></name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+                   <operator>.</operator><call><name>withPermanentDenialDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>onAnyDenied</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaPreviewActivity_unable_to_write_to_external_storage_without_permission</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>onAllGranted</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+                     <expr><operator>new</operator> <class><super><name><name>ProgressDialogAsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>SaveAttachmentTask</name><operator>.</operator><name>Attachment</name></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></super><argument_list>(<argument><expr><name>context</name></expr></argument>,
+                                                                                                  <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaOverviewActivity_collecting_attachments</name></name></expr></argument>,
+                                                                                                  <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>please_wait</name></name></expr></argument>)</argument_list> <block>{</block></class></expr></block>
+                       @Override
+                       protected List&lt;SaveAttachmentTask.Attachment&gt; doInBackground(Void... params</lambda></expr></argument>)</argument_list></call> <block>{
+                         <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>SaveAttachmentTask</name><operator>.</operator><name>Attachment</name></name></argument>&gt;</argument_list></name></type> <name>attachments</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+                         <for>for <control>(<init><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name> <range>: <expr><name>mediaRecords</name></expr></range></decl></init>)</control> <block>{
+                           <if>if <condition>(<expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDataUri</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                             <expr_stmt><expr><call><name><name>attachments</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>SaveAttachmentTask</name><operator>.</operator><name>Attachment</name></name><argument_list>(<argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDataUri</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                               <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                               <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                               <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getFileName</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                           }</block></then></if>
+                         }</block></for>
+
+                         <return>return <expr><name>attachments</name></expr>;</return>
+                       }</block></expr></expr_stmt>
+
+                       <function><annotation>@<name>Override</name></annotation>
+                       <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>SaveAttachmentTask</name><operator>.</operator><name>Attachment</name></name></argument>&gt;</argument_list></name></type> <name>attachments</name></decl></parameter>)</parameter_list> <block>{
+                         <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostExecute</name></name><argument_list>(<argument><expr><name>attachments</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                         <decl_stmt><decl><type><name>SaveAttachmentTask</name></type> <name>saveTask</name> <init>= <expr><operator>new</operator> <call><name>SaveAttachmentTask</name><argument_list>(<argument><expr><name>context</name></expr></argument>,
+                                                                              <argument><expr><call><name><name>attachments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                         <expr_stmt><expr><call><name><name>saveTask</name><operator>.</operator><name>executeOnExecutor</name></name><argument_list>(<argument><expr><name>THREAD_POOL_EXECUTOR</name></expr></argument>,
+                                                    <argument><expr><call><name><name>attachments</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>SaveAttachmentTask</name><operator>.</operator><name>Attachment</name><index>[<expr><call><name><name>attachments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                         <expr_stmt><expr><call><name><name>actionMode</name><operator>.</operator><name>finish</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                       }</block></function>
+                     }</block></lambda><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr></argument>;</argument_list></call></expr></expr_stmt>
+                   }</block></function>)</block>
+                   <expr_stmt><expr><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt></class>
+      }</block></class><operator>,</operator> <expr_stmt><expr><call><name><name>mediaRecords</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></expr_stmt>)<empty_stmt>;</empty_stmt>
+    }
+
+    @<expr_stmt><expr><call><name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></call>
+    <specifier>private</specifier> <name>void</name> <call><name>handleDeleteMedia</name><argument_list>(<argument><expr><annotation>@<name>NonNull</name></annotation> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></argument>&gt;</argument_list></name> <name>mediaRecords</name></expr></argument>)</argument_list></call> <block>{
+      <expr><name>int</name> <name>recordCount</name>       <operator>=</operator> <call><name><name>mediaRecords</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;
+      <expr><name>Resources</name> <name>res</name>         <operator>=</operator> <call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call></expr>;
+      <expr><name>String</name> <name>confirmTitle</name>   <operator>=</operator> <call><name><name>res</name><operator>.</operator><name>getQuantityString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>plurals</name><operator>.</operator><name>MediaOverviewActivity_Media_delete_confirm_title</name></name></expr></argument>,
+                                                    <argument><expr><name>recordCount</name></expr></argument>,
+                                                    <argument><expr><name>recordCount</name></expr></argument>)</argument_list></call></expr>;
+      <expr><name>String</name> <name>confirmMessage</name> <operator>=</operator> <call><name><name>res</name><operator>.</operator><name>getQuantityString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>plurals</name><operator>.</operator><name>MediaOverviewActivity_Media_delete_confirm_message</name></name></expr></argument>,
+                                                    <argument><expr><name>recordCount</name></expr></argument>,
+                                                    <argument><expr><name>recordCount</name></expr></argument>)</argument_list></call></expr>;
+
+      <expr><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name> <name>builder</name> <operator>=</operator> <operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;
+      <expr><call><name><name>builder</name><operator>.</operator><name>setIconAttribute</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>dialog_alert_icon</name></name></expr></argument>)</argument_list></call></expr>;
+      <expr><call><name><name>builder</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><name>confirmTitle</name></expr></argument>)</argument_list></call></expr>;
+      <expr><call><name><name>builder</name><operator>.</operator><name>setMessage</name></name><argument_list>(<argument><expr><name>confirmMessage</name></expr></argument>)</argument_list></call></expr>;
+      <expr><call><name><name>builder</name><operator>.</operator><name>setCancelable</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;
+
+      <expr><call><name><name>builder</name><operator>.</operator><name>setPositiveButton</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>delete</name></name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>dialogInterface</name></decl></parameter>, <parameter><decl><name>i</name></decl></parameter>)</parameter_list> -&gt; <block>{
+        <expr_stmt><expr><operator>new</operator> <class><super><name><name>ProgressDialogAsyncTask</name><argument_list type="generic">&lt;<argument><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                           <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaOverviewActivity_Media_delete_progress_title</name></name></expr></argument>,
+                                                                           <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MediaOverviewActivity_Media_delete_progress_message</name></name></expr></argument>)</argument_list>
+        <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name><modifier>...</modifier></type> <name>records</name></decl></parameter>)</parameter_list> <block>{
+            <if>if <condition>(<expr><name>records</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name><name>records</name><operator>.</operator><name>length</name></name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+              <return>return <expr><literal type="null">null</literal></expr>;</return>
+            <expr_stmt/></block></then></if></block></function></block></class></expr></expr_stmt></block></lambda></expr></argument></argument_list></call></expr>}</block></expr></expr_stmt>
+
+            <for>for <control>(<init><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>record</name> <range>: <expr><name>records</name></expr></range></decl></init>)</control> <block>{
+              <expr_stmt><expr><call><name><name>AttachmentUtil</name><operator>.</operator><name>deleteAttachment</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+          }
+
+        }<expr_stmt><expr><operator>.</operator><call><name>execute</name><argument_list>(<argument><expr><call><name><name>mediaRecords</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name><index>[<expr><call><name><name>mediaRecords</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      })<empty_stmt>;</empty_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setNegativeButton</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }
+
+    private <function><type><name>void</name></type> <name>handleSelectAllMedia</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>selectAllMedia</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>actionMode</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSelectedMediaCount</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>MediaGalleryAdapter</name></type> <name>getListAdapter</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>MediaGalleryAdapter</name><operator>)</operator> <call><name><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>enterMultiSelect</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><name>actionMode</name> <operator>=</operator> <operator>(</operator><operator>(</operator><name>AppCompatActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>startSupportActionMode</name><argument_list>(<argument><expr><name>actionModeCallback</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MediaOverviewActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>onEnterMultiSelect</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <class><specifier>private</specifier> class <name>ActionModeCallback</name> <super><implements>implements <name><name>ActionMode</name><operator>.</operator><name>Callback</name></name></implements></super> <block>{
+
+      <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>originalStatusBarColor</name></decl>;</decl_stmt>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>boolean</name></type> <name>onCreateActionMode</name><parameter_list>(<parameter><decl><type><name>ActionMode</name></type> <name>mode</name></decl></parameter>, <parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mode</name><operator>.</operator><name>getMenuInflater</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>media_overview_context</name></name></expr></argument>, <argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mode</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><literal type="string">"1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>Window</name></type> <name>window</name> <init>= <expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getWindow</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><name>originalStatusBarColor</name> <operator>=</operator> <call><name><name>window</name><operator>.</operator><name>getStatusBarColor</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>setStatusBarColor</name></name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>action_mode_status_bar</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>boolean</name></type> <name>onPrepareActionMode</name><parameter_list>(<parameter><decl><type><name>ActionMode</name></type> <name>mode</name></decl></parameter>, <parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>boolean</name></type> <name>onActionItemClicked</name><parameter_list>(<parameter><decl><type><name>ActionMode</name></type> <name>mode</name></decl></parameter>, <parameter><decl><type><name>MenuItem</name></type> <name>menuItem</name></decl></parameter>)</parameter_list> <block>{
+        <switch>switch <condition>(<expr><call><name><name>menuItem</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+          <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>save</name></name></expr>:</case>
+            <expr_stmt><expr><call><name>handleSaveMedia</name><argument_list>(<argument><expr><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSelectedMedia</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+          <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>delete</name></name></expr>:</case>
+            <expr_stmt><expr><call><name>handleDeleteMedia</name><argument_list>(<argument><expr><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSelectedMedia</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>actionMode</name><operator>.</operator><name>finish</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+          <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>select_all</name></name></expr>:</case>
+            <expr_stmt><expr><call><name>handleSelectAllMedia</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></switch>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onDestroyActionMode</name><parameter_list>(<parameter><decl><type><name>ActionMode</name></type> <name>mode</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>actionMode</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>clearSelection</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MediaOverviewActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>onExitMultiSelect</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setStatusBarColor</name><argument_list>(<argument><expr><name>originalStatusBarColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+    }</block></class>
+  }
+
+  public <class><specifier>static</specifier> class <name>MediaOverviewDocumentsFragment</name> <super><extends>extends <name><name>MediaOverviewFragment</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>View</name></type>                  <name>view</name>    <init>= <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>media_overview_documents_fragment</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MediaDocumentsAdapter</name></type> <name>adapter</name> <init>= <expr><operator>new</operator> <call><name>MediaDocumentsAdapter</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recyclerView</name></name>  <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>recycler_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>noMedia</name></name>       <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>no_documents</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>setLayoutManager</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>LinearLayoutManager</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>LinearLayoutManager</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>addItemDecoration</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>StickyHeaderDecoration</name><argument_list>(<argument><expr><name>adapter</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>addItemDecoration</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DividerItemDecoration</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>DividerItemDecoration</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>view</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type> <name>onCreateLoader</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name>ThreadMediaLoader</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onLoadFinished</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>, <parameter><decl><type><name>Cursor</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>CursorRecyclerViewAdapter</name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>changeCursor</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>noMedia</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>data</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr> </then><else>: <expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onLoaderReset</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>CursorRecyclerViewAdapter</name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>recyclerView</name><operator>.</operator><name>getAdapter</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>changeCursor</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+}
+</unit>

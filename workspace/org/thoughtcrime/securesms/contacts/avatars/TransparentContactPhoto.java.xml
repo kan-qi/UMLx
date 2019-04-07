@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\avatars\TransparentContactPhoto.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>ContextCompat</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>makeramen</name><operator>.</operator><name>roundedimageview</name><operator>.</operator><name>RoundedDrawable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>TransparentContactPhoto</name> <super><implements>implements <name>FallbackContactPhoto</name></implements></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>TransparentContactPhoto</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Drawable</name></type> <name>asDrawable</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>asDrawable</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>color</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Drawable</name></type> <name>asDrawable</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>inverted</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>RoundedDrawable</name><operator>.</operator><name>fromDrawable</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>transparent</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Drawable</name></type> <name>asCallCard</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_contact_picture_large</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

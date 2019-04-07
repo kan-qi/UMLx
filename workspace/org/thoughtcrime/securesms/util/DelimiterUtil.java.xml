@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\DelimiterUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DelimiterUtil</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>escape</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><name>char</name></type> <name>delimiter</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>value</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="string">""</literal> <operator>+</operator> <name>delimiter</name></expr></argument>, <argument><expr><literal type="string">"\\"</literal> <operator>+</operator> <name>delimiter</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>unescape</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><name>char</name></type> <name>delimiter</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>value</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="string">"\\"</literal> <operator>+</operator> <name>delimiter</name></expr></argument>, <argument><expr><literal type="string">""</literal> <operator>+</operator> <name>delimiter</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>String</name><index>[]</index></name></type> <name>split</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><name>char</name></type> <name>delimiter</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type> <name>regex</name> <init>= <expr><literal type="string">"(?&lt;!\\\\)"</literal> <operator>+</operator> <call><name><name>Pattern</name><operator>.</operator><name>quote</name></name><argument_list>(<argument><expr><name>delimiter</name> <operator>+</operator> <literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>value</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><name>regex</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

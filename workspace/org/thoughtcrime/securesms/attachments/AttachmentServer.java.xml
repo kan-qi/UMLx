@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\attachments\AttachmentServer.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>spongycastle</name><operator>.</operator><name>util</name><operator>.</operator><name>encoders</name><operator>.</operator><name>Hex</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartAuthority</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedReader</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStreamReader</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>OutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>InetAddress</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>ServerSocket</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>Socket</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>SocketException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>SocketTimeoutException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>UnknownHostException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Properties</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>StringTokenizer</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * @author      Stefan "frostymarvelous" Froelich &lt;stefan d0t froelich At whisppa DoT com&gt;
+ */</comment>
+<class><specifier>public</specifier> class <name>AttachmentServer</name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AttachmentServer</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type>      <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Attachment</name></type>   <name>attachment</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ServerSocket</name></type> <name>socket</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>          <name>port</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>       <name>auth</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>volatile</specifier> <name>boolean</name></type> <name>isRunning</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AttachmentServer</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Attachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>      <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachment</name></name>   <operator>=</operator> <name>attachment</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>socket</name></name>       <operator>=</operator> <operator>new</operator> <call><name>ServerSocket</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>InetAddress</name><operator>.</operator><name>getByAddress</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>byte</name><index>[]</index></name><block>{<expr><literal type="number">127</literal></expr>, <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>}</block></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>port</name></name>         <operator>=</operator> <call><name><name>socket</name><operator>.</operator><name>getLocalPort</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>auth</name></name>         <operator>=</operator> <operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><call><name><name>Hex</name><operator>.</operator><name>encode</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getSecretBytes</name></name><argument_list>(<argument><expr><literal type="number">16</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>socket</name><operator>.</operator><name>setSoTimeout</name></name><argument_list>(<argument><expr><literal type="number">5000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>UnknownHostException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>Uri</name></type> <name>getUri</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name><name>Locale</name><operator>.</operator><name>ROOT</name></name></expr></argument>, <argument><expr><literal type="string">"http://127.0.0.1:%d/%s"</literal></expr></argument>, <argument><expr><name>port</name></expr></argument>, <argument><expr><name>auth</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>start</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>isRunning</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>new</operator> <call><name>Thread</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>stop</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>isRunning</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+    <while>while <condition>(<expr><name>isRunning</name></expr>)</condition> <block>{
+      <decl_stmt><decl><type><name>Socket</name></type> <name>client</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><name>client</name> <operator>=</operator> <call><name><name>socket</name><operator>.</operator><name>accept</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>client</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>StreamToMediaPlayerTask</name></type> <name>task</name> <init>= <expr><operator>new</operator> <call><name>StreamToMediaPlayerTask</name><argument_list>(<argument><expr><name>client</name></expr></argument>, <argument><expr><literal type="string">"/"</literal> <operator>+</operator> <name>auth</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><call><name><name>task</name><operator>.</operator><name>processRequest</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>task</name><operator>.</operator><name>execute</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></then></if>
+
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>SocketTimeoutException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Error connecting to client"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch> <finally>finally <block>{
+        <try>try <block>{<if>if <condition>(<expr><name>client</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>client</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>}</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{}</block></catch></try>
+      }</block></finally></try>
+    }</block></while>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Proxy interrupted. Shutting down."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+
+  <class><specifier>private</specifier> class <name>StreamToMediaPlayerTask</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Socket</name></type> <name>client</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>auth</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>       <name>cbSkip</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Properties</name></type> <name>parameters</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Properties</name></type> <name>request</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Properties</name></type> <name>requestHeaders</name></decl>;</decl_stmt>
+<comment type="line">//    private String filePath;</comment>
+
+    <constructor><specifier>public</specifier> <name>StreamToMediaPlayerTask</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Socket</name></type> <name>client</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>auth</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name> <operator>=</operator> <name>client</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>auth</name></name>   <operator>=</operator> <name>auth</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>processRequest</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+            <decl_stmt><decl><type><name>InputStream</name></type> <name>is</name>         <init>= <expr><call><name><name>client</name><operator>.</operator><name>getInputStream</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>         <name>bufferSize</name> <init>= <expr><literal type="number">8192</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>      <name>buffer</name>     <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name>bufferSize</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type>         <name>splitByte</name>  <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type>         <name>readLength</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+      <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><call><name><name>is</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>bufferSize</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <while>while <condition>(<expr><name>read</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{
+          <expr_stmt><expr><name>readLength</name> <operator>+=</operator> <name>read</name></expr>;</expr_stmt>
+          <expr_stmt><expr><name>splitByte</name> <operator>=</operator> <call><name>findHeaderEnd</name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>readLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <if>if <condition>(<expr><name>splitByte</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then>
+            <block type="pseudo"><break>break;</break></block></then></if>
+          <expr_stmt><expr><name>read</name> <operator>=</operator> <call><name><name>is</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>readLength</name></expr></argument>, <argument><expr><name>bufferSize</name> <operator>-</operator> <name>readLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></while>
+      }</block>
+
+      <comment type="line">// Create a BufferedReader for parsing the header.</comment>
+      <decl_stmt><decl><type><name>ByteArrayInputStream</name></type> <name>hbis</name> <init>= <expr><operator>new</operator> <call><name>ByteArrayInputStream</name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>readLength</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>BufferedReader</name></type>       <name>hin</name>  <init>= <expr><operator>new</operator> <call><name>BufferedReader</name><argument_list>(<argument><expr><operator>new</operator> <call><name>InputStreamReader</name><argument_list>(<argument><expr><name>hbis</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name>request</name>        <operator>=</operator> <operator>new</operator> <call><name>Properties</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>parameters</name>     <operator>=</operator> <operator>new</operator> <call><name>Properties</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>requestHeaders</name> <operator>=</operator> <operator>new</operator> <call><name>Properties</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><call><name>decodeHeader</name><argument_list>(<argument><expr><name>hin</name></expr></argument>, <argument><expr><name>request</name></expr></argument>, <argument><expr><name>parameters</name></expr></argument>, <argument><expr><name>requestHeaders</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> <name>e1</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Exception: "</literal> <operator>+</operator> <call><name><name>e1</name><operator>.</operator><name>getMessage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>e1</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+
+      <for>for <control>(<init><decl><type><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></name></type> <name>e</name> <range>: <expr><call><name><name>requestHeaders</name><operator>.</operator><name>entrySet</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Header: "</literal> <operator>+</operator> <call><name><name>e</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" : "</literal> <operator>+</operator> <call><name><name>e</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>range</name> <init>= <expr><call><name><name>requestHeaders</name><operator>.</operator><name>getProperty</name></name><argument_list>(<argument><expr><literal type="string">"range"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>range</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"range is: "</literal> <operator>+</operator> <name>range</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>range</name> <operator>=</operator> <call><name><name>range</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">6</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>charPos</name> <init>= <expr><call><name><name>range</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="char">'-'</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>charPos</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name>range</name> <operator>=</operator> <call><name><name>range</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>charPos</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <expr_stmt><expr><name>cbSkip</name> <operator>=</operator> <call><name><name>Long</name><operator>.</operator><name>parseLong</name></name><argument_list>(<argument><expr><name>range</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"range found!! "</literal> <operator>+</operator> <name>cbSkip</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><literal type="string">"GET"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>request</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"method"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Only GET is supported: "</literal> <operator>+</operator> <call><name><name>request</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"method"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>receivedAuth</name> <init>= <expr><call><name><name>request</name><operator>.</operator><name>getProperty</name></name><argument_list>(<argument><expr><literal type="string">"uri"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>receivedAuth</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>MessageDigest</name><operator>.</operator><name>isEqual</name></name><argument_list>(<argument><expr><call><name><name>receivedAuth</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>auth</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Bad auth token!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+<comment type="line">//      filePath = request.getProperty("uri");</comment>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>execute</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <decl_stmt><decl><type><name>InputStream</name></type> <name>inputStream</name> <init>= <expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>        <name>fileSize</name>    <init>= <expr><call><name><name>attachment</name><operator>.</operator><name>getSize</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>headers</name> <init>= <expr><literal type="string">""</literal></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>cbSkip</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{<comment type="line">// It is a seek or skip request if there's a Range</comment>
+        <comment type="line">// header</comment>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"HTTP/1.1 206 Partial Content\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Content-Type: "</literal> <operator>+</operator> <call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Accept-Ranges: bytes\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Content-Length: "</literal> <operator>+</operator> <operator>(</operator><name>fileSize</name> <operator>-</operator> <name>cbSkip</name><operator>)</operator> <operator>+</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Content-Range: bytes "</literal> <operator>+</operator> <name>cbSkip</name> <operator>+</operator> <literal type="string">"-"</literal> <operator>+</operator> <operator>(</operator><name>fileSize</name> <operator>-</operator> <literal type="number">1</literal><operator>)</operator> <operator>+</operator> <literal type="string">"/"</literal> <operator>+</operator> <name>fileSize</name> <operator>+</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Connection: Keep-Alive\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"HTTP/1.1 200 OK\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Content-Type: "</literal> <operator>+</operator> <call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Accept-Ranges: bytes\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Content-Length: "</literal> <operator>+</operator> <name>fileSize</name> <operator>+</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"Connection: Keep-Alive\r\n"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>headers</name> <operator>+=</operator> <literal type="string">"\r\n"</literal></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"headers: "</literal> <operator>+</operator> <name>headers</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>OutputStream</name></type> <name>output</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buff</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">64</literal> <operator>*</operator> <literal type="number">1024</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <try>try <block>{
+        <expr_stmt><expr><name>output</name> <operator>=</operator> <operator>new</operator> <call><name>BufferedOutputStream</name><argument_list>(<argument><expr><call><name><name>client</name><operator>.</operator><name>getOutputStream</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">32</literal> <operator>*</operator> <literal type="number">1024</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>output</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><call><name><name>headers</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>inputStream</name><operator>.</operator><name>skip</name></name><argument_list>(<argument><expr><name>cbSkip</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//        dataSource.skipFully(data, cbSkip);//try to skip as much as possible</comment>
+
+        <comment type="line">// Loop as long as there's stuff to send and client has not closed</comment>
+        <decl_stmt><decl><type><name>int</name></type> <name>cbRead</name></decl>;</decl_stmt>
+        <while>while <condition>(<expr><operator>!</operator><call><name><name>client</name><operator>.</operator><name>isClosed</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><name>cbRead</name> <operator>=</operator> <call><name><name>inputStream</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buff</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>buff</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call><operator>)</operator> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition> <block>{
+          <expr_stmt><expr><call><name><name>output</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>buff</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>cbRead</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></while>
+      }</block>
+      <catch>catch <parameter_list>(<parameter><decl><type><name>SocketException</name></type> <name>socketException</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"SocketException() thrown, proxy client has probably closed. This can exit harmlessly"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch>
+      <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Exception thrown from streaming task:"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>e</name><operator>.</operator><name>getClass</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getName</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" : "</literal> <operator>+</operator> <call><name><name>e</name><operator>.</operator><name>getLocalizedMessage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+
+      <comment type="line">// Cleanup</comment>
+      <try>try <block>{
+        <if>if <condition>(<expr><name>output</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>output</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>client</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block>
+      <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"IOException while cleaning up streaming task:"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>e</name><operator>.</operator><name>getClass</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getName</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" : "</literal> <operator>+</operator> <call><name><name>e</name><operator>.</operator><name>getLocalizedMessage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Find byte index separating header from body. It must be the last byte of
+     * the first two sequential new lines.
+     **/</comment>
+    <function><specifier>private</specifier> <type><name>int</name></type> <name>findHeaderEnd</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>buf</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>rlen</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>splitbyte</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+      <while>while <condition>(<expr><name>splitbyte</name> <operator>+</operator> <literal type="number">3</literal> <operator>&lt;</operator> <name>rlen</name></expr>)</condition> <block>{
+        <if>if <condition>(<expr><name><name>buf</name><index>[<expr><name>splitbyte</name></expr>]</index></name> <operator>==</operator> <literal type="char">'\r'</literal> <operator>&amp;&amp;</operator> <name><name>buf</name><index>[<expr><name>splitbyte</name> <operator>+</operator> <literal type="number">1</literal></expr>]</index></name> <operator>==</operator> <literal type="char">'\n'</literal>
+            <operator>&amp;&amp;</operator> <name><name>buf</name><index>[<expr><name>splitbyte</name> <operator>+</operator> <literal type="number">2</literal></expr>]</index></name> <operator>==</operator> <literal type="char">'\r'</literal> <operator>&amp;&amp;</operator> <name><name>buf</name><index>[<expr><name>splitbyte</name> <operator>+</operator> <literal type="number">3</literal></expr>]</index></name> <operator>==</operator> <literal type="char">'\n'</literal></expr>)</condition><then>
+          <block type="pseudo"><return>return <expr><name>splitbyte</name> <operator>+</operator> <literal type="number">4</literal></expr>;</return></block></then></if>
+        <expr_stmt><expr><name>splitbyte</name><operator>++</operator></expr>;</expr_stmt>
+      }</block></while>
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+
+    <comment type="block" format="javadoc">/**
+     * Decodes the sent headers and loads the data into java Properties' key -
+     * value pairs
+     **/</comment>
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>decodeHeader</name><parameter_list>(<parameter><decl><type><name>BufferedReader</name></type> <name>in</name></decl></parameter>, <parameter><decl><type><name>Properties</name></type> <name>pre</name></decl></parameter>,
+                              <parameter><decl><type><name>Properties</name></type> <name>parms</name></decl></parameter>, <parameter><decl><type><name>Properties</name></type> <name>header</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InterruptedException</name></expr></argument></throws> <block>{
+      <try>try <block>{
+        <comment type="line">// Read the request line</comment>
+        <decl_stmt><decl><type><name>String</name></type> <name>inLine</name> <init>= <expr><call><name><name>in</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>inLine</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>
+          <block type="pseudo"><return>return;</return></block></then></if>
+        <decl_stmt><decl><type><name>StringTokenizer</name></type> <name>st</name> <init>= <expr><operator>new</operator> <call><name>StringTokenizer</name><argument_list>(<argument><expr><name>inLine</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>st</name><operator>.</operator><name>hasMoreTokens</name></name><argument_list>()</argument_list></call></expr>)</condition><then>
+          <block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"BAD REQUEST: Syntax error. Usage: GET /example/file.html"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>method</name> <init>= <expr><call><name><name>st</name><operator>.</operator><name>nextToken</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>pre</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"method"</literal></expr></argument>, <argument><expr><name>method</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>st</name><operator>.</operator><name>hasMoreTokens</name></name><argument_list>()</argument_list></call></expr>)</condition><then>
+          <block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"BAD REQUEST: Missing URI. Usage: GET /example/file.html"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>uri</name> <init>= <expr><call><name><name>st</name><operator>.</operator><name>nextToken</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <comment type="line">// Decode parameters from the URI</comment>
+        <decl_stmt><decl><type><name>int</name></type> <name>qmi</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="char">'?'</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>qmi</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>decodeParms</name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>qmi</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>parms</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>uri</name> <operator>=</operator> <call><name>decodePercent</name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>qmi</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else
+          <block type="pseudo"><expr_stmt><expr><name>uri</name> <operator>=</operator> <call><name>decodePercent</name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+        <comment type="line">// If there's another token, it's protocol version,</comment>
+        <comment type="line">// followed by HTTP headers. Ignore version but parse headers.</comment>
+        <comment type="line">// NOTE: this now forces header names lowercase since they are</comment>
+        <comment type="line">// case insensitive and vary by client.</comment>
+        <if>if <condition>(<expr><call><name><name>st</name><operator>.</operator><name>hasMoreTokens</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>String</name></type> <name>line</name> <init>= <expr><call><name><name>in</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <while>while <condition>(<expr><name>line</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>line</name><operator>.</operator><name>trim</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>p</name> <init>= <expr><call><name><name>line</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="char">':'</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>p</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then>
+              <block type="pseudo"><expr_stmt><expr><call><name><name>header</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><call><name><name>line</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>p</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>trim</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toLowerCase</name><argument_list>()</argument_list></call></expr></argument>,
+                         <argument><expr><call><name><name>line</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>p</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>trim</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+            <expr_stmt><expr><name>line</name> <operator>=</operator> <call><name><name>in</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></while>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>pre</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"uri"</literal></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ioe</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"SERVER INTERNAL ERROR: IOException: "</literal> <operator>+</operator> <call><name><name>ioe</name><operator>.</operator><name>getMessage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Decodes parameters in percent-encoded URI-format ( e.g.
+     * "name=Jack%20Daniels&amp;pass=Single%20Malt" ) and adds them to given
+     * Properties. NOTE: this doesn't support multiple identical keys due to the
+     * simplicity of Properties -- if you need multiples, you might want to
+     * replace the Properties with a Hashtable of Vectors or such.
+     */</comment>
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>decodeParms</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>parms</name></decl></parameter>, <parameter><decl><type><name>Properties</name></type> <name>p</name></decl></parameter>)</parameter_list>
+        <throws>throws <argument><expr><name>InterruptedException</name></expr></argument></throws> <block>{
+      <if>if <condition>(<expr><name>parms</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><return>return;</return></block></then></if>
+
+      <decl_stmt><decl><type><name>StringTokenizer</name></type> <name>st</name> <init>= <expr><operator>new</operator> <call><name>StringTokenizer</name><argument_list>(<argument><expr><name>parms</name></expr></argument>, <argument><expr><literal type="string">"&amp;"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <while>while <condition>(<expr><call><name><name>st</name><operator>.</operator><name>hasMoreTokens</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>e</name> <init>= <expr><call><name><name>st</name><operator>.</operator><name>nextToken</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>sep</name> <init>= <expr><call><name><name>e</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="char">'='</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>sep</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then>
+          <block type="pseudo"><expr_stmt><expr><call><name><name>p</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><call><name>decodePercent</name><argument_list>(<argument><expr><call><name><name>e</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>sep</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>trim</name><argument_list>()</argument_list></call></expr></argument>,
+                <argument><expr><call><name>decodePercent</name><argument_list>(<argument><expr><call><name><name>e</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>sep</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></while>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Decodes the percent encoding scheme. &lt;br/&gt;
+     * For example: "an+example%20string" -&gt; "an example string"
+     */</comment>
+    <function><specifier>private</specifier> <type><name>String</name></type> <name>decodePercent</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InterruptedException</name></expr></argument></throws> <block>{
+      <try>try <block>{
+        <decl_stmt><decl><type><name>StringBuffer</name></type> <name>sb</name> <init>= <expr><operator>new</operator> <call><name>StringBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>str</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+          <decl_stmt><decl><type><name>char</name></type> <name>c</name> <init>= <expr><call><name><name>str</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <switch>switch <condition>(<expr><name>c</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="char">'+'</literal></expr>:</case>
+              <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <break>break;</break>
+            <case>case <expr><literal type="char">'%'</literal></expr>:</case>
+              <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><operator>(</operator><name>char</name><operator>)</operator> <call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(
+                  <argument><expr><call><name><name>str</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>, <argument><expr><name>i</name> <operator>+</operator> <literal type="number">3</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">16</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+              <break>break;</break>
+            <default>default:</default>
+              <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <break>break;</break>
+          }</block></switch>
+        }</block></for>
+        <return>return <expr><call><name><name>sb</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"BAD REQUEST: Bad percent-encoding."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></catch></try>
+    }</block></function>
+  }</block></class>
+}</block></class></unit>

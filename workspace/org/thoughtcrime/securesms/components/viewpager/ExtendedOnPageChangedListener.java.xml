@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\viewpager\ExtendedOnPageChangedListener.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>viewpager</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewPager</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>ExtendedOnPageChangedListener</name> <super><implements>implements <name><name>ViewPager</name><operator>.</operator><name>OnPageChangeListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Integer</name></type> <name>currentPage</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPageScrolled</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>positionOffset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>positionOffsetPixels</name></decl></parameter>)</parameter_list> <block>{
+
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPageSelected</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>currentPage</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>currentPage</name> <operator>!=</operator> <name>position</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>onPageUnselected</name><argument_list>(<argument><expr><name>currentPage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    <expr_stmt><expr><name>currentPage</name> <operator>=</operator> <name>position</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>onPageUnselected</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPageScrollStateChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>state</name></decl></parameter>)</parameter_list> <block>{
+
+  }</block></function>
+
+
+}</block></class>
+</unit>

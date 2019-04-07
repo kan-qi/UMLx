@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\SpanUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Typeface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spannable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>ForegroundColorSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>RelativeSizeSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>StyleSpan</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SpanUtil</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>italic</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>sequence</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>italic</name><argument_list>(<argument><expr><name>sequence</name></expr></argument>, <argument><expr><call><name><name>sequence</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>italic</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>sequence</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>spannable</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>sequence</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>spannable</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Typeface</name><operator>.</operator><name>ITALIC</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>length</name></expr></argument>, <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>spannable</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>small</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>sequence</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>spannable</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>sequence</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>spannable</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RelativeSizeSpan</name><argument_list>(<argument><expr><literal type="number">0.9f</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>sequence</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>spannable</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>bold</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>sequence</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>spannable</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>sequence</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>spannable</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>StyleSpan</name><argument_list>(<argument><expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>sequence</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>spannable</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>color</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>, <parameter><decl><type><name>CharSequence</name></type> <name>sequence</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SpannableString</name></type> <name>spannable</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>sequence</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>spannable</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ForegroundColorSpan</name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>sequence</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>spannable</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

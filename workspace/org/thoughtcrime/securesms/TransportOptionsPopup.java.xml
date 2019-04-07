@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\TransportOptionsPopup.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListPopupWindow</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>AdapterView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListView</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>TransportOptionsPopup</name> <super><extends>extends <name>ListPopupWindow</name></extends> <implements>implements <name><name>ListView</name><operator>.</operator><name>OnItemClickListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TransportOptionsAdapter</name></type> <name>adapter</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SelectedListener</name></type>        <name>listener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>TransportOptionsPopup</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>anchor</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SelectedListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>adapter</name></name>  <operator>=</operator> <operator>new</operator> <call><name>TransportOptionsAdapter</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>TransportOption</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setVerticalOffset</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelOffset</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>transport_selection_popup_yoff</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setHorizontalOffset</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelOffset</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>transport_selection_popup_xoff</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setInputMethodMode</name><argument_list>(<argument><expr><name><name>ListPopupWindow</name><operator>.</operator><name>INPUT_METHOD_NOT_NEEDED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setModal</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setAnchorView</name><argument_list>(<argument><expr><name>anchor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setAdapter</name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentWidth</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>transport_selection_popup_width</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setOnItemClickListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>display</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>TransportOption</name></argument>&gt;</argument_list></name></type> <name>enabledTransports</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>setEnabledTransports</name></name><argument_list>(<argument><expr><name>enabledTransports</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>notifyDataSetChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onItemClick</name><parameter_list>(<parameter><decl><type><name><name>AdapterView</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onSelected</name></name><argument_list>(<argument><expr><operator>(</operator><name>TransportOption</name><operator>)</operator><call><name><name>adapter</name><operator>.</operator><name>getItem</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>SelectedListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onSelected</name><parameter_list>(<parameter><decl><type><name>TransportOption</name></type> <name>option</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+}</block></class>
+</unit>

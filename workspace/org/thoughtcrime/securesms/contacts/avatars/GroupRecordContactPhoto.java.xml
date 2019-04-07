@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\avatars\GroupRecordContactPhoto.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Conversions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>GroupRecordContactPhoto</name> <super><implements>implements <name>ContactPhoto</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier>          <name>long</name></type> <name>avatarId</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>GroupRecordContactPhoto</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>avatarId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name>  <operator>=</operator> <name>address</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>avatarId</name></name> <operator>=</operator> <name>avatarId</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>InputStream</name></type> <name>openInputStream</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>GroupDatabase</name></type>                       <name>groupDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name><name>GroupDatabase</name><operator>.</operator><name>GroupRecord</name></name></argument>&gt;</argument_list></name></type> <name>groupRecord</name>   <init>= <expr><call><name><name>groupDatabase</name><operator>.</operator><name>getGroup</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>toGroupString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>groupRecord</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>groupRecord</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAvatar</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>ByteArrayInputStream</name><argument_list>(<argument><expr><call><name><name>groupRecord</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAvatar</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Couldn't load avatar for group: "</literal> <operator>+</operator> <call><name><name>address</name><operator>.</operator><name>toGroupString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>getUri</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>isProfilePhoto</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>updateDiskCacheKey</name><parameter_list>(<parameter><decl><type><name>MessageDigest</name></type> <name>messageDigest</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>messageDigest</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>messageDigest</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><call><name><name>Conversions</name><operator>.</operator><name>longToByteArray</name></name><argument_list>(<argument><expr><name>avatarId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>equals</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>other</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>other</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><operator>(</operator><name>other</name> <operator>instanceof</operator> <name>GroupRecordContactPhoto</name><operator>)</operator></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">false</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>GroupRecordContactPhoto</name></type> <name>that</name> <init>= <expr><operator>(</operator><name>GroupRecordContactPhoto</name><operator>)</operator><name>other</name></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>address</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>address</name></name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <name><name>this</name><operator>.</operator><name>avatarId</name></name> <operator>==</operator> <name><name>that</name><operator>.</operator><name>avatarId</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>hashCode</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>address</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call> <operator>^</operator> <operator>(</operator><name>int</name><operator>)</operator> <name>avatarId</name></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

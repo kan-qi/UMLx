@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\ui\MainActivity.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>ActionBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ActivityInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentTransaction</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>widget</name><operator>.</operator><name>DrawerLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>KeyEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Window</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>AdListener</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>AdRequest</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>AdSize</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>AdView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>InterstitialAd</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>MobileAds</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>ikimuhendis</name><operator>.</operator><name>ldrawer</name><operator>.</operator><name>ActionBarDrawerToggle</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>ikimuhendis</name><operator>.</operator><name>ldrawer</name><operator>.</operator><name>DrawerArrowDrawable</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>ActivityTack</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>MainFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>NavigationDrawerFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>RelaxFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>SettingsFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>SystemBarTintManager</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>T</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>UIElementsHelper</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>InjectView</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>MainActivity</name> <super><extends>extends <name>BaseActivity</name></extends> <implements>implements <name><name>NavigationDrawerFragment</name><operator>.</operator><name>NavigationDrawerCallbacks</name></name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>container</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>FrameLayout</name></type> <name>container</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>drawer_layout</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>DrawerLayout</name></type> <name>mDrawerLayout</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>ActionBar</name></type> <name>ab</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>InterstitialAd</name></type> <name>mInterstitialAd</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>CharSequence</name></type> <name>mTitle</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ActionBarDrawerToggle</name></type> <name>mDrawerToggle</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>DrawerArrowDrawable</name></type> <name>drawerArrow</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>drawerArrowColor</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NavigationDrawerFragment</name></type> <name>mNavigationDrawerFragment</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>mFragmentContainerView</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>MainFragment</name></type> <name>mMainFragment</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>RelaxFragment</name></type> <name>mRelaxFragment</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>TWO_SECOND</name> <init>= <expr><literal type="number">2</literal> <operator>*</operator> <literal type="number">1000</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>preTime</name></decl>;</decl_stmt>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_main</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>mFragmentContainerView</name> <operator>=</operator> <operator>(</operator><name>View</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>navigation_drawer</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mTitle</name> <operator>=</operator> <call><name>getTitle</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+       <expr_stmt><expr><call><name>applyKitKatTranslucency</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>onNavigationDrawerItemSelected</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>initDrawer</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>MobileAds</name><operator>.</operator><name>initialize</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="string">"ca-app-pub-4369038195513432/2986510514"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mInterstitialAd</name> <operator>=</operator> <operator>new</operator> <call><name>InterstitialAd</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>setAdUnitId</name></name><argument_list>(<argument><expr><literal type="string">"ca-app-pub-4369038195513432/2986510514"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>loadAd</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>AdRequest</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>MyApp</name></type> <name>myApp</name> <init>= <expr><operator>new</operator> <call><name>MyApp</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>setRequestedOrientation</name><argument_list>(<argument><expr><name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_PORTRAIT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>initDrawer</name><parameter_list>()</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <expr_stmt><expr><name>ab</name> <operator>=</operator> <call><name>getActionBar</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ab</name><operator>.</operator><name>setDisplayHomeAsUpEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><comment type="line">// ç»home iconçå·¦è¾¹å ä¸ä¸ä¸ªè¿åçå¾æ </comment>
+        <expr_stmt><expr><call><name><name>ab</name><operator>.</operator><name>setHomeButtonEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>     <comment type="line">// éè¦api level 14 ä½¿ç¨home-icon å¯ç¹å»</comment>
+
+        <expr_stmt><expr><name>drawerArrow</name> <operator>=</operator> <operator>new</operator> <class><super><name>DrawerArrowDrawable</name></super><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>boolean</name></type> <name>isLayoutRtl</name><parameter_list>()</parameter_list> <block>{
+                <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+            }</block></function>
+        }</block></class></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mDrawerToggle</name> <operator>=</operator> <operator>new</operator> <class><super><name>ActionBarDrawerToggle</name></super><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>mDrawerLayout</name></expr></argument>,
+                <argument><expr><name>drawerArrow</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>drawer_open</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>drawer_close</name></name></expr></argument>)</argument_list> <block>{
+
+            <function><specifier>public</specifier> <type><name>void</name></type> <name>onDrawerClosed</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDrawerClosed</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+
+            <function><specifier>public</specifier> <type><name>void</name></type> <name>onDrawerOpened</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>drawerView</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDrawerOpened</name></name><argument_list>(<argument><expr><name>drawerView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+        }</block></class></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mDrawerLayout</name><operator>.</operator><name>setDrawerListener</name></name><argument_list>(<argument><expr><name>mDrawerToggle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mDrawerToggle</name><operator>.</operator><name>syncState</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,</comment>
+<comment type="line">//                mDrawerLayout);</comment>
+
+    }</block></function>
+
+<comment type="line">//    @Override</comment>
+<comment type="line">//    public boolean onCreateOptionsMenu(Menu menu) {</comment>
+<comment type="line">//        // Inflate the menu; this adds items to the action bar if it is present.</comment>
+<comment type="line">//        getMenuInflater().inflate(R.menu.main, menu);</comment>
+<comment type="line">//        return true;</comment>
+<comment type="line">//    }</comment>
+
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// Handle action bar item clicks here. The action bar will</comment>
+        <comment type="line">// automatically handle clicks on the Home/Up button, so long</comment>
+        <comment type="line">// as you specify a parent activity in AndroidManifest.xml.</comment>
+
+        <if>if <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>)</condition><then> <block>{
+            <if>if <condition>(<expr><call><name><name>mDrawerLayout</name><operator>.</operator><name>isDrawerOpen</name></name><argument_list>(<argument><expr><name>mFragmentContainerView</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mDrawerLayout</name><operator>.</operator><name>closeDrawer</name></name><argument_list>(<argument><expr><name>mFragmentContainerView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><call><name><name>mDrawerLayout</name><operator>.</operator><name>openDrawer</name></name><argument_list>(<argument><expr><name>mFragmentContainerView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+        }</block></then></if>
+        <decl_stmt><decl><type><name>int</name></type> <name>id</name> <init>= <expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>id</name> <operator>==</operator> <name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>action_settings</name></name></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></then></if>
+        <return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mDrawerToggle</name><operator>.</operator><name>syncState</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfig</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfig</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mDrawerToggle</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfig</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Apply KitKat specific translucency.
+     */</comment>
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>applyKitKatTranslucency</name><parameter_list>()</parameter_list> <block>{
+
+        <comment type="line">// KitKat translucent navigation/status bar.</comment>
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>KITKAT</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>setTranslucentStatus</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>SystemBarTintManager</name></type> <name>mTintManager</name> <init>= <expr><operator>new</operator> <call><name>SystemBarTintManager</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setStatusBarTintEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setNavigationBarTintEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <comment type="line">// mTintManager.setTintColor(0xF00099CC);</comment>
+
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setTintDrawable</name></name><argument_list>(<argument><expr><call><name><name>UIElementsHelper</name>
+                    <operator>.</operator><name>getGeneralActionBarBackground</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(
+                    <argument><expr><call><name><name>UIElementsHelper</name><operator>.</operator><name>getGeneralActionBarBackground</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        }</block></then></if>
+
+    }</block></function>
+
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">19</literal></expr></argument>)</argument_list></annotation>
+    <specifier>private</specifier> <type><name>void</name></type> <name>setTranslucentStatus</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>on</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Window</name></type> <name>win</name> <init>= <expr><call><name>getWindow</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name></name></type> <name>winParams</name> <init>= <expr><call><name><name>win</name><operator>.</operator><name>getAttributes</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>bits</name> <init>= <expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_TRANSLUCENT_STATUS</name></name></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>on</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name><name>winParams</name><operator>.</operator><name>flags</name></name> <operator>|=</operator> <name>bits</name></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name><name>winParams</name><operator>.</operator><name>flags</name></name> <operator>&amp;=</operator> <operator>~</operator><name>bits</name></expr>;</expr_stmt>
+        }</block></else></if>
+        <expr_stmt><expr><call><name><name>win</name><operator>.</operator><name>setAttributes</name></name><argument_list>(<argument><expr><name>winParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onNavigationDrawerItemSelected</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// å¼å¯ä¸ä¸ªFragmentäºå¡</comment>
+        <decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>transaction</name> <init>= <expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// åéèæææçFragmentï¼ä»¥é²æ­¢æå¤ä¸ªFragmentæ¾ç¤ºå¨çé¢ä¸çæåµ</comment>
+        <expr_stmt><expr><call><name>hideFragments</name><argument_list>(<argument><expr><name>transaction</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <expr_stmt><expr><call><name>closeDrawer</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <if>if <condition>(<expr><name>mMainFragment</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><name>mMainFragment</name> <operator>=</operator> <operator>new</operator> <call><name>MainFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>container</name></name></expr></argument>, <argument><expr><name>mMainFragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></then> <else>else <block>{
+                    <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>mMainFragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></else></if>
+                <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>commit</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+                <break>break;</break>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <expr_stmt><expr><call><name>closeDrawer</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <if>if <condition>(<expr><name>mRelaxFragment</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><name>mRelaxFragment</name> <operator>=</operator> <operator>new</operator> <call><name>RelaxFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>container</name></name></expr></argument>, <argument><expr><name>mRelaxFragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></then> <else>else <block>{
+                    <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>mRelaxFragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></else></if>
+                <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>commit</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+                <break>break;</break>
+            <case>case <expr><literal type="number">2</literal></expr>:</case>
+
+                <expr_stmt><expr><call><name>closeDrawer</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+              <comment type="line">//  SettingsFragment.launch(MainActivity.this);</comment>
+                <break>break;</break>
+
+            <comment type="line">// fragment = new SettingsFragment();</comment>
+            <comment type="line">// break;</comment>
+        }</block></switch>
+
+
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>hideFragments</name><parameter_list>(<parameter><decl><type><name>FragmentTransaction</name></type> <name>transaction</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>mMainFragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>hide</name></name><argument_list>(<argument><expr><name>mMainFragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <if>if <condition>(<expr><name>mRelaxFragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>hide</name></name><argument_list>(<argument><expr><name>mRelaxFragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+    }</block></function>
+
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>closeDrawer</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mDrawerLayout</name><operator>.</operator><name>closeDrawers</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onKeyDown</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>keyCode</name></decl></parameter>, <parameter><decl><type><name>KeyEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// æªè·åéé®</comment>
+        <if>if <condition>(<expr><name>keyCode</name> <operator>==</operator> <name><name>KeyEvent</name><operator>.</operator><name>KEYCODE_BACK</name></name></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name>long</name></type> <name>currentTime</name> <init>= <expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTime</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <comment type="line">// å¦ææ¶é´é´éå¤§äº2ç§, ä¸å¤ç</comment>
+            <if>if <condition>(<expr><operator>(</operator><name>currentTime</name> <operator>-</operator> <name>preTime</name><operator>)</operator> <operator>&gt;</operator> <name>TWO_SECOND</name></expr>)</condition><then> <block>{
+                <comment type="line">// æ¾ç¤ºæ¶æ¯</comment>
+                <expr_stmt><expr><call><name><name>T</name><operator>.</operator><name>showShort</name></name><argument_list>(<argument><expr><name>mContext</name></expr></argument>,<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>back</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                <comment type="line">// æ´æ°æ¶é´</comment>
+                <expr_stmt><expr><name>preTime</name> <operator>=</operator> <name>currentTime</name></expr>;</expr_stmt>
+
+                <comment type="line">// æªè·äºä»¶,ä¸åå¤ç</comment>
+                <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><call><name><name>ActivityTack</name><operator>.</operator><name>getInstanse</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>exit</name><argument_list>(<argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+        }</block></then></if>
+
+        <return>return <expr><call><name><name>super</name><operator>.</operator><name>onKeyDown</name></name><argument_list>(<argument><expr><name>keyCode</name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>listener</name><parameter_list>()</parameter_list><block>{
+
+
+    }</block></function>
+}</block></class>
+</unit>

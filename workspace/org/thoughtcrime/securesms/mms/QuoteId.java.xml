@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\QuoteId.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONObject</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Represents the information required to find the {@link MessageRecord} pointed to by a quote.
+ */</comment>
+<class><specifier>public</specifier> class <name>QuoteId</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>QuoteId</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>      <init>= <expr><literal type="string">"id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>AUTHOR</name>  <init>= <expr><literal type="string">"author"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>id</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Address</name></type> <name>author</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>QuoteId</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>author</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>id</name></name>     <operator>=</operator> <name>id</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>author</name></name> <operator>=</operator> <name>author</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>id</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Address</name></type> <name>getAuthor</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>author</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>serialize</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>JSONObject</name></type> <name>object</name> <init>= <expr><operator>new</operator> <call><name>JSONObject</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>object</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ID</name></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>object</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>AUTHOR</name></expr></argument>, <argument><expr><call><name><name>author</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>object</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>JSONException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to serialize to json"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="string">""</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>QuoteId</name></type> <name>deserialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>serialized</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>JSONObject</name></type> <name>json</name> <init>= <expr><operator>new</operator> <call><name>JSONObject</name><argument_list>(<argument><expr><name>serialized</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><operator>new</operator> <call><name>QuoteId</name><argument_list>(<argument><expr><call><name><name>json</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>ID</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>json</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>AUTHOR</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>JSONException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to deserialize from json"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

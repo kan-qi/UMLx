@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\giph\util\InfiniteScrollListener.java"><comment type="line">// From https://gist.github.com/mipreamble/b6d4b3d65b0b4775a22e#file-recyclerviewpositionhelper-java</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>giph</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>InfiniteScrollListener</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>OnScrollListener</name></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>InfiniteScrollListener</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>     <name>previousTotal</name>    <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>    <comment type="line">// The total number of items in the dataset after the last load</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>loading</name>          <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt> <comment type="line">// True if we are still waiting for the last set of data to load.</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>     <name>visibleThreshold</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>    <comment type="line">// The minimum amount of items to have below your current scroll position before loading more.</comment>
+
+  <decl_stmt><decl><type><name>int</name></type> <name>firstVisibleItem</name></decl>, <decl><type ref="prev"/><name>visibleItemCount</name></decl>, <decl><type ref="prev"/><name>totalItemCount</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>currentPage</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onScrolled</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>recyclerView</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dx</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dy</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onScrolled</name></name><argument_list>(<argument><expr><name>recyclerView</name></expr></argument>, <argument><expr><name>dx</name></expr></argument>, <argument><expr><name>dy</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>RecyclerViewPositionHelper</name></type> <name>recyclerViewPositionHelper</name> <init>= <expr><call><name><name>RecyclerViewPositionHelper</name><operator>.</operator><name>createHelper</name></name><argument_list>(<argument><expr><name>recyclerView</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>visibleItemCount</name> <operator>=</operator> <call><name><name>recyclerView</name><operator>.</operator><name>getChildCount</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>totalItemCount</name>   <operator>=</operator> <call><name><name>recyclerViewPositionHelper</name><operator>.</operator><name>getItemCount</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>firstVisibleItem</name> <operator>=</operator> <call><name><name>recyclerViewPositionHelper</name><operator>.</operator><name>findFirstVisibleItemPosition</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>loading</name></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name>totalItemCount</name> <operator>&gt;</operator> <name>previousTotal</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>loading</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>previousTotal</name> <operator>=</operator> <name>totalItemCount</name></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+    <if>if <condition>(<expr><operator>!</operator><name>loading</name> <operator>&amp;&amp;</operator> <operator>(</operator><name>totalItemCount</name> <operator>-</operator> <name>visibleItemCount</name><operator>)</operator>
+        <operator>&lt;=</operator> <operator>(</operator><name>firstVisibleItem</name> <operator>+</operator> <name>visibleThreshold</name><operator>)</operator></expr>)</condition><then> <block>{
+      <comment type="line">// End has been reached</comment>
+      <comment type="line">// Do something</comment>
+      <expr_stmt><expr><name>currentPage</name><operator>++</operator></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>onLoadMore</name><argument_list>(<argument><expr><name>currentPage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>loading</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>onLoadMore</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>currentPage</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></class></unit>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\ServiceUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>AlarmManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>AudioManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>ConnectivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>PowerManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Vibrator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>TelephonyManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>inputmethod</name><operator>.</operator><name>InputMethodManager</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ServiceUtil</name> <block>{
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>InputMethodManager</name></type> <name>getInputMethodManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>InputMethodManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>INPUT_METHOD_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>WindowManager</name></type> <name>getWindowManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>WindowManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>WINDOW_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>ConnectivityManager</name></type> <name>getConnectivityManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>ConnectivityManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CONNECTIVITY_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>NotificationManager</name></type> <name>getNotificationManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>NotificationManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>NOTIFICATION_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>TelephonyManager</name></type> <name>getTelephonyManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>TelephonyManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>TELEPHONY_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>AudioManager</name></type> <name>getAudioManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>AudioManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>AUDIO_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>PowerManager</name></type> <name>getPowerManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>PowerManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>POWER_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlarmManager</name></type> <name>getAlarmManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>AlarmManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>ALARM_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Vibrator</name></type> <name>getVibrator</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return  <expr><operator>(</operator><name>Vibrator</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>VIBRATOR_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

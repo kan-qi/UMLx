@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\swipeback\SwipeBackActivityBase.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>swipeback</name></name>;</package>
+
+<comment type="block" format="javadoc">/**
+ * @author Yrom
+ */</comment>
+<interface><specifier>public</specifier> interface <name>SwipeBackActivityBase</name> <block>{
+    <comment type="block" format="javadoc">/**
+     * @return the SwipeBackLayout associated with this activity.
+     */</comment>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>SwipeBackLayout</name></type> <name>getSwipeBackLayout</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>setSwipeBackEnable</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>enable</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/**
+     * Scroll out contentView and finish the activity
+     */</comment>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>scrollToFinishActivity</name><parameter_list>()</parameter_list>;</function_decl>
+
+}</block></interface>
+</unit>

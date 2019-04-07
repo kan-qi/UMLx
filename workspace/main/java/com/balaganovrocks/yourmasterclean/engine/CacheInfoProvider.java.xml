@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\engine\CacheInfoProvider.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>engine</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ApplicationInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>IPackageStatsObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageStats</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>RemoteException</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>model</name><operator>.</operator><name>CacheInfo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>TextFormater</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Method</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Vector</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>CacheInfoProvider</name>
+<block>{
+<comment type="line">//	private Handler handler;</comment>
+<comment type="line">//	private PackageManager packageManager;</comment>
+<comment type="line">//	private Vector&lt;CacheInfo&gt; cacheInfos;</comment>
+<comment type="line">//	private int size = 0;</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public CacheInfoProvider(Handler handler, Context context)</comment>
+<comment type="line">//	{</comment>
+<comment type="line">//		// æ¿å°ä¸ä¸ªåç®¡çå¨</comment>
+<comment type="line">//		packageManager = context.getPackageManager();</comment>
+<comment type="line">//		this.handler = handler;</comment>
+<comment type="line">//		cacheInfos = new Vector&lt;CacheInfo&gt;();</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public void initCacheInfos()</comment>
+<comment type="line">//	{</comment>
+<comment type="line">//		// è·åå°ææå®è£äºçåºç¨ç¨åºçä¿¡æ¯ï¼åæ¬é£äºå¸è½½äºçï¼ä½æ²¡ææ¸é¤æ°æ®çåºç¨ç¨åº</comment>
+<comment type="line">//		List&lt;PackageInfo&gt; packageInfos = packageManager</comment>
+<comment type="line">//				.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);</comment>
+<comment type="line">//		size = packageInfos.size();</comment>
+<comment type="line">//		for (int i = 0; i &lt; size; i++)</comment>
+<comment type="line">//		{</comment>
+<comment type="line">//			PackageInfo packageInfo = packageInfos.get(i);</comment>
+<comment type="line">//			CacheInfo cacheInfo = new CacheInfo();</comment>
+<comment type="line">//			// æ¿å°åå</comment>
+<comment type="line">//			String packageName = packageInfo.packageName;</comment>
+<comment type="line">//			cacheInfo.setPackageName(packageName);</comment>
+<comment type="line">//			// æ¿å°åºç¨ç¨åºçä¿¡æ¯</comment>
+<comment type="line">//			ApplicationInfo applicationInfo = packageInfo.applicationInfo;</comment>
+<comment type="line">//			// æ¿å°åºç¨ç¨åºçç¨åºå</comment>
+<comment type="line">//			String name = applicationInfo.loadLabel(packageManager).toString();</comment>
+<comment type="line">//			cacheInfo.setName(name);</comment>
+<comment type="line">//			// æ¿å°åºç¨ç¨åºçå¾æ </comment>
+<comment type="line">//			Drawable icon = applicationInfo.loadIcon(packageManager);</comment>
+<comment type="line">//			cacheInfo.setIcon(icon);</comment>
+<comment type="line">//</comment>
+<comment type="line">//			initDataSize(cacheInfo, i);</comment>
+<comment type="line">//		}</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	/**</comment>
+<comment type="line">//	 * éè¿AIDLçæ¹æ³æ¥è·åå°åºç¨çç¼å­ä¿¡æ¯ï¼getPackageSizeInfoæ¯PackageManageréé¢çä¸ä¸ªç§ææ¹æ³æ¥ç</comment>
+<comment type="line">//	 * æä»¬éè¿åå°å°±å¯ä»¥è°ç¨å°å®çäºï¼ä½æ¯è¿ä¸ªæ¹æ³éé¢ä¼ä¼ éä¸ä¸ªIPackageStatsObserver.Stubçå¯¹è±¡</comment>
+<comment type="line">//	 * éé¢å°±å¯è½éè¿AIDLæ¥è·åæä»¬æ³è¦çä¿¡æ¯äº</comment>
+<comment type="line">//	 *</comment>
+<comment type="line">//	 * å ä¸ºè¿æ ·çè°ç¨æ¯å¼æ­¥çï¼æä»¥å½æä»¬å®æè·åå®è¿äºä¿¡æ¯ä¹åï¼æä»¬å°±éè¿handleræ¥åéä¸ä¸ªæ¶æ¯</comment>
+<comment type="line">//	 * æ¥éç¥æä»¬çåºç¨ï¼éè¿getCacheInfosæ¥è·åå°æä»¬çVector</comment>
+<comment type="line">//	 *</comment>
+<comment type="line">//	 * ä¸ºä»ä¹è¦ç¨Vectorå¢ï¼å ä¸ºä¸é¢çæ¹æ³æ¯å¼æ­¥çï¼ä¹å°±æ¯æå¯è½æ¯å¤çº¿ç¨æä½ï¼æä»¥æä»¬å°±ç¨äºçº¿ç¨å®å¨çVector</comment>
+<comment type="line">//	 *</comment>
+<comment type="line">//	 * @param cacheInfo</comment>
+<comment type="line">//	 * @param position</comment>
+<comment type="line">//	 */</comment>
+<comment type="line">//	private void initDataSize(final CacheInfo cacheInfo, final int position)</comment>
+<comment type="line">//	{</comment>
+<comment type="line">//		try</comment>
+<comment type="line">//		{</comment>
+<comment type="line">//			Method method = PackageManager.class.getMethod(</comment>
+<comment type="line">//					"getPackageSizeInfo", new Class[] { String.class,</comment>
+<comment type="line">//							IPackageStatsObserver.class });</comment>
+<comment type="line">//			method.invoke(packageManager,</comment>
+<comment type="line">//					new Object[] { cacheInfo.getPackageName(),</comment>
+<comment type="line">//							new IPackageStatsObserver.Stub()</comment>
+<comment type="line">//							{</comment>
+<comment type="line">//								@Override</comment>
+<comment type="line">//								public void onGetStatsCompleted(</comment>
+<comment type="line">//										PackageStats pStats, boolean succeeded)</comment>
+<comment type="line">//										throws RemoteException</comment>
+<comment type="line">//								{</comment>
+<comment type="line">//									System.out.println("onGetStatsCompleted" + position);</comment>
+<comment type="line">//									long cacheSize = pStats.cacheSize;</comment>
+<comment type="line">//									long codeSize = pStats.codeSize;</comment>
+<comment type="line">//									long dataSize = pStats.dataSize;</comment>
+<comment type="line">//</comment>
+<comment type="line">//									cacheInfo.setCacheSize(TextFormater</comment>
+<comment type="line">//											.dataSizeFormat(cacheSize));</comment>
+<comment type="line">//									cacheInfo.setCodeSize(TextFormater</comment>
+<comment type="line">//											.dataSizeFormat(codeSize));</comment>
+<comment type="line">//									cacheInfo.setDataSize(TextFormater</comment>
+<comment type="line">//											.dataSizeFormat(dataSize));</comment>
+<comment type="line">//</comment>
+<comment type="line">//									cacheInfos.add(cacheInfo);</comment>
+<comment type="line">//</comment>
+<comment type="line">//									if (position == (size - 1))</comment>
+<comment type="line">//									{</comment>
+<comment type="line">//										// å½å®å¨è·åå®ä¿¡æ¯ä¹åï¼åéä¸ä¸ªæåçæ¶æ¯</comment>
+<comment type="line">//										// 1å¯¹åºçå°±æ¯CacheClearActivityéé¢çFINISH</comment>
+<comment type="line">//										handler.sendEmptyMessage(1);</comment>
+<comment type="line">//									}</comment>
+<comment type="line">//								}</comment>
+<comment type="line">//							} });</comment>
+<comment type="line">//		}</comment>
+<comment type="line">//		catch (Exception e)</comment>
+<comment type="line">//		{</comment>
+<comment type="line">//			e.printStackTrace();</comment>
+<comment type="line">//		}</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public Vector&lt;CacheInfo&gt; getCacheInfos()</comment>
+<comment type="line">//	{</comment>
+<comment type="line">//		return cacheInfos;</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public void setCacheInfos(Vector&lt;CacheInfo&gt; cacheInfos)</comment>
+<comment type="line">//	{</comment>
+<comment type="line">//		this.cacheInfos = cacheInfos;</comment>
+<comment type="line">//	}</comment>
+
+}</block></class>
+</unit>

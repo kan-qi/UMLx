@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\widget\textcounter\Counter.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name></name>;</package>
+
+<comment type="block" format="javadoc">/**
+ * Created by prem on 10/28/14.
+ *
+ * Class that handles the counting up/down of the text value
+ */</comment>
+<class>class <name>Counter</name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CounterView</name></type> <name>view</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>increment</name></decl>, <decl><type ref="prev"/><name>startValue</name></decl>, <decl><type ref="prev"/><name>endValue</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>long</name></type> <name>interval</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>float</name></type> <name>currentValue</name></decl>, <decl><type ref="prev"/><name>newValue</name></decl>;</decl_stmt>
+
+    <constructor><name>Counter</name><parameter_list>(<parameter><decl><type><name>CounterView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>startValue</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>endValue</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>interval</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>increment</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>view</name></name> <operator>=</operator> <name>view</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>startValue</name></name> <operator>=</operator> <name>startValue</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endValue</name></name> <operator>=</operator> <name>endValue</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>interval</name></name> <operator>=</operator> <name>interval</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>increment</name></name> <operator>=</operator> <name>increment</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>newValue</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>startValue</name></name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentValue</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>startValue</name></name> <operator>-</operator> <name>increment</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name>valuesAreCorrect</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name>float</name></type> <name>valueToSet</name></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>newValue</name> <operator>&lt;=</operator> <name>endValue</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>valueToSet</name> <operator>=</operator> <name>newValue</name></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><name>valueToSet</name> <operator>=</operator> <name>endValue</name></expr>;</expr_stmt>
+            }</block></else></if>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setCurrentTextValue</name></name><argument_list>(<argument><expr><name>valueToSet</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>currentValue</name> <operator>=</operator> <name>newValue</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>newValue</name> <operator>+=</operator> <name>increment</name></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>removeCallbacks</name></name><argument_list>(<argument><expr><name><name>Counter</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>postDelayed</name></name><argument_list>(<argument><expr><name><name>Counter</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>interval</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>boolean</name></type> <name>valuesAreCorrect</name><parameter_list>()</parameter_list> <block>{
+        <if>if<condition>(<expr><name>increment</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <return>return <expr><name>newValue</name> <operator>&gt;=</operator> <name>currentValue</name></expr>;</return>
+        }</block></then> <else>else <block>{
+            <return>return <expr><name>newValue</name> <operator>&lt;=</operator> <name>currentValue</name></expr>;</return>
+        }</block></else></if>
+    }</block></function>
+}</block></class>
+</unit>

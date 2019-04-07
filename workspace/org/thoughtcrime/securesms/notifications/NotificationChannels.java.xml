@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\notifications\NotificationChannels.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationChannel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationChannelGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>AudioAttributes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>Settings</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>WorkerThread</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Collectors</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name><operator>.</operator><name>VibrateState</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ServiceUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>NotificationChannels</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>NotificationChannels</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>VERSION_MESSAGES_CATEGORY</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>VERSION</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_MESSAGES</name> <init>= <expr><literal type="string">"messages"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CONTACT_PREFIX</name>    <init>= <expr><literal type="string">"contact_"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MESSAGES_PREFIX</name>   <init>= <expr><literal type="string">"messages_"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CALLS</name>         <init>= <expr><literal type="string">"calls_v2"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>FAILURES</name>      <init>= <expr><literal type="string">"failures"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>APP_UPDATES</name>   <init>= <expr><literal type="string">"app_updates"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>BACKUPS</name>       <init>= <expr><literal type="string">"backups_v2"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCKED_STATUS</name> <init>= <expr><literal type="string">"locked_status_v2"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>OTHER</name>         <init>= <expr><literal type="string">"other_v2"</literal></expr></init></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Ensures all of the notification channels are created. No harm in repeat calls. Call is safely
+   * ignored for API &lt; 26.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>create</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>oldVersion</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationChannelVersion</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>oldVersion</name> <operator>!=</operator> <name>VERSION</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>onUpgrade</name><argument_list>(<argument><expr><name>notificationManager</name></expr></argument>, <argument><expr><name>oldVersion</name></expr></argument>, <argument><expr><name>VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setNotificationChannelVersion</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>onCreate</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>notificationManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>AsyncTask</name><operator>.</operator><name>SERIAL_EXECUTOR</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <expr_stmt><expr><call><name>ensureCustomChannelConsistency</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Recreates all notification channels for contacts with custom notifications enabled. Should be
+   * safe to call repeatedly. Needs to be executed on a background thread.
+   */</comment>
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>restoreContactNotificationChannels</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>NotificationChannels</name><operator>.</operator><name>supported</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>RecipientDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name><name>RecipientDatabase</name><operator>.</operator><name>RecipientReader</name></name></type> <name>reader</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>getRecipientsWithNotificationChannels</name></name><argument_list>()</argument_list></call></expr></init></decl>)</init> <block>{
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name></decl>;</decl_stmt>
+      <while>while <condition>(<expr><operator>(</operator><name>recipient</name> <operator>=</operator> <call><name><name>reader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><operator>!</operator><call><name>channelExists</name><argument_list>(<argument><expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>String</name></type> <name>id</name> <init>= <expr><call><name>createChannelFor</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>setNotificationChannel</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></while>
+    }</block></try>
+
+    <expr_stmt><expr><call><name>ensureCustomChannelConsistency</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return The channel ID for the default messages channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getMessagesChannel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMessagesChannelId</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationMessagesChannelVersion</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return Whether or not notification channels are supported.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>supported</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">26</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return A name suitable to be displayed as the notification channel title.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getChannelDisplayNameFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemName</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>profileName</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>systemName</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>systemName</name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>profileName</name></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_missing_display_name</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a channel for the specified recipient.
+   * @return The channel ID for the newly-created channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>String</name></type> <name>createChannelFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>VibrateState</name></type> <name>vibrateState</name>     <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getMessageVibrate</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type>      <name>vibrationEnabled</name> <init>= <expr><ternary><condition><expr><name>vibrateState</name> <operator>==</operator> <name><name>VibrateState</name><operator>.</operator><name>DEFAULT</name></name></expr> ?</condition><then> <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isNotificationVibrateEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><name>vibrateState</name> <operator>==</operator> <name><name>VibrateState</name><operator>.</operator><name>ENABLED</name></name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Uri</name></type>          <name>messageRingtone</name>  <init>= <expr><ternary><condition><expr><call><name><name>recipient</name><operator>.</operator><name>getMessageRingtone</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>recipient</name><operator>.</operator><name>getMessageRingtone</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><call><name>getMessageRingtone</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>       <name>displayName</name>      <init>= <expr><call><name>getChannelDisplayNameFor</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getProfileName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name>createChannelFor</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>displayName</name></expr></argument>, <argument><expr><name>messageRingtone</name></expr></argument>, <argument><expr><name>vibrationEnabled</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * More verbose version of {@link #createChannelFor(Context, Recipient)}.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier>  <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>createChannelFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                                                                <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>,
+                                                                <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>displayName</name></decl></parameter>,
+                                                                <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>messageSound</name></decl></parameter>,
+                                                                <parameter><decl><type><name>boolean</name></type> <name>vibrationEnabled</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>String</name></type>              <name>channelId</name> <init>= <expr><call><name>generateChannelIdFor</name><argument_list>(<argument><expr><name>address</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>channel</name>   <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>channelId</name></expr></argument>, <argument><expr><name>displayName</name></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_HIGH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>setLedPreference</name><argument_list>(<argument><expr><name>channel</name></expr></argument>, <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationLedColor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>setGroup</name></name><argument_list>(<argument><expr><name>CATEGORY_MESSAGES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>enableVibration</name></name><argument_list>(<argument><expr><name>vibrationEnabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>messageSound</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>setSound</name></name><argument_list>(<argument><expr><name>messageSound</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>AudioAttributes</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setContentType</name><argument_list>(<argument><expr><name><name>AudioAttributes</name><operator>.</operator><name>CONTENT_TYPE_UNKNOWN</name></name></expr></argument>)</argument_list></call>
+                                                                  <operator>.</operator><call><name>setUsage</name><argument_list>(<argument><expr><name><name>AudioAttributes</name><operator>.</operator><name>USAGE_NOTIFICATION_COMMUNICATION_INSTANT</name></name></expr></argument>)</argument_list></call>
+                                                                  <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>createNotificationChannel</name></name><argument_list>(<argument><expr><name>channel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>channelId</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Deletes the channel generated for the provided recipient. Safe to call even if there was never
+   * a channel made for that recipient.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>deleteChannelFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>              <name>channel</name>             <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>channel</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Deleting channel"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><name>channel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Navigates the user to the system settings for the desired notification channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>openChannelSettings</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>channelId</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Settings</name><operator>.</operator><name>ACTION_CHANNEL_NOTIFICATION_SETTINGS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>Settings</name><operator>.</operator><name>EXTRA_CHANNEL_ID</name></name></expr></argument>, <argument><expr><name>channelId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>Settings</name><operator>.</operator><name>EXTRA_APP_PACKAGE</name></name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Updates the LED color for message notifications and all contact-specific message notification
+   * channels. Performs database operations and should therefore be invoked on a background thread.
+   */</comment>
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>updateMessagesLedColor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating LED color."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>updateMessageChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>channel</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>setLedPreference</name><argument_list>(<argument><expr><name>channel</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateAllRecipientChannelLedColors</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>notificationManager</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>ensureCustomChannelConsistency</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return The message ringtone set for the default message channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Uri</name></type> <name>getMessageRingtone</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>Uri</name><operator>.</operator><name>EMPTY</name></name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Uri</name></type> <name>sound</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getNotificationChannel</name><argument_list>(<argument><expr><call><name>getMessagesChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getSound</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><ternary><condition><expr><name>sound</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name><name>Uri</name><operator>.</operator><name>EMPTY</name></name></expr> </then><else>: <expr><name>sound</name></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>getMessageRingtone</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>channel</name>             <init>= <expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name>channelExists</name><argument_list>(<argument><expr><name>channel</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Recipient had no channel. Returning null."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>channel</name><operator>.</operator><name>getSound</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Update the message ringtone for the default message channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>updateMessageRingtone</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating default message ringtone with URI: "</literal> <operator>+</operator> <call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>updateMessageChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>channel</name></decl></parameter></parameter_list> -&gt; <block>{
+      <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>setSound</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>uri</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name><name>Settings</name><operator>.</operator><name>System</name><operator>.</operator><name>DEFAULT_NOTIFICATION_URI</name></name></expr> </then><else>: <expr><name>uri</name></expr></else></ternary></expr></argument>, <argument><expr><call><name>getRingtoneAudioAttributes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Updates the message ringtone for a specific recipient. If that recipient has no channel, this
+   * does nothing.
+   *
+   * This has to update the database, and therefore should be run on a background thread.
+   */</comment>
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>updateMessageRingtone</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating recipient message ringtone with URI: "</literal> <operator>+</operator> <call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>String</name></type>  <name>newChannelId</name> <init>= <expr><call><name>generateChannelIdFor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>success</name>      <init>= <expr><call><name>updateExistingChannel</name><argument_list>(<argument><expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>,
+                                                 <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                 <argument><expr><call><name>generateChannelIdFor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                 <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>channel</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>channel</name><operator>.</operator><name>setSound</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>uri</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name><name>Settings</name><operator>.</operator><name>System</name><operator>.</operator><name>DEFAULT_NOTIFICATION_URI</name></name></expr> </then><else>: <expr><name>uri</name></expr></else></ternary></expr></argument>, <argument><expr><call><name>getRingtoneAudioAttributes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setNotificationChannel</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><ternary><condition><expr><name>success</name></expr> ?</condition><then> <expr><name>newChannelId</name></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>ensureCustomChannelConsistency</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return The vibrate settings for the default message channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>boolean</name></type> <name>getMessageVibrate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getNotificationChannel</name><argument_list>(<argument><expr><call><name>getMessagesChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>shouldVibrate</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @return The vibrate setting for a specific recipient. If that recipient has no channel, this
+   *         will return the setting for the default message channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>boolean</name></type> <name>getMessageVibrate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name>getMessageVibrate</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>channel</name>             <init>= <expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name>channelExists</name><argument_list>(<argument><expr><name>channel</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Recipient didn't have a channel. Returning message default."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name>getMessageVibrate</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>channel</name><operator>.</operator><name>shouldVibrate</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Sets the vibrate property for the default message channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>updateMessageVibrate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating default vibrate with value: "</literal> <operator>+</operator> <name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>updateMessageChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>channel</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>channel</name><operator>.</operator><name>enableVibration</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Updates the message ringtone for a specific recipient. If that recipient has no channel, this
+   * does nothing.
+   *
+   * This has to update the database and should therefore be run on a background thread.
+   */</comment>
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>updateMessageVibrate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>VibrateState</name></type> <name>vibrateState</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return ;</return>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating recipient vibrate with value: "</literal> <operator>+</operator> <name>vibrateState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>boolean</name></type> <name>enabled</name>      <init>= <expr><ternary><condition><expr><name>vibrateState</name> <operator>==</operator> <name><name>VibrateState</name><operator>.</operator><name>DEFAULT</name></name></expr> ?</condition><then> <expr><call><name>getMessageVibrate</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><name>vibrateState</name> <operator>==</operator> <name><name>VibrateState</name><operator>.</operator><name>ENABLED</name></name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>newChannelId</name> <init>= <expr><call><name>generateChannelIdFor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>success</name>      <init>= <expr><call><name>updateExistingChannel</name><argument_list>(<argument><expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>,
+                                                 <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                 <argument><expr><name>newChannelId</name></expr></argument>,
+                                                 <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>channel</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>channel</name><operator>.</operator><name>enableVibration</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setNotificationChannel</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><ternary><condition><expr><name>success</name></expr> ?</condition><then> <expr><name>newChannelId</name></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>ensureCustomChannelConsistency</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Updates the name of an existing channel to match the recipient's current name. Will have no
+   * effect if the recipient doesn't have an existing valid channel.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>updateContactChannelName</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>supported</name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating contact channel name"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Tried to update the name of a channel, but that channel doesn't exist."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>channel</name> <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                          <argument><expr><call><name>getChannelDisplayNameFor</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getProfileName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                          <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_HIGH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>setGroup</name></name><argument_list>(<argument><expr><name>CATEGORY_MESSAGES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>createNotificationChannel</name></name><argument_list>(<argument><expr><name>channel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>ensureCustomChannelConsistency</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>RecipientDatabase</name></type>   <name>db</name>                  <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type>     <name>customRecipients</name>    <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type>         <name>customChannelIds</name>    <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type>         <name>existingChannelIds</name>  <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannels</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>NotificationChannel</name><operator>::</operator><name>getId</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>collect</name><argument_list>(<argument><expr><call><name><name>Collectors</name><operator>.</operator><name>toSet</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name><name>RecipientDatabase</name><operator>.</operator><name>RecipientReader</name></name></type> <name>reader</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>getRecipientsWithNotificationChannels</name></name><argument_list>()</argument_list></call></expr></init></decl>)</init> <block>{
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name></decl>;</decl_stmt>
+      <while>while <condition>(<expr><operator>(</operator><name>recipient</name> <operator>=</operator> <call><name><name>reader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>customRecipients</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>customChannelIds</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <for>for <control>(<init><decl><type><name>NotificationChannel</name></type> <name>existingChannel</name> <range>: <expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannels</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>startsWith</name><argument_list>(<argument><expr><name>CONTACT_PREFIX</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>customChannelIds</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>startsWith</name><argument_list>(<argument><expr><name>MESSAGES_PREFIX</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name>getMessagesChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+    }</block></for>
+
+    <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>customRecipient</name> <range>: <expr><name>customRecipients</name></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>existingChannelIds</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>customRecipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>setNotificationChannel</name></name><argument_list>(<argument><expr><name>customRecipient</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationManager</name></type> <name>notificationManager</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>NotificationChannelGroup</name></type> <name>messagesGroup</name> <init>= <expr><operator>new</operator> <call><name>NotificationChannelGroup</name><argument_list>(<argument><expr><name>CATEGORY_MESSAGES</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_group_messages</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>createNotificationChannelGroup</name></name><argument_list>(<argument><expr><name>messagesGroup</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>messages</name>     <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><call><name>getMessagesChannel</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_messages</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_HIGH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>calls</name>        <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>CALLS</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_calls</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_LOW</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>failures</name>     <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>FAILURES</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_failures</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_HIGH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>backups</name>      <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>BACKUPS</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_backups</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_LOW</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>lockedStatus</name> <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>LOCKED_STATUS</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_locked_status</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_LOW</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>other</name>        <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>OTHER</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_other</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_LOW</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>messages</name><operator>.</operator><name>setGroup</name></name><argument_list>(<argument><expr><name>CATEGORY_MESSAGES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>messages</name><operator>.</operator><name>enableVibration</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isNotificationVibrateEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>messages</name><operator>.</operator><name>setSound</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationRingtone</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getRingtoneAudioAttributes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setLedPreference</name><argument_list>(<argument><expr><name>messages</name></expr></argument>, <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationLedColor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>calls</name><operator>.</operator><name>setShowBadge</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>backups</name><operator>.</operator><name>setShowBadge</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>lockedStatus</name><operator>.</operator><name>setShowBadge</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>other</name><operator>.</operator><name>setShowBadge</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>createNotificationChannels</name></name><argument_list>(<argument><expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(<argument><expr><name>messages</name></expr></argument>, <argument><expr><name>calls</name></expr></argument>, <argument><expr><name>failures</name></expr></argument>, <argument><expr><name>backups</name></expr></argument>, <argument><expr><name>lockedStatus</name></expr></argument>, <argument><expr><name>other</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>BuildConfig</name><operator>.</operator><name>PLAY_STORE_DISABLED</name></name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>appUpdates</name> <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>APP_UPDATES</name></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>NotificationChannel_app_updates</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>NotificationManager</name><operator>.</operator><name>IMPORTANCE_HIGH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>createNotificationChannel</name></name><argument_list>(<argument><expr><name>appUpdates</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><name>APP_UPDATES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>onUpgrade</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationManager</name></type> <name>notificationManager</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldVersion</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>newVersion</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Upgrading channels from "</literal> <operator>+</operator> <name>oldVersion</name> <operator>+</operator> <literal type="string">" to "</literal> <operator>+</operator> <name>newVersion</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>oldVersion</name> <operator>&lt;</operator> <name>VERSION_MESSAGES_CATEGORY</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><literal type="string">"messages"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><literal type="string">"calls"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><literal type="string">"locked_status"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><literal type="string">"backups"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><literal type="string">"other"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>setLedPreference</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationChannel</name></type> <name>channel</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>ledColor</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><literal type="string">"none"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>ledColor</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>enableLights</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>enableLights</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>channel</name><operator>.</operator><name>setLightColor</name></name><argument_list>(<argument><expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><name>ledColor</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>generateChannelIdFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>CONTACT_PREFIX</name> <operator>+</operator> <call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"_"</literal> <operator>+</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>NotificationChannel</name></type> <name>copyChannel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationChannel</name></type> <name>original</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>copy</name> <init>= <expr><operator>new</operator> <call><name>NotificationChannel</name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><call><name><name>original</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>original</name><operator>.</operator><name>getImportance</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setGroup</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>getGroup</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setSound</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>getSound</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>original</name><operator>.</operator><name>getAudioAttributes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setBypassDnd</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>canBypassDnd</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>enableVibration</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>shouldVibrate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setVibrationPattern</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>getVibrationPattern</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setLockscreenVisibility</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>getLockscreenVisibility</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setShowBadge</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>canShowBadge</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>setLightColor</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>getLightColor</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>copy</name><operator>.</operator><name>enableLights</name></name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>shouldShowLights</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>copy</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getMessagesChannelId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>version</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>MESSAGES_PREFIX</name> <operator>+</operator> <name>version</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>updateAllRecipientChannelLedColors</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationManager</name></type> <name>notificationManager</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>RecipientDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name><name>RecipientDatabase</name><operator>.</operator><name>RecipientReader</name></name></type> <name>recipients</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>getRecipientsWithNotificationChannels</name></name><argument_list>()</argument_list></call></expr></init></decl>)</init> <block>{
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name></decl>;</decl_stmt>
+      <while>while <condition>(<expr><operator>(</operator><name>recipient</name> <operator>=</operator> <call><name><name>recipients</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <assert>assert <expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</assert>
+
+        <decl_stmt><decl><type><name>String</name></type>  <name>newChannelId</name> <init>= <expr><call><name>generateChannelIdFor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>success</name>      <init>= <expr><call><name>updateExistingChannel</name><argument_list>(<argument><expr><name>notificationManager</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>newChannelId</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>channel</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>setLedPreference</name><argument_list>(<argument><expr><name>channel</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>setNotificationChannel</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><ternary><condition><expr><name>success</name></expr> ?</condition><then> <expr><name>newChannelId</name></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <expr_stmt><expr><call><name>ensureCustomChannelConsistency</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>updateMessageChannel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ChannelUpdater</name></type> <name>updater</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>NotificationManager</name></type> <name>notificationManager</name> <init>= <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getNotificationManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>existingVersion</name>                     <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationMessagesChannelVersion</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>newVersion</name>                          <init>= <expr><name>existingVersion</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Updating message channel from version "</literal> <operator>+</operator> <name>existingVersion</name> <operator>+</operator> <literal type="string">" to "</literal> <operator>+</operator> <name>newVersion</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><call><name>updateExistingChannel</name><argument_list>(<argument><expr><name>notificationManager</name></expr></argument>, <argument><expr><call><name>getMessagesChannelId</name><argument_list>(<argument><expr><name>existingVersion</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getMessagesChannelId</name><argument_list>(<argument><expr><name>newVersion</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>updater</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setNotificationMessagesChannelVersion</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>newVersion</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>onCreate</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>notificationManager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>updateExistingChannel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationManager</name></type> <name>notificationManager</name></decl></parameter>,
+                                               <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>channelId</name></decl></parameter>,
+                                               <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>newChannelId</name></decl></parameter>,
+                                               <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ChannelUpdater</name></type> <name>updater</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>existingChannel</name> <init>= <expr><call><name><name>notificationManager</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>(<argument><expr><name>channelId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>existingChannel</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Tried to update a channel, but it didn't exist."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>deleteNotificationChannel</name></name><argument_list>(<argument><expr><call><name><name>existingChannel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>NotificationChannel</name></type> <name>newChannel</name> <init>= <expr><call><name>copyChannel</name><argument_list>(<argument><expr><name>existingChannel</name></expr></argument>, <argument><expr><name>newChannelId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>updater</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>newChannel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>notificationManager</name><operator>.</operator><name>createNotificationChannel</name></name><argument_list>(<argument><expr><name>newChannel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">21</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>AudioAttributes</name></type> <name>getRingtoneAudioAttributes</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AudioAttributes</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setContentType</name><argument_list>(<argument><expr><name><name>AudioAttributes</name><operator>.</operator><name>CONTENT_TYPE_UNKNOWN</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setUsage</name><argument_list>(<argument><expr><name><name>AudioAttributes</name><operator>.</operator><name>USAGE_NOTIFICATION_COMMUNICATION_INSTANT</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>channelExists</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>NotificationChannel</name></type> <name>channel</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>channel</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>NotificationChannel</name><operator>.</operator><name>DEFAULT_CHANNEL_ID</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>channel</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>private</specifier> interface <name>ChannelUpdater</name> <block>{
+    <function_decl><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">26</literal></expr></argument>)</argument_list></annotation>
+    <type><name>void</name></type> <name>update</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationChannel</name></type> <name>channel</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

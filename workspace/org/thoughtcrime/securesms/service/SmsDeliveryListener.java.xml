@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\SmsDeliveryListener.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>BroadcastReceiver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>SmsMessage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>SmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>SmsSentJob</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SmsDeliveryListener</name> <super><extends>extends <name>BroadcastReceiver</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SmsDeliveryListener</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SENT_SMS_ACTION</name>      <init>= <expr><literal type="string">"org.thoughtcrime.securesms.SendReceiveService.SENT_SMS_ACTION"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DELIVERED_SMS_ACTION</name> <init>= <expr><literal type="string">"org.thoughtcrime.securesms.SendReceiveService.DELIVERED_SMS_ACTION"</literal></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onReceive</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>JobManager</name></type> <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>       <name>messageId</name>  <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getLongExtra</name></name><argument_list>(<argument><expr><literal type="string">"message_id"</literal></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>        <name>runAttempt</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getIntExtra</name></name><argument_list>(<argument><expr><literal type="string">"run_attempt"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <switch>switch <condition>(<expr><call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name>SENT_SMS_ACTION</name></expr>:</case>
+        <decl_stmt><decl><type><name>int</name></type> <name>result</name> <init>= <expr><call><name>getResultCode</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SmsSentJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>SENT_SMS_ACTION</name></expr></argument>, <argument><expr><name>result</name></expr></argument>, <argument><expr><name>runAttempt</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name>DELIVERED_SMS_ACTION</name></expr>:</case>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pdu</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getByteArrayExtra</name></name><argument_list>(<argument><expr><literal type="string">"pdu"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>pdu</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"No PDU in delivery receipt!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>SmsMessage</name></type> <name>message</name> <init>= <expr><call><name><name>SmsMessage</name><operator>.</operator><name>createFromPdu</name></name><argument_list>(<argument><expr><name>pdu</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>message</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Delivery receipt failed to parse!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>status</name> <init>= <expr><call><name><name>message</name><operator>.</operator><name>getStatus</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Original status: "</literal> <operator>+</operator> <name>status</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <comment type="line">// Note: https://developer.android.com/reference/android/telephony/SmsMessage.html#getStatus()</comment>
+        <comment type="line">//       " CDMA: For not interfering with status codes from GSM, the value is shifted to the bits 31-16"</comment>
+        <comment type="line">// Note: https://stackoverflow.com/a/33240109</comment>
+        <if>if <condition>(<expr><literal type="string">"3gpp2"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><literal type="string">"format"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Correcting for CDMA delivery receipt..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <if>if      <condition>(<expr><name>status</name> <operator>&gt;&gt;</operator> <literal type="number">24</literal> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>status</name> <operator>=</operator> <name><name>SmsDatabase</name><operator>.</operator><name>Status</name><operator>.</operator><name>STATUS_COMPLETE</name></name></expr>;</expr_stmt></block></then>
+          <elseif>else <if>if <condition>(<expr><name>status</name> <operator>&gt;&gt;</operator> <literal type="number">24</literal> <operator>==</operator> <literal type="number">2</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>status</name> <operator>=</operator> <name><name>SmsDatabase</name><operator>.</operator><name>Status</name><operator>.</operator><name>STATUS_PENDING</name></name></expr>;</expr_stmt></block></then></if></elseif>
+          <elseif>else <if>if <condition>(<expr><name>status</name> <operator>&gt;&gt;</operator> <literal type="number">24</literal> <operator>==</operator> <literal type="number">3</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>status</name> <operator>=</operator> <name><name>SmsDatabase</name><operator>.</operator><name>Status</name><operator>.</operator><name>STATUS_FAILED</name></name></expr>;</expr_stmt></block></then></if></elseif></if>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SmsSentJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>DELIVERED_SMS_ACTION</name></expr></argument>, <argument><expr><name>status</name></expr></argument>, <argument><expr><name>runAttempt</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <default>default:</default>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Unknown action: "</literal> <operator>+</operator> <call><name><name>intent</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></switch>
+  }</block></function>
+}</block></class>
+</unit>

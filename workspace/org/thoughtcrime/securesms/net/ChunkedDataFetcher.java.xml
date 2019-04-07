@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\net\ChunkedDataFetcher.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>net</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>util</name><operator>.</operator><name>ContentLengthInputStream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>SignalExecutors</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FilterInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>CacheControl</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Call</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Response</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ChunkedDataFetcher</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ChunkedDataFetcher</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>CacheControl</name></type> <name>NO_CACHE</name> <init>= <expr><operator>new</operator> <call><name><name>CacheControl</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>noCache</name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>MB</name> <init>= <expr><literal type="number">1024</literal> <operator>*</operator> <literal type="number">1024</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>KB</name> <init>= <expr><literal type="number">1024</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>OkHttpClient</name></type> <name>client</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ChunkedDataFetcher</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name> <operator>=</operator> <name>client</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>RequestController</name></type> <name>fetch</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>contentLength</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Callback</name></type> <name>callback</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>contentLength</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>, <argument><expr><name>callback</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>CompositeRequestController</name></type> <name>compositeController</name> <init>= <expr><operator>new</operator> <call><name>CompositeRequestController</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>fetchChunks</name><argument_list>(<argument><expr><name>url</name></expr></argument>, <argument><expr><name>contentLength</name></expr></argument>, <argument><expr><name>compositeController</name></expr></argument>, <argument><expr><name>callback</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>compositeController</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>RequestController</name></type> <name>fetch</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Callback</name></type> <name>callback</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>CompositeRequestController</name></type> <name>compositeController</name> <init>= <expr><operator>new</operator> <call><name>CompositeRequestController</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Call</name></type> <name>headCall</name> <init>= <expr><call><name><name>client</name><operator>.</operator><name>newCall</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>Request</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>url</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>head</name><argument_list>()</argument_list></call><operator>.</operator><call><name>cacheControl</name><argument_list>(<argument><expr><name>NO_CACHE</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>addController</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>CallRequestController</name><argument_list>(<argument><expr><name>headCall</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>headCall</name><operator>.</operator><name>enqueue</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>okhttp3</name><operator>.</operator><name>Callback</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>Call</name></type> <name>call</name></decl></parameter>, <parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>compositeController</name><operator>.</operator><name>isCanceled</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onResponse</name><parameter_list>(<parameter><decl><type><name>Call</name></type> <name>call</name></decl></parameter>, <parameter><decl><type><name>Response</name></type> <name>response</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>contentLength</name> <init>= <expr><call><name><name>response</name><operator>.</operator><name>header</name></name><argument_list>(<argument><expr><literal type="string">"Content-Length"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>acceptRanges</name>  <init>= <expr><call><name><name>response</name><operator>.</operator><name>header</name></name><argument_list>(<argument><expr><literal type="string">"Accept-Ranges"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>response</name><operator>.</operator><name>isSuccessful</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Non-successful response code: "</literal> <operator>+</operator> <call><name><name>response</name><operator>.</operator><name>code</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Non-successful response code: "</literal> <operator>+</operator> <call><name><name>response</name><operator>.</operator><name>code</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <if>if <condition>(<expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>close</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <return>return;</return>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>contentLength</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Missing Content-Length header."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Missing Content-Length header."</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <if>if <condition>(<expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>close</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <return>return;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>long</name></type> <name>parsedContentLength</name></decl>;</decl_stmt>
+        <try>try <block>{
+          <expr_stmt><expr><name>parsedContentLength</name> <operator>=</operator> <call><name><name>Long</name><operator>.</operator><name>parseLong</name></name><argument_list>(<argument><expr><name>contentLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NumberFormatException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Invalid Content-Length value."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Invalid Content-Length value."</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <return>return;</return>
+        }</block></catch></try>
+
+        <if>if <condition>(<expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>close</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name>fetchChunks</name><argument_list>(<argument><expr><name>url</name></expr></argument>, <argument><expr><name>parsedContentLength</name></expr></argument>, <argument><expr><name>compositeController</name></expr></argument>, <argument><expr><name>callback</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>compositeController</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>fetchChunks</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>contentLength</name></decl></parameter>, <parameter><decl><type><name>CompositeRequestController</name></type> <name>compositeController</name></decl></parameter>, <parameter><decl><type><name>Callback</name></type> <name>callback</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>ByteRange</name></argument>&gt;</argument_list></name></type> <name>requestPattern</name></decl>;</decl_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><name>requestPattern</name> <operator>=</operator> <call><name>getRequestPattern</name><argument_list>(<argument><expr><name>contentLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></catch></try>
+
+    <expr_stmt><expr><call><name><name>SignalExecutors</name><operator>.</operator><name>IO</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CallRequestController</name></argument>&gt;</argument_list></name></type> <name>controllers</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>requestPattern</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>range</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>makeChunkRequest</name><argument_list>(<argument><expr><name>client</name></expr></argument>, <argument><expr><name>url</name></expr></argument>, <argument><expr><name>range</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></type>           <name>streams</name>     <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>controllers</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>controllers</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>forEach</name><argument_list>(<argument><expr><name>compositeController</name><operator>::</operator><name>addController</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <for>for <control>(<init><decl><type><name>CallRequestController</name></type> <name>controller</name> <range>: <expr><name>controllers</name></expr></range></decl></init>)</control> <block>{
+        <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></type> <name>stream</name> <init>= <expr><call><name><name>controller</name><operator>.</operator><name>getStream</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>stream</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Stream was canceled."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Failure"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <return>return;</return>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>streams</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>stream</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onSuccess</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>InputStreamList</name><argument_list>(<argument><expr><name>streams</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>compositeController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>CallRequestController</name></type> <name>makeChunkRequest</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>client</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ByteRange</name></type> <name>range</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Request</name></type> <name>request</name> <init>= <expr><operator>new</operator> <call><name><name>Request</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+                                 <operator>.</operator><call><name>url</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+                                 <operator>.</operator><call><name>cacheControl</name><argument_list>(<argument><expr><name>NO_CACHE</name></expr></argument>)</argument_list></call>
+                                 <operator>.</operator><call><name>addHeader</name><argument_list>(<argument><expr><literal type="string">"Range"</literal></expr></argument>, <argument><expr><literal type="string">"bytes="</literal> <operator>+</operator> <name><name>range</name><operator>.</operator><name>start</name></name> <operator>+</operator> <literal type="string">"-"</literal> <operator>+</operator> <name><name>range</name><operator>.</operator><name>end</name></name></expr></argument>)</argument_list></call>
+                                 <operator>.</operator><call><name>addHeader</name><argument_list>(<argument><expr><literal type="string">"Accept-Encoding"</literal></expr></argument>, <argument><expr><literal type="string">"identity"</literal></expr></argument>)</argument_list></call>
+                                 <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Call</name></type>                  <name>call</name>           <init>= <expr><call><name><name>client</name><operator>.</operator><name>newCall</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>CallRequestController</name></type> <name>callController</name> <init>= <expr><operator>new</operator> <call><name>CallRequestController</name><argument_list>(<argument><expr><name>call</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>call</name><operator>.</operator><name>enqueue</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>okhttp3</name><operator>.</operator><name>Callback</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>Call</name></type> <name>call</name></decl></parameter>, <parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>callController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onResponse</name><parameter_list>(<parameter><decl><type><name>Call</name></type> <name>call</name></decl></parameter>, <parameter><decl><type><name>Response</name></type> <name>response</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>response</name><operator>.</operator><name>isSuccessful</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>callController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <if>if <condition>(<expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>close</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <return>return;</return>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>callController</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <if>if <condition>(<expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>close</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <return>return;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>InputStream</name></type> <name>stream</name> <init>= <expr><operator>new</operator> <call><name>SkippingInputStream</name><argument_list>(<argument><expr><call><name><name>ContentLengthInputStream</name><operator>.</operator><name>obtain</name></name><argument_list>(<argument><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>byteStream</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>contentLength</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>range</name><operator>.</operator><name>ignoreFirst</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>callController</name><operator>.</operator><name>setStream</name></name><argument_list>(<argument><expr><name>stream</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>callController</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>ByteRange</name></argument>&gt;</argument_list></name></type> <name>getRequestPattern</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>size</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <if>if      <condition>(<expr><name>size</name> <operator>&gt;</operator> <name>MB</name></expr>)</condition><then>       <block type="pseudo"><return>return <expr><call><name>getRequestPattern</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><name>MB</name></expr></argument>)</argument_list></call></expr>;</return></block></then>
+    <elseif>else <if>if <condition>(<expr><name>size</name> <operator>&gt;</operator> <literal type="number">500</literal> <operator>*</operator> <name>KB</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name>getRequestPattern</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><literal type="number">500</literal> <operator>*</operator> <name>KB</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+    <elseif>else <if>if <condition>(<expr><name>size</name> <operator>&gt;</operator> <literal type="number">100</literal> <operator>*</operator> <name>KB</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name>getRequestPattern</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><literal type="number">100</literal> <operator>*</operator> <name>KB</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+    <elseif>else <if>if <condition>(<expr><name>size</name> <operator>&gt;</operator> <literal type="number">50</literal> <operator>*</operator> <name>KB</name></expr>)</condition><then>  <block type="pseudo"><return>return <expr><call><name>getRequestPattern</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><literal type="number">50</literal> <operator>*</operator> <name>KB</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+    <elseif>else <if>if <condition>(<expr><name>size</name> <operator>&gt;</operator> <literal type="number">10</literal> <operator>*</operator> <name>KB</name></expr>)</condition><then>  <block type="pseudo"><return>return <expr><call><name>getRequestPattern</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><literal type="number">10</literal> <operator>*</operator> <name>KB</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+    <elseif>else <if>if <condition>(<expr><name>size</name> <operator>&gt;</operator> <name>KB</name></expr>)</condition><then>       <block type="pseudo"><return>return <expr><call><name>getRequestPattern</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><name>KB</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif></if>
+
+    <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Unsupported size: "</literal> <operator>+</operator> <name>size</name></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>ByteRange</name></argument>&gt;</argument_list></name></type> <name>getRequestPattern</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>size</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>increment</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>ByteRange</name></argument>&gt;</argument_list></name></type> <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>offset</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <while>while <condition>(<expr><name>size</name> <operator>-</operator> <name>offset</name> <operator>&gt;</operator> <name>increment</name></expr>)</condition> <block>{
+      <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ByteRange</name><argument_list>(<argument><expr><name>offset</name></expr></argument>, <argument><expr><name>offset</name> <operator>+</operator> <name>increment</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>offset</name> <operator>+=</operator> <name>increment</name></expr>;</expr_stmt>
+    }</block></while>
+
+    <if>if <condition>(<expr><name>size</name> <operator>-</operator> <name>offset</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ByteRange</name><argument_list>(<argument><expr><name>size</name> <operator>-</operator> <name>increment</name></expr></argument>, <argument><expr><name>size</name><operator>-</operator><literal type="number">1</literal></expr></argument>, <argument><expr><name>increment</name> <operator>-</operator> <operator>(</operator><name>size</name> <operator>-</operator> <name>offset</name><operator>)</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>ByteRange</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>start</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>end</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>ignoreFirst</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>ByteRange</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>end</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>ignoreFirst</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>start</name></name>       <operator>=</operator> <name>start</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>end</name></name>         <operator>=</operator> <name>end</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>ignoreFirst</name></name> <operator>=</operator> <name>ignoreFirst</name></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>SkippingInputStream</name> <super><extends>extends <name>FilterInputStream</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type> <name>skip</name></decl>;</decl_stmt>
+
+    <constructor><name>SkippingInputStream</name><parameter_list>(<parameter><decl><type><name>InputStream</name></type> <name>in</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>skip</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>skip</name></name> <operator>=</operator> <name>skip</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <if>if <condition>(<expr><name>skip</name> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>skipFully</name><argument_list>(<argument><expr><name>skip</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>skip</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>read</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <if>if <condition>(<expr><name>skip</name> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>skipFully</name><argument_list>(<argument><expr><name>skip</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>skip</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <if>if <condition>(<expr><name>skip</name> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>skipFully</name><argument_list>(<argument><expr><name>skip</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>skip</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>available</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <return>return <expr><call><name><name>Util</name><operator>.</operator><name>toIntExact</name></name><argument_list>(<argument><expr><call><name><name>super</name><operator>.</operator><name>available</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>skip</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>skipFully</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>amount</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buffer</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">4096</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><name>amount</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><name><name>buffer</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><call><name><name>Util</name><operator>.</operator><name>toIntExact</name></name><argument_list>(<argument><expr><name>amount</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>read</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>amount</name> <operator>-=</operator> <name>read</name></expr>;</expr_stmt></block></then>
+        <else>else            <block type="pseudo"><return>return;</return></block></else></if>
+      }</block></while>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>InputStreamList</name> <super><extends>extends <name>InputStream</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></type> <name>inputStreams</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>currentStreamIndex</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <constructor><name>InputStreamList</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></type> <name>inputStreams</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>inputStreams</name></name> <operator>=</operator> <name>inputStreams</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <while>while <condition>(<expr><name>currentStreamIndex</name> <operator>&lt;</operator> <call><name><name>inputStreams</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>result</name> <init>= <expr><call><name><name>inputStreams</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>currentStreamIndex</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>read</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>result</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>currentStreamIndex</name><operator>++</operator></expr>;</expr_stmt></block></then>
+        <else>else              <block type="pseudo"><return>return <expr><name>result</name></expr>;</return></block></else></if>
+      }</block></while>
+
+      <return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <while>while <condition>(<expr><name>currentStreamIndex</name> <operator>&lt;</operator> <call><name><name>inputStreams</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>result</name> <init>= <expr><call><name><name>inputStreams</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>currentStreamIndex</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>read</name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>result</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>currentStreamIndex</name><operator>++</operator></expr>;</expr_stmt></block></then>
+        <else>else              <block type="pseudo"><return>return <expr><name>result</name></expr>;</return></block></else></if>
+      }</block></while>
+
+      <return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <return>return <expr><call><name>read</name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>buffer</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <for>for <control>(<init><decl><type><name>InputStream</name></type> <name>stream</name> <range>: <expr><name>inputStreams</name></expr></range></decl></init>)</control> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>stream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ignored</name></decl></parameter>)</parameter_list> <block>{}</block></catch></try>
+      }</block></for>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>available</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>total</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><name>currentStreamIndex</name></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><call><name><name>inputStreams</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <try>try <block>{
+          <decl_stmt><decl><type><name>int</name></type> <name>available</name> <init>= <expr><call><name><name>inputStreams</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>available</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><name>available</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>total</name> <operator>+=</operator> <name>available</name></expr>;</expr_stmt></block></then></if>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ignored</name></decl></parameter>)</parameter_list> <block>{}</block></catch></try>
+      }</block></for>
+
+      <return>return <expr><name>total</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <interface><specifier>public</specifier> interface <name>Callback</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onSuccess</name><parameter_list>(<parameter><decl><type><name>InputStream</name></type> <name>stream</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

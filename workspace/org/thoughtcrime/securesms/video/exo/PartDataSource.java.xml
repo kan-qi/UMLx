@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\video\exo\PartDataSource.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>video</name><operator>.</operator><name>exo</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>DataSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>DataSpec</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>exoplayer2</name><operator>.</operator><name>upstream</name><operator>.</operator><name>TransferListener</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartUriParser</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>EOFException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>PartDataSource</name> <super><implements>implements <name>DataSource</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>Context</name></type>          <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>TransferListener</name></type> <name>listener</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Uri</name></type>         <name>uri</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>InputStream</name></type> <name>inputSteam</name></decl>;</decl_stmt>
+
+  <constructor><name>PartDataSource</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>TransferListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>  <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>addTransferListener</name><parameter_list>(<parameter><decl><type><name>TransferListener</name></type> <name>transferListener</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>open</name><parameter_list>(<parameter><decl><type><name>DataSpec</name></type> <name>dataSpec</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>uri</name></name> <operator>=</operator> <name><name>dataSpec</name><operator>.</operator><name>uri</name></name></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>AttachmentDatabase</name></type> <name>attachmentDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>PartUriParser</name></type>      <name>partUri</name>            <init>= <expr><operator>new</operator> <call><name>PartUriParser</name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Attachment</name></type>         <name>attachment</name>         <init>= <expr><call><name><name>attachmentDatabase</name><operator>.</operator><name>getAttachment</name></name><argument_list>(<argument><expr><call><name><name>partUri</name><operator>.</operator><name>getPartId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>attachment</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Attachment not found"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>inputSteam</name></name> <operator>=</operator> <call><name><name>attachmentDatabase</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><call><name><name>partUri</name><operator>.</operator><name>getPartId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>dataSpec</name><operator>.</operator><name>position</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onTransferStart</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>dataSpec</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>attachment</name><operator>.</operator><name>getSize</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name><name>dataSpec</name><operator>.</operator><name>position</name></name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>EOFException</name><argument_list>(<argument><expr><literal type="string">"No more data"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+
+    <return>return <expr><call><name><name>attachment</name><operator>.</operator><name>getSize</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name><name>dataSpec</name><operator>.</operator><name>position</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>read</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>readLength</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><call><name><name>inputSteam</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>readLength</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>read</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onBytesTransferred</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><name>read</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><name>read</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Uri</name></type> <name>getUri</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>uri</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>getResponseHeaders</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptyMap</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name><name>inputSteam</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

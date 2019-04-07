@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\DeviceLinkFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DeviceLinkFragment</name> <super><extends>extends <name>Fragment</name></extends> <implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>LinearLayout</name></type>        <name>container</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>LinkClickedListener</name></type> <name>linkClickedListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Uri</name></type>                 <name>uri</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name> <operator>=</operator> <operator>(</operator><name>LinearLayout</name><operator>)</operator> <call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>device_link_fragment</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>container</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>link_device</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnClickListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getConfiguration</name><argument_list>()</argument_list></call><operator>.</operator><name>orientation</name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>ORIENTATION_LANDSCAPE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>HORIZONTAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <return>return <expr><name><name>this</name><operator>.</operator><name>container</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfiguration</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>newConfiguration</name><operator>.</operator><name>orientation</name></name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>ORIENTATION_LANDSCAPE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>HORIZONTAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setOrientation</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>VERTICAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setLinkClickedListener</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>LinkClickedListener</name></type> <name>linkClickedListener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>uri</name></name>                 <operator>=</operator> <name>uri</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>linkClickedListener</name></name> <operator>=</operator> <name>linkClickedListener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>linkClickedListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>linkClickedListener</name><operator>.</operator><name>onLink</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>LinkClickedListener</name> <block>{
+    <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onLink</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\OutgoingMediaMessage.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name><operator>.</operator><name>Contact</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>documents</name><operator>.</operator><name>IdentityKeyMismatch</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>documents</name><operator>.</operator><name>NetworkFailure</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>linkpreview</name><operator>.</operator><name>LinkPreview</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>OutgoingMediaMessage</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>Recipient</name></type>                 <name>recipient</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <type><specifier>final</specifier> <name>String</name></type>                    <name>body</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type>          <name>attachments</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>long</name></type>                      <name>sentTimeMillis</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>int</name></type>                       <name>distributionType</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>int</name></type>                       <name>subscriptionId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>long</name></type>                      <name>expiresIn</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>QuoteModel</name></type>                <name>outgoingQuote</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>NetworkFailure</name></argument>&gt;</argument_list></name></type>      <name>networkFailures</name>       <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>IdentityKeyMismatch</name></argument>&gt;</argument_list></name></type> <name>identityKeyMismatches</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type>             <name>contacts</name>              <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>LinkPreview</name></argument>&gt;</argument_list></name></type>         <name>linkPreviews</name>          <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>OutgoingMediaMessage</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>,
+                              <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>attachments</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>sentTimeMillis</name></decl></parameter>,
+                              <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>expiresIn</name></decl></parameter>,
+                              <parameter><decl><type><name>int</name></type> <name>distributionType</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>QuoteModel</name></type> <name>outgoingQuote</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>contacts</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>LinkPreview</name></argument>&gt;</argument_list></name></type> <name>linkPreviews</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>NetworkFailure</name></argument>&gt;</argument_list></name></type> <name>networkFailures</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>IdentityKeyMismatch</name></argument>&gt;</argument_list></name></type> <name>identityKeyMismatches</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>             <operator>=</operator> <name>recipient</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>body</name></name>                  <operator>=</operator> <name>message</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimeMillis</name></name>        <operator>=</operator> <name>sentTimeMillis</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>distributionType</name></name>      <operator>=</operator> <name>distributionType</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachments</name></name>           <operator>=</operator> <name>attachments</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>        <operator>=</operator> <name>subscriptionId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresIn</name></name>             <operator>=</operator> <name>expiresIn</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>outgoingQuote</name></name>         <operator>=</operator> <name>outgoingQuote</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>contacts</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>contacts</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>linkPreviews</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>linkPreviews</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>networkFailures</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>networkFailures</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>identityKeyMismatches</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>identityKeyMismatches</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>OutgoingMediaMessage</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>SlideDeck</name></type> <name>slideDeck</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>,
+                              <parameter><decl><type><name>long</name></type> <name>sentTimeMillis</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>expiresIn</name></decl></parameter>,
+                              <parameter><decl><type><name>int</name></type> <name>distributionType</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>QuoteModel</name></type> <name>outgoingQuote</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>contacts</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>LinkPreview</name></argument>&gt;</argument_list></name></type> <name>linkPreviews</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>,
+         <argument><expr><call><name>buildMessage</name><argument_list>(<argument><expr><name>slideDeck</name></expr></argument>, <argument><expr><name>message</name></expr></argument>)</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>slideDeck</name><operator>.</operator><name>asAttachments</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><name>sentTimeMillis</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>,
+         <argument><expr><name>expiresIn</name></expr></argument>, <argument><expr><name>distributionType</name></expr></argument>, <argument><expr><name>outgoingQuote</name></expr></argument>,
+         <argument><expr><name>contacts</name></expr></argument>, <argument><expr><name>linkPreviews</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>OutgoingMediaMessage</name><parameter_list>(<parameter><decl><type><name>OutgoingMediaMessage</name></type> <name>that</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>           <operator>=</operator> <call><name><name>that</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>body</name></name>                <operator>=</operator> <name><name>that</name><operator>.</operator><name>body</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>distributionType</name></name>    <operator>=</operator> <name><name>that</name><operator>.</operator><name>distributionType</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachments</name></name>         <operator>=</operator> <name><name>that</name><operator>.</operator><name>attachments</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sentTimeMillis</name></name>      <operator>=</operator> <name><name>that</name><operator>.</operator><name>sentTimeMillis</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name>      <operator>=</operator> <name><name>that</name><operator>.</operator><name>subscriptionId</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresIn</name></name>           <operator>=</operator> <name><name>that</name><operator>.</operator><name>expiresIn</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>outgoingQuote</name></name>       <operator>=</operator> <name><name>that</name><operator>.</operator><name>outgoingQuote</name></name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>identityKeyMismatches</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>identityKeyMismatches</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>networkFailures</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>networkFailures</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>contacts</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>contacts</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>linkPreviews</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>linkPreviews</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>Recipient</name></type> <name>getRecipient</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>recipient</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getBody</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>body</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>getAttachments</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>attachments</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getDistributionType</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>distributionType</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isSecure</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isGroup</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isExpirationUpdate</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getSentTimeMillis</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>sentTimeMillis</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getSubscriptionId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>subscriptionId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getExpiresIn</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>expiresIn</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>QuoteModel</name></type> <name>getOutgoingQuote</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>outgoingQuote</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>getSharedContacts</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>contacts</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>LinkPreview</name></argument>&gt;</argument_list></name></type> <name>getLinkPreviews</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>linkPreviews</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>NetworkFailure</name></argument>&gt;</argument_list></name></type> <name>getNetworkFailures</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>networkFailures</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>IdentityKeyMismatch</name></argument>&gt;</argument_list></name></type> <name>getIdentityKeyMismatches</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>identityKeyMismatches</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>buildMessage</name><parameter_list>(<parameter><decl><type><name>SlideDeck</name></type> <name>slideDeck</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>slideDeck</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>slideDeck</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"\n\n"</literal> <operator>+</operator> <name>message</name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>message</name></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><call><name><name>slideDeck</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+}</block></class>
+</unit>

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\ApplicationPreferencesActivity.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ * Copyright (C) 2013-2017 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentTransaction</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>ContextCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>DrawableCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>AdvancedPreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>AppProtectionPreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>AppearancePreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>ChatsPreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>CorrectedPreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>NotificationsPreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>SmsMmsPreferenceFragment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>widgets</name><operator>.</operator><name>ProfilePreference</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>KeyCachingService</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * The Activity for application preference display and management.
+ *
+ * @author Moxie Marlinspike
+ *
+ */</comment>
+
+<class><specifier>public</specifier> class <name>ApplicationPreferencesActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends>
+    <implements>implements <name><name>SharedPreferences</name><operator>.</operator><name>OnSharedPreferenceChangeListener</name></name></implements></super>
+<block>{
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ApplicationPreferencesActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_PROFILE</name>        <init>= <expr><literal type="string">"preference_category_profile"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_SMS_MMS</name>        <init>= <expr><literal type="string">"preference_category_sms_mms"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_NOTIFICATIONS</name>  <init>= <expr><literal type="string">"preference_category_notifications"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_APP_PROTECTION</name> <init>= <expr><literal type="string">"preference_category_app_protection"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_APPEARANCE</name>     <init>= <expr><literal type="string">"preference_category_appearance"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_CHATS</name>          <init>= <expr><literal type="string">"preference_category_chats"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_DEVICES</name>        <init>= <expr><literal type="string">"preference_category_devices"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PREFERENCE_CATEGORY_ADVANCED</name>       <init>= <expr><literal type="string">"preference_category_advanced"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>icicle</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">//noinspection ConstantConditions</comment>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>getSupportActionBar</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>getIntent</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getCategories</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getCategories</name><argument_list>()</argument_list></call><operator>.</operator><call><name>contains</name><argument_list>(<argument><expr><literal type="string">"android.intent.category.NOTIFICATION_PREFERENCES"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>initFragment</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>NotificationsPreferenceFragment</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>icicle</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>initFragment</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>ApplicationPreferenceFragment</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>findFragmentById</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onSupportNavigateUp</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>FragmentManager</name></type> <name>fragmentManager</name> <init>= <expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>fragmentManager</name><operator>.</operator><name>getBackStackEntryCount</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>fragmentManager</name><operator>.</operator><name>popBackStack</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>ConversationListActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setFlags</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TOP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onSharedPreferenceChanged</name><parameter_list>(<parameter><decl><type><name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>key</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>THEME_PREF</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>recreate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>key</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>LANGUAGE_PREF</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>recreate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>KeyCachingService</name><operator>.</operator><name>LOCALE_CHANGE_EVENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>ApplicationPreferenceFragment</name> <super><extends>extends <name>CorrectedPreferenceFragment</name></extends></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>icicle</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>icicle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_PROFILE</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ProfileClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_SMS_MMS</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_SMS_MMS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_NOTIFICATIONS</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_NOTIFICATIONS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APP_PROTECTION</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APP_PROTECTION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APPEARANCE</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APPEARANCE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_CHATS</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_CHATS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_DEVICES</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_DEVICES</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_ADVANCED</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CategoryClickListener</name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_ADVANCED</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>tintIcons</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreatePreferences</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>rootKey</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>addPreferencesFromResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>xml</name><operator>.</operator><name>preferences</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <comment type="line">//noinspection ConstantConditions</comment>
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ApplicationPreferencesActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>text_secure_normal__menu_settings</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setCategorySummaries</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setCategoryVisibility</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setCategorySummaries</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ProfilePreference</name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_PROFILE</name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>refresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_SMS_MMS</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name><name>SmsMmsPreferenceFragment</name><operator>.</operator><name>getSummary</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_NOTIFICATIONS</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name><name>NotificationsPreferenceFragment</name><operator>.</operator><name>getSummary</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APP_PROTECTION</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name><name>AppProtectionPreferenceFragment</name><operator>.</operator><name>getSummary</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APPEARANCE</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name><name>AppearancePreferenceFragment</name><operator>.</operator><name>getSummary</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_CHATS</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name><name>ChatsPreferenceFragment</name><operator>.</operator><name>getSummary</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setCategoryVisibility</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Preference</name></type> <name>devicePreference</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_DEVICES</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>devicePreference</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>getPreferenceScreen</name><argument_list>()</argument_list></call><operator>.</operator><call><name>removePreference</name><argument_list>(<argument><expr><name>devicePreference</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">11</literal></expr></argument>)</argument_list></annotation>
+    <specifier>private</specifier> <type><name>void</name></type> <name>tintIcons</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>sms</name>           <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_textsms_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>notifications</name> <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_notifications_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>privacy</name>       <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_security_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>appearance</name>    <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_brightness_6_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>chats</name>         <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_forum_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>devices</name>       <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_laptop_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>advanced</name>      <init>= <expr><call><name><name>DrawableCompat</name><operator>.</operator><name>wrap</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_advanced_white_24dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name><name>int</name><index>[]</index></name></type>      <name>tintAttr</name>   <init>= <expr><operator>new</operator> <name><name>int</name><index>[]</index></name><block>{<expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>pref_icon_tint</name></name></expr>}</block></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>tintAttr</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>        <name>color</name>      <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0x0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>sms</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>notifications</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>privacy</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>appearance</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>chats</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>devices</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><name>advanced</name></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_SMS_MMS</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>sms</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_NOTIFICATIONS</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>notifications</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APP_PROTECTION</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>privacy</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_APPEARANCE</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>appearance</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_CHATS</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>chats</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_DEVICES</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>devices</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PREFERENCE_CATEGORY_ADVANCED</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setIcon</name><argument_list>(<argument><expr><name>advanced</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <class><specifier>private</specifier> class <name>CategoryClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+      <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>category</name></decl>;</decl_stmt>
+
+      <constructor><name>CategoryClickListener</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>category</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>category</name></name> <operator>=</operator> <name>category</name></expr>;</expr_stmt>
+      }</block></constructor>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+        <switch>switch <condition>(<expr><name>category</name></expr>)</condition> <block>{
+        <case>case <expr><name>PREFERENCE_CATEGORY_SMS_MMS</name></expr>:</case>
+          <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>SmsMmsPreferenceFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>PREFERENCE_CATEGORY_NOTIFICATIONS</name></expr>:</case>
+          <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>NotificationsPreferenceFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>PREFERENCE_CATEGORY_APP_PROTECTION</name></expr>:</case>
+          <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>AppProtectionPreferenceFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>PREFERENCE_CATEGORY_APPEARANCE</name></expr>:</case>
+          <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>AppearancePreferenceFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>PREFERENCE_CATEGORY_CHATS</name></expr>:</case>
+          <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>ChatsPreferenceFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>PREFERENCE_CATEGORY_DEVICES</name></expr>:</case>
+          <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>DeviceActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>PREFERENCE_CATEGORY_ADVANCED</name></expr>:</case>
+          <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>AdvancedPreferenceFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <default>default:</default>
+          <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw>
+        }</block></switch>
+
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name>FragmentManager</name></type>     <name>fragmentManager</name>     <init>= <expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>fragmentTransaction</name> <init>= <expr><call><name><name>fragmentManager</name><operator>.</operator><name>beginTransaction</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>fragmentTransaction</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>, <argument><expr><name>fragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>fragmentTransaction</name><operator>.</operator><name>addToBackStack</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>fragmentTransaction</name><operator>.</operator><name>commit</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></function>
+    }</block></class>
+
+    <class><specifier>private</specifier> class <name>ProfileClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name><name>preference</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>EXCLUDE_SYSTEM</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//        ((BaseActionBarActivity)getActivity()).startActivitySceneTransition(intent, getActivity().findViewById(R.id.avatar), "avatar");</comment>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></function>
+    }</block></class>
+  }</block></class>
+
+}</block></class>
+</unit>

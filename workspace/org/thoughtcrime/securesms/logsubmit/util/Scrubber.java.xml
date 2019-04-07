@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\logsubmit\util\Scrubber.java"><comment type="block">/*
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logsubmit</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Matcher</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Scrub data for possibly sensitive information
+ */</comment>
+<class><specifier>public</specifier> class <name>Scrubber</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>Scrubber</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>E164_PATTERN</name> <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"\\+\\d{10,15}"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Pattern</name><index>[]</index></name></type> <name>DEFAULTS</name> <init>= <expr><operator>new</operator> <name><name>Pattern</name><index>[]</index></name> <block>{
+      <expr><name>E164_PATTERN</name></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Pattern</name><index>[]</index></name></type> <name>patterns</name></decl>;</decl_stmt>
+  <constructor><specifier>public</specifier> <name>Scrubber</name><parameter_list>(<parameter><decl><type><name>Pattern</name><modifier>...</modifier></type> <name>patterns</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>patterns</name></name> <operator>=</operator> <name>patterns</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>Scrubber</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>DEFAULTS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>scrub</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type> <name>out</name> <init>= <expr><name>in</name></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>Pattern</name></type> <name>pattern</name> <range>: <expr><name>patterns</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>Matcher</name></type>       <name>matcher</name>       <init>= <expr><call><name><name>pattern</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>out</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>StringBuilder</name></type> <name>builder</name>       <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>           <name>lastEndingPos</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><call><name><name>matcher</name><operator>.</operator><name>find</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>lastEndingPos</name></expr></argument>, <argument><expr><call><name><name>matcher</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>censored</name> <init>= <expr><call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>substring</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>                                      <operator>+</operator>
+                                <operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><operator>new</operator> <name><name>char</name><index>[<expr><call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call><operator>-</operator><literal type="number">3</literal></expr>]</index></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="string">"\0"</literal></expr></argument>, <argument><expr><literal type="string">"*"</literal></expr></argument>)</argument_list></call> <operator>+</operator>
+                                <call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>substring</name><argument_list>(<argument><expr><call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call><operator>-</operator><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>censored</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>lastEndingPos</name> <operator>=</operator> <call><name><name>matcher</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>lastEndingPos</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>out</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+    <return>return <expr><name>out</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

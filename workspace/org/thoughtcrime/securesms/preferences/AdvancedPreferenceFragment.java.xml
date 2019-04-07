@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\preferences\AdvancedPreferenceFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>CheckBoxPreference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>iid</name><operator>.</operator><name>FirebaseInstanceId</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationPreferencesActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>LogSubmitActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>RegistrationActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactAccessor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactIdentityManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>push</name><operator>.</operator><name>AccountManagerFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>task</name><operator>.</operator><name>ProgressDialogAsyncTask</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceAccountManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>exceptions</name><operator>.</operator><name>AuthorizationFailedException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AdvancedPreferenceFragment</name> <super><extends>extends <name>CorrectedPreferenceFragment</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AdvancedPreferenceFragment</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PUSH_MESSAGING_PREF</name>   <init>= <expr><literal type="string">"pref_toggle_push_messaging"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SUBMIT_DEBUG_LOG_PREF</name> <init>= <expr><literal type="string">"pref_submit_debug_logs"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>PICK_IDENTITY_CONTACT</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>paramBundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>paramBundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeIdentitySelection</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Preference</name></type> <name>submitDebugLog</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>SUBMIT_DEBUG_LOG_PREF</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>submitDebugLog</name><operator>.</operator><name>setOnPreferenceClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SubmitDebugLogListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>submitDebugLog</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name>getVersion</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreatePreferences</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>rootKey</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>addPreferencesFromResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>xml</name><operator>.</operator><name>preferences_advanced</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ApplicationPreferencesActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__advanced</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializePushMessagingToggle</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>reqCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>reqCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got result: "</literal> <operator>+</operator> <name>resultCode</name> <operator>+</operator> <literal type="string">" for req: "</literal> <operator>+</operator> <name>reqCode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>resultCode</name> <operator>==</operator> <name><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name> <operator>&amp;&amp;</operator> <name>reqCode</name> <operator>==</operator> <name>PICK_IDENTITY_CONTACT</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>handleIdentitySelection</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializePushMessagingToggle</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>CheckBoxPreference</name></type> <name>preference</name> <init>= <expr><operator>(</operator><name>CheckBoxPreference</name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name>PUSH_MESSAGING_PREF</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__free_private_messages_and_calls</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setOnPreferenceChangeListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PushMessagingClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeIdentitySelection</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContactIdentityManager</name></type> <name>identity</name> <init>= <expr><call><name><name>ContactIdentityManager</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Preference</name></type> <name>preference</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>IDENTITY_PREF</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>identity</name><operator>.</operator><name>isSelfIdentityAutoDetected</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>getPreferenceScreen</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>removePreference</name><argument_list>(<argument><expr><name>preference</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><name>Uri</name></type> <name>contactUri</name> <init>= <expr><call><name><name>identity</name><operator>.</operator><name>getSelfIdentityUri</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>contactUri</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>contactName</name> <init>= <expr><call><name><name>ContactAccessor</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getNameFromContact</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contactUri</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_currently_s</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                            <argument><expr><name>contactName</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setOnPreferenceClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>IdentityPreferenceClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getVersion</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <if>if <condition>(<expr><name>context</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="string">""</literal></expr>;</return></block></then></if>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>app</name>     <init>= <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>app_name</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>version</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPackageInfo</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><name>versionName</name></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"%s %s"</literal></expr></argument>, <argument><expr><name>app</name></expr></argument>, <argument><expr><name>version</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>app_name</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>IdentityPreferenceClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_PICK</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setType</name></name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Contacts</name><operator>.</operator><name>CONTENT_TYPE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><name>PICK_IDENTITY_CONTACT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleIdentitySelection</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Uri</name></type> <name>contactUri</name> <init>= <expr><call><name><name>data</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>contactUri</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setIdentityContactUri</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>contactUri</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>initializeIdentitySelection</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>SubmitDebugLogListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>LogSubmitActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>PushMessagingClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SUCCESS</name>       <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>NETWORK_ERROR</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+    <class><specifier>private</specifier> class <name>DisablePushMessagesTask</name> <super><extends>extends <name><name>ProgressDialogAsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></extends></super> <block>{
+      <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CheckBoxPreference</name></type> <name>checkBoxPreference</name></decl>;</decl_stmt>
+
+      <constructor><specifier>public</specifier> <name>DisablePushMessagesTask</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>CheckBoxPreference</name></type> <name>checkBoxPreference</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_unregistering</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_unregistering_from_signal_messages_and_calls</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>checkBoxPreference</name></name> <operator>=</operator> <name>checkBoxPreference</name></expr>;</expr_stmt>
+      }</block></constructor>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostExecute</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <switch>switch <condition>(<expr><name>result</name></expr>)</condition> <block>{
+        <case>case <expr><name>NETWORK_ERROR</name></expr>:</case>
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>,
+                         <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_error_connecting_to_server</name></name></expr></argument>,
+                         <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name>SUCCESS</name></expr>:</case>
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setPushRegistered</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>initializePushMessagingToggle</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        }</block></switch>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Integer</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <try>try <block>{
+          <decl_stmt><decl><type><name>Context</name></type>                     <name>context</name>        <init>= <expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><type><name>SignalServiceAccountManager</name></type> <name>accountManager</name> <init>= <expr><call><name><name>AccountManagerFactory</name><operator>.</operator><name>createManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <try>try <block>{
+            <expr_stmt><expr><call><name><name>accountManager</name><operator>.</operator><name>setGcmId</name></name><argument_list>(<argument><expr><name><name>Optional</name><operator>.</operator></name>&lt;<name>String</name><operator>&gt;</operator><call><name>absent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>AuthorizationFailedException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch></try>
+
+          <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isFcmDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>FirebaseInstanceId</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>deleteInstanceId</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+
+          <return>return <expr><name>SUCCESS</name></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ioe</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>ioe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><name>NETWORK_ERROR</name></expr>;</return>
+        }</block></catch></try>
+      }</block></function>
+    }</block></class>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>(</operator><operator>(</operator><name>CheckBoxPreference</name><operator>)</operator><name>preference</name><operator>)</operator><operator>.</operator><call><name>isChecked</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setIconAttribute</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>dialog_info_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_disable_signal_messages_and_calls</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setMessage</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setNegativeButton</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setPositiveButton</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ok</name></name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><operator>new</operator> <call><name>DisablePushMessagesTask</name><argument_list>(<argument><expr><operator>(</operator><name>CheckBoxPreference</name><operator>)</operator><name>preference</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>nextIntent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>ApplicationPreferencesActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>RegistrationActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RegistrationActivity</name><operator>.</operator><name>RE_REGISTRATION_EXTRA</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><literal type="string">"next_intent"</literal></expr></argument>, <argument><expr><name>nextIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

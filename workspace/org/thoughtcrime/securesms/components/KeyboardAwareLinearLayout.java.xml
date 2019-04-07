@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\KeyboardAwareLinearLayout.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Rect</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>preference</name><operator>.</operator><name>PreferenceManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayoutCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Surface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ServiceUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Field</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * LinearLayout that, when a view container, will report back when it thinks a soft keyboard
+ * has been opened and what its height would be.
+ */</comment>
+<class><specifier>public</specifier> class <name>KeyboardAwareLinearLayout</name> <super><extends>extends <name>LinearLayoutCompat</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>KeyboardAwareLinearLayout</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Rect</name></type>                          <name>rect</name>                       <init>= <expr><operator>new</operator> <call><name>Rect</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>OnKeyboardHiddenListener</name></argument>&gt;</argument_list></name></type> <name>hiddenListeners</name>            <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>OnKeyboardShownListener</name></argument>&gt;</argument_list></name></type>  <name>shownListeners</name>             <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                           <name>minKeyboardSize</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                           <name>minCustomKeyboardSize</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                           <name>defaultCustomKeyboardSize</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                           <name>minCustomKeyboardTopMargin</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                           <name>statusBarHeight</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>viewInset</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>keyboardOpen</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>     <name>rotation</name>     <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isFullscreen</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KeyboardAwareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>KeyboardAwareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>KeyboardAwareLinearLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>statusBarRes</name> <init>= <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getIdentifier</name><argument_list>(<argument><expr><literal type="string">"status_bar_height"</literal></expr></argument>, <argument><expr><literal type="string">"dimen"</literal></expr></argument>, <argument><expr><literal type="string">"android"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>minKeyboardSize</name>            <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>min_keyboard_size</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>minCustomKeyboardSize</name>      <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>min_custom_keyboard_size</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>defaultCustomKeyboardSize</name>  <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>default_custom_keyboard_size</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>minCustomKeyboardTopMargin</name> <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>min_custom_keyboard_top_margin</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>statusBarHeight</name>            <operator>=</operator> <ternary><condition><expr><name>statusBarRes</name> <operator>&gt;</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name>statusBarRes</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr>;</expr_stmt>
+    <expr_stmt><expr><name>viewInset</name>                  <operator>=</operator> <call><name>getViewInset</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation> <specifier>protected</specifier> <type><name>void</name></type> <name>onMeasure</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>widthMeasureSpec</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>heightMeasureSpec</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>updateRotation</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateKeyboardState</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onMeasure</name></name><argument_list>(<argument><expr><name>widthMeasureSpec</name></expr></argument>, <argument><expr><name>heightMeasureSpec</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateRotation</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>oldRotation</name> <init>= <expr><name>rotation</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>rotation</name> <operator>=</operator> <call><name>getDeviceRotation</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>oldRotation</name> <operator>!=</operator> <name>rotation</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"rotation changed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>onKeyboardClose</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateKeyboardState</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>isLandscape</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name>keyboardOpen</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>onKeyboardClose</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>viewInset</name> <operator>==</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>viewInset</name> <operator>=</operator> <call><name>getViewInset</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+    <expr_stmt><expr><call><name>getWindowVisibleDisplayFrame</name><argument_list>(<argument><expr><name>rect</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>availableHeight</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>getRootView</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getHeight</name><argument_list>()</argument_list></call> <operator>-</operator> <name>viewInset</name> <operator>-</operator> <operator>(</operator><ternary><condition><expr><operator>!</operator><name>isFullscreen</name></expr> ?</condition><then> <expr><name>statusBarHeight</name></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>keyboardHeight</name>  <init>= <expr><name>availableHeight</name> <operator>-</operator> <operator>(</operator><name><name>rect</name><operator>.</operator><name>bottom</name></name> <operator>-</operator> <name><name>rect</name><operator>.</operator><name>top</name></name><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>keyboardHeight</name> <operator>&gt;</operator> <name>minKeyboardSize</name></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name>getKeyboardHeight</name><argument_list>()</argument_list></call> <operator>!=</operator> <name>keyboardHeight</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>setKeyboardPortraitHeight</name><argument_list>(<argument><expr><name>keyboardHeight</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      <if>if <condition>(<expr><operator>!</operator><name>keyboardOpen</name></expr>)</condition><then>                         <block type="pseudo"><expr_stmt><expr><call><name>onKeyboardOpen</name><argument_list>(<argument><expr><name>keyboardHeight</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>keyboardOpen</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>onKeyboardClose</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>int</name></type> <name>getViewInset</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Field</name></type> <name>attachInfoField</name> <init>= <expr><call><name><name>View</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getDeclaredField</name></name></name><argument_list>(<argument><expr><literal type="string">"mAttachInfo"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>attachInfoField</name><operator>.</operator><name>setAccessible</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><name>Object</name></type> <name>attachInfo</name> <init>= <expr><call><name><name>attachInfoField</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>attachInfo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>Field</name></type> <name>stableInsetsField</name> <init>= <expr><call><name><name>attachInfo</name><operator>.</operator><name>getClass</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDeclaredField</name><argument_list>(<argument><expr><literal type="string">"mStableInsets"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>stableInsetsField</name><operator>.</operator><name>setAccessible</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>Rect</name></type> <name>insets</name> <init>= <expr><operator>(</operator><name>Rect</name><operator>)</operator><call><name><name>stableInsetsField</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>attachInfo</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><name><name>insets</name><operator>.</operator><name>bottom</name></name></expr>;</return>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchFieldException</name></type> <name>nsfe</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"field reflection error when measuring view inset"</literal></expr></argument>, <argument><expr><name>nsfe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalAccessException</name></type> <name>iae</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"access reflection error when measuring view inset"</literal></expr></argument>, <argument><expr><name>iae</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>onKeyboardOpen</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>keyboardHeight</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onKeyboardOpen("</literal> <operator>+</operator> <name>keyboardHeight</name> <operator>+</operator> <literal type="string">")"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>keyboardOpen</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>notifyShownListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>onKeyboardClose</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onKeyboardClose()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>keyboardOpen</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyHiddenListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isKeyboardOpen</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>keyboardOpen</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getKeyboardHeight</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><call><name>isLandscape</name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name>getKeyboardLandscapeHeight</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><call><name>getKeyboardPortraitHeight</name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isLandscape</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>rotation</name> <init>= <expr><call><name>getDeviceRotation</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>rotation</name> <operator>==</operator> <name><name>Surface</name><operator>.</operator><name>ROTATION_90</name></name> <operator>||</operator> <name>rotation</name> <operator>==</operator> <name><name>Surface</name><operator>.</operator><name>ROTATION_270</name></name></expr>;</return>
+  }</block></function>
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getDeviceRotation</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getWindowManager</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getDefaultDisplay</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRotation</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getKeyboardLandscapeHeight</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getRootView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getKeyboardPortraitHeight</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>keyboardHeight</name> <init>= <expr><call><name><name>PreferenceManager</name><operator>.</operator><name>getDefaultSharedPreferences</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>getInt</name><argument_list>(<argument><expr><literal type="string">"keyboard_height_portrait"</literal></expr></argument>, <argument><expr><name>defaultCustomKeyboardSize</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>Util</name><operator>.</operator><name>clamp</name></name><argument_list>(<argument><expr><name>keyboardHeight</name></expr></argument>, <argument><expr><name>minCustomKeyboardSize</name></expr></argument>, <argument><expr><call><name>getRootView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getHeight</name><argument_list>()</argument_list></call> <operator>-</operator> <name>minCustomKeyboardTopMargin</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setKeyboardPortraitHeight</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>PreferenceManager</name><operator>.</operator><name>getDefaultSharedPreferences</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>edit</name><argument_list>()</argument_list></call><operator>.</operator><call><name>putInt</name><argument_list>(<argument><expr><literal type="string">"keyboard_height_portrait"</literal></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>apply</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>postOnKeyboardClose</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Runnable</name></type> <name>runnable</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>keyboardOpen</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>addOnKeyboardHiddenListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>OnKeyboardHiddenListener</name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>onKeyboardHidden</name><parameter_list>()</parameter_list> <block>{
+          <expr_stmt><expr><call><name>removeOnKeyboardHiddenListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>runnable</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>runnable</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>postOnKeyboardOpen</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Runnable</name></type> <name>runnable</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><name>keyboardOpen</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>addOnKeyboardShownListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>OnKeyboardShownListener</name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>onKeyboardShown</name><parameter_list>()</parameter_list> <block>{
+          <expr_stmt><expr><call><name>removeOnKeyboardShownListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>runnable</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>runnable</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addOnKeyboardHiddenListener</name><parameter_list>(<parameter><decl><type><name>OnKeyboardHiddenListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>hiddenListeners</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>removeOnKeyboardHiddenListener</name><parameter_list>(<parameter><decl><type><name>OnKeyboardHiddenListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>hiddenListeners</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addOnKeyboardShownListener</name><parameter_list>(<parameter><decl><type><name>OnKeyboardShownListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>shownListeners</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>removeOnKeyboardShownListener</name><parameter_list>(<parameter><decl><type><name>OnKeyboardShownListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>shownListeners</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setFullscreen</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isFullscreen</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>isFullscreen</name></name> <operator>=</operator> <name>isFullscreen</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>notifyHiddenListeners</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>OnKeyboardHiddenListener</name></argument>&gt;</argument_list></name></type> <name>listeners</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>hiddenListeners</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>OnKeyboardHiddenListener</name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onKeyboardHidden</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>notifyShownListeners</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>OnKeyboardShownListener</name></argument>&gt;</argument_list></name></type> <name>listeners</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>shownListeners</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>OnKeyboardShownListener</name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onKeyboardShown</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>OnKeyboardHiddenListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onKeyboardHidden</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface><specifier>public</specifier> interface <name>OnKeyboardShownListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onKeyboardShown</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

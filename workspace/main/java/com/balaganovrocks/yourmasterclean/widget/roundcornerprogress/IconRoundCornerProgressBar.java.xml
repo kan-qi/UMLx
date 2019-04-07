@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\widget\roundcornerprogress\IconRoundCornerProgressBar.java"><comment type="block">/*
+
+Copyright 2015 Akexorcist
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/</comment>
+
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>roundcornerprogress</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ColorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>GradientDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>DisplayMetrics</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>TypedValue</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Gravity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewTreeObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewTreeObserver</name><operator>.</operator><name>OnGlobalLayoutListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name><operator>.</operator><name>ScaleType</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IconRoundCornerProgressBar</name> <super><extends>extends <name>LinearLayout</name></extends></super> <block>{	
+	<decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type> <name>imageIcon</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>LinearLayout</name></type> <name>layoutHeader</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>LinearLayout</name></type> <name>layoutBackground</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>LinearLayout</name></type> <name>layoutProgress</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>backgroundWidth</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>headerWidth</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+	
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isProgressBarCreated</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isProgressSetBeforeDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isMaxProgressSetBeforeDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isIconSetBeforeDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isBackgroundColorSetBeforeDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isProgressColorSetBeforeDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isHeaderColorSetBeforeDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	
+	<decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>max</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>progress</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>iconSize</name> <init>= <expr><literal type="number">40</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>iconPadding</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>radius</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>padding</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>headerColor</name> <init>= <expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#8a8a8a"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>progressColor</name> <init>= <expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#757575"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>backgroundColor</name> <init>= <expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#595959"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+	<constructor><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>public</specifier> <name>IconRoundCornerProgressBar</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if <condition>(<expr><operator>!</operator><call><name>isInEditMode</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>isProgressBarCreated</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isProgressSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isMaxProgressSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isIconSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isBackgroundColorSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isProgressColorSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isHeaderColorSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+			<decl_stmt><decl><type><name>LayoutInflater</name></type> <name>inflater</name> <init>= <expr><operator>(</operator><name>LayoutInflater</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>LAYOUT_INFLATER_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			<expr_stmt><expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>round_corner_with_icon_layout</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name>setup</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><name>isProgressBarCreated</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+		}</block></then> <else>else <block>{
+			<if>if<condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+				<expr_stmt><expr><call><name>setBackground</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#CCCCCC"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    	}</block></then> <else>else <block>{
+				<expr_stmt><expr><call><name>setBackgroundColor</name><argument_list>(<argument><expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#CCCCCC"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    	}</block></else></if>
+			<expr_stmt><expr><call><name>setGravity</name><argument_list>(<argument><expr><name><name>Gravity</name><operator>.</operator><name>CENTER</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	                
+			<decl_stmt><decl><type><name>int</name></type> <name>padding</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name>dp2px</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			<expr_stmt><expr><call><name>setPadding</name><argument_list>(<argument><expr><name>padding</name></expr></argument>, <argument><expr><name>padding</name></expr></argument>, <argument><expr><name>padding</name></expr></argument>, <argument><expr><name>padding</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	        
+			<decl_stmt><decl><type><name>TextView</name></type> <name>tv</name> <init>= <expr><operator>new</operator> <call><name>TextView</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			<expr_stmt><expr><call><name><name>tv</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">"IconRoundCornerProgressBar"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name>addView</name><argument_list>(<argument><expr><name>tv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></else></if>
+	}</block></constructor>
+	
+	<function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>private</specifier> <type><name>void</name></type> <name>setup</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>int</name></type> <name>color</name></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>DisplayMetrics</name></type> <name>metrics</name> <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDisplayMetrics</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><name>radius</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(<argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><name>radius</name></expr></argument>, <argument><expr><name>metrics</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>radius</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>typedArray</name><operator>.</operator><name>getDimension</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_backgroundRadius</name></name></expr></argument>, <argument><expr><name>radius</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>padding</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(<argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><name>padding</name></expr></argument>, <argument><expr><name>metrics</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>padding</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>typedArray</name><operator>.</operator><name>getDimension</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_backgroundPadding</name></name></expr></argument>, <argument><expr><name>padding</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+		<expr_stmt><expr><name>imageIcon</name> <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>round_corner_progress_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>imageIcon</name><operator>.</operator><name>setScaleType</name></name><argument_list>(<argument><expr><name><name>ScaleType</name><operator>.</operator><name>CENTER_CROP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><operator>!</operator><name>isIconSetBeforeDraw</name></expr>)</condition><then> <block>{
+			<decl_stmt><decl><type><name>int</name></type> <name>iconResource</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>typedArray</name><operator>.</operator><name>getResourceId</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_iconSrc</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>round_corner_progress_icon</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			<expr_stmt><expr><call><name><name>imageIcon</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name>iconResource</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+        <expr_stmt><expr><name>iconSize</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(<argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><name>iconSize</name></expr></argument>, <argument><expr><name>metrics</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>iconSize</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>typedArray</name><operator>.</operator><name>getDimension</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_iconSize</name></name></expr></argument>, <argument><expr><name>iconSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>imageIcon</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>LayoutParams</name><argument_list>(<argument><expr><name>iconSize</name></expr></argument>, <argument><expr><name>iconSize</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+		<expr_stmt><expr><name>layoutHeader</name> <operator>=</operator> <operator>(</operator><name>LinearLayout</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>round_corner_progress_header</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>iconPadding</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(<argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><name>iconPadding</name></expr></argument>, <argument><expr><name>metrics</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>iconPadding</name> <operator>=</operator> <operator>(</operator><name>int</name><operator>)</operator> <call><name><name>typedArray</name><operator>.</operator><name>getDimension</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_iconPadding</name></name></expr></argument>, <argument><expr><name>iconPadding</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>layoutHeader</name><operator>.</operator><name>setPadding</name></name><argument_list>(<argument><expr><name>iconPadding</name></expr></argument>, <argument><expr><name>iconPadding</name></expr></argument>, <argument><expr><name>iconPadding</name></expr></argument>, <argument><expr><name>iconPadding</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><operator>!</operator><name>isHeaderColorSetBeforeDraw</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>color</name><operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_headerColor</name></name></expr></argument>, <argument><expr><name>headerColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name>setHeaderColor</name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		<decl_stmt><decl><type><name>ViewTreeObserver</name></type> <name>observer</name> <init>= <expr><call><name><name>layoutHeader</name><operator>.</operator><name>getViewTreeObserver</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt> 
+		<expr_stmt><expr><call><name><name>observer</name><operator>.</operator><name>addOnGlobalLayoutListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>OnGlobalLayoutListener</name></super><argument_list>()</argument_list> <block>{ 
+			<function><annotation>@<name>Override</name></annotation> 
+		    <specifier>public</specifier> <type><name>void</name></type> <name>onGlobalLayout</name><parameter_list>()</parameter_list> <block>{ 
+		    	<expr_stmt><expr><call><name><name>layoutHeader</name><operator>.</operator><name>getViewTreeObserver</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>removeOnGlobalLayoutListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> 
+		    	<if>if<condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB</name></name></expr>)</condition><then> <block>{
+		    		<expr_stmt><expr><name>headerWidth</name> <operator>=</operator> <call><name><name>layoutHeader</name><operator>.</operator><name>getMeasuredWidth</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		    	}</block></then> <else>else <block>{
+			    	<expr_stmt><expr><name>headerWidth</name> <operator>=</operator> <call><name><name>layoutHeader</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		    	}</block></else></if>
+		    	<if>if<condition>(<expr><name>backgroundWidth</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then>
+		    		<block type="pseudo"><expr_stmt><expr><call><name>setProgress</name><argument_list>(<argument><expr><name>progress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+		    }</block></function> 
+		}</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+		<expr_stmt><expr><name>layoutBackground</name> <operator>=</operator> <operator>(</operator><name>LinearLayout</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>round_corner_progress_background</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>layoutBackground</name><operator>.</operator><name>setPadding</name></name><argument_list>(<argument><expr><name>padding</name></expr></argument>, <argument><expr><name>padding</name></expr></argument>, <argument><expr><name>padding</name></expr></argument>, <argument><expr><name>padding</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><operator>!</operator><name>isBackgroundColorSetBeforeDraw</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>color</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_backgroundColor</name></name></expr></argument>, <argument><expr><name>backgroundColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name>setBackgroundColor</name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		<expr_stmt><expr><name>observer</name> <operator>=</operator> <call><name><name>layoutBackground</name><operator>.</operator><name>getViewTreeObserver</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> 
+		<expr_stmt><expr><call><name><name>observer</name><operator>.</operator><name>addOnGlobalLayoutListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>OnGlobalLayoutListener</name></super><argument_list>()</argument_list> <block>{ 
+		    <function><annotation>@<name>Override</name></annotation> 
+		    <specifier>public</specifier> <type><name>void</name></type> <name>onGlobalLayout</name><parameter_list>()</parameter_list> <block>{ 
+		    	<expr_stmt><expr><call><name><name>layoutBackground</name><operator>.</operator><name>getViewTreeObserver</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>removeOnGlobalLayoutListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> 
+		    	<if>if<condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB</name></name></expr>)</condition><then> <block>{
+		    		<expr_stmt><expr><name>backgroundWidth</name> <operator>=</operator> <call><name><name>layoutBackground</name><operator>.</operator><name>getMeasuredWidth</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		    	}</block></then> <else>else <block>{
+			    	<expr_stmt><expr><name>backgroundWidth</name> <operator>=</operator> <call><name><name>layoutBackground</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		    	}</block></else></if>
+		    	<if>if<condition>(<expr><name>headerWidth</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then>
+		    		<block type="pseudo"><expr_stmt><expr><call><name>setProgress</name><argument_list>(<argument><expr><name>progress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+		    }</block></function> 
+		}</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+		<expr_stmt><expr><name>layoutProgress</name> <operator>=</operator> <operator>(</operator><name>LinearLayout</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>round_corner_progress_progress</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressColorSetBeforeDraw</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>color</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_progressColor</name></name></expr></argument>, <argument><expr><name>progressColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name>setProgressColor</name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+
+		<if>if<condition>(<expr><operator>!</operator><name>isMaxProgressSetBeforeDraw</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>max</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_max</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressSetBeforeDraw</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>progress</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RoundCornerProgress_progress1</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+
+		<expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+	
+	<function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+	<annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>public</specifier> <type><name>void</name></type> <name>setProgressColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>progressColor</name> <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+		<decl_stmt><decl><type><name>int</name></type> <name>radius</name> <init>= <expr><name><name>this</name><operator>.</operator><name>radius</name></name> <operator>-</operator> <operator>(</operator><name>padding</name> <operator>/</operator> <literal type="number">2</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>GradientDrawable</name></type> <name>gradient</name> <init>= <expr><operator>new</operator> <call><name>GradientDrawable</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setShape</name></name><argument_list>(<argument><expr><name><name>GradientDrawable</name><operator>.</operator><name>RECTANGLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>progressColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setCornerRadii</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>float</name> <index>[]</index></name> <block>{ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>, <expr><name>radius</name></expr>, <expr><name>radius</name></expr>, <expr><name>radius</name></expr>, <expr><name>radius</name></expr>, <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>layoutProgress</name><operator>.</operator><name>setBackgroundDrawable</name></name><argument_list>(<argument><expr><name>gradient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    	}</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>layoutProgress</name><operator>.</operator><name>setBackground</name></name><argument_list>(<argument><expr><name>gradient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    	}</block></else></if>
+		
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressBarCreated</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>isProgressColorSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+		}</block></then></if>
+	}</block></function>
+	
+	<function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+	<annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>public</specifier> <type><name>void</name></type> <name>setHeaderColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>headerColor</name> <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+		<decl_stmt><decl><type><name>int</name></type> <name>radius</name> <init>= <expr><name><name>this</name><operator>.</operator><name>radius</name></name> <operator>-</operator> <operator>(</operator><name>padding</name> <operator>/</operator> <literal type="number">2</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>GradientDrawable</name></type> <name>gradient</name> <init>= <expr><operator>new</operator> <call><name>GradientDrawable</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setShape</name></name><argument_list>(<argument><expr><name><name>GradientDrawable</name><operator>.</operator><name>RECTANGLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>headerColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setCornerRadii</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>float</name> <index>[]</index></name> <block>{ <expr><name>radius</name></expr>, <expr><name>radius</name></expr>, <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>, <expr><name>radius</name></expr>, <expr><name>radius</name></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><call><name><name>layoutHeader</name><operator>.</operator><name>setBackgroundDrawable</name></name><argument_list>(<argument><expr><name>gradient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    	}</block></then> <else>else <block>{
+    		<expr_stmt><expr><call><name><name>layoutHeader</name><operator>.</operator><name>setBackground</name></name><argument_list>(<argument><expr><name>gradient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    	}</block></else></if>
+		
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressBarCreated</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>isHeaderColorSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+		}</block></then></if>
+	}</block></function>
+	
+	<function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+	<annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>public</specifier> <type><name>void</name></type> <name>setBackgroundColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>backgroundColor</name> <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+		<decl_stmt><decl><type><name>GradientDrawable</name></type> <name>gradient</name> <init>= <expr><operator>new</operator> <call><name>GradientDrawable</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setShape</name></name><argument_list>(<argument><expr><name><name>GradientDrawable</name><operator>.</operator><name>RECTANGLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>backgroundColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>gradient</name><operator>.</operator><name>setCornerRadius</name></name><argument_list>(<argument><expr><name>radius</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if<condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><call><name><name>layoutBackground</name><operator>.</operator><name>setBackgroundDrawable</name></name><argument_list>(<argument><expr><name>gradient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    	}</block></then> <else>else <block>{
+			<expr_stmt><expr><call><name><name>layoutBackground</name><operator>.</operator><name>setBackground</name></name><argument_list>(<argument><expr><name>gradient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    	}</block></else></if>
+		
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressBarCreated</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>isBackgroundColorSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+		}</block></then></if>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>int</name></type> <name>getHeaderColor</name><parameter_list>()</parameter_list> <block>{
+		<return>return <expr><name>headerColor</name></expr>;</return>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>int</name></type> <name>getBackgroundColor</name><parameter_list>()</parameter_list> <block>{
+		<return>return <expr><name>backgroundColor</name></expr>;</return>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>int</name></type> <name>getProgressColor</name><parameter_list>()</parameter_list> <block>{
+		<return>return <expr><name>progressColor</name></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>void</name></type> <name>setProgress</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>progress</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>progress</name> <operator>=</operator> <ternary><condition><expr><operator>(</operator><name>progress</name> <operator>&gt;</operator> <name>max</name><operator>)</operator></expr> ?</condition><then> <expr><name>max</name></expr> </then><else>: <expr><name>progress</name></expr></else></ternary></expr>;</expr_stmt>
+        <expr_stmt><expr><name>progress</name> <operator>=</operator> <ternary><condition><expr><operator>(</operator><name>progress</name> <operator>&lt;</operator> <literal type="number">0</literal><operator>)</operator></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><name>progress</name></expr></else></ternary></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>progress</name></name> <operator>=</operator> <name>progress</name></expr>;</expr_stmt>
+		<decl_stmt><decl><type><name>float</name></type> <name>ratio</name> <init>= <expr><name>max</name> <operator>/</operator> <name>progress</name></expr></init></decl>;</decl_stmt>
+		
+		<decl_stmt><decl><type><name>LayoutParams</name></type> <name>params</name> <init>= <expr><operator>(</operator><name>LayoutParams</name><operator>)</operator><call><name><name>layoutProgress</name><operator>.</operator><name>getLayoutParams</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><name><name>params</name><operator>.</operator><name>width</name></name> <operator>=</operator> <call>(<name>int</name>)<argument_list>(<argument><expr><operator>(</operator><name>backgroundWidth</name> <operator>-</operator> <operator>(</operator><name>headerWidth</name> <operator>+</operator> <operator>(</operator><name>padding</name> <operator>*</operator> <literal type="number">2</literal><operator>)</operator><operator>)</operator><operator>)</operator> <operator>/</operator> <name>ratio</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>layoutProgress</name><operator>.</operator><name>setLayoutParams</name></name><argument_list>(<argument><expr><name>params</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressBarCreated</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>isProgressSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+		}</block></then></if>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>void</name></type> <name>setIconImageResource</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>resource</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name><name>imageIcon</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><name>resource</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>void</name></type> <name>setIconImageBitmap</name><parameter_list>(<parameter><decl><type><name>Bitmap</name></type> <name>bitmap</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name><name>imageIcon</name><operator>.</operator><name>setImageBitmap</name></name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>void</name></type> <name>setIconImageDrawable</name><parameter_list>(<parameter><decl><type><name>Drawable</name></type> <name>drawable</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name><name>imageIcon</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><name>drawable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>float</name></type> <name>getMax</name><parameter_list>()</parameter_list> <block>{
+		<return>return <expr><name>max</name></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>void</name></type> <name>setMax</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>max</name></decl></parameter>)</parameter_list> <block>{
+		<if>if<condition>(<expr><operator>!</operator><name>isProgressBarCreated</name></expr>)</condition><then> <block>{
+			<expr_stmt><expr><name>isMaxProgressSetBeforeDraw</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+		}</block></then></if>
+		<expr_stmt><expr><name><name>this</name><operator>.</operator><name>max</name></name> <operator>=</operator> <name>max</name></expr>;</expr_stmt>
+	}</block></function>
+	
+	<function><specifier>public</specifier> <type><name>float</name></type> <name>getProgress</name><parameter_list>()</parameter_list> <block>{
+		<return>return <expr><name>progress</name></expr>;</return>
+	}</block></function>
+	
+	<function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>private</specifier> <type><name>float</name></type> <name>dp2px</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>dp</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>DisplayMetrics</name></type> <name>displayMetrics</name> <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDisplayMetrics</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>Math</name><operator>.</operator><name>round</name></name><argument_list>(<argument><expr><name>dp</name> <operator>*</operator> <operator>(</operator><name><name>displayMetrics</name><operator>.</operator><name>densityDpi</name></name> <operator>/</operator> <name><name>DisplayMetrics</name><operator>.</operator><name>DENSITY_DEFAULT</name></name><operator>)</operator></expr></argument>)</argument_list></call></expr>;</return>	
+	}</block></function>
+}</block></class>
+</unit>

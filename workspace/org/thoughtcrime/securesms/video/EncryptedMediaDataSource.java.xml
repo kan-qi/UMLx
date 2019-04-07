@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\video\EncryptedMediaDataSource.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>video</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaDataSource</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>AttachmentSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ClassicDecryptingPartInputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ModernDecryptingPartInputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+
+<class><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>M</name></name></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>EncryptedMediaDataSource</name> <super><extends>extends <name>MediaDataSource</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AttachmentSecret</name></type> <name>attachmentSecret</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>File</name></type>             <name>mediaFile</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>           <name>random</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>             <name>length</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>EncryptedMediaDataSource</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentSecret</name></type> <name>attachmentSecret</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>File</name></type> <name>mediaFile</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>random</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachmentSecret</name></name> <operator>=</operator> <name>attachmentSecret</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mediaFile</name></name>        <operator>=</operator> <name>mediaFile</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>random</name></name>           <operator>=</operator> <name>random</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>length</name></name>           <operator>=</operator> <name>length</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>readAt</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><name>random</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name>readAtClassic</name><argument_list>(<argument><expr><name>position</name></expr></argument>, <argument><expr><name>bytes</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr>;</return></block></then>
+    <else>else                <block type="pseudo"><return>return <expr><call><name>readAtModern</name><argument_list>(<argument><expr><name>position</name></expr></argument>, <argument><expr><name>bytes</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr>;</return></block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>readAtClassic</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>InputStream</name></type> <name>inputStream</name>     <init>= <expr><call><name><name>ClassicDecryptingPartInputStream</name><operator>.</operator><name>createFor</name></name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name>mediaFile</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>      <name>buffer</name>          <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">4096</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>        <name>headerRemaining</name> <init>= <expr><name>position</name></expr></init></decl>;</decl_stmt>
+
+    <while>while <condition>(<expr><name>headerRemaining</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><call><name><name>inputStream</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>Util</name><operator>.</operator><name>toIntExact</name></name><argument_list>(<argument><expr><call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><operator>(</operator><name>long</name><operator>)</operator><name><name>buffer</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name>headerRemaining</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>read</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+
+      <expr_stmt><expr><name>headerRemaining</name> <operator>-=</operator> <name>read</name></expr>;</expr_stmt>
+    }</block></while>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>returnValue</name> <init>= <expr><call><name><name>inputStream</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>bytes</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>inputStream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>returnValue</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>readAtModern</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <assert>assert<expr><operator>(</operator><name>random</name> <operator>!=</operator> <literal type="null">null</literal><operator>)</operator></expr>;</assert>
+
+    <decl_stmt><decl><type><name>InputStream</name></type> <name>inputStream</name> <init>= <expr><call><name><name>ModernDecryptingPartInputStream</name><operator>.</operator><name>createFor</name></name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name>random</name></expr></argument>, <argument><expr><name>mediaFile</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>         <name>returnValue</name> <init>= <expr><call><name><name>inputStream</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>bytes</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>inputStream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>returnValue</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getSize</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><name>length</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+
+  }</block></function>
+}</block></class>
+</unit>

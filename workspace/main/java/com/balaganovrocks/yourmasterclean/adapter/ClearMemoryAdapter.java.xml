@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\adapter\ClearMemoryAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>adapter</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>BaseAdapter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RadioButton</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RelativeLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>bean</name><operator>.</operator><name>AppProcessInfo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>StorageUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ClearMemoryAdapter</name> <super><extends>extends <name>BaseAdapter</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>mlistAppInfo</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>LayoutInflater</name></type> <name>infater</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Context</name></type> <name>mContext</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>clearIds</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ClearMemoryAdapter</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>apps</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>infater</name> <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mContext</name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>clearIds</name> <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mlistAppInfo</name></name> <operator>=</operator> <name>apps</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <return>return <expr><call><name><name>mlistAppInfo</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Object</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <return>return <expr><call><name><name>mlistAppInfo</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>long</name></type> <name>getItemId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <return>return <expr><name>position</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>getView</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>convertView</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>ViewHolder</name></type> <name>holder</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>convertView</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>convertView</name> <operator>=</operator> <call><name><name>infater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>listview_memory_clean</name></name></expr></argument>,
+                    <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>holder</name> <operator>=</operator> <operator>new</operator> <call><name>ViewHolder</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>appIcon</name></name> <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator> <call><name><name>convertView</name>
+                    <operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>image</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>appName</name></name> <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name><name>convertView</name>
+                    <operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>memory</name></name> <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name><name>convertView</name>
+                    <operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>memory</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>cb</name></name> <operator>=</operator> <operator>(</operator><name>RadioButton</name><operator>)</operator> <call><name><name>convertView</name>
+                    <operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>choice_radio</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>convertView</name><operator>.</operator><name>setTag</name></name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>holder</name> <operator>=</operator> <operator>(</operator><name>ViewHolder</name><operator>)</operator> <call><name><name>convertView</name><operator>.</operator><name>getTag</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>AppProcessInfo</name></type> <name>appInfo</name> <init>= <expr><operator>(</operator><name>AppProcessInfo</name><operator>)</operator> <call><name>getItem</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>appIcon</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><name><name>appInfo</name><operator>.</operator><name>icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>appName</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>appInfo</name><operator>.</operator><name>appName</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>memory</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>StorageUtil</name><operator>.</operator><name>convertStorage</name></name><argument_list>(<argument><expr><name><name>appInfo</name><operator>.</operator><name>memory</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name><name>appInfo</name><operator>.</operator><name>checked</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>cb</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>cb</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+        <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>cb</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+                <if>if <condition>(<expr><name><name>appInfo</name><operator>.</operator><name>checked</name></name></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><name><name>appInfo</name><operator>.</operator><name>checked</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+                }</block></then> <else>else <block>{
+                    <expr_stmt><expr><name><name>appInfo</name><operator>.</operator><name>checked</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+                }</block></else></if>
+                <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>convertView</name></expr>;</return>
+    }</block></function>
+
+    <class>class <name>ViewHolder</name> <block>{
+        <decl_stmt><decl><type><name>ImageView</name></type> <name>appIcon</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>TextView</name></type> <name>appName</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>TextView</name></type> <name>memory</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>TextView</name></type> <name>tvProcessMemSize</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>RelativeLayout</name></type> <name>cb_rl</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>RadioButton</name></type> <name>cb</name></decl>;</decl_stmt>
+
+        <function><specifier>public</specifier> <type><name>RadioButton</name></type> <name>getCb</name><parameter_list>()</parameter_list> <block>{
+            <return>return <expr><name>cb</name></expr>;</return>
+        }</block></function>
+
+        <function><specifier>public</specifier> <type><name>void</name></type> <name>setCb</name><parameter_list>(<parameter><decl><type><name>RadioButton</name></type> <name>cb</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cb</name></name> <operator>=</operator> <name>cb</name></expr>;</expr_stmt>
+        }</block></function>
+    }</block></class>
+
+}</block></class>
+</unit>

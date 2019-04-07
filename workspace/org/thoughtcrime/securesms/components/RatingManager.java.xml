@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\RatingManager.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ActivityNotFoundException</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>RatingManager</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DAYS_SINCE_INSTALL_THRESHOLD</name>  <init>= <expr><literal type="number">7</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DAYS_UNTIL_REPROMPT_THRESHOLD</name> <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>RatingManager</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>showRatingDialogIfNecessary</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isRatingEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>daysSinceInstall</name> <init>= <expr><call><name>getDaysSinceInstalled</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>laterTimestamp</name>   <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getRatingLaterTimestamp</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>daysSinceInstall</name> <operator>&gt;=</operator> <name>DAYS_SINCE_INSTALL_THRESHOLD</name> <operator>&amp;&amp;</operator>
+        <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>&gt;=</operator> <name>laterTimestamp</name></expr>)</condition><then>
+    <block>{
+      <expr_stmt><expr><call><name>showRatingDialog</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>showRatingDialog</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RatingManager_rate_this_app</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setMessage</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RatingManager_if_you_enjoy_using_this_app_please_take_a_moment</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setPositiveButton</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RatingManager_rate_now</name></name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setRatingEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>startPlayStore</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+         }</block></function>
+       }</block></class></expr></argument>)</argument_list></call>
+       <operator>.</operator><call><name>setNegativeButton</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RatingManager_no_thanks</name></name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+         <function><annotation>@<name>Override</name></annotation>
+         <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+           <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setRatingEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+         }</block></function>
+       }</block></class></expr></argument>)</argument_list></call>
+       <operator>.</operator><call><name>setNeutralButton</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RatingManager_later</name></name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+         <function><annotation>@<name>Override</name></annotation>
+         <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+           <decl_stmt><decl><type><name>long</name></type> <name>waitUntil</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>TimeUnit</name><operator>.</operator><name>DAYS</name><operator>.</operator><name>toMillis</name></name><argument_list>(<argument><expr><name>DAYS_UNTIL_REPROMPT_THRESHOLD</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+           <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setRatingLaterTimestamp</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>waitUntil</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+         }</block></function>
+       }</block></class></expr></argument>)</argument_list></call>
+       <operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>startPlayStore</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Uri</name></type> <name>uri</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"market://details?id="</literal> <operator>+</operator> <call><name><name>context</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_VIEW</name></name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ActivityNotFoundException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RatingManager_whoops_the_play_store_app_does_not_appear_to_be_installed</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>getDaysSinceInstalled</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>long</name></type> <name>installTimestamp</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call>
+                                     <operator>.</operator><call><name>getPackageInfo</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call>
+                                     <operator>.</operator><name>firstInstallTime</name></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><call><name><name>TimeUnit</name><operator>.</operator><name>MILLISECONDS</name><operator>.</operator><name>toDays</name></name><argument_list>(<argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>installTimestamp</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+}</block></class>
+</unit>

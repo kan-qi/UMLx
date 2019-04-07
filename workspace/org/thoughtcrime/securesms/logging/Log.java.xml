@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\logging\Log.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>MainThread</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>Log</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name><name>Logger</name><index>[]</index></name></type> <name>loggers</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>MainThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><name>Logger</name><modifier>...</modifier></type> <name>loggers</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>Log</name><operator>.</operator><name>loggers</name></name> <operator>=</operator> <name>loggers</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>v</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>d</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>i</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>w</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>w</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>e</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>wtf</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>wtf</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>v</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>d</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>i</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>w</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>w</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>e</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>wtf</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>wtf</name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>loggers</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>Logger</name></type> <name>logger</name> <range>: <expr><name>loggers</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>logger</name><operator>.</operator><name>v</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>v</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>loggers</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>Logger</name></type> <name>logger</name> <range>: <expr><name>loggers</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>logger</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>loggers</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>Logger</name></type> <name>logger</name> <range>: <expr><name>loggers</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>logger</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>w</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>loggers</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>Logger</name></type> <name>logger</name> <range>: <expr><name>loggers</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>logger</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>loggers</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>Logger</name></type> <name>logger</name> <range>: <expr><name>loggers</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>logger</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>wtf</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>loggers</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>Logger</name></type> <name>logger</name> <range>: <expr><name>loggers</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>logger</name><operator>.</operator><name>wtf</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>wtf</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>abstract</specifier> class <name>Logger</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>w</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>wtf</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></class>
+}</block></class>
+</unit>

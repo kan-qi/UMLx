@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\MmsConfigManager.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>WorkerThread</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>service_alt</name><operator>.</operator><name>MmsConfig</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>dualsim</name><operator>.</operator><name>SubscriptionInfoCompat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>dualsim</name><operator>.</operator><name>SubscriptionManagerCompat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MmsConfigManager</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>MmsConfig</name></argument>&gt;</argument_list></name></type> <name>mmsConfigMap</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>synchronized</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>MmsConfig</name></type> <name>getMmsConfig</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>mmsConfigMap</name><operator>.</operator><name>containsKey</name></name><argument_list>(<argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>mmsConfigMap</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>MmsConfig</name></type> <name>loadedConfig</name> <init>= <expr><call><name>loadMmsConfig</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>loadedConfig</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>mmsConfigMap</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>subscriptionId</name></expr></argument>, <argument><expr><name>loadedConfig</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+    <return>return <expr><name>loadedConfig</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>MmsConfig</name></type> <name>loadMmsConfig</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>subscriptionId</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal> <operator>&amp;&amp;</operator> <name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">24</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>SubscriptionInfoCompat</name></argument>&gt;</argument_list></name></type> <name>subscriptionInfo</name> <init>= <expr><operator>new</operator> <call><name>SubscriptionManagerCompat</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getActiveSubscriptionInfo</name><argument_list>(<argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>subscriptionInfo</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>Configuration</name></type> <name>configuration</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getConfiguration</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name><name>configuration</name><operator>.</operator><name>mcc</name></name> <operator>=</operator> <call><name><name>subscriptionInfo</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getMcc</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>configuration</name><operator>.</operator><name>mnc</name></name> <operator>=</operator> <call><name><name>subscriptionInfo</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getMnc</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>Context</name></type> <name>subcontext</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>createConfigurationContext</name></name><argument_list>(<argument><expr><name>configuration</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><operator>new</operator> <call><name>MmsConfig</name><argument_list>(<argument><expr><name>subcontext</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block></then></if>
+
+    <return>return <expr><operator>new</operator> <call><name>MmsConfig</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

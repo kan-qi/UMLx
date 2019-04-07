@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\RecipientDatabase.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>net</name><operator>.</operator><name>sqlcipher</name><operator>.</operator><name>database</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>helpers</name><operator>.</operator><name>SQLCipherOpenHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Closeable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>function</name><operator>.</operator><name>Consumer</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>RecipientDatabase</name> <super><extends>extends <name>Database</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>RecipientDatabase</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier>         <name>String</name></type> <name>TABLE_NAME</name>       <init>= <expr><literal type="string">"recipient_preferences"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>                       <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier>         <name>String</name></type> <name>ADDRESS</name>          <init>= <expr><literal type="string">"recipient_ids"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>BLOCK</name>                    <init>= <expr><literal type="string">"block"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NOTIFICATION</name>             <init>= <expr><literal type="string">"notification"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>VIBRATE</name>                  <init>= <expr><literal type="string">"vibrate"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MUTE_UNTIL</name>               <init>= <expr><literal type="string">"mute_until"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COLOR</name>                    <init>= <expr><literal type="string">"color"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SEEN_INVITE_REMINDER</name>     <init>= <expr><literal type="string">"seen_invite_reminder"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DEFAULT_SUBSCRIPTION_ID</name>  <init>= <expr><literal type="string">"default_subscription_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXPIRE_MESSAGES</name>          <init>= <expr><literal type="string">"expire_messages"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>REGISTERED</name>               <init>= <expr><literal type="string">"registered"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PROFILE_KEY</name>              <init>= <expr><literal type="string">"profile_key"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SYSTEM_DISPLAY_NAME</name>      <init>= <expr><literal type="string">"system_display_name"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SYSTEM_PHOTO_URI</name>         <init>= <expr><literal type="string">"system_contact_photo"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SYSTEM_PHONE_LABEL</name>       <init>= <expr><literal type="string">"system_phone_label"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SYSTEM_CONTACT_URI</name>       <init>= <expr><literal type="string">"system_contact_uri"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SIGNAL_PROFILE_NAME</name>      <init>= <expr><literal type="string">"signal_profile_name"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SIGNAL_PROFILE_AVATAR</name>    <init>= <expr><literal type="string">"signal_profile_avatar"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PROFILE_SHARING</name>          <init>= <expr><literal type="string">"profile_sharing_approval"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CALL_RINGTONE</name>            <init>= <expr><literal type="string">"call_ringtone"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CALL_VIBRATE</name>             <init>= <expr><literal type="string">"call_vibrate"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NOTIFICATION_CHANNEL</name>     <init>= <expr><literal type="string">"notification_channel"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNIDENTIFIED_ACCESS_MODE</name> <init>= <expr><literal type="string">"unidentified_access_mode"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>RECIPIENT_PROJECTION</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{
+      <expr><name>BLOCK</name></expr>, <expr><name>NOTIFICATION</name></expr>, <expr><name>CALL_RINGTONE</name></expr>, <expr><name>VIBRATE</name></expr>, <expr><name>CALL_VIBRATE</name></expr>, <expr><name>MUTE_UNTIL</name></expr>, <expr><name>COLOR</name></expr>, <expr><name>SEEN_INVITE_REMINDER</name></expr>, <expr><name>DEFAULT_SUBSCRIPTION_ID</name></expr>, <expr><name>EXPIRE_MESSAGES</name></expr>, <expr><name>REGISTERED</name></expr>,
+      <expr><name>PROFILE_KEY</name></expr>, <expr><name>SYSTEM_DISPLAY_NAME</name></expr>, <expr><name>SYSTEM_PHOTO_URI</name></expr>, <expr><name>SYSTEM_PHONE_LABEL</name></expr>, <expr><name>SYSTEM_CONTACT_URI</name></expr>,
+      <expr><name>SIGNAL_PROFILE_NAME</name></expr>, <expr><name>SIGNAL_PROFILE_AVATAR</name></expr>, <expr><name>PROFILE_SHARING</name></expr>, <expr><name>NOTIFICATION_CHANNEL</name></expr>,
+      <expr><name>UNIDENTIFIED_ACCESS_MODE</name></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>TYPED_RECIPIENT_PROJECTION</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>RECIPIENT_PROJECTION</name></expr></argument>)</argument_list></call>
+                                                               <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>columnName</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>columnName</name></expr></block></lambda></expr></argument>)</argument_list></call>
+                                                               <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <enum><specifier>public</specifier> enum <name>VibrateState</name> <block>{
+    <decl><name>DEFAULT</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><name>ENABLED</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></decl>, <decl><name>DISABLED</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></decl>;
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>id</name></decl>;</decl_stmt>
+
+    <constructor><name>VibrateState</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>id</name></name> <operator>=</operator> <name>id</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getId</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>id</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>VibrateState</name></type> <name>fromId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name>values</name><argument_list>()</argument_list></call><index>[<expr><name>id</name></expr>]</index></expr>;</return>
+    }</block></function>
+  }</block></enum>
+
+  <enum><specifier>public</specifier> enum <name>RegisteredState</name> <block>{
+    <decl><name>UNKNOWN</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><name>REGISTERED</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></decl>, <decl><name>NOT_REGISTERED</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></decl>;
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>id</name></decl>;</decl_stmt>
+
+    <constructor><name>RegisteredState</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>id</name></name> <operator>=</operator> <name>id</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getId</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>id</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>RegisteredState</name></type> <name>fromId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name>values</name><argument_list>()</argument_list></call><index>[<expr><name>id</name></expr>]</index></expr>;</return>
+    }</block></function>
+  }</block></enum>
+
+  <enum><specifier>public</specifier> enum <name>UnidentifiedAccessMode</name> <block>{
+    <decl><name>UNKNOWN</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><name>DISABLED</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></decl>, <decl><name>ENABLED</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></decl>, <decl><name>UNRESTRICTED</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></decl>;
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>mode</name></decl>;</decl_stmt>
+
+    <constructor><name>UnidentifiedAccessMode</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>mode</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mode</name></name> <operator>=</operator> <name>mode</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getMode</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>mode</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>UnidentifiedAccessMode</name></type> <name>fromMode</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>mode</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name>values</name><argument_list>()</argument_list></call><index>[<expr><name>mode</name></expr>]</index></expr>;</return>
+    }</block></function>
+  }</block></enum>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CREATE_TABLE</name> <init>=
+      <expr><literal type="string">"CREATE TABLE "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator>
+          <literal type="string">" ("</literal> <operator>+</operator> <name>ID</name> <operator>+</operator> <literal type="string">" INTEGER PRIMARY KEY, "</literal> <operator>+</operator>
+          <name>ADDRESS</name> <operator>+</operator> <literal type="string">" TEXT UNIQUE, "</literal> <operator>+</operator>
+          <name>BLOCK</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0,"</literal> <operator>+</operator>
+          <name>NOTIFICATION</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>VIBRATE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT "</literal> <operator>+</operator> <call><name><name>VibrateState</name><operator>.</operator><name>DEFAULT</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator>
+          <name>MUTE_UNTIL</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator>
+          <name>COLOR</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>SEEN_INVITE_REMINDER</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator>
+          <name>DEFAULT_SUBSCRIPTION_ID</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT -1, "</literal> <operator>+</operator>
+          <name>EXPIRE_MESSAGES</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator>
+          <name>REGISTERED</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator>
+          <name>SYSTEM_DISPLAY_NAME</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>SYSTEM_PHOTO_URI</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>SYSTEM_PHONE_LABEL</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>SYSTEM_CONTACT_URI</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>PROFILE_KEY</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>SIGNAL_PROFILE_NAME</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>SIGNAL_PROFILE_AVATAR</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>PROFILE_SHARING</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator>
+          <name>CALL_RINGTONE</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>CALL_VIBRATE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT "</literal> <operator>+</operator> <call><name><name>VibrateState</name><operator>.</operator><name>DEFAULT</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator>
+          <name>NOTIFICATION_CHANNEL</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal> <operator>+</operator>
+          <name>UNIDENTIFIED_ACCESS_MODE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0);"</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>RecipientDatabase</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>SQLCipherOpenHelper</name></type> <name>databaseHelper</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>databaseHelper</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>Cursor</name></type> <name>getBlocked</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ID</name></expr>, <expr><name>ADDRESS</name></expr>}</block></expr></argument>, <argument><expr><name>BLOCK</name> <operator>+</operator> <literal type="string">" = 1"</literal></expr></argument>,
+                          <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>RecipientReader</name></type> <name>readerForBlocked</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>RecipientReader</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>RecipientReader</name></type> <name>getRecipientsWithNotificationChannels</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name>   <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ID</name></expr>, <expr><name>ADDRESS</name></expr>}</block></expr></argument>, <argument><expr><name>NOTIFICATION_CHANNEL</name>  <operator>+</operator> <literal type="string">" NOT NULL"</literal></expr></argument>,
+                                             <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><operator>new</operator> <call><name>RecipientReader</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>RecipientSettings</name></argument>&gt;</argument_list></name></type> <name>getRecipientSettings</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name>   <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name>getRecipientSettings</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+
+      <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>RecipientSettings</name></argument>&gt;</argument_list></name></type> <name>getRecipientSettings</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>boolean</name></type> <name>blocked</name>                <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>BLOCK</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>                <operator>==</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>messageRingtone</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>NOTIFICATION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>callRingtone</name>           <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>CALL_RINGTONE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>messageVibrateState</name>    <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>VIBRATE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>callVibrateState</name>       <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>CALL_VIBRATE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>    <name>muteUntil</name>              <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>MUTE_UNTIL</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>serializedColor</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>COLOR</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>seenInviteReminder</name>     <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SEEN_INVITE_REMINDER</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>defaultSubscriptionId</name>  <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>DEFAULT_SUBSCRIPTION_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>expireMessages</name>         <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>EXPIRE_MESSAGES</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>registeredState</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>REGISTERED</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>profileKeyString</name>       <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>PROFILE_KEY</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>systemDisplayName</name>      <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SYSTEM_DISPLAY_NAME</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>systemContactPhoto</name>     <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SYSTEM_PHOTO_URI</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>systemPhoneLabel</name>       <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SYSTEM_PHONE_LABEL</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>systemContactUri</name>       <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SYSTEM_CONTACT_URI</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>signalProfileName</name>      <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SIGNAL_PROFILE_NAME</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>signalProfileAvatar</name>    <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SIGNAL_PROFILE_AVATAR</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>profileSharing</name>         <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>PROFILE_SHARING</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>      <operator>==</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>  <name>notificationChannel</name>    <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>NOTIFICATION_CHANNEL</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>unidentifiedAccessMode</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>UNIDENTIFIED_ACCESS_MODE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>MaterialColor</name></type> <name>color</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>profileKey</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>color</name> <operator>=</operator> <ternary><condition><expr><name>serializedColor</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>MaterialColor</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>serializedColor</name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>MaterialColor</name><operator>.</operator><name>UnknownColorException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>color</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    }</block></catch></try>
+
+    <if>if <condition>(<expr><name>profileKeyString</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><name>profileKey</name> <operator>=</operator> <call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>profileKeyString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>profileKey</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RecipientSettings</name><argument_list>(<argument><expr><name>blocked</name></expr></argument>, <argument><expr><name>muteUntil</name></expr></argument>,
+                                             <argument><expr><call><name><name>VibrateState</name><operator>.</operator><name>fromId</name></name><argument_list>(<argument><expr><name>messageVibrateState</name></expr></argument>)</argument_list></call></expr></argument>,
+                                             <argument><expr><call><name><name>VibrateState</name><operator>.</operator><name>fromId</name></name><argument_list>(<argument><expr><name>callVibrateState</name></expr></argument>)</argument_list></call></expr></argument>,
+                                             <argument><expr><call><name><name>Util</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><name>messageRingtone</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>Util</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><name>callRingtone</name></expr></argument>)</argument_list></call></expr></argument>,
+                                             <argument><expr><name>color</name></expr></argument>, <argument><expr><name>seenInviteReminder</name></expr></argument>,
+                                             <argument><expr><name>defaultSubscriptionId</name></expr></argument>, <argument><expr><name>expireMessages</name></expr></argument>,
+                                             <argument><expr><call><name><name>RegisteredState</name><operator>.</operator><name>fromId</name></name><argument_list>(<argument><expr><name>registeredState</name></expr></argument>)</argument_list></call></expr></argument>,
+                                             <argument><expr><name>profileKey</name></expr></argument>, <argument><expr><name>systemDisplayName</name></expr></argument>, <argument><expr><name>systemContactPhoto</name></expr></argument>,
+                                             <argument><expr><name>systemPhoneLabel</name></expr></argument>, <argument><expr><name>systemContactUri</name></expr></argument>,
+                                             <argument><expr><name>signalProfileName</name></expr></argument>, <argument><expr><name>signalProfileAvatar</name></expr></argument>, <argument><expr><name>profileSharing</name></expr></argument>,
+                                             <argument><expr><name>notificationChannel</name></expr></argument>, <argument><expr><call><name><name>UnidentifiedAccessMode</name><operator>.</operator><name>fromMode</name></name><argument_list>(<argument><expr><name>unidentifiedAccessMode</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>BulkOperationsHandle</name></type> <name>resetAllSystemContactInfo</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>beginTransaction</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_DISPLAY_NAME</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_PHOTO_URI</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_PHONE_LABEL</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_CONTACT_URI</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><operator>new</operator> <call><name>BulkOperationsHandle</name><argument_list>(<argument><expr><name>database</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setColor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MaterialColor</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>COLOR</name></expr></argument>, <argument><expr><call><name><name>color</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColor</name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDefaultSubscriptionId</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defaultSubscriptionId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DEFAULT_SUBSCRIPTION_ID</name></expr></argument>, <argument><expr><name>defaultSubscriptionId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDefaultSubscriptionId</name><argument_list>(<argument><expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>defaultSubscriptionId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setBlocked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>blocked</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>BLOCK</name></expr></argument>, <argument><expr><ternary><condition><expr><name>blocked</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBlocked</name><argument_list>(<argument><expr><name>blocked</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setMessageRingtone</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>notification</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>NOTIFICATION</name></expr></argument>, <argument><expr><ternary><condition><expr><name>notification</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>notification</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setMessageRingtone</name><argument_list>(<argument><expr><name>notification</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setCallRingtone</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>ringtone</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CALL_RINGTONE</name></expr></argument>, <argument><expr><ternary><condition><expr><name>ringtone</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>ringtone</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setCallRingtone</name><argument_list>(<argument><expr><name>ringtone</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setMessageVibrate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>VibrateState</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>VIBRATE</name></expr></argument>, <argument><expr><call><name><name>enabled</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setMessageVibrate</name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setCallVibrate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>VibrateState</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CALL_VIBRATE</name></expr></argument>, <argument><expr><call><name><name>enabled</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setCallVibrate</name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setMuted</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>until</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>MUTE_UNTIL</name></expr></argument>, <argument><expr><name>until</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setMuted</name><argument_list>(<argument><expr><name>until</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setSeenInviteReminder</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"SameParameterValue"</literal></expr></argument>)</argument_list></annotation> <name>boolean</name></type> <name>seen</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SEEN_INVITE_REMINDER</name></expr></argument>, <argument><expr><ternary><condition><expr><name>seen</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setHasSeenInviteReminder</name><argument_list>(<argument><expr><name>seen</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setExpireMessages</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>expiration</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>setExpireMessages</name></name><argument_list>(<argument><expr><name>expiration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>EXPIRE_MESSAGES</name></expr></argument>, <argument><expr><name>expiration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setExpireMessages</name><argument_list>(<argument><expr><name>expiration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setUnidentifiedAccessMode</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>UnidentifiedAccessMode</name></type> <name>unidentifiedAccessMode</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>UNIDENTIFIED_ACCESS_MODE</name></expr></argument>, <argument><expr><call><name><name>unidentifiedAccessMode</name><operator>.</operator><name>getMode</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setUnidentifiedAccessMode</name><argument_list>(<argument><expr><name>unidentifiedAccessMode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProfileKey</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>profileKey</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>PROFILE_KEY</name></expr></argument>, <argument><expr><ternary><condition><expr><name>profileKey</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>Base64</name><operator>.</operator><name>encodeBytes</name></name><argument_list>(<argument><expr><name>profileKey</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setProfileKey</name><argument_list>(<argument><expr><name>profileKey</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProfileName</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIGNAL_PROFILE_NAME</name></expr></argument>, <argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setProfileName</name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProfileAvatar</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>profileAvatar</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIGNAL_PROFILE_AVATAR</name></expr></argument>, <argument><expr><name>profileAvatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setProfileAvatar</name><argument_list>(<argument><expr><name>profileAvatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProfileSharing</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"SameParameterValue"</literal></expr></argument>)</argument_list></annotation> <name>boolean</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>PROFILE_SHARING</name></expr></argument>, <argument><expr><ternary><condition><expr><name>enabled</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>setProfileSharing</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setNotificationChannel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>notificationChannel</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>NOTIFICATION_CHANNEL</name></expr></argument>, <argument><expr><name>notificationChannel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>setNotificationChannel</name></name><argument_list>(<argument><expr><name>notificationChannel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>getAllAddresses</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>      <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type>   <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ADDRESS</name></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromExternal</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setRegistered</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>RegisteredState</name></type> <name>registeredState</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>REGISTERED</name></expr></argument>, <argument><expr><call><name><name>registeredState</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>setRegistered</name></name><argument_list>(<argument><expr><name>registeredState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setRegistered</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>activeAddresses</name></decl></parameter>,
+                            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>inactiveAddresses</name></decl></parameter>)</parameter_list>
+  <block>{
+    <for>for <control>(<init><decl><type><name>Address</name></type> <name>activeAddress</name> <range>: <expr><name>activeAddresses</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>REGISTERED</name></expr></argument>, <argument><expr><call><name><name>RegisteredState</name><operator>.</operator><name>REGISTERED</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><name>activeAddress</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Recipient</name><operator>.</operator><name>applyCached</name></name><argument_list>(<argument><expr><name>activeAddress</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>recipient</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>recipient</name><operator>.</operator><name>setRegistered</name></name><argument_list>(<argument><expr><name><name>RegisteredState</name><operator>.</operator><name>REGISTERED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <for>for <control>(<init><decl><type><name>Address</name></type> <name>inactiveAddress</name> <range>: <expr><name>inactiveAddresses</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>REGISTERED</name></expr></argument>, <argument><expr><call><name><name>RegisteredState</name><operator>.</operator><name>NOT_REGISTERED</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><name>inactiveAddress</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Recipient</name><operator>.</operator><name>applyCached</name></name><argument_list>(<argument><expr><name>inactiveAddress</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>recipient</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>recipient</name><operator>.</operator><name>setRegistered</name></name><argument_list>(<argument><expr><name><name>RegisteredState</name><operator>.</operator><name>NOT_REGISTERED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>getRegistered</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>      <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type>  <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ADDRESS</name></expr>}</block></expr></argument>, <argument><expr><name>REGISTERED</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><literal type="string">"1"</literal></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>getSystemContacts</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>      <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type>  <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ADDRESS</name></expr>}</block></expr></argument>, <argument><expr><name>SYSTEM_DISPLAY_NAME</name> <operator>+</operator> <literal type="string">" IS NOT NULL AND "</literal> <operator>+</operator> <name>SYSTEM_DISPLAY_NAME</name> <operator>+</operator> <literal type="string">" != \"\""</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>updateSystemContactColors</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ColorUpdater</name></type> <name>updater</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>              <name>db</name>      <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>, <argument><name>MaterialColor</name></argument>&gt;</argument_list></name></type> <name>updates</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>beginTransaction</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ADDRESS</name></expr>, <expr><name>COLOR</name></expr>, <expr><name>SYSTEM_DISPLAY_NAME</name></expr>}</block></expr></argument>, <argument><expr><name>SYSTEM_DISPLAY_NAME</name> <operator>+</operator> <literal type="string">" IS NOT NULL AND "</literal> <operator>+</operator> <name>SYSTEM_DISPLAY_NAME</name> <operator>+</operator> <literal type="string">" != \"\""</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>Address</name></type> <name>address</name> <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>MaterialColor</name></type> <name>newColor</name> <init>= <expr><call><name><name>updater</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SYSTEM_DISPLAY_NAME</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>COLOR</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>COLOR</name></expr></argument>, <argument><expr><call><name><name>newColor</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>updates</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>address</name></expr></argument>, <argument><expr><name>newColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try> <finally>finally <block>{
+      <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>setTransactionSuccessful</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>endTransaction</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>updates</name><operator>.</operator><name>entrySet</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>forEach</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>entry</name></decl></parameter></parameter_list> -&gt; <block>{
+        <expr_stmt><expr><call><name><name>Recipient</name><operator>.</operator><name>applyCached</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>recipient</name></decl></parameter></parameter_list> -&gt; <block>{
+          <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></finally>
+  }</block></function>
+
+  <comment type="line">// XXX This shouldn't be here, and is just a temporary workaround</comment>
+  <function><specifier>public</specifier> <type><name>RegisteredState</name></type> <name>isRegistered</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>REGISTERED</name></expr>}</block></expr></argument>, <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>RegisteredState</name><operator>.</operator><name>fromId</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return></block></then>
+      <else>else                                        <block type="pseudo"><return>return <expr><name><name>RegisteredState</name><operator>.</operator><name>UNKNOWN</name></name></expr>;</return></block></else></if>
+    }</block></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateOrInsert</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>ContentValues</name></type> <name>contentValues</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>beginTransaction</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>updated</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                                  <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>updated</name> <operator>&lt;</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>setTransactionSuccessful</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>endTransaction</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> class <name>BulkOperationsHandle</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SQLiteDatabase</name></type> <name>database</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>, <argument><name>PendingContactInfo</name></argument>&gt;</argument_list></name></type> <name>pendingContactInfoMap</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <constructor><name>BulkOperationsHandle</name><parameter_list>(<parameter><decl><type><name>SQLiteDatabase</name></type> <name>database</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>database</name></name> <operator>=</operator> <name>database</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setSystemContactInfo</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>displayName</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>photoUri</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemPhoneLabel</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemContactUri</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_DISPLAY_NAME</name></expr></argument>, <argument><expr><name>displayName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_PHOTO_URI</name></expr></argument>, <argument><expr><name>photoUri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_PHONE_LABEL</name></expr></argument>, <argument><expr><name>systemPhoneLabel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SYSTEM_CONTACT_URI</name></expr></argument>, <argument><expr><name>systemContactUri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>updateOrInsert</name><argument_list>(<argument><expr><name>address</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>pendingContactInfoMap</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>address</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>PendingContactInfo</name><argument_list>(<argument><expr><name>displayName</name></expr></argument>, <argument><expr><name>photoUri</name></expr></argument>, <argument><expr><name>systemPhoneLabel</name></expr></argument>, <argument><expr><name>systemContactUri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>finish</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>setTransactionSuccessful</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>endTransaction</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>pendingContactInfoMap</name><operator>.</operator><name>entrySet</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>forEach</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>entry</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Recipient</name><operator>.</operator><name>applyCached</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>recipient</name></decl></parameter></parameter_list> -&gt; <block>{
+              <expr><call><name><name>recipient</name><operator>.</operator><name>setName</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><name>displayName</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument></argument_list></call></expr></block></lambda></expr></argument>;
+              <argument><expr><call><name><name>recipient</name><operator>.</operator><name>setSystemContactPhoto</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><name>photoUri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>;
+              <argument><expr><call><name><name>recipient</name><operator>.</operator><name>setCustomLabel</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><name>phoneLabel</name></expr></argument>)</argument_list></call></expr></argument>;
+              <argument><expr><call><name><name>recipient</name><operator>.</operator><name>setContactUri</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><name>contactUri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>;</argument_list></call></expr></expr_stmt>
+            }</block></function>)</block></class>)</block>;</class>
+    }
+  }
+
+  <interface><specifier>public</specifier> interface <name>ColorUpdater</name> <block>{
+    <function_decl><type><name>MaterialColor</name></type> <name>update</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>color</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>RecipientSettings</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type>                <name>blocked</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>                   <name>muteUntil</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>VibrateState</name></type>           <name>messageVibrateState</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>VibrateState</name></type>           <name>callVibrateState</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Uri</name></type>                    <name>messageRingtone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Uri</name></type>                    <name>callRingtone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MaterialColor</name></type>          <name>color</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type>                <name>seenInviteReminder</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                    <name>defaultSubscriptionId</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                    <name>expireMessages</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>RegisteredState</name></type>        <name>registered</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>                 <name>profileKey</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>systemDisplayName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>systemContactPhoto</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>systemPhoneLabel</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>systemContactUri</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>signalProfileName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>signalProfileAvatar</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type>                <name>profileSharing</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>                 <name>notificationChannel</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>UnidentifiedAccessMode</name></type> <name>unidentifiedAccessMode</name></decl>;</decl_stmt>
+
+    <constructor><name>RecipientSettings</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>blocked</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>muteUntil</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>VibrateState</name></type> <name>messageVibrateState</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>VibrateState</name></type> <name>callVibrateState</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>messageRingtone</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>callRingtone</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>MaterialColor</name></type> <name>color</name></decl></parameter>,
+                      <parameter><decl><type><name>boolean</name></type> <name>seenInviteReminder</name></decl></parameter>,
+                      <parameter><decl><type><name>int</name></type> <name>defaultSubscriptionId</name></decl></parameter>,
+                      <parameter><decl><type><name>int</name></type> <name>expireMessages</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>RegisteredState</name></type> <name>registered</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>profileKey</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemDisplayName</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemContactPhoto</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemPhoneLabel</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>systemContactUri</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>signalProfileName</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>signalProfileAvatar</name></decl></parameter>,
+                      <parameter><decl><type><name>boolean</name></type> <name>profileSharing</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>notificationChannel</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>UnidentifiedAccessMode</name></type> <name>unidentifiedAccessMode</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>blocked</name></name>                <operator>=</operator> <name>blocked</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>muteUntil</name></name>              <operator>=</operator> <name>muteUntil</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageVibrateState</name></name>    <operator>=</operator> <name>messageVibrateState</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>callVibrateState</name></name>       <operator>=</operator> <name>callVibrateState</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageRingtone</name></name>        <operator>=</operator> <name>messageRingtone</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>callRingtone</name></name>           <operator>=</operator> <name>callRingtone</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name>                  <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>seenInviteReminder</name></name>     <operator>=</operator> <name>seenInviteReminder</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>defaultSubscriptionId</name></name>  <operator>=</operator> <name>defaultSubscriptionId</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expireMessages</name></name>         <operator>=</operator> <name>expireMessages</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>registered</name></name>             <operator>=</operator> <name>registered</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>profileKey</name></name>             <operator>=</operator> <name>profileKey</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>systemDisplayName</name></name>      <operator>=</operator> <name>systemDisplayName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>systemContactPhoto</name></name>     <operator>=</operator> <name>systemContactPhoto</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>systemPhoneLabel</name></name>       <operator>=</operator> <name>systemPhoneLabel</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>systemContactUri</name></name>       <operator>=</operator> <name>systemContactUri</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>signalProfileName</name></name>      <operator>=</operator> <name>signalProfileName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>signalProfileAvatar</name></name>    <operator>=</operator> <name>signalProfileAvatar</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>profileSharing</name></name>         <operator>=</operator> <name>profileSharing</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>notificationChannel</name></name>    <operator>=</operator> <name>notificationChannel</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentifiedAccessMode</name></name> <operator>=</operator> <name>unidentifiedAccessMode</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>MaterialColor</name></type> <name>getColor</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>color</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isBlocked</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>blocked</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>long</name></type> <name>getMuteUntil</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>muteUntil</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>VibrateState</name></type> <name>getMessageVibrateState</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>messageVibrateState</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>VibrateState</name></type> <name>getCallVibrateState</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>callVibrateState</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>getMessageRingtone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>messageRingtone</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>getCallRingtone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>callRingtone</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>hasSeenInviteReminder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>seenInviteReminder</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>getDefaultSubscriptionId</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><ternary><condition><expr><name>defaultSubscriptionId</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr> ?</condition><then> <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>defaultSubscriptionId</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getExpireMessages</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>expireMessages</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>RegisteredState</name></type> <name>getRegistered</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>registered</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>byte</name><index>[]</index></name></type> <name>getProfileKey</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>profileKey</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getSystemDisplayName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>systemDisplayName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getSystemContactPhotoUri</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>systemContactPhoto</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getSystemPhoneLabel</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>systemPhoneLabel</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getSystemContactUri</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>systemContactUri</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getProfileName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>signalProfileName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getProfileAvatar</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>signalProfileAvatar</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isProfileSharing</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>profileSharing</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getNotificationChannel</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>notificationChannel</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>UnidentifiedAccessMode</name></type> <name>getUnidentifiedAccessMode</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>unidentifiedAccessMode</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>RecipientReader</name> <super><implements>implements <name>Closeable</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Cursor</name></type>  <name>cursor</name></decl>;</decl_stmt>
+
+    <constructor><name>RecipientReader</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cursor</name></name>  <operator>=</operator> <name>cursor</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Recipient</name></type> <name>getCurrent</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>serialized</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>serialized</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Recipient</name></type> <name>getNext</name><parameter_list>()</parameter_list> <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <return>return <expr><call><name>getCurrent</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>PendingContactInfo</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>displayName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>photoUri</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>phoneLabel</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>contactUri</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>PendingContactInfo</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>displayName</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>photoUri</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>phoneLabel</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>contactUri</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>displayName</name></name> <operator>=</operator> <name>displayName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>photoUri</name></name>    <operator>=</operator> <name>photoUri</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>phoneLabel</name></name>  <operator>=</operator> <name>phoneLabel</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contactUri</name></name>  <operator>=</operator> <name>contactUri</name></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+}
+</unit>

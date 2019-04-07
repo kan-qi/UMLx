@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\OutgoingLegacyMmsConnection.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2015 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>ConnectivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>NetworkInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>PduParser</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>SendConf</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>http</name><operator>.</operator><name>Header</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>http</name><operator>.</operator><name>HttpHost</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>http</name><operator>.</operator><name>client</name><operator>.</operator><name>config</name><operator>.</operator><name>RequestConfig</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>http</name><operator>.</operator><name>client</name><operator>.</operator><name>methods</name><operator>.</operator><name>HttpPostHC4</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>http</name><operator>.</operator><name>client</name><operator>.</operator><name>methods</name><operator>.</operator><name>HttpUriRequest</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>http</name><operator>.</operator><name>entity</name><operator>.</operator><name>ByteArrayEntityHC4</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>transport</name><operator>.</operator><name>UndeliverableMessageException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+
+<class><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>OutgoingLegacyMmsConnection</name> <super><extends>extends <name>LegacyMmsConnection</name></extends> <implements>implements <name>OutgoingMmsConnection</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>OutgoingLegacyMmsConnection</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>OutgoingLegacyMmsConnection</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>ApnUnavailableException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>HttpUriRequest</name></type> <name>constructRequest</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>useProxy</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>HttpPostHC4</name></type> <name>request</name> <init>= <expr><operator>new</operator> <call><name>HttpPostHC4</name><argument_list>(<argument><expr><call><name><name>apn</name><operator>.</operator><name>getMmsc</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <for>for <control>(<init><decl><type><name>Header</name></type> <name>header</name> <range>: <expr><call><name>getBaseHeaders</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>request</name><operator>.</operator><name>addHeader</name></name><argument_list>(<argument><expr><name>header</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <expr_stmt><expr><call><name><name>request</name><operator>.</operator><name>setEntity</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ByteArrayEntityHC4</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name>useProxy</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>HttpHost</name></type> <name>proxy</name> <init>= <expr><operator>new</operator> <call><name>HttpHost</name><argument_list>(<argument><expr><call><name><name>apn</name><operator>.</operator><name>getProxy</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>apn</name><operator>.</operator><name>getPort</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>request</name><operator>.</operator><name>setConfig</name></name><argument_list>(<argument><expr><call><name><name>RequestConfig</name><operator>.</operator><name>custom</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setProxy</name><argument_list>(<argument><expr><name>proxy</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <return>return <expr><name>request</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalArgumentException</name></type> <name>iae</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>iae</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>sendNotificationReceived</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>usingMmsRadio</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>useProxyIfAvailable</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <expr_stmt><expr><call><name>sendBytes</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><name>usingMmsRadio</name></expr></argument>, <argument><expr><name>useProxyIfAvailable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SendConf</name></type> <name>send</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>MmsRadio</name></type> <name>radio</name> <init>= <expr><call><name><name>MmsRadio</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name>isDirectConnect</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending MMS directly without radio change..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <try>try <block>{
+          <return>return <expr><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending MMS with radio change and proxy..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>radio</name><operator>.</operator><name>connect</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <try>try <block>{
+        <try>try <block>{
+          <return>return <expr><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending MMS with radio change and without proxy..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <try>try <block>{
+          <return>return <expr><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ioe</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>ioe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><name>ioe</name></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></catch></try>
+      }</block> <finally>finally <block>{
+        <expr_stmt><expr><call><name><name>radio</name><operator>.</operator><name>disconnect</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></finally></try>
+
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>MmsRadioException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>SendConf</name></type> <name>send</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>useMmsRadio</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>useProxyIfAvailable</name></decl></parameter>)</parameter_list>  <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>response</name> <init>= <expr><call><name>sendBytes</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><name>useMmsRadio</name></expr></argument>, <argument><expr><name>useProxyIfAvailable</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><operator>(</operator><name>SendConf</name><operator>)</operator> <operator>new</operator> <call><name>PduParser</name><argument_list>(<argument><expr><name>response</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>parse</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>sendBytes</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>useMmsRadio</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>useProxyIfAvailable</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>useProxy</name>   <init>= <expr><name>useProxyIfAvailable</name> <operator>&amp;&amp;</operator> <call><name><name>apn</name><operator>.</operator><name>hasProxy</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type>  <name>targetHost</name> <init>= <expr><ternary><condition><expr><name>useProxy</name></expr>
+                             ?</condition><then> <expr><call><name><name>apn</name><operator>.</operator><name>getProxy</name></name><argument_list>()</argument_list></call></expr>
+                             </then><else>: <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name><name>apn</name><operator>.</operator><name>getMmsc</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getHost</name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending MMS of length: "</literal> <operator>+</operator> <name><name>pduBytes</name><operator>.</operator><name>length</name></name>
+               <operator>+</operator> <operator>(</operator><ternary><condition><expr><name>useMmsRadio</name></expr> ?</condition><then> <expr><literal type="string">", using mms radio"</literal></expr> </then><else>: <expr><literal type="string">""</literal></expr></else></ternary><operator>)</operator>
+               <operator>+</operator> <operator>(</operator><ternary><condition><expr><name>useProxy</name></expr> ?</condition><then> <expr><literal type="string">", using proxy"</literal></expr> </then><else>: <expr><literal type="string">""</literal></expr></else></ternary><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <try>try <block>{
+      <if>if <condition>(<expr><call><name>checkRouteToHost</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>targetHost</name></expr></argument>, <argument><expr><name>useMmsRadio</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"got successful route to host "</literal> <operator>+</operator> <name>targetHost</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>response</name> <init>= <expr><call><name>execute</name><argument_list>(<argument><expr><call><name>constructRequest</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><name>useProxy</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>response</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>response</name></expr>;</return></block></then></if>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>ioe</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>ioe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+    <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Connection manager could not obtain route to host."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isConnectionPossible</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>ConnectivityManager</name></type> <name>connectivityManager</name> <init>= <expr><operator>(</operator><name>ConnectivityManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>CONNECTIVITY_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>NetworkInfo</name></type>         <name>networkInfo</name>         <init>= <expr><call><name><name>connectivityManager</name><operator>.</operator><name>getNetworkInfo</name></name><argument_list>(<argument><expr><name><name>MmsRadio</name><operator>.</operator><name>TYPE_MOBILE_MMS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>networkInfo</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"MMS network info was null, unsupported by this device"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name>getApn</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ApnUnavailableException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

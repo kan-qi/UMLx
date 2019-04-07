@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\VerificationCodeParser.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Matcher</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>VerificationCodeParser</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>CHALLENGE_PATTERN</name> <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">".*Your (Signal|TextSecure) verification code:? ([0-9]{3,4})-([0-9]{3,4}).*"</literal></expr></argument>, <argument><expr><name><name>Pattern</name><operator>.</operator><name>DOTALL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>parse</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>messageBody</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>messageBody</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Matcher</name></type> <name>challengeMatcher</name> <init>= <expr><call><name><name>CHALLENGE_PATTERN</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>messageBody</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>challengeMatcher</name><operator>.</operator><name>matches</name></name><argument_list>()</argument_list></call> <operator>||</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isVerifying</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>challengeMatcher</name><operator>.</operator><name>group</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call> <operator>+</operator> <call><name><name>challengeMatcher</name><operator>.</operator><name>group</name></name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

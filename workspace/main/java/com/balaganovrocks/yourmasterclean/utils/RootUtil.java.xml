@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\utils\RootUtil.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>DataInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>DataOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>RootUtil</name> <block>{
+
+
+    <comment type="block" format="javadoc">/**
+     * è°ç¨suè·årootæéåæzlsuåå°system/binç®å½ä¸
+     * ä»¥ä¾¿æ°¸ä¹è·årootæéï¼ä¸æ¦è·åæåï¼ä¸æ¬¡ä¸åè°ç¨suï¼
+     *
+     * @param ctx
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>preparezlsu</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>ctx</name></decl></parameter>)</parameter_list> <block>{
+        <try>try <block>{
+            <decl_stmt><decl><type><name>File</name></type> <name>zlsu</name> <init>= <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><literal type="string">"/system/bin/"</literal> <operator>+</operator> <name><name>Constants</name><operator>.</operator><name>ROOT_SU</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <comment type="line">// if (!zlsu.exists())</comment>
+            <comment type="line">// {</comment>
+            <comment type="line">// Toast toast = Toast.makeText(ctx,</comment>
+            <comment type="line">// "Unable to find /system/bin/zlsu.", Toast.LENGTH_LONG);</comment>
+            <comment type="line">// toast.show();</comment>
+            <comment type="line">// return;</comment>
+            <comment type="line">// }</comment>
+
+            <decl_stmt><decl><type><name>InputStream</name></type> <name>suStream</name> <init>= <expr><call><name><name>ctx</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>openRawResource</name><argument_list>(
+                    <argument><expr><name><name>R</name><operator>.</operator><name>raw</name><operator>.</operator><name>zlsu</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <comment type="block" format="javadoc">/**
+             * å¦æzlsuå­å¨ï¼åårawç®å½ä¸çzlsuæ¯è¾å¤§å°ï¼å¤§å°ç¸ååä¸æ¿æ¢
+             */</comment>
+            <if>if <condition>(<expr><call><name><name>zlsu</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                <if>if <condition>(<expr><call><name><name>zlsu</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>suStream</name><operator>.</operator><name>available</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>suStream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                    <return>return;</return>
+                }</block></then></if>
+            }</block></then></if>
+
+            <comment type="line">// File superuser = new File("/system/bin/superuser");</comment>
+            <comment type="line">//</comment>
+            <comment type="line">// if (superuser.exists())</comment>
+            <comment type="line">// {</comment>
+            <comment type="line">// // return device to original state</comment>
+            <comment type="line">// Process process = Runtime.getRuntime().exec("superuser");</comment>
+            <comment type="line">// DataOutputStream os = new</comment>
+            <comment type="line">// DataOutputStream(process.getOutputStream());</comment>
+            <comment type="line">//</comment>
+            <comment type="line">// os.writeBytes("mount -oremount,rw /dev/block/mtdblock3 /system\n");</comment>
+            <comment type="line">// os.writeBytes("busybox cp /system/bin/superuser /system/bin/su\n");</comment>
+            <comment type="line">// os.writeBytes("busybox chown 0:0 /system/bin/su\n");</comment>
+            <comment type="line">// os.writeBytes("chmod 4755 /system/bin/su\n");</comment>
+            <comment type="line">// os.writeBytes("rm /system/bin/superuser\n");</comment>
+            <comment type="line">// os.writeBytes("exit\n");</comment>
+            <comment type="line">// os.flush();</comment>
+            <comment type="line">// }</comment>
+
+            <comment type="block" format="javadoc">/**
+             * åæzlsu åå°/data/data/com.zl.movepkgdemoä¸­ ç¶ååè°ç¨ su æé åå°
+             * /system/binç®å½ä¸
+             */</comment>
+            <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><call><name><name>suStream</name><operator>.</operator><name>available</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>DataInputStream</name></type> <name>dis</name> <init>= <expr><operator>new</operator> <call><name>DataInputStream</name><argument_list>(<argument><expr><name>suStream</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>dis</name><operator>.</operator><name>readFully</name></name><argument_list>(<argument><expr><name>bytes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>String</name></type> <name>pkgPath</name> <init>= <expr><call><name><name>ctx</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>getPackageName</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <comment type="line">// "/data/data/com.zl.movepkgdemo/zlsu"</comment>
+            <decl_stmt><decl><type><name>String</name></type> <name>zlsuPath</name> <init>= <expr><literal type="string">"/data/data/"</literal> <operator>+</operator> <name>pkgPath</name> <operator>+</operator> <name><name>File</name><operator>.</operator><name>separator</name></name> <operator>+</operator> <name><name>Constants</name><operator>.</operator><name>ROOT_SU</name></name></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>File</name></type> <name>zlsuFileInData</name> <init>= <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><name>zlsuPath</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>zlsuFileInData</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>out</name><operator>.</operator><name>println</name></name><argument_list>(<argument><expr><name>zlsuPath</name> <operator>+</operator> <literal type="string">" not exist! "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <try>try <block>{
+                    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>out</name><operator>.</operator><name>println</name></name><argument_list>(<argument><expr><literal type="string">"creating "</literal> <operator>+</operator> <name>zlsuPath</name> <operator>+</operator> <literal type="string">"......"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt><expr><call><name><name>zlsuFileInData</name><operator>.</operator><name>createNewFile</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>out</name><operator>.</operator><name>println</name></name><argument_list>(<argument><expr><literal type="string">"create "</literal> <operator>+</operator> <name>zlsuPath</name> <operator>+</operator> <literal type="string">" failed ! "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></catch></try>
+                <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>out</name><operator>.</operator><name>println</name></name><argument_list>(<argument><expr><literal type="string">"create "</literal> <operator>+</operator> <name>zlsuPath</name> <operator>+</operator> <literal type="string">" successfully ! "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+            <decl_stmt><decl><type><name>FileOutputStream</name></type> <name>suOutStream</name> <init>= <expr><operator>new</operator> <call><name>FileOutputStream</name><argument_list>(<argument><expr><name>zlsuPath</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>suOutStream</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>bytes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>suOutStream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+            <decl_stmt><decl><type><name>Process</name></type> <name>process</name> <init>= <expr><call><name><name>Runtime</name><operator>.</operator><name>getRuntime</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><literal type="string">"su"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>DataOutputStream</name></type> <name>os</name> <init>= <expr><operator>new</operator> <call><name>DataOutputStream</name><argument_list>(
+                    <argument><expr><call><name><name>process</name><operator>.</operator><name>getOutputStream</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><literal type="string">"mount -oremount,rw /dev/block/mtdblock3 /system\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//			"busybox cp /data/data/com.zl.movepkgdemo/zlsu /system/bin/zlsu \n"</comment>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><literal type="string">"busybox cp "</literal> <operator>+</operator> <name>zlsuPath</name> <operator>+</operator> <literal type="string">" /system/bin/"</literal>
+                    <operator>+</operator> <name><name>Constants</name><operator>.</operator><name>ROOT_SU</name></name> <operator>+</operator> <literal type="string">"\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//			"busybox chown 0:0 /system/bin/zlsu \n"</comment>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><literal type="string">"busybox chown 0:0 /system/bin/"</literal> <operator>+</operator> <name><name>Constants</name><operator>.</operator><name>ROOT_SU</name></name>
+                    <operator>+</operator> <literal type="string">"\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//			"chmod 4755 /system/bin/zlsu \n"</comment>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><literal type="string">"chmod 4755 /system/bin/"</literal> <operator>+</operator> <name><name>Constants</name><operator>.</operator><name>ROOT_SU</name></name> <operator>+</operator> <literal type="string">"\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><literal type="string">"exit\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>flush</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+<comment type="line">//			Toast toast = Toast</comment>
+<comment type="line">//					.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);</comment>
+<comment type="line">//			toast.show();</comment>
+            <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>out</name><operator>.</operator><name>println</name></name><argument_list>(<argument><expr><literal type="string">"RootUtil preparezlsu: error"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+    }</block></function>
+}</block></class>
+</unit>

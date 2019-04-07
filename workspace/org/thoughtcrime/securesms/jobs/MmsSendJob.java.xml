@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\MmsSendJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>MimeTypeMap</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>dom</name><operator>.</operator><name>smil</name><operator>.</operator><name>parser</name><operator>.</operator><name>SmilXmlSerializer</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>ContentType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>InvalidHeaderValueException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>CharacterSets</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>EncodedStringValue</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>PduBody</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>PduComposer</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>PduHeaders</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>PduPart</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>SendConf</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>SendReq</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>smil</name><operator>.</operator><name>SmilHelper</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>klinker</name><operator>.</operator><name>android</name><operator>.</operator><name>send_message</name><operator>.</operator><name>Utils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>NoSuchMessageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>ThreadDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>CompatMmsConnection</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MediaConstraints</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MmsException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MmsSendResult</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>OutgoingMediaMessage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartAuthority</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>MessageNotifier</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>transport</name><operator>.</operator><name>InsecureFallbackApprovalException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>transport</name><operator>.</operator><name>UndeliverableMessageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Hex</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>NumberUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MmsSendJob</name> <super><extends>extends <name>SendJob</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>serialVersionUID</name> <init>= <expr><literal type="number">0L</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MmsSendJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_MESSAGE_ID</name> <init>= <expr><literal type="string">"message_id"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type> <name>messageId</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>MmsSendJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>MmsSendJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withGroupId</name><argument_list>(<argument><expr><literal type="string">"mms-operation"</literal></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>withNetworkRequirement</name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withRetryCount</name><argument_list>(<argument><expr><literal type="number">15</literal></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageId</name></name> <operator>=</operator> <name>messageId</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>messageId</name> <operator>=</operator> <call><name><name>data</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>KEY_MESSAGE_ID</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>putLong</name></name><argument_list>(<argument><expr><name>KEY_MESSAGE_ID</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onSend</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>MmsException</name></expr></argument>, <argument><expr><name>NoSuchMessageException</name></expr></argument>, <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>MmsDatabase</name></type>          <name>database</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>OutgoingMediaMessage</name></type> <name>message</name>  <init>= <expr><call><name><name>database</name><operator>.</operator><name>getOutgoingMessage</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>database</name><operator>.</operator><name>isSent</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Message "</literal> <operator>+</operator> <name>messageId</name> <operator>+</operator> <literal type="string">" was already sent. Ignoring."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sending message: "</literal> <operator>+</operator> <name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>SendReq</name></type> <name>pdu</name> <init>= <expr><call><name>constructSendPdu</name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name>validateDestinations</name><argument_list>(<argument><expr><name>message</name></expr></argument>, <argument><expr><name>pdu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>        <name>pduBytes</name> <init>= <expr><call><name>getPduBytes</name><argument_list>(<argument><expr><name>pdu</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>SendConf</name></type>      <name>sendConf</name> <init>= <expr><operator>new</operator> <call><name>CompatMmsConnection</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>send</name><argument_list>(<argument><expr><name>pduBytes</name></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getSubscriptionId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>MmsSendResult</name></type> <name>result</name>   <init>= <expr><call><name>getSendResult</name><argument_list>(<argument><expr><name>sendConf</name></expr></argument>, <argument><expr><name>pdu</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>markAsSent</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>markAttachmentsUploaded</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getAttachments</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sent message: "</literal> <operator>+</operator> <name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>UndeliverableMessageException</name></type> | <type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>markAsSentFailed</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyMediaMessageDeliveryFailed</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>InsecureFallbackApprovalException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>markAsPendingInsecureSmsFallback</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyMediaMessageDeliveryFailed</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>exception</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onCanceled() messageId: "</literal> <operator>+</operator> <name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>markAsSentFailed</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyMediaMessageDeliveryFailed</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getPduBytes</name><parameter_list>(<parameter><decl><type><name>SendReq</name></type> <name>message</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name>UndeliverableMessageException</name></expr></argument>, <argument><expr><name>InsecureFallbackApprovalException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pduBytes</name> <init>= <expr><operator>new</operator> <call><name>PduComposer</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>message</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>make</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>pduBytes</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"PDU composition failed, null payload"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <return>return <expr><name>pduBytes</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>MmsSendResult</name></type> <name>getSendResult</name><parameter_list>(<parameter><decl><type><name>SendConf</name></type> <name>conf</name></decl></parameter>, <parameter><decl><type><name>SendReq</name></type> <name>message</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws>
+  <block>{
+    <if>if <condition>(<expr><name>conf</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"No M-Send.conf received in response to send."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>conf</name><operator>.</operator><name>getResponseStatus</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>PduHeaders</name><operator>.</operator><name>RESPONSE_STATUS_OK</name></name></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"Got bad response: "</literal> <operator>+</operator> <call><name><name>conf</name><operator>.</operator><name>getResponseStatus</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>isInconsistentResponse</name><argument_list>(<argument><expr><name>message</name></expr></argument>, <argument><expr><name>conf</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"Mismatched response!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><operator>new</operator> <call><name>MmsSendResult</name><argument_list>(<argument><expr><call><name><name>conf</name><operator>.</operator><name>getMessageId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>conf</name><operator>.</operator><name>getResponseStatus</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>isInconsistentResponse</name><parameter_list>(<parameter><decl><type><name>SendReq</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>SendConf</name></type> <name>response</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Comparing: "</literal> <operator>+</operator> <call><name><name>Hex</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getTransactionId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"With:      "</literal> <operator>+</operator> <call><name><name>Hex</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>response</name><operator>.</operator><name>getTransactionId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><operator>!</operator><call><name><name>Arrays</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getTransactionId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>response</name><operator>.</operator><name>getTransactionId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>validateDestinations</name><parameter_list>(<parameter><decl><type><name><name>EncodedStringValue</name><index>[]</index></name></type> <name>destinations</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><name>destinations</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <for>for <control>(<init><decl><type><name>EncodedStringValue</name></type> <name>destination</name> <range>: <expr><name>destinations</name></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><name>destination</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>NumberUtil</name><operator>.</operator><name>isValidSmsOrEmail</name></name><argument_list>(<argument><expr><call><name><name>destination</name><operator>.</operator><name>getString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"Invalid destination: "</literal> <operator>+</operator>
+                                                <operator>(</operator><ternary><condition><expr><name>destination</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>destination</name><operator>.</operator><name>getString</name></name><argument_list>()</argument_list></call></expr></else></ternary><operator>)</operator></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></then></if>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>validateDestinations</name><parameter_list>(<parameter><decl><type><name>OutgoingMediaMessage</name></type> <name>media</name></decl></parameter>, <parameter><decl><type><name>SendReq</name></type> <name>message</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name>validateDestinations</name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getTo</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>validateDestinations</name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getCc</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>validateDestinations</name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getBcc</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>message</name><operator>.</operator><name>getTo</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>message</name><operator>.</operator><name>getCc</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>message</name><operator>.</operator><name>getBcc</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"No to, cc, or bcc specified!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>media</name><operator>.</operator><name>isSecure</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><literal type="string">"Attempt to send encrypted MMS?"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>SendReq</name></type> <name>constructSendPdu</name><parameter_list>(<parameter><decl><type><name>OutgoingMediaMessage</name></type> <name>message</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>SendReq</name></type>          <name>req</name>               <init>= <expr><operator>new</operator> <call><name>SendReq</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>           <name>lineNumber</name>        <init>= <expr><call><name>getMyNumber</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Address</name></type>          <name>destination</name>       <init>= <expr><call><name><name>message</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>MediaConstraints</name></type> <name>mediaConstraints</name>  <init>= <expr><call><name><name>MediaConstraints</name><operator>.</operator><name>getMmsMediaConstraints</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getSubscriptionId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>scaledAttachments</name> <init>= <expr><call><name>scaleAndStripExifFromAttachments</name><argument_list>(<argument><expr><name>mediaConstraints</name></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getAttachments</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>lineNumber</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setFrom</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EncodedStringValue</name><argument_list>(<argument><expr><name>lineNumber</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setFrom</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EncodedStringValue</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <if>if <condition>(<expr><call><name><name>destination</name><operator>.</operator><name>isMmsGroup</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>members</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroupMembers</name><argument_list>(<argument><expr><call><name><name>destination</name><operator>.</operator><name>toGroupString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>member</name> <range>: <expr><name>members</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>message</name><operator>.</operator><name>getDistributionType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ThreadDatabase</name><operator>.</operator><name>DistributionTypes</name><operator>.</operator><name>BROADCAST</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>addBcc</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EncodedStringValue</name><argument_list>(<argument><expr><call><name><name>member</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>addTo</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EncodedStringValue</name><argument_list>(<argument><expr><call><name><name>member</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></for>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>addTo</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EncodedStringValue</name><argument_list>(<argument><expr><call><name><name>destination</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setDate</name></name><argument_list>(<argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>PduBody</name></type> <name>body</name> <init>= <expr><operator>new</operator> <call><name>PduBody</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>     <name>size</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>PduPart</name></type> <name>part</name> <init>= <expr><operator>new</operator> <call><name>PduPart</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>name</name> <init>= <expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setData</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>toUtf8Bytes</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setCharset</name></name><argument_list>(<argument><expr><name><name>CharacterSets</name><operator>.</operator><name>UTF_8</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setContentType</name></name><argument_list>(<argument><expr><call><name><name>ContentType</name><operator>.</operator><name>TEXT_PLAIN</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setContentId</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setContentLocation</name></name><argument_list>(<argument><expr><operator>(</operator><name>name</name> <operator>+</operator> <literal type="string">".txt"</literal><operator>)</operator><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setName</name></name><argument_list>(<argument><expr><operator>(</operator><name>name</name> <operator>+</operator> <literal type="string">".txt"</literal><operator>)</operator><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>body</name><operator>.</operator><name>addPart</name></name><argument_list>(<argument><expr><name>part</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>size</name> <operator>+=</operator> <call><name>getPartSize</name><argument_list>(<argument><expr><name>part</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <for>for <control>(<init><decl><type><name>Attachment</name></type> <name>attachment</name> <range>: <expr><name>scaledAttachments</name></expr></range></decl></init>)</control> <block>{
+      <try>try <block>{
+        <if>if <condition>(<expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Assertion failed, attachment for outgoing MMS has no data!"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+
+        <decl_stmt><decl><type><name>String</name></type>  <name>fileName</name> <init>= <expr><call><name><name>attachment</name><operator>.</operator><name>getFileName</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>PduPart</name></type> <name>part</name>     <init>= <expr><operator>new</operator> <call><name>PduPart</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>fileName</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name>fileName</name>      <operator>=</operator> <call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getSecureRandom</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>nextLong</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <decl_stmt><decl><type><name>String</name></type> <name>fileExtension</name> <init>= <expr><call><name><name>MimeTypeMap</name><operator>.</operator><name>getSingleton</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getExtensionFromMimeType</name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><name>fileExtension</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>fileName</name> <operator>=</operator> <name>fileName</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>fileExtension</name></expr>;</expr_stmt></block></then></if>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>startsWith</name><argument_list>(<argument><expr><literal type="string">"text"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setCharset</name></name><argument_list>(<argument><expr><name><name>CharacterSets</name><operator>.</operator><name>UTF_8</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setContentType</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setContentLocation</name></name><argument_list>(<argument><expr><call><name><name>fileName</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setName</name></name><argument_list>(<argument><expr><call><name><name>fileName</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>index</name> <init>= <expr><call><name><name>fileName</name><operator>.</operator><name>lastIndexOf</name></name><argument_list>(<argument><expr><literal type="string">"."</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>contentId</name> <init>= <expr><ternary><condition><expr><operator>(</operator><name>index</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal><operator>)</operator></expr> ?</condition><then> <expr><name>fileName</name></expr> </then><else>: <expr><call><name><name>fileName</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>index</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setContentId</name></name><argument_list>(<argument><expr><call><name><name>contentId</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>part</name><operator>.</operator><name>setData</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>readFully</name></name><argument_list>(<argument><expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>body</name><operator>.</operator><name>addPart</name></name><argument_list>(<argument><expr><name>part</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>size</name> <operator>+=</operator> <call><name>getPartSize</name><argument_list>(<argument><expr><name>part</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></for>
+
+    <decl_stmt><decl><type><name>ByteArrayOutputStream</name></type> <name>out</name> <init>= <expr><operator>new</operator> <call><name>ByteArrayOutputStream</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>SmilXmlSerializer</name><operator>.</operator><name>serialize</name></name><argument_list>(<argument><expr><call><name><name>SmilHelper</name><operator>.</operator><name>createSmilDocument</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>out</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>PduPart</name></type> <name>smilPart</name> <init>= <expr><operator>new</operator> <call><name>PduPart</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>smilPart</name><operator>.</operator><name>setContentId</name></name><argument_list>(<argument><expr><literal type="string">"smil"</literal><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>smilPart</name><operator>.</operator><name>setContentLocation</name></name><argument_list>(<argument><expr><literal type="string">"smil.xml"</literal><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>smilPart</name><operator>.</operator><name>setContentType</name></name><argument_list>(<argument><expr><call><name><name>ContentType</name><operator>.</operator><name>APP_SMIL</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>smilPart</name><operator>.</operator><name>setData</name></name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>toByteArray</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>body</name><operator>.</operator><name>addPart</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>smilPart</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setBody</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setMessageSize</name></name><argument_list>(<argument><expr><name>size</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setMessageClass</name></name><argument_list>(<argument><expr><call><name><name>PduHeaders</name><operator>.</operator><name>MESSAGE_CLASS_PERSONAL_STR</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setExpiry</name></name><argument_list>(<argument><expr><literal type="number">7</literal> <operator>*</operator> <literal type="number">24</literal> <operator>*</operator> <literal type="number">60</literal> <operator>*</operator> <literal type="number">60</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setPriority</name></name><argument_list>(<argument><expr><name><name>PduHeaders</name><operator>.</operator><name>PRIORITY_NORMAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setDeliveryReport</name></name><argument_list>(<argument><expr><name><name>PduHeaders</name><operator>.</operator><name>VALUE_NO</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>req</name><operator>.</operator><name>setReadReport</name></name><argument_list>(<argument><expr><name><name>PduHeaders</name><operator>.</operator><name>VALUE_NO</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidHeaderValueException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{}</block></catch></try>
+
+    <return>return <expr><name>req</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>long</name></type> <name>getPartSize</name><parameter_list>(<parameter><decl><type><name>PduPart</name></type> <name>part</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>part</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call><operator>.</operator><name>length</name> <operator>+</operator> <call><name><name>part</name><operator>.</operator><name>getContentLocation</name></name><argument_list>()</argument_list></call><operator>.</operator><name>length</name> <operator>+</operator>
+        <call><name><name>part</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call><operator>.</operator><name>length</name> <operator>+</operator> <call><name><name>part</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call><operator>.</operator><name>length</name> <operator>+</operator>
+        <call><name><name>part</name><operator>.</operator><name>getContentId</name></name><argument_list>()</argument_list></call><operator>.</operator><name>length</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>notifyMediaMessageDeliveryFailed</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type>      <name>threadId</name>  <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdForMessage</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getRecipientForThreadId</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>recipient</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>notifyMessageDeliveryFailed</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>getMyNumber</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>UndeliverableMessageException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>Utils</name><operator>.</operator><name>getMyPhoneNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>SecurityException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>UndeliverableMessageException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

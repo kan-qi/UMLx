@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\CornerMask.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Path</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuffXfermode</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>RectF</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CornerMask</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>float</name><index>[]</index></name></type> <name>radii</name>      <init>= <expr><operator>new</operator> <name><name>float</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Paint</name></type>   <name>clearPaint</name> <init>= <expr><operator>new</operator> <call><name>Paint</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Path</name></type>    <name>outline</name>    <init>= <expr><operator>new</operator> <call><name>Path</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Path</name></type>    <name>corners</name>    <init>= <expr><operator>new</operator> <call><name>Path</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>RectF</name></type>   <name>bounds</name>     <init>= <expr><operator>new</operator> <call><name>RectF</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CornerMask</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>isLegacy</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setLayerType</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>LAYER_TYPE_SOFTWARE</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setLayerType</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>LAYER_TYPE_HARDWARE</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>clearPaint</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name><name>Color</name><operator>.</operator><name>BLACK</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>clearPaint</name><operator>.</operator><name>setStyle</name></name><argument_list>(<argument><expr><name><name>Paint</name><operator>.</operator><name>Style</name><operator>.</operator><name>FILL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>clearPaint</name><operator>.</operator><name>setAntiAlias</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>clearPaint</name><operator>.</operator><name>setXfermode</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PorterDuffXfermode</name><argument_list>(<argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>CLEAR</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>mask</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>bounds</name><operator>.</operator><name>left</name></name>   <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>bounds</name><operator>.</operator><name>top</name></name>    <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>bounds</name><operator>.</operator><name>right</name></name>  <operator>=</operator> <call><name><name>canvas</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>bounds</name><operator>.</operator><name>bottom</name></name> <operator>=</operator> <call><name><name>canvas</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>corners</name><operator>.</operator><name>reset</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>corners</name><operator>.</operator><name>addRoundRect</name></name><argument_list>(<argument><expr><name>bounds</name></expr></argument>, <argument><expr><name>radii</name></expr></argument>, <argument><expr><name><name>Path</name><operator>.</operator><name>Direction</name><operator>.</operator><name>CW</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Note: There's a bug in the P beta where most PorterDuff modes aren't working. But CLEAR does.</comment>
+    <comment type="line">//       So we find and inverse path and use Mode.CLEAR for versions that support Path.op().</comment>
+    <comment type="line">//       See issue https://issuetracker.google.com/issues/111394085.</comment>
+    <if>if <condition>(<expr><operator>!</operator><call><name>isLegacy</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>outline</name><operator>.</operator><name>reset</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>outline</name><operator>.</operator><name>addRect</name></name><argument_list>(<argument><expr><name>bounds</name></expr></argument>, <argument><expr><name><name>Path</name><operator>.</operator><name>Direction</name><operator>.</operator><name>CW</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>outline</name><operator>.</operator><name>op</name></name><argument_list>(<argument><expr><name>corners</name></expr></argument>, <argument><expr><name><name>Path</name><operator>.</operator><name>Op</name><operator>.</operator><name>DIFFERENCE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawPath</name></name><argument_list>(<argument><expr><name>outline</name></expr></argument>, <argument><expr><name>clearPaint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>corners</name><operator>.</operator><name>addRoundRect</name></name><argument_list>(<argument><expr><name>bounds</name></expr></argument>, <argument><expr><name>radii</name></expr></argument>, <argument><expr><name><name>Path</name><operator>.</operator><name>Direction</name><operator>.</operator><name>CW</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>clipPath</name></name><argument_list>(<argument><expr><name>corners</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isLegacy</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <literal type="number">19</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setRadius</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setRadii</name><argument_list>(<argument><expr><name>radius</name></expr></argument>, <argument><expr><name>radius</name></expr></argument>, <argument><expr><name>radius</name></expr></argument>, <argument><expr><name>radius</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setRadii</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>topLeft</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>topRight</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>bottomRight</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>bottomLeft</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>=</operator> <name>topLeft</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">2</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">3</literal></expr>]</index></name> <operator>=</operator> <name>topRight</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">4</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">5</literal></expr>]</index></name> <operator>=</operator> <name>bottomRight</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">6</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">7</literal></expr>]</index></name> <operator>=</operator> <name>bottomLeft</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTopLeftRadius</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTopRightRadius</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">2</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">3</literal></expr>]</index></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setBottomRightRadius</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">4</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">5</literal></expr>]</index></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setBottomLeftRadius</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>radii</name><index>[<expr><literal type="number">6</literal></expr>]</index></name> <operator>=</operator> <name><name>radii</name><index>[<expr><literal type="number">7</literal></expr>]</index></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\sms\MessageSender.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MessagingDatabase</name><operator>.</operator><name>SyncMessageId</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsSmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>NoSuchMessageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>SmsMessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>SmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>ThreadDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MmsSendJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>PushGroupSendJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>PushMediaSendJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>PushTextSendJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>SmsSendJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MmsException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>OutgoingMediaMessage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>push</name><operator>.</operator><name>AccountManagerFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>ExpiringMessageManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceAccountManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>ContactTokenDetails</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MessageSender</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MessageSender</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>send</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>OutgoingTextMessage</name></type> <name>message</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>long</name></type> <name>threadId</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>forceSms</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name><name>SmsDatabase</name><operator>.</operator><name>InsertListener</name></name></type> <name>insertListener</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>SmsDatabase</name></type> <name>database</name>    <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Recipient</name></type>   <name>recipient</name>   <init>= <expr><call><name><name>message</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type>     <name>keyExchange</name> <init>= <expr><call><name><name>message</name><operator>.</operator><name>isKeyExchange</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>allocatedThreadId</name></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>threadId</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>allocatedThreadId</name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdFor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name>allocatedThreadId</name> <operator>=</operator> <name>threadId</name></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>messageId</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>insertMessageOutbox</name></name><argument_list>(<argument><expr><name>allocatedThreadId</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>insertListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>sendTextMessage</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>, <argument><expr><name>keyExchange</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>allocatedThreadId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>send</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>OutgoingMediaMessage</name></type> <name>message</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>long</name></type> <name>threadId</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>forceSms</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name><name>SmsDatabase</name><operator>.</operator><name>InsertListener</name></name></type> <name>insertListener</name></decl></parameter>)</parameter_list>
+  <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>ThreadDatabase</name></type> <name>threadDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MmsDatabase</name></type>    <name>database</name>       <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>long</name></type> <name>allocatedThreadId</name></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>threadId</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>allocatedThreadId</name> <operator>=</operator> <call><name><name>threadDatabase</name><operator>.</operator><name>getThreadIdFor</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getDistributionType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><name>allocatedThreadId</name> <operator>=</operator> <name>threadId</name></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>message</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>      <name>messageId</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>insertMessageOutbox</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>, <argument><expr><name>allocatedThreadId</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>, <argument><expr><name>insertListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name>sendMediaMessage</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>allocatedThreadId</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>MmsException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>threadId</name></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>resendGroupMessage</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>, <parameter><decl><type><name>Address</name></type> <name>filterAddress</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"Not Group"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+    <expr_stmt><expr><call><name>sendGroupPush</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>filterAddress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>resend</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type>       <name>messageId</name>   <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type>    <name>forceSms</name>    <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>isForcedSms</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type>    <name>keyExchange</name> <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>isKeyExchange</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>       <name>expiresIn</name>   <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Recipient</name></type>  <name>recipient</name>   <init>= <expr><call><name><name>messageRecord</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>sendMediaMessage</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>expiresIn</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>sendTextMessage</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>, <argument><expr><name>keyExchange</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendMediaMessage</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>forceSms</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>expiresIn</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><call><name>isLocalSelfSend</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>sendLocalMediaSelf</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>isGroupPushSend</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>sendGroupPush</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>!</operator><name>forceSms</name> <operator>&amp;&amp;</operator> <call><name>isPushMediaSend</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>sendMediaPush</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name>sendMms</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendTextMessage</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>,
+                                      <parameter><decl><type><name>boolean</name></type> <name>forceSms</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>keyExchange</name></decl></parameter>,
+                                      <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><call><name>isLocalSelfSend</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>forceSms</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>sendLocalTextSelf</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><operator>!</operator><name>forceSms</name> <operator>&amp;&amp;</operator> <call><name>isPushTextSend</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>keyExchange</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>sendTextPush</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name>sendSms</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendTextPush</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>JobManager</name></type> <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PushTextSendJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendMediaPush</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>JobManager</name></type> <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>PushMediaSendJob</name><operator>.</operator><name>enqueue</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>jobManager</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendGroupPush</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>Address</name></type> <name>filterAddress</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>JobManager</name></type> <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>PushGroupSendJob</name><operator>.</operator><name>enqueue</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>jobManager</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>filterAddress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendSms</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>JobManager</name></type> <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SmsSendJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendMms</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>JobManager</name></type> <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>MmsSendJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPushTextSend</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>keyExchange</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>keyExchange</name></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name>isPushDestination</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPushMediaSend</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>recipient</name><operator>.</operator><name>isGroupRecipient</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name>isPushDestination</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isGroupPushSend</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isGroup</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator>
+           <operator>!</operator><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isMmsGroup</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPushDestination</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>destination</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>destination</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRegistered</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>RecipientDatabase</name><operator>.</operator><name>RegisteredState</name><operator>.</operator><name>REGISTERED</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>destination</name><operator>.</operator><name>resolve</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getRegistered</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>RecipientDatabase</name><operator>.</operator><name>RegisteredState</name><operator>.</operator><name>NOT_REGISTERED</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <try>try <block>{
+        <decl_stmt><decl><type><name>SignalServiceAccountManager</name></type>   <name>accountManager</name> <init>= <expr><call><name><name>AccountManagerFactory</name><operator>.</operator><name>createManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>ContactTokenDetails</name></argument>&gt;</argument_list></name></type> <name>registeredUser</name> <init>= <expr><call><name><name>accountManager</name><operator>.</operator><name>getContact</name></name><argument_list>(<argument><expr><call><name><name>destination</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>registeredUser</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setRegistered</name><argument_list>(<argument><expr><name>destination</name></expr></argument>, <argument><expr><name><name>RecipientDatabase</name><operator>.</operator><name>RegisteredState</name><operator>.</operator><name>NOT_REGISTERED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setRegistered</name><argument_list>(<argument><expr><name>destination</name></expr></argument>, <argument><expr><name><name>RecipientDatabase</name><operator>.</operator><name>RegisteredState</name><operator>.</operator><name>REGISTERED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></else></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e1</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e1</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></catch></try>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isLocalSelfSend</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>forceSms</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>recipient</name><operator>.</operator><name>isLocalNumber</name></name><argument_list>()</argument_list></call>                       <operator>&amp;&amp;</operator>
+           <operator>!</operator><name>forceSms</name>                                       <operator>&amp;&amp;</operator>
+           <call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+           <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isMultiDevice</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendLocalMediaSelf</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>ExpiringMessageManager</name></type> <name>expirationManager</name>  <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getExpiringMessageManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>AttachmentDatabase</name></type>     <name>attachmentDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MmsDatabase</name></type>            <name>mmsDatabase</name>        <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MmsSmsDatabase</name></type>         <name>mmsSmsDatabase</name>     <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>OutgoingMediaMessage</name></type>   <name>message</name>            <init>= <expr><call><name><name>mmsDatabase</name><operator>.</operator><name>getOutgoingMessage</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SyncMessageId</name></type>          <name>syncId</name>             <init>= <expr><operator>new</operator> <call><name>SyncMessageId</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getSentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>Attachment</name></type> <name>attachment</name> <range>: <expr><call><name><name>message</name><operator>.</operator><name>getAttachments</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>attachmentDatabase</name><operator>.</operator><name>markAttachmentUploaded</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <expr_stmt><expr><call><name><name>mmsDatabase</name><operator>.</operator><name>markAsSent</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mmsDatabase</name><operator>.</operator><name>markUnidentified</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>mmsSmsDatabase</name><operator>.</operator><name>incrementDeliveryReceiptCount</name></name><argument_list>(<argument><expr><name>syncId</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mmsSmsDatabase</name><operator>.</operator><name>incrementReadReceiptCount</name></name><argument_list>(<argument><expr><name>syncId</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>message</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>message</name><operator>.</operator><name>isExpirationUpdate</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>mmsDatabase</name><operator>.</operator><name>markExpireStarted</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>expirationManager</name><operator>.</operator><name>scheduleDeletion</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchMessageException</name></type> | <type><name>MmsException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"Failed to update self-sent message."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>sendLocalTextSelf</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>ExpiringMessageManager</name></type> <name>expirationManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getExpiringMessageManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SmsDatabase</name></type>            <name>smsDatabase</name>       <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MmsSmsDatabase</name></type>         <name>mmsSmsDatabase</name>    <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SmsMessageRecord</name></type>       <name>message</name>           <init>= <expr><call><name><name>smsDatabase</name><operator>.</operator><name>getMessage</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SyncMessageId</name></type>          <name>syncId</name>            <init>= <expr><operator>new</operator> <call><name>SyncMessageId</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getDateSent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>smsDatabase</name><operator>.</operator><name>markAsSent</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>smsDatabase</name><operator>.</operator><name>markUnidentified</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>mmsSmsDatabase</name><operator>.</operator><name>incrementDeliveryReceiptCount</name></name><argument_list>(<argument><expr><name>syncId</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mmsSmsDatabase</name><operator>.</operator><name>incrementReadReceiptCount</name></name><argument_list>(<argument><expr><name>syncId</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>message</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>smsDatabase</name><operator>.</operator><name>markExpireStarted</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>expirationManager</name><operator>.</operator><name>scheduleDeletion</name></name><argument_list>(<argument><expr><call><name><name>message</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchMessageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"Failed to update self-sent message."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

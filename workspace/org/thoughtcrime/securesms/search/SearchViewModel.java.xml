@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\search\SearchViewModel.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>search</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>LiveData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>MutableLiveData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ViewModel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ViewModelProvider</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>ContentObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>search</name><operator>.</operator><name>model</name><operator>.</operator><name>SearchResult</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Debouncer</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A {@link ViewModel} for handling all the business logic and interactions that take place inside
+ * of the {@link SearchFragment}.
+ *
+ * This class should be view- and Android-agnostic, and therefore should contain no references to
+ * things like {@link android.content.Context}, {@link android.view.View},
+ * {@link android.support.v4.app.Fragment}, etc.
+ */</comment>
+<class>class <name>SearchViewModel</name> <super><extends>extends <name>ViewModel</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ObservingLiveData</name></type> <name>searchResult</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SearchRepository</name></type>  <name>searchRepository</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Debouncer</name></type>         <name>debouncer</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>lastQuery</name></decl>;</decl_stmt>
+
+  <constructor><specifier>private</specifier> <name>SearchViewModel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SearchRepository</name></type> <name>searchRepository</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>searchResult</name></name>     <operator>=</operator> <operator>new</operator> <call><name>ObservingLiveData</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>searchRepository</name></name> <operator>=</operator> <name>searchRepository</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>debouncer</name></name>        <operator>=</operator> <operator>new</operator> <call><name>Debouncer</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>searchResult</name><operator>.</operator><name>registerContentObserver</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>ContentObserver</name></super><argument_list>(<argument><expr><operator>new</operator> <call><name>Handler</name><argument_list>()</argument_list></call></expr></argument>)</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onChange</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>selfChange</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name>getLastQuery</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>searchRepository</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><call><name>getLastQuery</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>searchResult</name><operator>::</operator><name>postValue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><type><name><name>LiveData</name><argument_list type="generic">&lt;<argument><name>SearchResult</name></argument>&gt;</argument_list></name></type> <name>getSearchResult</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>searchResult</name></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>updateQuery</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>query</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>lastQuery</name> <operator>=</operator> <name>query</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>debouncer</name><operator>.</operator><name>publish</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>searchRepository</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>result</name></decl></parameter></parameter_list> -&gt; <block>{
+      <expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{</block></lambda></expr></argument></argument_list></call></expr></block></lambda></expr></argument></argument_list></call></expr>
+        if (query.equals(lastQuery</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>)</block> <block>{
+          <expr_stmt><expr><call><name><name>searchResult</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function> <else>else <block>{
+          <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else>
+      }</block></class>)<empty_stmt>;</empty_stmt>
+    }))<empty_stmt>;</empty_stmt>
+  }
+
+  @<function><type><name>NonNull</name>
+  <name>String</name></type> <name>getLastQuery</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><name>lastQuery</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">""</literal></expr> </then><else>: <expr><name>lastQuery</name></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCleared</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>debouncer</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>searchResult</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Ensures that the previous {@link SearchResult} is always closed whenever we set a new one.
+   */</comment>
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>ObservingLiveData</name> <super><extends>extends <name><name>MutableLiveData</name><argument_list type="generic">&lt;<argument><name>SearchResult</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ContentObserver</name></type> <name>observer</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setValue</name><parameter_list>(<parameter><decl><type><name>SearchResult</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>SearchResult</name></type> <name>previous</name> <init>= <expr><call><name>getValue</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>previous</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>previous</name><operator>.</operator><name>unregisterContentObserver</name></name><argument_list>(<argument><expr><name>observer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>previous</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>value</name><operator>.</operator><name>registerContentObserver</name></name><argument_list>(<argument><expr><name>observer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>SearchResult</name></type> <name>value</name> <init>= <expr><call><name>getValue</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>value</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>value</name><operator>.</operator><name>unregisterContentObserver</name></name><argument_list>(<argument><expr><name>observer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>value</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><type><name>void</name></type> <name>registerContentObserver</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ContentObserver</name></type> <name>observer</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>observer</name></name> <operator>=</operator> <name>observer</name></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Factory</name> <super><extends>extends <name><name>ViewModelProvider</name><operator>.</operator><name>NewInstanceFactory</name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SearchRepository</name></type> <name>searchRepository</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>Factory</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SearchRepository</name></type> <name>searchRepository</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>searchRepository</name></name> <operator>=</operator> <name>searchRepository</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>NonNull</name></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name> <extends>extends <name>ViewModel</name></extends></parameter>&gt;</parameter_list> <type><name>T</name></type> <name>create</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Class</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>modelClass</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>modelClass</name><operator>.</operator><name>cast</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SearchViewModel</name><argument_list>(<argument><expr><name>searchRepository</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+}
+</unit>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\service\ExpiringMessageManager.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>SmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Comparator</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>TreeSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Executor</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Executors</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ExpiringMessageManager</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ExpiringMessageManager</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>TreeSet</name><argument_list type="generic">&lt;<argument><name>ExpiringMessageReference</name></argument>&gt;</argument_list></name></type> <name>expiringMessageReferences</name> <init>= <expr><operator>new</operator> <call><name><name>TreeSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ExpiringMessageComparator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Executor</name></type>                          <name>executor</name>                  <init>= <expr><call><name><name>Executors</name><operator>.</operator><name>newSingleThreadExecutor</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SmsDatabase</name></type> <name>smsDatabase</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MmsDatabase</name></type> <name>mmsDatabase</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type>     <name>context</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ExpiringMessageManager</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>     <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>smsDatabase</name></name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mmsDatabase</name></name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>executor</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>LoadTask</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>executor</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ProcessTask</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>scheduleDeletion</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>mms</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>expiresInMillis</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>scheduleDeletion</name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>mms</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>expiresInMillis</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>scheduleDeletion</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>mms</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>startedAtTimestamp</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>expiresInMillis</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type> <name>expiresAtMillis</name> <init>= <expr><name>startedAtTimestamp</name> <operator>+</operator> <name>expiresInMillis</name></expr></init></decl>;</decl_stmt>
+
+    <synchronized>synchronized <init>(<expr><name>expiringMessageReferences</name></expr>)</init> <block>{
+      <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ExpiringMessageReference</name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>mms</name></expr></argument>, <argument><expr><name>expiresAtMillis</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>notifyAll</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>checkSchedule</name><parameter_list>()</parameter_list> <block>{
+    <synchronized>synchronized <init>(<expr><name>expiringMessageReferences</name></expr>)</init> <block>{
+      <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>notifyAll</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></synchronized>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>LoadTask</name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>SmsDatabase</name><operator>.</operator><name>Reader</name></name></type> <name>smsReader</name> <init>= <expr><call><name><name>smsDatabase</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><call><name><name>smsDatabase</name><operator>.</operator><name>getExpirationStartedMessages</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>MmsDatabase</name><operator>.</operator><name>Reader</name></name></type> <name>mmsReader</name> <init>= <expr><call><name><name>mmsDatabase</name><operator>.</operator><name>getExpireStartedMessages</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><operator>(</operator><name>messageRecord</name> <operator>=</operator> <call><name><name>smsReader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ExpiringMessageReference</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getExpireStarted</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+
+      <while>while <condition>(<expr><operator>(</operator><name>messageRecord</name> <operator>=</operator> <call><name><name>mmsReader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ExpiringMessageReference</name><argument_list>(<argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                   <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getExpireStarted</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+
+      <expr_stmt><expr><call><name><name>smsReader</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mmsReader</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"InfiniteLoopStatement"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> class <name>ProcessTask</name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+      <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>ExpiringMessageReference</name></type> <name>expiredMessage</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+        <synchronized>synchronized <init>(<expr><name>expiringMessageReferences</name></expr>)</init> <block>{
+          <try>try <block>{
+            <while>while <condition>(<expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition> <block type="pseudo"><expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>wait</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></while>
+
+            <decl_stmt><decl><type><name>ExpiringMessageReference</name></type> <name>nextReference</name> <init>= <expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>first</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>long</name></type>                     <name>waitTime</name>      <init>= <expr><name><name>nextReference</name><operator>.</operator><name>expiresAtMillis</name></name> <operator>-</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <if>if <condition>(<expr><name>waitTime</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+              <expr_stmt><expr><call><name><name>ExpirationListener</name><operator>.</operator><name>setAlarm</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>waitTime</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>wait</name></name><argument_list>(<argument><expr><name>waitTime</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+              <expr_stmt><expr><name>expiredMessage</name> <operator>=</operator> <name>nextReference</name></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>expiringMessageReferences</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>nextReference</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+
+          }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch></try>
+        }</block></synchronized>
+
+        <if>if <condition>(<expr><name>expiredMessage</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <if>if <condition>(<expr><name><name>expiredMessage</name><operator>.</operator><name>mms</name></name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>mmsDatabase</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name><name>expiredMessage</name><operator>.</operator><name>id</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+          <else>else                    <block type="pseudo"><expr_stmt><expr><call><name><name>smsDatabase</name><operator>.</operator><name>deleteMessage</name></name><argument_list>(<argument><expr><name><name>expiredMessage</name><operator>.</operator><name>id</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+        }</block></then></if>
+      }</block></while>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>ExpiringMessageReference</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>id</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>mms</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>expiresAtMillis</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>ExpiringMessageReference</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>mms</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>expiresAtMillis</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>id</name></name> <operator>=</operator> <name>id</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mms</name></name> <operator>=</operator> <name>mms</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiresAtMillis</name></name> <operator>=</operator> <name>expiresAtMillis</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>equals</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>other</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>other</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">false</literal></expr>;</return></block></then></if>
+      <if>if <condition>(<expr><operator>!</operator><operator>(</operator><name>other</name> <operator>instanceof</operator> <name>ExpiringMessageReference</name><operator>)</operator></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">false</literal></expr>;</return></block></then></if>
+
+      <decl_stmt><decl><type><name>ExpiringMessageReference</name></type> <name>that</name> <init>= <expr><operator>(</operator><name>ExpiringMessageReference</name><operator>)</operator><name>other</name></expr></init></decl>;</decl_stmt>
+      <return>return <expr><name><name>this</name><operator>.</operator><name>id</name></name> <operator>==</operator> <name><name>that</name><operator>.</operator><name>id</name></name> <operator>&amp;&amp;</operator> <name><name>this</name><operator>.</operator><name>mms</name></name> <operator>==</operator> <name><name>that</name><operator>.</operator><name>mms</name></name> <operator>&amp;&amp;</operator> <name><name>this</name><operator>.</operator><name>expiresAtMillis</name></name> <operator>==</operator> <name><name>that</name><operator>.</operator><name>expiresAtMillis</name></name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>hashCode</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>int</name><operator>)</operator><name><name>this</name><operator>.</operator><name>id</name></name> <operator>^</operator> <operator>(</operator><ternary><condition><expr><name>mms</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary><operator>)</operator> <operator>^</operator> <operator>(</operator><name>int</name><operator>)</operator><name>expiresAtMillis</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>ExpiringMessageComparator</name> <super><implements>implements <name><name>Comparator</name><argument_list type="generic">&lt;<argument><name>ExpiringMessageReference</name></argument>&gt;</argument_list></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>compare</name><parameter_list>(<parameter><decl><type><name>ExpiringMessageReference</name></type> <name>lhs</name></decl></parameter>, <parameter><decl><type><name>ExpiringMessageReference</name></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{
+      <if>if      <condition>(<expr><name><name>lhs</name><operator>.</operator><name>expiresAtMillis</name></name> <operator>&lt;</operator> <name><name>rhs</name><operator>.</operator><name>expiresAtMillis</name></name></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then>
+      <elseif>else <if>if <condition>(<expr><name><name>lhs</name><operator>.</operator><name>expiresAtMillis</name></name> <operator>&gt;</operator> <name><name>rhs</name><operator>.</operator><name>expiresAtMillis</name></name></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">1</literal></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name><name>lhs</name><operator>.</operator><name>id</name></name> <operator>&lt;</operator> <name><name>rhs</name><operator>.</operator><name>id</name></name></expr>)</condition><then>                           <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name><name>lhs</name><operator>.</operator><name>id</name></name> <operator>&gt;</operator> <name><name>rhs</name><operator>.</operator><name>id</name></name></expr>)</condition><then>                           <block type="pseudo"><return>return <expr><literal type="number">1</literal></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><operator>!</operator><name><name>lhs</name><operator>.</operator><name>mms</name></name> <operator>&amp;&amp;</operator> <name><name>rhs</name><operator>.</operator><name>mms</name></name></expr>)</condition><then>                       <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if></elseif>
+      <elseif>else <if>if <condition>(<expr><name><name>lhs</name><operator>.</operator><name>mms</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><name><name>rhs</name><operator>.</operator><name>mms</name></name></expr>)</condition><then>                       <block type="pseudo"><return>return <expr><literal type="number">1</literal></expr>;</return></block></then></if></elseif>
+      <else>else                                                <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></else></if>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

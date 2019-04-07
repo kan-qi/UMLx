@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\logging\PersistentLogger.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>AnyThread</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>WorkerThread</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>NoExternalStorageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ListenableFuture</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>SettableFuture</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>PrintStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>text</name><operator>.</operator><name>SimpleDateFormat</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Executor</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Executors</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>PersistentLogger</name> <super><extends>extends <name><name>Log</name><operator>.</operator><name>Logger</name></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name>     <init>= <expr><call><name><name>PersistentLogger</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOG_V</name>   <init>= <expr><literal type="string">"V"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOG_D</name>   <init>= <expr><literal type="string">"D"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOG_I</name>   <init>= <expr><literal type="string">"I"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOG_W</name>   <init>= <expr><literal type="string">"W"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOG_E</name>   <init>= <expr><literal type="string">"E"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOG_WTF</name> <init>= <expr><literal type="string">"A"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>           <name>LOG_DIRECTORY</name>   <init>= <expr><literal type="string">"log"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type>           <name>FILENAME_PREFIX</name> <init>= <expr><literal type="string">"log-"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type>              <name>MAX_LOG_FILES</name>   <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type>              <name>MAX_LOG_SIZE</name>    <init>= <expr><literal type="number">300</literal> <operator>*</operator> <literal type="number">1024</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>SimpleDateFormat</name></type> <name>DATE_FORMAT</name>     <init>= <expr><operator>new</operator> <call><name>SimpleDateFormat</name><argument_list>(<argument><expr><literal type="string">"yyyy-MM-dd HH:mm:ss.SSS zzz"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type>  <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Executor</name></type> <name>executor</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>   <name>secret</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>LogFile</name><operator>.</operator><name>Writer</name></name></type> <name>writer</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>PersistentLogger</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>  <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>secret</name></name>   <operator>=</operator> <call><name><name>LogSecretProvider</name><operator>.</operator><name>getOrCreateAttachmentSecret</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>executor</name></name> <operator>=</operator> <call><name><name>Executors</name><operator>.</operator><name>newSingleThreadExecutor</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>r</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name>Thread</name></type> <name>thread</name> <init>= <expr><operator>new</operator> <call><name>Thread</name><argument_list>(<argument><expr><name>r</name></expr></argument>, <argument><expr><literal type="string">"logger"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>thread</name><operator>.</operator><name>setPriority</name></name><argument_list>(<argument><expr><name><name>Thread</name><operator>.</operator><name>MIN_PRIORITY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>thread</name></expr>;</return>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>executor</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>initializeWriter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>v</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>write</name><argument_list>(<argument><expr><name>LOG_V</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>write</name><argument_list>(<argument><expr><name>LOG_D</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>i</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>write</name><argument_list>(<argument><expr><name>LOG_I</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>w</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>write</name><argument_list>(<argument><expr><name>LOG_W</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>e</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>write</name><argument_list>(<argument><expr><name>LOG_E</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>wtf</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>write</name><argument_list>(<argument><expr><name>LOG_WTF</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <type><name><name>ListenableFuture</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getLogs</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>SettableFuture</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>future</name> <init>= <expr><operator>new</operator> <call><name><name>SettableFuture</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>executor</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name>StringBuilder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <try>try <block>{
+        <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>logs</name> <init>= <expr><call><name>getSortedLogFiles</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name><name>logs</name><operator>.</operator><name>length</name></name> <operator>-</operator> <literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>;</condition> <incr><expr><name>i</name><operator>--</operator></expr></incr>)</control> <block>{
+          <try>try <block>{
+            <decl_stmt><decl><type><name><name>LogFile</name><operator>.</operator><name>Reader</name></name></type> <name>reader</name> <init>= <expr><operator>new</operator> <call><name><name>LogFile</name><operator>.</operator><name>Reader</name></name><argument_list>(<argument><expr><name>secret</name></expr></argument>, <argument><expr><name><name>logs</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>reader</name><operator>.</operator><name>readAll</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to read log at index "</literal> <operator>+</operator> <name>i</name> <operator>+</operator> <literal type="string">". Removing reference."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>logs</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>delete</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></catch></try>
+        }</block></for>
+
+        <expr_stmt><expr><call><name><name>future</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoExternalStorageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>future</name><operator>.</operator><name>setException</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>future</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>initializeWriter</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <expr_stmt><expr><name>writer</name> <operator>=</operator> <operator>new</operator> <call><name><name>LogFile</name><operator>.</operator><name>Writer</name></name><argument_list>(<argument><expr><name>secret</name></expr></argument>, <argument><expr><call><name>getOrCreateActiveLogFile</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoExternalStorageException</name></type> | <type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to initialize writer."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>AnyThread</name></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>write</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>level</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>executor</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <try>try <block>{
+        <if>if <condition>(<expr><name>writer</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <return>return;</return>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name><name>writer</name><operator>.</operator><name>getLogSize</name></name><argument_list>()</argument_list></call> <operator>&gt;=</operator> <name>MAX_LOG_SIZE</name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>writer</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>writer</name> <operator>=</operator> <operator>new</operator> <call><name><name>LogFile</name><operator>.</operator><name>Writer</name></name><argument_list>(<argument><expr><name>secret</name></expr></argument>, <argument><expr><call><name>createNewLogFile</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>trimLogFilesOverMax</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <for>for <control>(<init><decl><type><name>String</name></type> <name>entry</name> <range>: <expr><call><name>buildLogEntries</name><argument_list>(<argument><expr><name>level</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr></range></decl></init>)</control> <block>{
+          <expr_stmt><expr><call><name><name>writer</name><operator>.</operator><name>writeEntry</name></name><argument_list>(<argument><expr><name>entry</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoExternalStorageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Cannot persist logs."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to write line. Deleting all logs and starting over."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>deleteAllLogs</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>initializeWriter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>trimLogFilesOverMax</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>logs</name> <init>= <expr><call><name>getSortedLogFiles</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name><name>logs</name><operator>.</operator><name>length</name></name> <operator>&gt;</operator> <name>MAX_LOG_FILES</name></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name>MAX_LOG_FILES</name></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name><name>logs</name><operator>.</operator><name>length</name></name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <expr_stmt><expr><name><name>logs</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>delete</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>deleteAllLogs</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>logs</name> <init>= <expr><call><name>getSortedLogFiles</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <for>for <control>(<init><decl><type><name>File</name></type> <name>log</name> <range>: <expr><name>logs</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoExternalStorageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Was unable to delete logs."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>File</name></type> <name>getOrCreateActiveLogFile</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>logs</name> <init>= <expr><call><name>getSortedLogFiles</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name><name>logs</name><operator>.</operator><name>length</name></name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>logs</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name>createNewLogFile</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>File</name></type> <name>createNewLogFile</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <return>return <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getOrCreateLogDirectory</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>FILENAME_PREFIX</name> <operator>+</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>File</name><index>[]</index></name></type> <name>getSortedLogFiles</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>logs</name> <init>= <expr><call><name>getOrCreateLogDirectory</name><argument_list>()</argument_list></call><operator>.</operator><call><name>listFiles</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>logs</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Arrays</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name>logs</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>o1</name></decl></parameter>, <parameter><decl><name>o2</name></decl></parameter>)</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>o2</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>compareTo</name><argument_list>(<argument><expr><call><name><name>o1</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>logs</name></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><operator>new</operator> <name><name>File</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>File</name></type> <name>getOrCreateLogDirectory</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>File</name></type> <name>logDir</name> <init>= <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getCacheDir</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>LOG_DIRECTORY</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>logDir</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>logDir</name><operator>.</operator><name>mkdir</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>NoExternalStorageException</name><argument_list>(<argument><expr><literal type="string">"Unable to create log directory."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <return>return <expr><name>logDir</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>buildLogEntries</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>level</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>entries</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Date</name></type>         <name>date</name>    <init>= <expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>entries</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name>buildEntry</name><argument_list>(<argument><expr><name>level</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>message</name></expr></argument>, <argument><expr><name>date</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>t</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>ByteArrayOutputStream</name></type> <name>outputStream</name> <init>= <expr><operator>new</operator> <call><name>ByteArrayOutputStream</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>t</name><operator>.</operator><name>printStackTrace</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PrintStream</name><argument_list>(<argument><expr><name>outputStream</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>String</name></type>   <name>trace</name> <init>= <expr><operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><call><name><name>outputStream</name><operator>.</operator><name>toByteArray</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>lines</name> <init>= <expr><call><name><name>trace</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">"\\n"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>String</name></type> <name>line</name> <range>: <expr><name>lines</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>entries</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name>buildEntry</name><argument_list>(<argument><expr><name>level</name></expr></argument>, <argument><expr><name>tag</name></expr></argument>, <argument><expr><name>line</name></expr></argument>, <argument><expr><name>date</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></then></if>
+
+    <return>return <expr><name>entries</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>buildEntry</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>level</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Date</name></type> <name>date</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>DATE_FORMAT</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>date</name></expr></argument>)</argument_list></call> <operator>+</operator> <literal type="char">' '</literal> <operator>+</operator> <name>level</name> <operator>+</operator> <literal type="char">' '</literal> <operator>+</operator> <name>tag</name> <operator>+</operator> <literal type="string">": "</literal> <operator>+</operator> <name>message</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

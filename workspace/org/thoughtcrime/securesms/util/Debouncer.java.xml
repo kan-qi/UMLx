@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\Debouncer.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A class that will throttle the number of runnables executed to be at most once every specified
+ * interval.
+ *
+ * Useful for performing actions in response to rapid user input, such as inputting text, where you
+ * don't necessarily want to perform an action after &lt;em&gt;every&lt;/em&gt; input.
+ *
+ * See http://rxmarbles.com/#debounce
+ */</comment>
+<class><specifier>public</specifier> class <name>Debouncer</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Handler</name></type> <name>handler</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>threshold</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * @param threshold Only one runnable will be executed via {@link #publish(Runnable)} every
+   *                  {@code threshold} milliseconds.
+   */</comment>
+  <constructor><specifier>public</specifier> <name>Debouncer</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threshold</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>handler</name></name>   <operator>=</operator> <operator>new</operator> <call><name>Handler</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>threshold</name></name> <operator>=</operator> <name>threshold</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>publish</name><parameter_list>(<parameter><decl><type><name>Runnable</name></type> <name>runnable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>handler</name><operator>.</operator><name>removeCallbacksAndMessages</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>handler</name><operator>.</operator><name>postDelayed</name></name><argument_list>(<argument><expr><name>runnable</name></expr></argument>, <argument><expr><name>threshold</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>clear</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>handler</name><operator>.</operator><name>removeCallbacksAndMessages</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

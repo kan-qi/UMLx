@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobmanager\persistence\PersistentStorage.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>persistence</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>sqlite</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>sqlite</name><operator>.</operator><name>SQLiteOpenHelper</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>EncryptionKeys</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>Job</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>PersistentStorage</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DATABASE_VERSION</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TABLE_NAME</name> <init>= <expr><literal type="string">"queue"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>         <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ITEM</name>       <init>= <expr><literal type="string">"item"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ENCRYPTED</name>  <init>= <expr><literal type="string">"encrypted"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DATABASE_CREATE</name> <init>= <expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"CREATE TABLE %s (%s INTEGER PRIMARY KEY, %s TEXT NOT NULL, %s INTEGER DEFAULT 0);"</literal></expr></argument>,
+                                                              <argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>ID</name></expr></argument>, <argument><expr><name>ITEM</name></expr></argument>, <argument><expr><name>ENCRYPTED</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DatabaseHelper</name></type> <name>databaseHelper</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>JobSerializer</name></type>  <name>jobSerializer</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>PersistentStorage</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>JobSerializer</name></type> <name>serializer</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>databaseHelper</name></name>     <operator>=</operator> <operator>new</operator> <call><name>DatabaseHelper</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="string">"_jobqueue-"</literal> <operator>+</operator> <name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>jobSerializer</name></name>      <operator>=</operator> <name>serializer</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Job</name></argument>&gt;</argument_list></name></type> <name>getAllUnencrypted</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>getJobs</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>ENCRYPTED</name> <operator>+</operator> <literal type="string">" = 0"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Job</name></argument>&gt;</argument_list></name></type> <name>getJobs</name><parameter_list>(<parameter><decl><type><name>EncryptionKeys</name></type> <name>keys</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>where</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Job</name></argument>&gt;</argument_list></name></type>      <name>results</name>  <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name>   <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>where</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>ID</name> <operator>+</operator> <literal type="string">" ASC"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <while>while <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>long</name></type>    <name>id</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type>  <name>item</name>      <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ITEM</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>encrypted</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ENCRYPTED</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+        <try>try<block>{
+          <decl_stmt><decl><type><name>Job</name></type> <name>job</name> <init>= <expr><call><name><name>jobSerializer</name><operator>.</operator><name>deserialize</name></name><argument_list>(<argument><expr><name>keys</name></expr></argument>, <argument><expr><name>encrypted</name></expr></argument>, <argument><expr><name>item</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>job</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"PersistentStore"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>remove</name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></while>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>remove</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call>
+                  <operator>.</operator><call><name>delete</name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>DatabaseHelper</name> <super><extends>extends <name>SQLiteOpenHelper</name></extends></super> <block>{
+
+    <constructor><specifier>public</specifier> <name>DatabaseHelper</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>DATABASE_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>SQLiteDatabase</name></type> <name>db</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><name>DATABASE_CREATE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onUpgrade</name><parameter_list>(<parameter><decl><type><name>SQLiteDatabase</name></type> <name>db</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldVersion</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>newVersion</name></decl></parameter>)</parameter_list> <block>{
+
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

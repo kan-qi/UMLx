@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\widget\stickyheader\StikkyHeaderBuilder.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>stickyheader</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>DimenRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>IdRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>stickyheader</name><operator>.</operator><name>animator</name><operator>.</operator><name>HeaderStikkyAnimator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>stickyheader</name><operator>.</operator><name>animator</name><operator>.</operator><name>HeaderStikkyAnimator</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>StikkyHeaderBuilder</name> <block>{
+
+	<decl_stmt><decl><specifier>protected</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>mContext</name></decl>;</decl_stmt>
+
+	<decl_stmt><decl><specifier>protected</specifier> <type><name>View</name></type> <name>mHeader</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>protected</specifier> <type><name>int</name></type> <name>mMinHeight</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>protected</specifier> <type><name>HeaderAnimator</name></type> <name>mAnimator</name></decl>;</decl_stmt>
+
+	<constructor><specifier>protected</specifier> <name>StikkyHeaderBuilder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>mContext</name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>mMinHeight</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+	}</block></constructor>
+
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>ListViewBuilder</name></type> <name>stickTo</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>ListView</name></type> <name>listView</name></decl></parameter>)</parameter_list> <block>{
+		<return>return <expr><operator>new</operator> <call><name>ListViewBuilder</name><argument_list>(<argument><expr><name>listView</name></expr></argument>)</argument_list></call></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>StikkyHeaderBuilder</name></type> <name>setHeader</name><parameter_list>(<parameter><decl><type><annotation>@<name>IdRes</name></annotation> <specifier>final</specifier> <name>int</name></type> <name>idHeader</name></decl></parameter>,
+			<parameter><decl><type><specifier>final</specifier> <name>ViewGroup</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>mHeader</name> <operator>=</operator> <call><name><name>view</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name>idHeader</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<return>return <expr><name>this</name></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>StikkyHeaderBuilder</name></type> <name>setHeader</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>header</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>mHeader</name> <operator>=</operator> <name>header</name></expr>;</expr_stmt>
+		<return>return <expr><name>this</name></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>StikkyHeaderBuilder</name></type> <name>minHeightHeaderRes</name><parameter_list>(
+			<parameter><decl><type><annotation>@<name>DimenRes</name></annotation> <specifier>final</specifier> <name>int</name></type> <name>resDimension</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>mMinHeight</name> <operator>=</operator> <call><name><name>mContext</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call>
+				<operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name>resDimension</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<return>return <expr><name>this</name></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>StikkyHeaderBuilder</name></type> <name>minHeightHeaderPixel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>minHeight</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>mMinHeight</name> <operator>=</operator> <name>minHeight</name></expr>;</expr_stmt>
+		<return>return <expr><name>this</name></expr>;</return>
+	}</block></function>
+
+	<function><specifier>public</specifier> <type><name>StikkyHeaderBuilder</name></type> <name>animator</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>HeaderAnimator</name></type> <name>animator</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>mAnimator</name> <operator>=</operator> <name>animator</name></expr>;</expr_stmt>
+		<return>return <expr><name>this</name></expr>;</return>
+	}</block></function>
+
+	<function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>StikkyHeader</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+
+	<class><specifier>public</specifier> <specifier>static</specifier> class <name>ListViewBuilder</name> <super><extends>extends <name>StikkyHeaderBuilder</name></extends></super> <block>{
+
+		<decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ListView</name></type> <name>mListView</name></decl>;</decl_stmt>
+
+		<constructor><specifier>protected</specifier> <name>ListViewBuilder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>ListView</name></type> <name>listView</name></decl></parameter>)</parameter_list> <block>{
+			<expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><call><name><name>listView</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><name>mListView</name> <operator>=</operator> <name>listView</name></expr>;</expr_stmt>
+		}</block></constructor>
+
+		<function><annotation>@<name>Override</name></annotation>
+		<specifier>public</specifier> <type><name>StikkyHeaderListView</name></type> <name>build</name><parameter_list>()</parameter_list> <block>{
+
+			<comment type="line">// if the animator has not been set, the default one is used</comment>
+			<if>if <condition>(<expr><name>mAnimator</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+				<expr_stmt><expr><name>mAnimator</name> <operator>=</operator> <operator>new</operator> <call><name>HeaderStikkyAnimator</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+			}</block></then></if>
+
+			<return>return <expr><operator>new</operator> <call><name>StikkyHeaderListView</name><argument_list>(<argument><expr><name>mContext</name></expr></argument>, <argument><expr><name>mListView</name></expr></argument>, <argument><expr><name>mHeader</name></expr></argument>,
+					<argument><expr><name>mMinHeight</name></expr></argument>, <argument><expr><name>mAnimator</name></expr></argument>)</argument_list></call></expr>;</return>
+		}</block></function>
+	}</block></class>
+
+}</block></class>
+</unit>

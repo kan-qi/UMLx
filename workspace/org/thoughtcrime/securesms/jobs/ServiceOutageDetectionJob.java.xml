@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\ServiceOutageDetectionJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>EventBus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>events</name><operator>.</operator><name>ReminderUpdateEvent</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>transport</name><operator>.</operator><name>RetryLaterException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>InetAddress</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>UnknownHostException</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ServiceOutageDetectionJob</name> <super><extends>extends <name>ContextJob</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ServiceOutageDetectionJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>IP_SUCCESS</name> <init>= <expr><literal type="string">"127.0.0.1"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>IP_FAILURE</name> <init>= <expr><literal type="string">"127.0.0.2"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type>   <name>CHECK_TIME</name> <init>= <expr><literal type="number">1000</literal> <operator>*</operator> <literal type="number">60</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ServiceOutageDetectionJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ServiceOutageDetectionJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>JobParameters</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+                                    <operator>.</operator><call><name>withGroupId</name><argument_list>(<argument><expr><call><name><name>ServiceOutageDetectionJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                    <operator>.</operator><call><name>withDuplicatesIgnored</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+                                    <operator>.</operator><call><name>withNetworkRequirement</name><argument_list>()</argument_list></call>
+                                    <operator>.</operator><call><name>withRetryCount</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+                                    <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>RetryLaterException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onRun()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>timeSinceLastCheck</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLastOutageCheckTime</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>timeSinceLastCheck</name> <operator>&lt;</operator> <name>CHECK_TIME</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Skipping service outage check. Too soon."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <try>try <block>{
+      <decl_stmt><decl><type><name>InetAddress</name></type> <name>address</name> <init>= <expr><call><name><name>InetAddress</name><operator>.</operator><name>getByName</name></name><argument_list>(<argument><expr><name><name>BuildConfig</name><operator>.</operator><name>SIGNAL_SERVICE_STATUS_URL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Received outage check address: "</literal> <operator>+</operator> <call><name><name>address</name><operator>.</operator><name>getHostAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>IP_SUCCESS</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getHostAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Service is available."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setServiceOutage</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>IP_FAILURE</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>getHostAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Service is down."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setServiceOutage</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif> <else>else <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Service status check returned an unrecognized IP address. Could be a weird network state. Prompting retry."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <throw>throw <expr><operator>new</operator> <call><name>RetryLaterException</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Exception</name><argument_list>(<argument><expr><literal type="string">"Unrecognized service outage IP address."</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></else></if>
+
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setLastOutageCheckTime</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>post</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ReminderUpdateEvent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>UnknownHostException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>RetryLaterException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>e</name> <operator>instanceof</operator> <name>RetryLaterException</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Service status check could not complete. Assuming success to avoid false positives due to bad network."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setServiceOutage</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setLastOutageCheckTime</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>post</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ReminderUpdateEvent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

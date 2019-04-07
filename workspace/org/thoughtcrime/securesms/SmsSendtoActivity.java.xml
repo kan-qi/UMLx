@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\SmsSendtoActivity.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name><operator>.</operator><name>ConversationActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Rfc5724Uri</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URISyntaxException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SmsSendtoActivity</name> <super><extends>extends <name>Activity</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SmsSendtoActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><call><name>getNextIntent</name><argument_list>(<argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Intent</name></type> <name>getNextIntent</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>original</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>DestinationAndBody</name></type> <name>destination</name></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>original</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_SENDTO</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>destination</name> <operator>=</operator> <call><name>getDestinationForSendTo</name><argument_list>(<argument><expr><name>original</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>original</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <literal type="string">"content"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>original</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getScheme</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>destination</name> <operator>=</operator> <call><name>getDestinationForSyncAdapter</name><argument_list>(<argument><expr><name>original</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><name>destination</name> <operator>=</operator> <call><name>getDestinationForView</name><argument_list>(<argument><expr><name>original</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>nextIntent</name></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name><name>destination</name><operator>.</operator><name>destination</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>nextIntent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>NewConversationActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>nextIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>TEXT_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>destination</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationActivity_specify_recipient</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromExternal</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>destination</name><operator>.</operator><name>getDestination</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>      <name>threadId</name>  <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdIfExistsFor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name>nextIntent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>nextIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>TEXT_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>destination</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>nextIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>THREAD_ID_EXTRA</name></name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>nextIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>ConversationActivity</name><operator>.</operator><name>ADDRESS_EXTRA</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+    <return>return <expr><name>nextIntent</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DestinationAndBody</name></type> <name>getDestinationForSendTo</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>DestinationAndBody</name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSchemeSpecificPart</name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><literal type="string">"sms_body"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DestinationAndBody</name></type> <name>getDestinationForView</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Rfc5724Uri</name></type> <name>smsUri</name> <init>= <expr><operator>new</operator> <call><name>Rfc5724Uri</name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><operator>new</operator> <call><name>DestinationAndBody</name><argument_list>(<argument><expr><call><name><name>smsUri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>smsUri</name><operator>.</operator><name>getQueryParams</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><literal type="string">"body"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>URISyntaxException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"unable to parse RFC5724 URI from intent"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><operator>new</operator> <call><name>DestinationAndBody</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DestinationAndBody</name></type> <name>getDestinationForSyncAdapter</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name>getContentResolver</name><argument_list>()</argument_list></call><operator>.</operator><call><name>query</name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><operator>new</operator> <call><name>DestinationAndBody</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>RawContacts</name><operator>.</operator><name>Data</name><operator>.</operator><name>DATA1</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+
+      <return>return <expr><operator>new</operator> <call><name>DestinationAndBody</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>DestinationAndBody</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>destination</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>body</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>DestinationAndBody</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>destination</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>destination</name></name> <operator>=</operator> <name>destination</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>body</name></name> <operator>=</operator> <name>body</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getDestination</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>destination</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getBody</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>body</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

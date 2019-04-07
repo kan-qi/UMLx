@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\ui\SplishActivity.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ActivityInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapFactory</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>AnimationUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>MainFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>service</name><operator>.</operator><name>CleanerService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>service</name><operator>.</operator><name>CoreService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>SharedPreferencesUtils</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>SplishActivity</name> <super><extends>extends <name>BaseActivity</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * ä¸ä¸ªåæ¢çå¨ç»
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Animation</name></type> <name>mFadeIn</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Animation</name></type> <name>mFadeInScale</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Animation</name></type> <name>mFadeOut</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Button</name></type> <name>BtnStart</name></decl>;</decl_stmt>
+
+    <comment type="line">//  @InjectView(R.id.image)</comment>
+    <decl_stmt><decl><type><name>ImageView</name></type> <name>mImageView</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ACTION_INSTALL_SHORTCUT</name> <init>= <expr><literal type="string">"com.android.launcher.action.INSTALL_SHORTCUT"</literal></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_splish</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>mImageView</name> <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>image</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>BtnStart</name> <operator>=</operator> <operator>(</operator><name>Button</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>start_main</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">//int index = new Random().nextInt(2);</comment>
+        <comment type="line">//if (index == 1) {</comment>
+        <comment type="line">//    mImageView.setImageResource(R.drawable.entrance3);</comment>
+        <comment type="line">//} else {</comment>
+        <comment type="line">//    mImageView.setImageResource(R.drawable.entrance2);</comment>
+        <comment type="line">//}</comment>
+        <decl_stmt><decl><type><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></type> <name>OclBtnStart</name> <init>= <expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name>buttonEffect</name><argument_list>(<argument><expr><name>BtnStart</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name><name>v</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>MainActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+        }</block></class></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>BtnStart</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>OclBtnStart</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>CoreService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>startService</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>CleanerService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>SharedPreferencesUtils</name><operator>.</operator><name>isShortCut</name></name><argument_list>(<argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+         <comment type="line">//   createShortCut();</comment>
+        }</block></then></if>
+
+       <comment type="line">// initAnim();</comment>
+<comment type="line">//        setListener();</comment>
+        <expr_stmt><expr><call><name>setRequestedOrientation</name><argument_list>(<argument><expr><name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_PORTRAIT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>buttonEffect</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>button</name></decl></parameter>)</parameter_list><block>{
+        <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>setOnTouchListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>View</name><operator>.</operator><name>OnTouchListener</name></name></super><argument_list>()</argument_list> <block>{
+
+            <function><specifier>public</specifier> <type><name>boolean</name></type> <name>onTouch</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>, <parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+                <switch>switch <condition>(<expr><call><name><name>event</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+                    <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr>:</case> <block>{
+                        <expr_stmt><expr><call><name><name>v</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><literal type="number">0xe0f47521</literal></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_ATOP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                        <expr_stmt><expr><call><name><name>v</name><operator>.</operator><name>invalidate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        <break>break;</break>
+                    }</block>
+                    <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_UP</name></name></expr>:</case> <block>{
+                        <expr_stmt><expr><call><name><name>v</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>clearColorFilter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        <expr_stmt><expr><call><name><name>v</name><operator>.</operator><name>invalidate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        <break>break;</break>
+                    }</block>
+                }</block></switch>
+                <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+   <comment type="line">// private void createShortCut() {</comment>
+   <comment type="line">//     // TODO Auto-generated method stub</comment>
+   <comment type="line">//     Intent intent = new Intent();</comment>
+   <comment type="line">//     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");</comment>
+   <comment type="line">//     intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "ÐÐÐÐÐÐ");</comment>
+   <comment type="line">//     intent.putExtra("duplicate", false);</comment>
+   <comment type="line">//     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, BitmapFactory.decodeResource(getResources(), R.drawable.short_cut_icon));</comment>
+   <comment type="line">//     Intent i = new Intent();</comment>
+   <comment type="line">//     i.setAction("com.balaganovrocks.shortcut");</comment>
+   <comment type="line">//     i.addCategory("android.intent.category.DEFAULT");</comment>
+   <comment type="line">//     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, i);</comment>
+   <comment type="line">//     sendBroadcast(intent);</comment>
+   <comment type="line">//     SharedPreferencesUtils.setIsShortCut(mContext, true);</comment>
+   <comment type="line">// }</comment>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>initAnim</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>mFadeIn</name> <operator>=</operator> <call><name><name>AnimationUtils</name><operator>.</operator><name>loadAnimation</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>welcome_fade_in</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mFadeIn</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mFadeInScale</name> <operator>=</operator> <call><name><name>AnimationUtils</name><operator>.</operator><name>loadAnimation</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>,
+                <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>welcome_fade_in_scale</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mFadeInScale</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">2000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mFadeOut</name> <operator>=</operator> <call><name><name>AnimationUtils</name><operator>.</operator><name>loadAnimation</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>welcome_fade_out</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mFadeOut</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//        mImageView.startAnimation(mFadeIn);</comment>
+    }</block></function>
+
+
+    <comment type="block" format="javadoc">/**
+     * çå¬äºä»¶
+     */</comment>
+ <comment type="line">// public void setListener() {</comment>
+ <comment type="line">//     /**</comment>
+ <comment type="line">//      * å¨ç»åæ¢åç:å¼å§æ¶æ¯ç¨ç¬¬ä¸ä¸ªæ¸ç°å¨ç»,å½ç¬¬ä¸ä¸ªå¨ç»ç»ææ¶å¼å§ç¬¬äºä¸ªæ¾å¤§å¨ç»,å½ç¬¬äºä¸ªå¨ç»ç»ææ¶è°ç¨ç¬¬ä¸ä¸ªæ¸éå¨ç»,</comment>
+ <comment type="line">//      * ç¬¬ä¸ä¸ªå¨ç»ç»ææ¶ä¿®æ¹æ¾ç¤ºçåå®¹å¹¶ä¸éæ°è°ç¨ç¬¬ä¸ä¸ªå¨ç»,ä»èè¾¾å°å¾ªç¯ææ</comment>
+ <comment type="line">//      */</comment>
+ <comment type="line">//     mFadeIn.setAnimationListener(new AnimationListener() {</comment>
+
+ <comment type="line">//         public void onAnimationStart(Animation animation) {</comment>
+
+ <comment type="line">//         }</comment>
+
+ <comment type="line">//         public void onAnimationRepeat(Animation animation) {</comment>
+
+ <comment type="line">//         }</comment>
+
+ <comment type="line">//         public void onAnimationEnd(Animation animation) {</comment>
+ <comment type="line">//             mImageView.startAnimation(mFadeInScale);</comment>
+ <comment type="line">//         }</comment>
+ <comment type="line">//     });</comment>
+ <comment type="line">//     mFadeInScale.setAnimationListener(new AnimationListener() {</comment>
+
+ <comment type="line">//         public void onAnimationStart(Animation animation) {</comment>
+
+ <comment type="line">//         }</comment>
+
+ <comment type="line">//         public void onAnimationRepeat(Animation animation) {</comment>
+
+ <comment type="line">//         }</comment>
+
+ <comment type="line">//         public void onAnimationEnd(Animation animation) {</comment>
+ <comment type="line">//             startActivity(MainActivity.class);</comment>
+ <comment type="line">//             finish();</comment>
+ <comment type="line">//             // mImageView.startAnimation(mFadeOut);</comment>
+ <comment type="line">//         }</comment>
+ <comment type="line">//     });</comment>
+ <comment type="line">//     mFadeOut.setAnimationListener(new AnimationListener() {</comment>
+
+ <comment type="line">//         public void onAnimationStart(Animation animation) {</comment>
+
+ <comment type="line">//         }</comment>
+
+ <comment type="line">//         public void onAnimationRepeat(Animation animation) {</comment>
+
+ <comment type="line">//         }</comment>
+
+ <comment type="line">//         public void onAnimationEnd(Animation animation) {</comment>
+ <comment type="line">//             // startActivity(MainActivity.class);</comment>
+ <comment type="line">//         }</comment>
+ <comment type="line">//     });</comment>
+ <comment type="line">// }</comment>
+}</block></class>
+</unit>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\FileUtils.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileDescriptor</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>FileUtils</name> <block>{
+
+  <static>static <block>{
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>loadLibrary</name></name><argument_list>(<argument><expr><literal type="string">"native-utils"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></static>
+
+  <function_decl><specifier>public</specifier> <specifier>static</specifier> <specifier>native</specifier> <type><name>int</name></type> <name>getFileDescriptorOwner</name><parameter_list>(<parameter><decl><type><name>FileDescriptor</name></type> <name>fileDescriptor</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getFileDigest</name><parameter_list>(<parameter><decl><type><name>FileInputStream</name></type> <name>fin</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>MessageDigest</name></type> <name>digest</name> <init>= <expr><call><name><name>MessageDigest</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"SHA256"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buffer</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">4096</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><operator>(</operator><name>read</name> <operator>=</operator> <call><name><name>fin</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>buffer</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call><operator>)</operator> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>digest</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>read</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+
+      <return>return <expr><call><name><name>digest</name><operator>.</operator><name>digest</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>deleteDirectoryContents</name><parameter_list>(<parameter><decl><type><name>File</name></type> <name>directory</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><name>directory</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>directory</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call> <operator>||</operator> <operator>!</operator><call><name><name>directory</name><operator>.</operator><name>isDirectory</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>files</name> <init>= <expr><call><name><name>directory</name><operator>.</operator><name>listFiles</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>files</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <for>for <control>(<init><decl><type><name>File</name></type> <name>file</name> <range>: <expr><name>files</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>file</name><operator>.</operator><name>isDirectory</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>deleteDirectory</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+        <else>else                    <block type="pseudo"><expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+      }</block></for>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>deleteDirectory</name><parameter_list>(<parameter><decl><type><name>File</name></type> <name>directory</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><name>directory</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>directory</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call> <operator>||</operator> <operator>!</operator><call><name><name>directory</name><operator>.</operator><name>isDirectory</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>deleteDirectoryContents</name><argument_list>(<argument><expr><name>directory</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>directory</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

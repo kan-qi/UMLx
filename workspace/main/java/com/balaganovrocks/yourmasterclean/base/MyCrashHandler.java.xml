@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\base\MyCrashHandler.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>Thread</name><operator>.</operator><name>UncaughtExceptionHandler</name></name>;</import>
+
+<comment type="line">//public class MyCrashHandler implements UncaughtExceptionHandler {</comment>
+<comment type="line">//	@Override</comment>
+<comment type="line">//	public void uncaughtException(Thread thread, Throwable throwable) {</comment>
+
+<comment type="line">//	}</comment>
+<comment type="line">//	// ä¿è¯MyCrashHandleråªæä¸ä¸ªå®ä¾</comment>
+<comment type="line">//	// 2.æä¾ä¸ä¸ªéæçç¨åºåé</comment>
+<comment type="line">//	private static MyCrashHandler myCrashHandler;</comment>
+<comment type="line">//	private Context context;</comment>
+<comment type="line">//</comment>
+<comment type="line">//	// 1.ç§æåæé æ¹æ³</comment>
+<comment type="line">//	private MyCrashHandler() {</comment>
+<comment type="line">//</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	// 3.æ´é²åºæ¥ä¸ä¸ªéæçæ¹æ³ è·åmyCrashHandler</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public static synchronized MyCrashHandler getInstance() {</comment>
+<comment type="line">//		if (myCrashHandler == null) {</comment>
+<comment type="line">//			myCrashHandler = new MyCrashHandler();</comment>
+<comment type="line">//		}</comment>
+<comment type="line">//		return myCrashHandler;</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public void init(Context context) {</comment>
+<comment type="line">//		this.context = context;</comment>
+<comment type="line">//	}</comment>
+<comment type="line">//</comment>
+<comment type="line">//	// ç¨åºåçå¼å¸¸çæ¶åè°ç¨çæ¹æ³</comment>
+<comment type="line">//	// try catch</comment>
+<comment type="line">//</comment>
+<comment type="line">//	public void uncaughtException(Thread thread, Throwable ex) {</comment>
+<comment type="line">//	//	System.out.println("åºç°éè¯¯å¦ åå");</comment>
+<comment type="line">//		ex.printStackTrace();</comment>
+<comment type="line">////		StringBuilder sb = new StringBuilder();</comment>
+<comment type="line">////		// 1.è·åå½ååºç¨ç¨åºççæ¬å·.</comment>
+<comment type="line">////		PackageManager pm = context.getPackageManager();</comment>
+<comment type="line">////		try {</comment>
+<comment type="line">////			PackageInfo packinfo = pm.getPackageInfo(context.getPackageName(),</comment>
+<comment type="line">////					0);</comment>
+<comment type="line">////			sb.append("ç¨åºççæ¬å·ä¸º" + packinfo.versionName);</comment>
+<comment type="line">////			sb.append("\n");</comment>
+<comment type="line">////</comment>
+<comment type="line">////			// 2.è·åææºçç¡¬ä»¶ä¿¡æ¯.</comment>
+<comment type="line">////			Field[] fields = Build.class.getDeclaredFields();</comment>
+<comment type="line">////			for (int i = 0; i &lt; fields.length; i++) {</comment>
+<comment type="line">////				// æ´ååå°,è·åç§æçå­æ®µä¿¡æ¯</comment>
+<comment type="line">////				fields[i].setAccessible(true);</comment>
+<comment type="line">////				String name = fields[i].getName();</comment>
+<comment type="line">////				sb.append(name + " = ");</comment>
+<comment type="line">////				String value = fields[i].get(null).toString();</comment>
+<comment type="line">////				sb.append(value);</comment>
+<comment type="line">////				sb.append("\n");</comment>
+<comment type="line">////			}</comment>
+<comment type="line">////			// 3.è·åç¨åºéè¯¯çå æ ä¿¡æ¯ .</comment>
+<comment type="line">////			StringWriter writer = new StringWriter();</comment>
+<comment type="line">////			PrintWriter printWriter = new PrintWriter(writer);</comment>
+<comment type="line">////			ex.printStackTrace(printWriter);</comment>
+<comment type="line">////</comment>
+<comment type="line">////		    String result =	writer.toString();</comment>
+<comment type="line">////		    sb.append(result);</comment>
+<comment type="line">////		    String time =  new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());</comment>
+<comment type="line">////		    String name ="xizi"+time+".txt";</comment>
+<comment type="line">////		    String fileName=Environment.getExternalStorageDirectory()+File.separator+"xz_app"+File.separator+"log";</comment>
+<comment type="line">////</comment>
+<comment type="line">////		    File file1 =new File(fileName);</comment>
+<comment type="line">////		    if(!file1.exists()){</comment>
+<comment type="line">////		        file1.mkdir();</comment>
+<comment type="line">////		    }</comment>
+<comment type="line">////		    File file=new File(fileName,name);</comment>
+<comment type="line">////		    if(!file.exists()){</comment>
+<comment type="line">////                file.createNewFile();</comment>
+<comment type="line">////            }</comment>
+<comment type="line">////		//    File file = new File(Environment.getExternalStorageDirectory(),"error.log");</comment>
+<comment type="line">////            FileOutputStream fos = new FileOutputStream(file);</comment>
+<comment type="line">////            fos.write(sb.toString().getBytes());</comment>
+<comment type="line">////            fos.close();</comment>
+<comment type="line">////</comment>
+<comment type="line">////</comment>
+<comment type="line">////			// 4.æéè¯¯ä¿¡æ¯ æäº¤å°æå¡å¨</comment>
+<comment type="line">////</comment>
+<comment type="line">////		} catch (Exception e) {</comment>
+<comment type="line">////			e.printStackTrace();</comment>
+<comment type="line">////		}</comment>
+<comment type="line">//</comment>
+<comment type="line">//		// å®æèªæçæä½</comment>
+<comment type="line">//		android.os.Process.killProcess(android.os.Process.myPid());</comment>
+<comment type="line">//	}</comment>
+
+<comment type="line">//}</comment>
+</unit>

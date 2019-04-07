@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\ui\MemoryCleanActivity.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>ActionBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ComponentName</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ServiceConnection</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ActivityInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>IBinder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Window</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>AnimationUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RelativeLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>etiennelawlor</name><operator>.</operator><name>quickreturn</name><operator>.</operator><name>library</name><operator>.</operator><name>enums</name><operator>.</operator><name>QuickReturnType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>etiennelawlor</name><operator>.</operator><name>quickreturn</name><operator>.</operator><name>library</name><operator>.</operator><name>listeners</name><operator>.</operator><name>QuickReturnListViewOnScrollListener</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>AdListener</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>AdRequest</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>ads</name><operator>.</operator><name>InterstitialAd</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>john</name><operator>.</operator><name>waveview</name><operator>.</operator><name>WaveView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>nhaarman</name><operator>.</operator><name>listviewanimations</name><operator>.</operator><name>appearance</name><operator>.</operator><name>simple</name><operator>.</operator><name>SwingBottomInAnimationAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>nhaarman</name><operator>.</operator><name>listviewanimations</name><operator>.</operator><name>itemmanipulation</name><operator>.</operator><name>swipedismiss</name><operator>.</operator><name>OnDismissCallback</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>adapter</name><operator>.</operator><name>ClearMemoryAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseSwipeBackActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>bean</name><operator>.</operator><name>AppProcessInfo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>model</name><operator>.</operator><name>StorageSize</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>service</name><operator>.</operator><name>CoreService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>StorageUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>SystemBarTintManager</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>T</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>UIElementsHelper</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>CounterView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>DecimalFormatter</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>InjectView</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>OnClick</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>MemoryCleanActivity</name> <super><extends>extends <name>BaseSwipeBackActivity</name></extends> <implements>implements <name>OnDismissCallback</name>, <name><name>CoreService</name><operator>.</operator><name>OnPeocessActionListener</name></name></implements></super> <block>{
+
+    <decl_stmt><decl><type><name>ActionBar</name></type> <name>ab</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>listview</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>ListView</name></type> <name>mListView</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>wave_view</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>WaveView</name></type> <name>mwaveView</name></decl>;</decl_stmt>
+
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>header</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>RelativeLayout</name></type> <name>header</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>mAppProcessInfos</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ClearMemoryAdapter</name></type> <name>mClearMemoryAdapter</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>textCounter</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>CounterView</name></type> <name>textCounter</name></decl>;</decl_stmt>
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>sufix</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>TextView</name></type> <name>sufix</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>long</name></type> <name>Allmemory</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>bottom_lin</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>LinearLayout</name></type> <name>bottom_lin</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>progressBar</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>View</name></type> <name>mProgressBar</name></decl>;</decl_stmt>
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>progressBarText</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>TextView</name></type> <name>mProgressBarText</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>clear_button</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>Button</name></type> <name>clearButton</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>INITIAL_DELAY_MILLIS</name> <init>= <expr><literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SwingBottomInAnimationAdapter</name></type> <name>swingBottomInAnimationAdapter</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"myLogs"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>CoreService</name></type> <name>mCoreService</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>InterstitialAd</name></type> <name>mInterstitialAd</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ServiceConnection</name></type> <name>mServiceConnection</name> <init>= <expr><operator>new</operator> <class><super><name>ServiceConnection</name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onServiceConnected</name><parameter_list>(<parameter><decl><type><name>ComponentName</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>IBinder</name></type> <name>service</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name>mCoreService</name> <operator>=</operator> <operator>(</operator><operator>(</operator><name><name>CoreService</name><operator>.</operator><name>ProcessServiceBinder</name></name><operator>)</operator> <name>service</name><operator>)</operator><operator>.</operator><call><name>getService</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mCoreService</name><operator>.</operator><name>setOnActionListener</name></name><argument_list>(<argument><expr><name><name>MemoryCleanActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mCoreService</name><operator>.</operator><name>scanRunProcess</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <comment type="line">//  updateStorageUsage();</comment>
+
+
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onServiceDisconnected</name><parameter_list>(<parameter><decl><type><name>ComponentName</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>mCoreService</name><operator>.</operator><name>setOnActionListener</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>mCoreService</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_memory_clean</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">//  applyKitKatTranslucency();</comment>
+        <expr_stmt><expr><name>mClearMemoryAdapter</name> <operator>=</operator> <operator>new</operator> <call><name>ClearMemoryAdapter</name><argument_list>(<argument><expr><name>mContext</name></expr></argument>, <argument><expr><name>mAppProcessInfos</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mListView</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>mClearMemoryAdapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>bindService</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>mContext</name></expr></argument>, <argument><expr><name><name>CoreService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                <argument><expr><name>mServiceConnection</name></expr></argument>, <argument><expr><name><name>Context</name><operator>.</operator><name>BIND_AUTO_CREATE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>footerHeight</name> <init>= <expr><call><name><name>mContext</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>footer_height</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>mListView</name><operator>.</operator><name>setOnScrollListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>QuickReturnListViewOnScrollListener</name><argument_list>(<argument><expr><name><name>QuickReturnType</name><operator>.</operator><name>FOOTER</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>bottom_lin</name></expr></argument>, <argument><expr><name>footerHeight</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setAutoFormat</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setFormatter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DecimalFormatter</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setAutoStart</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setIncrement</name></name><argument_list>(<argument><expr><literal type="number">5f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// the amount the number increments at each time interval</comment>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setTimeInterval</name></name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// the time interval (ms) at which the text changes</comment>
+        <expr_stmt><expr><name>mInterstitialAd</name> <operator>=</operator> <operator>new</operator> <call><name>InterstitialAd</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>setAdUnitId</name></name><argument_list>(<argument><expr><literal type="string">"ca-app-pub-4369038195513432/2986510514"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>loadAd</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>AdRequest</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setRequestedOrientation</name><argument_list>(<argument><expr><name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_PORTRAIT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <if>if <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></then></if>
+        <return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Apply KitKat specific translucency.
+     */</comment>
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>applyKitKatTranslucency</name><parameter_list>()</parameter_list> <block>{
+
+        <comment type="line">// KitKat translucent navigation/status bar.</comment>
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>KITKAT</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>setTranslucentStatus</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>SystemBarTintManager</name></type> <name>mTintManager</name> <init>= <expr><operator>new</operator> <call><name>SystemBarTintManager</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setStatusBarTintEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setNavigationBarTintEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <comment type="line">// mTintManager.setTintColor(0xF00099CC);</comment>
+
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setTintDrawable</name></name><argument_list>(<argument><expr><call><name><name>UIElementsHelper</name>
+                    <operator>.</operator><name>getGeneralActionBarBackground</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(
+                    <argument><expr><call><name><name>UIElementsHelper</name><operator>.</operator><name>getGeneralActionBarBackground</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        }</block></then></if>
+
+    }</block></function>
+
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">19</literal></expr></argument>)</argument_list></annotation>
+    <specifier>private</specifier> <type><name>void</name></type> <name>setTranslucentStatus</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>on</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Window</name></type> <name>win</name> <init>= <expr><call><name>getWindow</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name></name></type> <name>winParams</name> <init>= <expr><call><name><name>win</name><operator>.</operator><name>getAttributes</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>bits</name> <init>= <expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_TRANSLUCENT_STATUS</name></name></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>on</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name><name>winParams</name><operator>.</operator><name>flags</name></name> <operator>|=</operator> <name>bits</name></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name><name>winParams</name><operator>.</operator><name>flags</name></name> <operator>&amp;=</operator> <operator>~</operator><name>bits</name></expr>;</expr_stmt>
+        }</block></else></if>
+        <expr_stmt><expr><call><name><name>win</name><operator>.</operator><name>setAttributes</name></name><argument_list>(<argument><expr><name>winParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDismiss</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>int</name><index>[]</index></name></type> <name>ints</name></decl></parameter>)</parameter_list> <block>{
+
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onScanStarted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mProgressBarText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>scanning</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>showProgressBar</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onScanProgressUpdated</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>current</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>max</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mProgressBarText</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>scanning_m_of_n</name></name></expr></argument>, <argument><expr><name>current</name></expr></argument>, <argument><expr><name>max</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onScanCompleted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></type> <name>apps</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>Allmemory</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+        <for>for <control>(<init><decl><type><name>AppProcessInfo</name></type> <name>appInfo</name> <range>: <expr><name>apps</name></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><operator>!</operator><name><name>appInfo</name><operator>.</operator><name>isSystem</name></name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>appInfo</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>Allmemory</name> <operator>+=</operator> <name><name>appInfo</name><operator>.</operator><name>memory</name></name></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></for>
+
+
+        <expr_stmt><expr><call><name>refeshTextCounter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>mClearMemoryAdapter</name><operator>.</operator><name>notifyDataSetChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>showProgressBar</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+        <if>if <condition>(<expr><call><name><name>apps</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>header</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>bottom_lin</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>header</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>bottom_lin</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+     <comment type="line">//   mClearMemoryAdapter = new ClearMemoryAdapter(mContext,</comment>
+     <comment type="line">//           apps);  mClearMemoryAdapter = new ClearMemoryAdapter(mContext,</comment>
+     <comment type="line">//           apps);</comment>
+     <comment type="line">//   swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mClearMemoryAdapter, MemoryCleanActivity.this));</comment>
+     <comment type="line">//   swingBottomInAnimationAdapter.setAbsListView(mListView);</comment>
+     <comment type="line">//   assert swingBottomInAnimationAdapter.getViewAnimator() != null;</comment>
+     <comment type="line">//   swingBottomInAnimationAdapter.getViewAnimator().setInitialDelayMillis(INITIAL_DELAY_MILLIS);</comment>
+<comment type="line">//</comment>
+     <comment type="line">//   mListView.setAdapter(swingBottomInAnimationAdapter);</comment>
+     <comment type="line">//   clearMem.setText("200M");</comment>
+
+
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>refeshTextCounter</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mwaveView</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><literal type="number">20</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>StorageSize</name></type> <name>mStorageSize</name> <init>= <expr><call><name><name>StorageUtil</name><operator>.</operator><name>convertStorageSize</name></name><argument_list>(<argument><expr><name>Allmemory</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setStartValue</name></name><argument_list>(<argument><expr><literal type="number">0f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>setEndValue</name></name><argument_list>(<argument><expr><name><name>mStorageSize</name><operator>.</operator><name>value</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>sufix</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>mStorageSize</name><operator>.</operator><name>suffix</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">//  textCounter.setSuffix(mStorageSize.suffix);</comment>
+        <expr_stmt><expr><call><name><name>textCounter</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCleanStarted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCleanCompleted</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>cacheSize</name></decl></parameter>)</parameter_list> <block>{
+
+    }</block></function>
+
+
+    <function><annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>clear_button</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClickClear</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>long</name></type> <name>killAppmemory</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>;</condition> <incr><expr><name>i</name><operator>--</operator></expr></incr>)</control> <block>{
+            <if>if <condition>(<expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>.</operator><name>checked</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>killAppmemory</name> <operator>+=</operator> <call><name><name>mAppProcessInfos</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>.</operator><name>memory</name></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>mCoreService</name><operator>.</operator><name>killBackgroundProcesses</name></name><argument_list>(<argument><expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>.</operator><name>processName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><call><name><name>mAppProcessInfos</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>mClearMemoryAdapter</name><operator>.</operator><name>notifyDataSetChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></for>
+        <expr_stmt><expr><name>Allmemory</name> <operator>=</operator> <name>Allmemory</name> <operator>-</operator> <name>killAppmemory</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>T</name><operator>.</operator><name>showLong</name></name><argument_list>(<argument><expr><name>mContext</name></expr></argument>, <argument><expr><literal type="string">"ÐÑÐ¸ÑÐµÐ½Ð¾ "</literal> <operator>+</operator> <call><name><name>StorageUtil</name><operator>.</operator><name>convertStorage</name></name><argument_list>(<argument><expr><name>killAppmemory</name></expr></argument>)</argument_list></call> <operator>+</operator> <literal type="string">" Ð¿Ð°Ð¼ÑÑÐ¸"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>Allmemory</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>refeshTextCounter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <if>if <condition>(<expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>isLoaded</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"TAG"</literal></expr></argument>, <argument><expr><literal type="string">"The interstitial wasn't loaded yet."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+        <expr_stmt><expr><call><name><name>mInterstitialAd</name><operator>.</operator><name>setAdListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>AdListener</name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onAdLoaded</name><parameter_list>()</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>,<argument><expr><literal type="string">"onAdLoaded"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">// Code to be executed when an ad finishes loading.</comment>
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onAdFailedToLoad</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>errorCode</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>,<argument><expr><literal type="string">"onAdFailedToLoad"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">// Code to be executed when an ad request fails.</comment>
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onAdOpened</name><parameter_list>()</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>,<argument><expr><literal type="string">"onAdOpened"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                <comment type="line">// Code to be executed when the ad is displayed.</comment>
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onAdLeftApplication</name><parameter_list>()</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>,<argument><expr><literal type="string">"onAdLeftApplication"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <comment type="line">// Code to be executed when the user has left the app.</comment>
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>onAdClosed</name><parameter_list>()</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>,<argument><expr><literal type="string">"onAdClosed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getBaseContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>ResultActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">// Code to be executed when when the interstitial ad is closed.</comment>
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+         <comment type="line">// do something</comment>
+    }</block></function>
+
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>showProgressBar</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>show</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>show</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>mProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>mProgressBar</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><call><name><name>AnimationUtils</name><operator>.</operator><name>loadAnimation</name></name><argument_list>(
+                    <argument><expr><name>mContext</name></expr></argument>, <argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_out</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name>unbindService</name><argument_list>(<argument><expr><name>mServiceConnection</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

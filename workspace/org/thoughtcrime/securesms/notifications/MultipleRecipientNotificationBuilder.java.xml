@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\notifications\MultipleRecipientNotificationBuilder.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Notification</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>PendingIntent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationCompat</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ConversationListActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>widgets</name><operator>.</operator><name>NotificationPrivacyPreference</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MultipleRecipientNotificationBuilder</name> <super><extends>extends <name>AbstractNotificationBuilder</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>messageBodies</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>MultipleRecipientNotificationBuilder</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>NotificationPrivacyPreference</name></type> <name>privacy</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>privacy</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setColor</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>textsecure_primary</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setSmallIcon</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>icon_notification</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentTitle</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>app_name</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentIntent</name><argument_list>(<argument><expr><call><name><name>PendingIntent</name><operator>.</operator><name>getActivity</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>ConversationListActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setCategory</name><argument_list>(<argument><expr><name><name>NotificationCompat</name><operator>.</operator><name>CATEGORY_MESSAGE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setGroupSummary</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>NotificationChannels</name><operator>.</operator><name>supported</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setPriority</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationPriority</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setMessageCount</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>messageCount</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>threadCount</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSubText</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_d_new_messages_in_d_conversations</name></name></expr></argument>,
+                                 <argument><expr><name>messageCount</name></expr></argument>, <argument><expr><name>threadCount</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentInfo</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>messageCount</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setNumber</name><argument_list>(<argument><expr><name>messageCount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setMostRecentSender</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setContentText</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_most_recent_from_s</name></name></expr></argument>,
+                                       <argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setChannelId</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addActions</name><parameter_list>(<parameter><decl><type><name>PendingIntent</name></type> <name>markAsReadIntent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>Action</name></name></type> <name>markAllAsReadAction</name> <init>= <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>Action</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>check</name></name></expr></argument>,
+                                            <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_mark_all_as_read</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                            <argument><expr><name>markAsReadIntent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>addAction</name><argument_list>(<argument><expr><name>markAllAsReadAction</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>extend</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>WearableExtender</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>addAction</name><argument_list>(<argument><expr><name>markAllAsReadAction</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addMessageBody</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>sender</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>CharSequence</name></type> <name>body</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayMessage</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>messageBodies</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name>getStyledMessage</name><argument_list>(<argument><expr><name>sender</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>messageBodies</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getBoldedString</name></name><argument_list>(<argument><expr><call><name><name>sender</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>sender</name><operator>.</operator><name>getContactUri</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>addPerson</name><argument_list>(<argument><expr><call><name><name>sender</name><operator>.</operator><name>getContactUri</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Notification</name></type> <name>build</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayMessage</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>InboxStyle</name></name></type> <name>style</name> <init>= <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>InboxStyle</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>CharSequence</name></type> <name>body</name> <range>: <expr><name>messageBodies</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>style</name><operator>.</operator><name>addLine</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <expr_stmt><expr><call><name>setStyle</name><argument_list>(<argument><expr><name>style</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

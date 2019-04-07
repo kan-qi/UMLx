@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\conversation\ConversationAdapter.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>VisibleForTesting</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BindableConversationItem</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name><operator>.</operator><name>ConversationAdapter</name><operator>.</operator><name>HeaderViewHolder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>DatabaseAttachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>FastCursorRecyclerViewAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsSmsColumns</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsSmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MmsMessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>SlideDeck</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Conversions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DateUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>LRUCache</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>StickyHeaderDecoration</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>ref</name><operator>.</operator><name>SoftReference</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Calendar</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A cursor adapter for a conversation thread.  Ultimately
+ * used by ComposeMessageActivity to display a conversation
+ * thread in a ListActivity.
+ *
+ * @author Moxie Marlinspike
+ *
+ */</comment>
+<class><specifier>public</specifier> class <name><name>ConversationAdapter</name> <parameter_list>&lt;<parameter><name>V</name> <extends>extends <name>View</name></extends> <operator>&amp;</operator> <name>BindableConversationItem</name></parameter>&gt;</parameter_list></name>
+    <super><extends>extends <name><name>FastCursorRecyclerViewAdapter</name><argument_list type="generic">&lt;<argument><name><name>ConversationAdapter</name><operator>.</operator><name>ViewHolder</name></name></argument>, <argument><name>MessageRecord</name></argument>&gt;</argument_list></name></extends>
+  <implements>implements <name><name>StickyHeaderDecoration</name><operator>.</operator><name><name>StickyHeaderAdapter</name><argument_list type="generic">&lt;<argument><name>HeaderViewHolder</name></argument>&gt;</argument_list></name></name></implements></super>
+<block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MAX_CACHE_SIZE</name> <init>= <expr><literal type="number">40</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ConversationAdapter</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>,<argument><name><name>SoftReference</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageRecordCache</name> <init>=
+      <expr><call><name><name>Collections</name><operator>.</operator><name>synchronizedMap</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>LRUCache</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name><name>SoftReference</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>MAX_CACHE_SIZE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_OUTGOING</name>           <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_INCOMING</name>           <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_UPDATE</name>             <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_AUDIO_OUTGOING</name>     <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_AUDIO_INCOMING</name>     <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_THUMBNAIL_OUTGOING</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_THUMBNAIL_INCOMING</name> <init>= <expr><literal type="number">6</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_DOCUMENT_OUTGOING</name>  <init>= <expr><literal type="number">7</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MESSAGE_TYPE_DOCUMENT_INCOMING</name>  <init>= <expr><literal type="number">8</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></type> <name>batchSelected</name> <init>= <expr><call><name><name>Collections</name><operator>.</operator><name>synchronizedSet</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>ItemClickListener</name></type> <name>clickListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>GlideRequests</name></type>     <name>glideRequests</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>Locale</name></type>            <name>locale</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>Recipient</name></type>         <name>recipient</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>MmsSmsDatabase</name></type>    <name>db</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>LayoutInflater</name></type>    <name>inflater</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>Calendar</name></type>          <name>calendar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation>  <name>MessageDigest</name></type>     <name>digest</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>MessageRecord</name></type> <name>recordToPulseHighlight</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type>        <name>searchQuery</name></decl>;</decl_stmt>
+
+  <class><specifier>protected</specifier> <specifier>static</specifier> class <name>ViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>V</name> <extends>extends <name>View</name></extends> <operator>&amp;</operator> <name>BindableConversationItem</name></parameter>&gt;</parameter_list> <name>ViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>V</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unchecked"</literal></expr></argument>)</argument_list></annotation>
+    <specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>V</name> <extends>extends <name>View</name></extends> <operator>&amp;</operator> <name>BindableConversationItem</name></parameter>&gt;</parameter_list> <type><name>V</name></type> <name>getView</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>V</name><operator>)</operator><name>itemView</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+
+  <class><specifier>static</specifier> class <name>HeaderViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+    <decl_stmt><decl><type><name>TextView</name></type> <name>textView</name></decl>;</decl_stmt>
+
+    <constructor><name>HeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>textView</name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>itemView</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><name>HeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>TextView</name></type> <name>textView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>textView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>textView</name></name> <operator>=</operator> <name>textView</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setText</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>textView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+
+  <interface>interface <name>ItemClickListener</name> <super><extends>extends <name><name>BindableConversationItem</name><operator>.</operator><name>EventListener</name></name></extends></super> <block>{
+    <function_decl><type><name>void</name></type> <name>onItemClick</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>item</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onItemLongClick</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>item</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"ConstantConditions"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>VisibleForTesting</name></annotation>
+  <name>ConversationAdapter</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>locale</name></name>        <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>clickListener</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>     <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>inflater</name></name>      <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>db</name></name>            <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>calendar</name></name>      <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>digest</name></name>        <operator>=</operator> <call><name><name>MessageDigest</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"SHA1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> <name>nsae</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"SHA1 isn't supported!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ConversationAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>ItemClickListener</name></type> <name>clickListener</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name> <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>locale</name></name>        <operator>=</operator> <name>locale</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>clickListener</name></name> <operator>=</operator> <name>clickListener</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>     <operator>=</operator> <name>recipient</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>inflater</name></name>      <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>db</name></name>            <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>calendar</name></name>      <operator>=</operator> <call><name><name>Calendar</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>digest</name></name>        <operator>=</operator> <call><name><name>MessageDigest</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"SHA1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>setHasStableIds</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> <name>nsae</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"SHA1 isn't supported!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>changeCursor</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>messageRecordCache</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>cleanFastRecords</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>changeCursor</name></name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onBindItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type>           <name>adapterPosition</name> <init>= <expr><call><name><name>viewHolder</name><operator>.</operator><name>getAdapterPosition</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>MessageRecord</name></type> <name>previousRecord</name>  <init>= <expr><ternary><condition><expr><name>adapterPosition</name> <operator>&lt;</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name>isFooterPosition</name><argument_list>(<argument><expr><name>adapterPosition</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>adapterPosition</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>MessageRecord</name></type> <name>nextRecord</name>      <init>= <expr><ternary><condition><expr><name>adapterPosition</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name>isHeaderPosition</name><argument_list>(<argument><expr><name>adapterPosition</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>adapterPosition</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>getView</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>bind</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>,
+                              <argument><expr><call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><name>previousRecord</name></expr></argument>)</argument_list></call></expr></argument>,
+                              <argument><expr><call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><name>nextRecord</name></expr></argument>)</argument_list></call></expr></argument>,
+                              <argument><expr><name>glideRequests</name></expr></argument>,
+                              <argument><expr><name>locale</name></expr></argument>,
+                              <argument><expr><name>batchSelected</name></expr></argument>,
+                              <argument><expr><name>recipient</name></expr></argument>,
+                              <argument><expr><name>searchQuery</name></expr></argument>,
+                              <argument><expr><name>messageRecord</name> <operator>==</operator> <name>recordToPulseHighlight</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>messageRecord</name> <operator>==</operator> <name>recordToPulseHighlight</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>recordToPulseHighlight</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>ViewHolder</name></type> <name>onCreateItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type> <name>start</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>V</name></type> <name>itemView</name> <init>= <expr><call><name><name>ViewUtil</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name>inflater</name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><call><name>getLayoutForViewType</name><argument_list>(<argument><expr><name>viewType</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><name>clickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>clickListener</name><operator>.</operator><name>onItemClick</name></name><argument_list>(<argument><expr><call><name><name>itemView</name><operator>.</operator><name>getMessageRecord</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setOnLongClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><name>clickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>clickListener</name><operator>.</operator><name>onItemLongClick</name></name><argument_list>(<argument><expr><call><name><name>itemView</name><operator>.</operator><name>getMessageRecord</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setEventListener</name></name><argument_list>(<argument><expr><name>clickListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Inflate time: "</literal> <operator>+</operator> <operator>(</operator><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>start</name><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><operator>new</operator> <call><name>ViewHolder</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onItemViewRecycled</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>getView</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>unbind</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>LayoutRes</name></annotation> <type><name>int</name></type> <name>getLayoutForViewType</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>viewType</name></expr>)</condition> <block>{
+      <case>case <expr><name>MESSAGE_TYPE_AUDIO_OUTGOING</name></expr>:</case>
+      <case>case <expr><name>MESSAGE_TYPE_THUMBNAIL_OUTGOING</name></expr>:</case>
+      <case>case <expr><name>MESSAGE_TYPE_DOCUMENT_OUTGOING</name></expr>:</case>
+      <case>case <expr><name>MESSAGE_TYPE_OUTGOING</name></expr>:</case>        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_sent</name></name></expr>;</return>
+      <case>case <expr><name>MESSAGE_TYPE_AUDIO_INCOMING</name></expr>:</case>
+      <case>case <expr><name>MESSAGE_TYPE_THUMBNAIL_INCOMING</name></expr>:</case>
+      <case>case <expr><name>MESSAGE_TYPE_DOCUMENT_INCOMING</name></expr>:</case>
+      <case>case <expr><name>MESSAGE_TYPE_INCOMING</name></expr>:</case>        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_received</name></name></expr>;</return>
+      <case>case <expr><name>MESSAGE_TYPE_UPDATE</name></expr>:</case>          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_update</name></name></expr>;</return>
+      <default>default:</default> <throw>throw <expr><operator>new</operator> <call><name>IllegalArgumentException</name><argument_list>(<argument><expr><literal type="string">"unsupported item view type given to ConversationAdapter"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></switch>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getItemViewType</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isUpdate</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>MESSAGE_TYPE_UPDATE</name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>hasAudio</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>MESSAGE_TYPE_AUDIO_OUTGOING</name></expr>;</return></block></then>
+      <else>else                            <block type="pseudo"><return>return <expr><name>MESSAGE_TYPE_AUDIO_INCOMING</name></expr>;</return></block></else></if>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>hasDocument</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>MESSAGE_TYPE_DOCUMENT_OUTGOING</name></expr>;</return></block></then>
+      <else>else                            <block type="pseudo"><return>return <expr><name>MESSAGE_TYPE_DOCUMENT_INCOMING</name></expr>;</return></block></else></if>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>hasThumbnail</name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>MESSAGE_TYPE_THUMBNAIL_OUTGOING</name></expr>;</return></block></then>
+      <else>else                            <block type="pseudo"><return>return <expr><name>MESSAGE_TYPE_THUMBNAIL_INCOMING</name></expr>;</return></block></else></if>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>MESSAGE_TYPE_OUTGOING</name></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><name>MESSAGE_TYPE_INCOMING</name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>boolean</name></type> <name>isRecordForId</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type> <name>record</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>record</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>id</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getItemId</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>attachments</name>        <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getAttachment</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>messageAttachments</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>attachments</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>filterNot</name><argument_list>(<argument><expr><name>DatabaseAttachment</name><operator>::</operator><name>isQuote</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>messageAttachments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <call><name><name>messageAttachments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getFastPreflightId</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Long</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>messageAttachments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getFastPreflightId</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>unique</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>MmsSmsColumns</name><operator>.</operator><name>UNIQUE_ROW_ID</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>bytes</name>  <init>= <expr><call><name><name>digest</name><operator>.</operator><name>digest</name></name><argument_list>(<argument><expr><call><name><name>unique</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>Conversions</name><operator>.</operator><name>byteArrayToLong</name></name><argument_list>(<argument><expr><name>bytes</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>long</name></type> <name>getItemId</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>record</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>record</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>SlideDeck</name></type> <name>slideDeck</name> <init>= <expr><operator>(</operator><operator>(</operator><name>MmsMessageRecord</name><operator>)</operator><name>record</name><operator>)</operator><operator>.</operator><call><name>getSlideDeck</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>slideDeck</name><operator>.</operator><name>getThumbnailSlide</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>slideDeck</name><operator>.</operator><name>getThumbnailSlide</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getFastPreflightId</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>Long</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>slideDeck</name><operator>.</operator><name>getThumbnailSlide</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getFastPreflightId</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>record</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>MessageRecord</name></type> <name>getRecordFromCursor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>long</name></type>   <name>messageId</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>MmsSmsColumns</name><operator>.</operator><name>ID</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>type</name>      <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>MmsSmsDatabase</name><operator>.</operator><name>TRANSPORT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>SoftReference</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></type> <name>reference</name> <init>= <expr><call><name><name>messageRecordCache</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>type</name> <operator>+</operator> <name>messageId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>reference</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>MessageRecord</name></type> <name>record</name> <init>= <expr><call><name><name>reference</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>record</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>record</name></expr>;</return></block></then></if>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>MessageRecord</name></type> <name>messageRecord</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getCurrent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>messageRecordCache</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>type</name> <operator>+</operator> <name>messageId</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>SoftReference</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>messageRecord</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>getCursor</name><argument_list>()</argument_list></call><operator>.</operator><call><name>close</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>findLastSeenPosition</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>lastSeen</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>lastSeen</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then>     <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><operator>!</operator><call><name>isActiveCursor</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>count</name> <init>= <expr><call><name>getItemCount</name><argument_list>()</argument_list></call> <operator>-</operator> <operator>(</operator><ternary><condition><expr><call><name>hasFooterView</name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><operator>(</operator><ternary><condition><expr><call><name>hasHeaderView</name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary><operator>)</operator></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name>count</name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>MessageRecord</name></type> <name>messageRecord</name> <init>= <expr><call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>messageRecord</name><operator>.</operator><name>getDateReceived</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <name>lastSeen</name></expr>)</condition><then> <block>{
+        <return>return <expr><name>i</name></expr>;</return>
+      }</block></then></if>
+    }</block></for>
+
+    <return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>toggleSelection</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>batchSelected</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>batchSelected</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>messageRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>clearSelection</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>batchSelected</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></type> <name>getSelectedItems</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>unmodifiableSet</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>batchSelected</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>pulseHighlightItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>position</name> <operator>&lt;</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>recordToPulseHighlight</name> <operator>=</operator> <call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyItemChanged</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onSearchQueryUpdated</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>query</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>searchQuery</name></name> <operator>=</operator> <name>query</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>hasAudio</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><operator>(</operator><name>MmsMessageRecord</name><operator>)</operator><name>messageRecord</name><operator>)</operator><operator>.</operator><call><name>getSlideDeck</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAudioSlide</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>hasDocument</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><operator>(</operator><name>MmsMessageRecord</name><operator>)</operator><name>messageRecord</name><operator>)</operator><operator>.</operator><call><name>getSlideDeck</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDocumentSlide</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>hasThumbnail</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><operator>(</operator><name>MmsMessageRecord</name><operator>)</operator><name>messageRecord</name><operator>)</operator><operator>.</operator><call><name>getSlideDeck</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThumbnailSlide</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getHeaderId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>isActiveCursor</name><argument_list>()</argument_list></call></expr>)</condition><then>          <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><call><name>isHeaderPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><call><name>isFooterPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>position</name> <operator>&gt;=</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>position</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then>               <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>MessageRecord</name></type> <name>record</name> <init>= <expr><call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>calendar</name><operator>.</operator><name>setTime</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getDateSent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>Util</name><operator>.</operator><name>hashCode</name></name><argument_list>(<argument><expr><call><name><name>calendar</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>YEAR</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>calendar</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getReceivedTimestamp</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>isActiveCursor</name><argument_list>()</argument_list></call></expr>)</condition><then>          <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><call><name>isHeaderPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><call><name>isFooterPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>position</name> <operator>&gt;=</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>position</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then>               <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>MessageRecord</name></type> <name>messageRecord</name> <init>= <expr><call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="number">0</literal></expr>;</return></block></then>
+    <else>else                            <block type="pseudo"><return>return <expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateReceived</name></name><argument_list>()</argument_list></call></expr>;</return></block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>HeaderViewHolder</name></type> <name>onCreateHeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>HeaderViewHolder</name><argument_list>(<argument><expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_header</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>HeaderViewHolder</name></type> <name>onCreateLastSeenViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>HeaderViewHolder</name><argument_list>(<argument><expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>conversation_item_last_seen</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindHeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>HeaderViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MessageRecord</name></type> <name>messageRecord</name> <init>= <expr><call><name>getRecordForPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>DateUtils</name><operator>.</operator><name>getRelativeDate</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><call><name><name>messageRecord</name><operator>.</operator><name>getDateReceived</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onBindLastSeenViewHolder</name><parameter_list>(<parameter><decl><type><name>HeaderViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getQuantityString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>plurals</name><operator>.</operator><name>ConversationAdapter_n_unread_messages</name></name></expr></argument>, <argument><expr><operator>(</operator><name>position</name> <operator>+</operator> <literal type="number">1</literal><operator>)</operator></expr></argument>, <argument><expr><operator>(</operator><name>position</name> <operator>+</operator> <literal type="number">1</literal><operator>)</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>static</specifier> class <name>LastSeenHeader</name> <super><extends>extends <name>StickyHeaderDecoration</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ConversationAdapter</name></type> <name>adapter</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>                <name>lastSeenTimestamp</name></decl>;</decl_stmt>
+
+    <constructor><name>LastSeenHeader</name><parameter_list>(<parameter><decl><type><name>ConversationAdapter</name></type> <name>adapter</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>lastSeenTimestamp</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>adapter</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>adapter</name></name>           <operator>=</operator> <name>adapter</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastSeenTimestamp</name></name> <operator>=</operator> <name>lastSeenTimestamp</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>boolean</name></type> <name>hasHeader</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>StickyHeaderAdapter</name></type> <name>stickyAdapter</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>adapter</name><operator>.</operator><name>isActiveCursor</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name>lastSeenTimestamp</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>long</name></type> <name>currentRecordTimestamp</name>  <init>= <expr><call><name><name>adapter</name><operator>.</operator><name>getReceivedTimestamp</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type> <name>previousRecordTimestamp</name> <init>= <expr><call><name><name>adapter</name><operator>.</operator><name>getReceivedTimestamp</name></name><argument_list>(<argument><expr><name>position</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><name>currentRecordTimestamp</name> <operator>&gt;</operator> <name>lastSeenTimestamp</name> <operator>&amp;&amp;</operator> <name>previousRecordTimestamp</name> <operator>&lt;</operator> <name>lastSeenTimestamp</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>int</name></type> <name>getHeaderTop</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>header</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>adapterPos</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>layoutPos</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>parent</name><operator>.</operator><name>getLayoutManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDecoratedTop</name><argument_list>(<argument><expr><name>child</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>HeaderViewHolder</name></type> <name>getHeader</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>StickyHeaderAdapter</name></type> <name>stickyAdapter</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>HeaderViewHolder</name></type> <name>viewHolder</name> <init>= <expr><call><name><name>adapter</name><operator>.</operator><name>onCreateLastSeenViewHolder</name></name><argument_list>(<argument><expr><name>parent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>onBindLastSeenViewHolder</name></name><argument_list>(<argument><expr><name>viewHolder</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>int</name></type> <name>widthSpec</name>  <init>= <expr><call><name><name>View</name><operator>.</operator><name>MeasureSpec</name><operator>.</operator><name>makeMeasureSpec</name></name><argument_list>(<argument><expr><call><name><name>parent</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>View</name><operator>.</operator><name>MeasureSpec</name><operator>.</operator><name>EXACTLY</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>heightSpec</name> <init>= <expr><call><name><name>View</name><operator>.</operator><name>MeasureSpec</name><operator>.</operator><name>makeMeasureSpec</name></name><argument_list>(<argument><expr><call><name><name>parent</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>View</name><operator>.</operator><name>MeasureSpec</name><operator>.</operator><name>UNSPECIFIED</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>int</name></type> <name>childWidth</name>  <init>= <expr><call><name><name>ViewGroup</name><operator>.</operator><name>getChildMeasureSpec</name></name><argument_list>(<argument><expr><name>widthSpec</name></expr></argument>, <argument><expr><call><name><name>parent</name><operator>.</operator><name>getPaddingLeft</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>parent</name><operator>.</operator><name>getPaddingRight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>viewHolder</name><operator>.</operator><name>itemView</name><operator>.</operator><name>getLayoutParams</name></name><argument_list>()</argument_list></call><operator>.</operator><name>width</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>childHeight</name> <init>= <expr><call><name><name>ViewGroup</name><operator>.</operator><name>getChildMeasureSpec</name></name><argument_list>(<argument><expr><name>heightSpec</name></expr></argument>, <argument><expr><call><name><name>parent</name><operator>.</operator><name>getPaddingTop</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>parent</name><operator>.</operator><name>getPaddingBottom</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>viewHolder</name><operator>.</operator><name>itemView</name><operator>.</operator><name>getLayoutParams</name></name><argument_list>()</argument_list></call><operator>.</operator><name>height</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>itemView</name><operator>.</operator><name>measure</name></name><argument_list>(<argument><expr><name>childWidth</name></expr></argument>, <argument><expr><name>childHeight</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>itemView</name><operator>.</operator><name>layout</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>viewHolder</name><operator>.</operator><name>itemView</name><operator>.</operator><name>getMeasuredWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>viewHolder</name><operator>.</operator><name>itemView</name><operator>.</operator><name>getMeasuredHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>viewHolder</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+
+</unit>

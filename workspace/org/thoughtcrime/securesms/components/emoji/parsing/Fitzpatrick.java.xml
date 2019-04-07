@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\emoji\parsing\Fitzpatrick.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>parsing</name></name>;</package>
+
+
+<enum><specifier>public</specifier> enum <name>Fitzpatrick</name> <block>{
+  <comment type="block" format="javadoc">/**
+   * Fitzpatrick modifier of type 1/2 (pale white/white)
+   */</comment>
+  <decl><name>TYPE_1_2</name><argument_list>(<argument><expr><literal type="string">"\uD83C\uDFFB"</literal></expr></argument>)</argument_list></decl>,
+
+  <comment type="block" format="javadoc">/**
+   * Fitzpatrick modifier of type 3 (cream white)
+   */</comment>
+  <decl><name>TYPE_3</name><argument_list>(<argument><expr><literal type="string">"\uD83C\uDFFC"</literal></expr></argument>)</argument_list></decl>,
+
+  <comment type="block" format="javadoc">/**
+   * Fitzpatrick modifier of type 4 (moderate brown)
+   */</comment>
+  <decl><name>TYPE_4</name><argument_list>(<argument><expr><literal type="string">"\uD83C\uDFFD"</literal></expr></argument>)</argument_list></decl>,
+
+  <comment type="block" format="javadoc">/**
+   * Fitzpatrick modifier of type 5 (dark brown)
+   */</comment>
+  <decl><name>TYPE_5</name><argument_list>(<argument><expr><literal type="string">"\uD83C\uDFFE"</literal></expr></argument>)</argument_list></decl>,
+
+  <comment type="block" format="javadoc">/**
+   * Fitzpatrick modifier of type 6 (black)
+   */</comment>
+  <decl><name>TYPE_6</name><argument_list>(<argument><expr><literal type="string">"\uD83C\uDFFF"</literal></expr></argument>)</argument_list></decl>;
+
+  <comment type="block" format="javadoc">/**
+   * The unicode representation of the Fitzpatrick modifier
+   */</comment>
+  <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>unicode</name></decl>;</decl_stmt>
+
+  <constructor><name>Fitzpatrick</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>unicode</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unicode</name></name> <operator>=</operator> <name>unicode</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Fitzpatrick</name></type> <name>fitzpatrickFromUnicode</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>unicode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>index</name></decl></parameter>)</parameter_list> <block>{
+    <for>for <control>(<init><decl><type><name>Fitzpatrick</name></type> <name>v</name> <range>: <expr><call><name>values</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>boolean</name></type> <name>match</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><call><name><name>v</name><operator>.</operator><name>unicode</name><operator>.</operator><name>toCharArray</name></name><argument_list>()</argument_list></call><operator>.</operator><name>length</name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>v</name><operator>.</operator><name>unicode</name><operator>.</operator><name>toCharArray</name></name><argument_list>()</argument_list></call><index>[<expr><name>i</name></expr>]</index> <operator>!=</operator> <call><name><name>unicode</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>index</name> <operator>+</operator> <name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name>match</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></for>
+
+      <if>if <condition>(<expr><name>match</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><name>v</name></expr>;</return></block></then></if>
+    }</block></for>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Fitzpatrick</name></type> <name>fitzpatrickFromType</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>Fitzpatrick</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>type</name><operator>.</operator><name>toUpperCase</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalArgumentException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+}</block></enum>
+
+</unit>

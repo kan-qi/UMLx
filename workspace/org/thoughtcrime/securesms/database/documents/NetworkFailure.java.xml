@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\documents\NetworkFailure.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>documents</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonIgnore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonProperty</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>NetworkFailure</name> <block>{
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><name>value</name> <operator>=</operator> <literal type="string">"a"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>String</name></type> <name>address</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>NetworkFailure</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name> <operator>=</operator> <call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>NetworkFailure</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><annotation>@<name>JsonIgnore</name></annotation>
+  <specifier>public</specifier> <type><name>Address</name></type> <name>getAddress</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>address</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>equals</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>other</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>other</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><operator>(</operator><name>other</name> <operator>instanceof</operator> <name>NetworkFailure</name><operator>)</operator></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">false</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>NetworkFailure</name></type> <name>that</name> <init>= <expr><operator>(</operator><name>NetworkFailure</name><operator>)</operator><name>other</name></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>address</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>address</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>hashCode</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>address</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

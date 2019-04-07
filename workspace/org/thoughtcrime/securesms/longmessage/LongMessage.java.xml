@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\longmessage\LongMessage.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>longmessage</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A wrapper around a {@link MessageRecord} and its extra text attachment expanded into a string
+ * held in memory.
+ */</comment>
+<class>class <name>LongMessage</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MessageRecord</name></type> <name>messageRecord</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>        <name>fullBody</name></decl>;</decl_stmt>
+
+  <constructor><name>LongMessage</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>fullBody</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageRecord</name></name> <operator>=</operator> <name>messageRecord</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fullBody</name></name>      <operator>=</operator> <name>fullBody</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><type><name>MessageRecord</name></type> <name>getMessageRecord</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>messageRecord</name></expr>;</return>
+  }</block></function>
+
+  <function><type><name>String</name></type> <name>getFullBody</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>fullBody</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><name>fullBody</name></expr> </then><else>: <expr><call><name><name>messageRecord</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

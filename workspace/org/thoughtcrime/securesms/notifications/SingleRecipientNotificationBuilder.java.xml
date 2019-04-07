@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\notifications\SingleRecipientNotificationBuilder.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Notification</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>PendingIntent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>NotificationCompat</name><operator>.</operator><name>Action</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>RemoteInput</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableStringBuilder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ContactColors</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>FallbackContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>GeneratedContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>DecryptableStreamUriLoader</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>Slide</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>SlideDeck</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>widgets</name><operator>.</operator><name>NotificationPrivacyPreference</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SingleRecipientNotificationBuilder</name> <super><extends>extends <name>AbstractNotificationBuilder</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SingleRecipientNotificationBuilder</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>messageBodies</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>SlideDeck</name></type>    <name>slideDeck</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CharSequence</name></type> <name>contentTitle</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CharSequence</name></type> <name>contentText</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>SingleRecipientNotificationBuilder</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>NotificationPrivacyPreference</name></type> <name>privacy</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>privacy</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setSmallIcon</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>icon_notification</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setColor</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>textsecure_primary</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setCategory</name><argument_list>(<argument><expr><name><name>NotificationCompat</name><operator>.</operator><name>CATEGORY_MESSAGE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>NotificationChannels</name><operator>.</operator><name>supported</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setPriority</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationPriority</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setThread</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type> <name>channelId</name> <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getNotificationChannel</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>setChannelId</name><argument_list>(<argument><expr><ternary><condition><expr><name>channelId</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name>channelId</name></expr> </then><else>: <expr><call><name><name>NotificationChannels</name><operator>.</operator><name>getMessagesChannel</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setContentTitle</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>recipient</name><operator>.</operator><name>getContactUri</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>addPerson</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getContactUri</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>ContactPhoto</name></type>         <name>contactPhoto</name>         <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getContactPhoto</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>FallbackContactPhoto</name></type> <name>fallbackContactPhoto</name> <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getFallbackContactPhoto</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>contactPhoto</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name>setLargeIcon</name><argument_list>(<argument><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><name>contactPhoto</name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>ALL</name></name></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>circleCrop</name><argument_list>()</argument_list></call>
+                               <operator>.</operator><call><name>submit</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>notification_large_icon_width</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                       <argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>notification_large_icon_height</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                               <operator>.</operator><call><name>get</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> | <type><name>ExecutionException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>setLargeIcon</name><argument_list>(<argument><expr><call><name><name>fallbackContactPhoto</name><operator>.</operator><name>asDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toConversationColor</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name>setLargeIcon</name><argument_list>(<argument><expr><call><name><name>fallbackContactPhoto</name><operator>.</operator><name>asDrawable</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toConversationColor</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>setContentTitle</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>SingleRecipientNotificationBuilder_signal</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setLargeIcon</name><argument_list>(<argument><expr><operator>new</operator> <call><name>GeneratedContactPhoto</name><argument_list>(<argument><expr><literal type="string">"Unknown"</literal></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_profile_default</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asDrawable</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>ContactColors</name><operator>.</operator><name>UNKNOWN_COLOR</name><operator>.</operator><name>toConversationColor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setMessageCount</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>messageCount</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setContentInfo</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>messageCount</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setNumber</name><argument_list>(<argument><expr><name>messageCount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setPrimaryMessageBody</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Recipient</name></type> <name>threadRecipients</name></decl></parameter>,
+                                    <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Recipient</name></type> <name>individualRecipient</name></decl></parameter>,
+                                    <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>CharSequence</name></type> <name>message</name></decl></parameter>,
+                                    <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>SlideDeck</name></type> <name>slideDeck</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>SpannableStringBuilder</name></type> <name>stringBuilder</name> <init>= <expr><operator>new</operator> <call><name>SpannableStringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>threadRecipients</name><operator>.</operator><name>isGroupRecipient</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getBoldedString</name></name><argument_list>(<argument><expr><call><name><name>individualRecipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">": "</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayMessage</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setContentText</name><argument_list>(<argument><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>slideDeck</name></name> <operator>=</operator> <name>slideDeck</name></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>setContentText</name><argument_list>(<argument><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>SingleRecipientNotificationBuilder_new_message</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addAndroidAutoAction</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PendingIntent</name></type> <name>androidAutoReplyIntent</name></decl></parameter>,
+                                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PendingIntent</name></type> <name>androidAutoHeardIntent</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timestamp</name></decl></parameter>)</parameter_list>
+  <block>{
+
+    <if>if <condition>(<expr><name>contentTitle</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name>contentText</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>
+      <block type="pseudo"><return>return;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>RemoteInput</name></type> <name>remoteInput</name> <init>= <expr><operator>new</operator> <call><name><name>RemoteInput</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name><name>AndroidAutoReplyReceiver</name><operator>.</operator><name>VOICE_REPLY_KEY</name></name></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>setLabel</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_reply</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name><name>NotificationCompat</name><operator>.</operator><name>CarExtender</name><operator>.</operator><name>UnreadConversation</name><operator>.</operator><name>Builder</name></name></type> <name>unreadConversationBuilder</name> <init>=
+            <expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>CarExtender</name><operator>.</operator><name>UnreadConversation</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name><name>contentTitle</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>addMessage</name><argument_list>(<argument><expr><call><name><name>contentText</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>setLatestTimestamp</name><argument_list>(<argument><expr><name>timestamp</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>setReadPendingIntent</name><argument_list>(<argument><expr><name>androidAutoHeardIntent</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>setReplyAction</name><argument_list>(<argument><expr><name>androidAutoReplyIntent</name></expr></argument>, <argument><expr><name>remoteInput</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>extend</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>CarExtender</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setUnreadConversation</name><argument_list>(<argument><expr><call><name><name>unreadConversationBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addActions</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PendingIntent</name></type> <name>markReadIntent</name></decl></parameter>,
+                         <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PendingIntent</name></type> <name>quickReplyIntent</name></decl></parameter>,
+                         <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>PendingIntent</name></type> <name>wearableReplyIntent</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>Action</name></type> <name>markAsReadAction</name> <init>= <expr><operator>new</operator> <call><name>Action</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>check</name></name></expr></argument>,
+                                         <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_mark_read</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                         <argument><expr><name>markReadIntent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Action</name></type> <name>replyAction</name> <init>= <expr><operator>new</operator> <call><name>Action</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_reply_white_36dp</name></name></expr></argument>,
+                                    <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_reply</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><name>quickReplyIntent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>N</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>replyAction</name> <operator>=</operator> <operator>new</operator> <call><name><name>Action</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_reply_white_36dp</name></name></expr></argument>,
+                                       <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_reply</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                       <argument><expr><name>wearableReplyIntent</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>addRemoteInput</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>RemoteInput</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name><name>MessageNotifier</name><operator>.</operator><name>EXTRA_REMOTE_REPLY</name></name></expr></argument>)</argument_list></call>
+                              <operator>.</operator><call><name>setLabel</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_reply</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Action</name></type> <name>wearableReplyAction</name> <init>= <expr><operator>new</operator> <call><name><name>Action</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_reply</name></name></expr></argument>,
+                                                    <argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_reply</name></name></expr></argument>)</argument_list></call></expr></argument>,
+                                                    <argument><expr><name>wearableReplyIntent</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>addRemoteInput</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>RemoteInput</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name><name>MessageNotifier</name><operator>.</operator><name>EXTRA_REMOTE_REPLY</name></name></expr></argument>)</argument_list></call>
+                            <operator>.</operator><call><name>setLabel</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>MessageNotifier_reply</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>addAction</name><argument_list>(<argument><expr><name>markAsReadAction</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>addAction</name><argument_list>(<argument><expr><name>replyAction</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>extend</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>WearableExtender</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>addAction</name><argument_list>(<argument><expr><name>markAsReadAction</name></expr></argument>)</argument_list></call>
+                                                    <operator>.</operator><call><name>addAction</name><argument_list>(<argument><expr><name>wearableReplyAction</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addMessageBody</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>threadRecipient</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>individualRecipient</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>CharSequence</name></type> <name>messageBody</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>SpannableStringBuilder</name></type> <name>stringBuilder</name> <init>= <expr><operator>new</operator> <call><name>SpannableStringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayContact</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>threadRecipient</name><operator>.</operator><name>isGroupRecipient</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getBoldedString</name></name><argument_list>(<argument><expr><call><name><name>individualRecipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">": "</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayMessage</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>messageBodies</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>messageBody</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">""</literal></expr> </then><else>: <expr><name>messageBody</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>messageBodies</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>stringBuilder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>SingleRecipientNotificationBuilder_new_message</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Notification</name></type> <name>build</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>privacy</name><operator>.</operator><name>isDisplayMessage</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>messageBodies</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <call><name>hasBigPictureSlide</name><argument_list>(<argument><expr><name>slideDeck</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>setStyle</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>BigPictureStyle</name></name><argument_list>()</argument_list></call>
+                     <operator>.</operator><call><name>bigPicture</name><argument_list>(<argument><expr><call><name>getBigPicture</name><argument_list>(<argument><expr><name>slideDeck</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>setSummaryText</name><argument_list>(<argument><expr><call><name>getBigText</name><argument_list>(<argument><expr><name>messageBodies</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name>setStyle</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>NotificationCompat</name><operator>.</operator><name>BigTextStyle</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>bigText</name><argument_list>(<argument><expr><call><name>getBigText</name><argument_list>(<argument><expr><name>messageBodies</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setLargeIcon</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Drawable</name></type> <name>drawable</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>drawable</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>int</name></type>    <name>largeIconTargetSize</name>  <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>contact_photo_target_size</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>recipientPhotoBitmap</name> <init>= <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>createFromDrawable</name></name><argument_list>(<argument><expr><name>drawable</name></expr></argument>, <argument><expr><name>largeIconTargetSize</name></expr></argument>, <argument><expr><name>largeIconTargetSize</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>recipientPhotoBitmap</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>setLargeIcon</name><argument_list>(<argument><expr><name>recipientPhotoBitmap</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>hasBigPictureSlide</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>SlideDeck</name></type> <name>slideDeck</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>slideDeck</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <literal type="number">16</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Slide</name></type> <name>thumbnailSlide</name> <init>= <expr><call><name><name>slideDeck</name><operator>.</operator><name>getThumbnailSlide</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><name>thumbnailSlide</name> <operator>!=</operator> <literal type="null">null</literal>         <operator>&amp;&amp;</operator>
+           <call><name><name>thumbnailSlide</name><operator>.</operator><name>hasImage</name></name><argument_list>()</argument_list></call>      <operator>&amp;&amp;</operator>
+           <operator>!</operator><call><name><name>thumbnailSlide</name><operator>.</operator><name>isInProgress</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator>
+           <call><name><name>thumbnailSlide</name><operator>.</operator><name>getThumbnailUri</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Bitmap</name></type> <name>getBigPicture</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SlideDeck</name></type> <name>slideDeck</name></decl></parameter>)</parameter_list>
+  <block>{
+    <try>try <block>{
+      <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"ConstantConditions"</literal></expr></argument>)</argument_list></annotation>
+      <type><name>Uri</name></type> <name>uri</name> <init>= <expr><call><name><name>slideDeck</name><operator>.</operator><name>getThumbnailSlide</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThumbnailUri</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>asBitmap</name><argument_list>()</argument_list></call>
+                     <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>DecryptableStreamUriLoader</name><operator>.</operator><name>DecryptableUri</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>submit</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>, <argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>get</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> | <type><name>ExecutionException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>, <argument><expr><literal type="number">500</literal></expr></argument>, <argument><expr><name><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>RGB_565</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name></type> <name>setContentTitle</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>contentTitle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contentTitle</name></name> <operator>=</operator> <name>contentTitle</name></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>setContentTitle</name></name><argument_list>(<argument><expr><name>contentTitle</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>NotificationCompat</name><operator>.</operator><name>Builder</name></name></type> <name>setContentText</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>contentText</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contentText</name></name> <operator>=</operator> <name>contentText</name></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>setContentText</name></name><argument_list>(<argument><expr><name>contentText</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>CharSequence</name></type> <name>getBigText</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>messageBodies</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SpannableStringBuilder</name></type> <name>content</name> <init>= <expr><operator>new</operator> <call><name>SpannableStringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>messageBodies</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <expr_stmt><expr><call><name><name>content</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>messageBodies</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name>i</name> <operator>&lt;</operator> <call><name><name>messageBodies</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>content</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+
+    <return>return <expr><name>content</name></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

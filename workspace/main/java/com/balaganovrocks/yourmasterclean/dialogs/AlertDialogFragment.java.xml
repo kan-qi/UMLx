@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\dialogs\AlertDialogFragment.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>dialogs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Dialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>DialogFragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<comment type="block" format="javadoc">/**
+ * Â© 2012 amsoft.cn
+ * åç§°ï¼AbAlertDialogFragment.java 
+ * æè¿°ï¼å¼¹åºæ¡
+ *
+ * @author 
+ * @version v1.0
+ * @dateï¼2014-07-29 ä¸å9:00:52
+ */</comment>
+<class><specifier>public</specifier> class <name>AlertDialogFragment</name> <super><extends>extends <name>DialogFragment</name></extends></super> <block>{
+	
+	<decl_stmt><decl><type><name>int</name></type> <name>mIcon</name></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>String</name></type> <name>mTitle</name></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>String</name></type> <name>mMessage</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>static</specifier> <type><name>View</name></type> <name>mContentView</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>static</specifier> <type><name>DialogOnClickListener</name></type> <name>mOnClickListener</name></decl>;</decl_stmt>
+	
+	<comment type="block" format="javadoc">/**
+	 * Create a new instance of AbDialogFragment.
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>newInstance</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>icon</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>,<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>,<parameter><decl><type><name>DialogOnClickListener</name></type> <name>onClickListener</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>f</name> <init>= <expr><operator>new</operator> <call><name>AlertDialogFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><name>mOnClickListener</name> <operator>=</operator> <name>onClickListener</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>mContentView</name> <operator>=</operator> <name>view</name></expr>;</expr_stmt>
+		
+		<decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putInt</name></name><argument_list>(<argument><expr><literal type="string">"icon"</literal></expr></argument>, <argument><expr><name>icon</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><literal type="string">"title"</literal></expr></argument>, <argument><expr><name>title</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><literal type="string">"message"</literal></expr></argument>, <argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>f</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+		<return>return <expr><name>f</name></expr>;</return>
+	}</block></function>
+	
+
+	<function><annotation>@<name>Override</name></annotation>
+	<specifier>public</specifier> <type><name>Dialog</name></type> <name>onCreateDialog</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>mIcon</name> <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInt</name><argument_list>(<argument><expr><literal type="string">"icon"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>mTitle</name> <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><literal type="string">"title"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>mMessage</name> <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><literal type="string">"message"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+		<decl_stmt><decl><type><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>,<argument><expr><name><name>AlertDialog</name><operator>.</operator><name>THEME_HOLO_LIGHT</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<if>if<condition>(<expr><name>mIcon</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then><block>{
+			<expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setIcon</name></name><argument_list>(<argument><expr><name>mIcon</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		
+		<if>if<condition>(<expr><name>mTitle</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then><block>{
+			<expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><name>mTitle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		
+		<if>if<condition>(<expr><name>mMessage</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then><block>{
+			<expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setMessage</name></name><argument_list>(<argument><expr><name>mMessage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			
+		}</block></then></if>
+		<if>if<condition>(<expr><name>mContentView</name><operator>!=</operator><literal type="null">null</literal></expr>)</condition><then><block>{
+			<expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setView</name></name><argument_list>(<argument><expr><name>mContentView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		
+		<if>if<condition>(<expr><name>mOnClickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then><block>{
+			<expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setPositiveButton</name></name><argument_list>(<argument><expr><literal type="string">"Ð¿Ð¾Ð´ÑÐ²ÐµÑÐ´Ð¸ÑÑ"</literal></expr></argument>,
+	            <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+	                <function><specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>whichButton</name></decl></parameter>)</parameter_list> <block>{
+	                	<if>if<condition>(<expr><name>mOnClickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then><block>{
+	                		<expr_stmt><expr><call><name><name>mOnClickListener</name><operator>.</operator><name>onPositiveClick</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+	                	}</block></then></if>
+	                }</block></function>
+	            }</block></class></expr></argument>
+		     )</argument_list></call></expr>;</expr_stmt>
+		     <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setNegativeButton</name></name><argument_list>(<argument><expr><literal type="string">"Ð¾ÑÐ¼ÐµÐ½ÐµÐ½"</literal></expr></argument>,
+	            <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+	                <function><specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>whichButton</name></decl></parameter>)</parameter_list> <block>{
+	                	<if>if<condition>(<expr><name>mOnClickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then><block>{
+	                		<expr_stmt><expr><call><name><name>mOnClickListener</name><operator>.</operator><name>onNegativeClick</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+	                	}</block></then></if>
+	                }</block></function>
+	            }</block></class></expr></argument>
+		    )</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+		
+	    <return>return <expr><call><name><name>builder</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr>;</return>
+	}</block></function>
+	
+	
+	<comment type="block" format="javadoc">/**
+     * Dialogäºä»¶çæ¥å£.
+     */</comment>
+    <interface><specifier>public</specifier> interface <name>DialogOnClickListener</name> <block>{
+    	
+    	<function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onPositiveClick</name><parameter_list>()</parameter_list>;</function_decl>
+   	    
+     	<function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onNegativeClick</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></interface>
+	
+}</block></class>
+</unit>

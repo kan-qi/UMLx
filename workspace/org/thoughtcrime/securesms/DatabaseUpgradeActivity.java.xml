@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\DatabaseUpgradeActivity.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2013 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>PreferenceManager</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>Job</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>persistence</name><operator>.</operator><name>JavaJobSerializer</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>persistence</name><operator>.</operator><name>PersistentStorage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ContactColorsLegacy</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ProgressBar</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>DatabaseAttachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>IdentityKeyUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MmsDatabase</name><operator>.</operator><name>Reader</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>PushDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>AttachmentDownloadJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>CreateSignedPreKeyJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>DirectoryRefreshJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>PushDecryptJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>RefreshAttributesJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>MessageNotifier</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>KeyCachingService</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>FileUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>VersionTracker</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>SortedSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>TreeSet</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DatabaseUpgradeActivity</name> <super><extends>extends <name>BaseActivity</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>DatabaseUpgradeActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>NO_MORE_KEY_EXCHANGE_PREFIX_VERSION</name>  <init>= <expr><literal type="number">46</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MMS_BODY_VERSION</name>                     <init>= <expr><literal type="number">46</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TOFU_IDENTITIES_VERSION</name>              <init>= <expr><literal type="number">50</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>CURVE25519_VERSION</name>                   <init>= <expr><literal type="number">63</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ASYMMETRIC_MASTER_SECRET_FIX_VERSION</name> <init>= <expr><literal type="number">73</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>NO_V1_VERSION</name>                        <init>= <expr><literal type="number">83</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SIGNED_PREKEY_VERSION</name>                <init>= <expr><literal type="number">83</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>NO_DECRYPT_QUEUE_VERSION</name>             <init>= <expr><literal type="number">113</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>PUSH_DECRYPT_SERIAL_ID_VERSION</name>       <init>= <expr><literal type="number">131</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MIGRATE_SESSION_PLAINTEXT</name>            <init>= <expr><literal type="number">136</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>CONTACTS_ACCOUNT_VERSION</name>             <init>= <expr><literal type="number">136</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MEDIA_DOWNLOAD_CONTROLS_VERSION</name>      <init>= <expr><literal type="number">151</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>REDPHONE_SUPPORT_VERSION</name>             <init>= <expr><literal type="number">157</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>NO_MORE_CANONICAL_DB_VERSION</name>         <init>= <expr><literal type="number">276</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>PROFILES</name>                             <init>= <expr><literal type="number">289</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SCREENSHOTS</name>                          <init>= <expr><literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>PERSISTENT_BLOBS</name>                     <init>= <expr><literal type="number">317</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>INTERNALIZE_CONTACTS</name>                 <init>= <expr><literal type="number">317</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SQLCIPHER</name>                            <init>= <expr><literal type="number">334</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SQLCIPHER_COMPLETE</name>                   <init>= <expr><literal type="number">352</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>REMOVE_JOURNAL</name>                       <init>= <expr><literal type="number">353</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>REMOVE_CACHE</name>                         <init>= <expr><literal type="number">354</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>FULL_TEXT_SEARCH</name>                     <init>= <expr><literal type="number">358</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>BAD_IMPORT_CLEANUP</name>                   <init>= <expr><literal type="number">373</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>IMAGE_CACHE_CLEANUP</name>                  <init>= <expr><literal type="number">406</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>WORKMANAGER_MIGRATION</name>                <init>= <expr><literal type="number">408</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>COLOR_MIGRATION</name>                      <init>= <expr><literal type="number">412</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>UNIDENTIFIED_DELIVERY</name>                <init>= <expr><literal type="number">422</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SIGNALING_KEY_DEPRECATION</name>            <init>= <expr><literal type="number">447</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>CONVERSATION_SEARCH</name>                  <init>= <expr><literal type="number">455</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>SortedSet</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>UPGRADE_VERSIONS</name> <init>= <expr><operator>new</operator> <class><super><name><name>TreeSet</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block>{
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>NO_MORE_KEY_EXCHANGE_PREFIX_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>TOFU_IDENTITIES_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>CURVE25519_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>ASYMMETRIC_MASTER_SECRET_FIX_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>NO_V1_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>SIGNED_PREKEY_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>NO_DECRYPT_QUEUE_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>PUSH_DECRYPT_SERIAL_ID_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>MIGRATE_SESSION_PLAINTEXT</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>MEDIA_DOWNLOAD_CONTROLS_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>REDPHONE_SUPPORT_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>NO_MORE_CANONICAL_DB_VERSION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>SCREENSHOTS</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>INTERNALIZE_CONTACTS</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>PERSISTENT_BLOBS</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>SQLCIPHER</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>SQLCIPHER_COMPLETE</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>REMOVE_CACHE</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>FULL_TEXT_SEARCH</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>BAD_IMPORT_CLEANUP</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>IMAGE_CACHE_CLEANUP</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>WORKMANAGER_MIGRATION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>COLOR_MIGRATION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>UNIDENTIFIED_DELIVERY</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>SIGNALING_KEY_DEPRECATION</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>add</name><parameter_list>(<parameter><decl><type><name>CONVERSATION_SEARCH</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+  }</block>}</block></class></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>MasterSecret</name></type> <name>masterSecret</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>masterSecret</name></name> <operator>=</operator> <call><name><name>KeyCachingService</name><operator>.</operator><name>getMasterSecret</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>needsUpgradeTask</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><literal type="string">"DatabaseUpgradeActivity"</literal></expr></argument>, <argument><expr><literal type="string">"Upgrading..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>database_upgrade_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>ProgressBar</name></type> <name>indeterminateProgress</name> <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>indeterminate_progress</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>ProgressBar</name></type> <name>determinateProgress</name>   <init>= <expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>determinate_progress</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><operator>new</operator> <call><name>DatabaseUpgradeTask</name><argument_list>(<argument><expr><name>indeterminateProgress</name></expr></argument>, <argument><expr><name>determinateProgress</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>, <argument><expr><call><name><name>VersionTracker</name><operator>.</operator><name>getLastSeenVersion</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>VersionTracker</name><operator>.</operator><name>updateLastSeenVersion</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>updateNotifications</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><operator>(</operator><name>Intent</name><operator>)</operator><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><literal type="string">"next_intent"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>needsUpgradeTask</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>currentVersionCode</name> <init>= <expr><call><name><name>Util</name><operator>.</operator><name>getCurrentApkReleaseVersion</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>lastSeenVersion</name>    <init>= <expr><call><name><name>VersionTracker</name><operator>.</operator><name>getLastSeenVersion</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><literal type="string">"DatabaseUpgradeActivity"</literal></expr></argument>, <argument><expr><literal type="string">"LastSeenVersion: "</literal> <operator>+</operator> <name>lastSeenVersion</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>lastSeenVersion</name> <operator>&gt;=</operator> <name>currentVersionCode</name></expr>)</condition><then>
+      <block type="pseudo"><return>return <expr><literal type="boolean">false</literal></expr>;</return></block></then></if>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>version</name> <range>: <expr><name>UPGRADE_VERSIONS</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><literal type="string">"DatabaseUpgradeActivity"</literal></expr></argument>, <argument><expr><literal type="string">"Comparing: "</literal> <operator>+</operator> <name>version</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name>lastSeenVersion</name> <operator>&lt;</operator> <name>version</name></expr>)</condition><then>
+        <block type="pseudo"><return>return <expr><literal type="boolean">true</literal></expr>;</return></block></then></if>
+    }</block></for>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isUpdate</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>currentVersionCode</name>  <init>= <expr><call><name><name>context</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPackageInfo</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><name>versionCode</name></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>previousVersionCode</name> <init>= <expr><call><name><name>VersionTracker</name><operator>.</operator><name>getLastSeenVersion</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><name>previousVersionCode</name> <operator>&lt;</operator> <name>currentVersionCode</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>updateNotifications</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>updateNotification</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>DatabaseUpgradeListener</name> <block>{
+    <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>setProgress</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>progress</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>total</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> class <name>DatabaseUpgradeTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Double</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></extends>
+      <implements>implements <name>DatabaseUpgradeListener</name></implements></super>
+  <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ProgressBar</name></type> <name>indeterminateProgress</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ProgressBar</name></type> <name>determinateProgress</name></decl>;</decl_stmt>
+
+    <constructor><name>DatabaseUpgradeTask</name><parameter_list>(<parameter><decl><type><name>ProgressBar</name></type> <name>indeterminateProgress</name></decl></parameter>, <parameter><decl><type><name>ProgressBar</name></type> <name>determinateProgress</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>indeterminateProgress</name></name> <operator>=</operator> <name>indeterminateProgress</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>determinateProgress</name></name>   <operator>=</operator> <name>determinateProgress</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Integer</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Context</name></type> <name>context</name> <init>= <expr><call><name><name>DatabaseUpgradeActivity</name><operator>.</operator><name>this</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><literal type="string">"DatabaseUpgradeActivity"</literal></expr></argument>, <argument><expr><literal type="string">"Running background upgrade.."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name><name>DatabaseUpgradeActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call>
+                     <operator>.</operator><call><name>onApplicationLevelUpgrade</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>masterSecret</name></expr></argument>, <argument><expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>CURVE25519_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>IdentityKeyUtil</name><operator>.</operator><name>migrateIdentityKeys</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>NO_V1_VERSION</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>File</name></type> <name>v1sessions</name> <init>= <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getFilesDir</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"sessions"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>v1sessions</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>v1sessions</name><operator>.</operator><name>isDirectory</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>contents</name> <init>= <expr><call><name><name>v1sessions</name><operator>.</operator><name>listFiles</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><name>contents</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <for>for <control>(<init><decl><type><name>File</name></type> <name>session</name> <range>: <expr><name>contents</name></expr></range></decl></init>)</control> <block>{
+              <expr_stmt><expr><call><name><name>session</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+          }</block></then></if>
+
+          <expr_stmt><expr><call><name><name>v1sessions</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>SIGNED_PREKEY_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>CreateSignedPreKeyJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>NO_DECRYPT_QUEUE_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>scheduleMessagesInPushDatabase</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>PUSH_DECRYPT_SERIAL_ID_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>scheduleMessagesInPushDatabase</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>MIGRATE_SESSION_PLAINTEXT</name></expr>)</condition><then> <block>{
+<comment type="line">//        new TextSecureSessionStore(context, masterSecret).migrateSessions();</comment>
+<comment type="line">//        new TextSecurePreKeyStore(context, masterSecret).migrateRecords();</comment>
+
+        <expr_stmt><expr><call><name><name>IdentityKeyUtil</name><operator>.</operator><name>migrateIdentityKeys</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>scheduleMessagesInPushDatabase</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><empty_stmt>;</empty_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>CONTACTS_ACCOUNT_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DirectoryRefreshJob</name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>MEDIA_DOWNLOAD_CONTROLS_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>schedulePendingIncomingParts</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>REDPHONE_SUPPORT_VERSION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RefreshAttributesJob</name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DirectoryRefreshJob</name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>PROFILES</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DirectoryRefreshJob</name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>SCREENSHOTS</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>boolean</name></type> <name>screenSecurity</name> <init>= <expr><call><name><name>PreferenceManager</name><operator>.</operator><name>getDefaultSharedPreferences</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getBoolean</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>SCREEN_SECURITY_PREF</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setScreenSecurityEnabled</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>screenSecurity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>PERSISTENT_BLOBS</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>File</name></type> <name>externalDir</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getExternalFilesDir</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>externalDir</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>externalDir</name><operator>.</operator><name>isDirectory</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>externalDir</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <for>for <control>(<init><decl><type><name>File</name></type> <name>blob</name> <range>: <expr><call><name><name>externalDir</name><operator>.</operator><name>listFiles</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><call><name><name>blob</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>blob</name><operator>.</operator><name>isFile</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>blob</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          }</block></for>
+        }</block></then></if>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>INTERNALIZE_CONTACTS</name></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setHasSuccessfullyRetrievedDirectory</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>SQLCIPHER</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>scheduleMessagesInPushDatabase</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>SQLCIPHER_COMPLETE</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>File</name></type> <name>file</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getDatabasePath</name></name><argument_list>(<argument><expr><literal type="string">"messages.db"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>file</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>file</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>REMOVE_JOURNAL</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>File</name></type> <name>file</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getDatabasePath</name></name><argument_list>(<argument><expr><literal type="string">"messages.db-journal"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>file</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>file</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>REMOVE_CACHE</name></expr>)</condition><then> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>FileUtils</name><operator>.</operator><name>deleteDirectoryContents</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getCacheDir</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>IMAGE_CACHE_CLEANUP</name></expr>)</condition><then> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>FileUtils</name><operator>.</operator><name>deleteDirectoryContents</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getExternalCacheDir</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>clearDiskCache</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>WORKMANAGER_MIGRATION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Beginning migration of existing jobs to WorkManager"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>JobManager</name></type>        <name>jobManager</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>PersistentStorage</name></type> <name>storage</name>    <init>= <expr><operator>new</operator> <call><name>PersistentStorage</name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"TextSecureJobs"</literal></expr></argument>, <argument><expr><operator>new</operator> <call><name>JavaJobSerializer</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>Job</name></type> <name>job</name> <range>: <expr><call><name><name>storage</name><operator>.</operator><name>getAllUnencrypted</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+          <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>job</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Migrated job with class '"</literal> <operator>+</operator> <call><name><name>job</name><operator>.</operator><name>getClass</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSimpleName</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"' to run on new JobManager."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>COLOR_MIGRATION</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>long</name></type> <name>startTime</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>updateSystemContactColors</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>name</name></decl></parameter>, <parameter><decl><name>color</name></decl></parameter>)</parameter_list> -&gt; <block>{
+          <if>if <condition>(<expr><name>color</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <try>try <block>{
+              <return>return <expr><call><name><name>MaterialColor</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</return>
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>MaterialColor</name><operator>.</operator><name>UnknownColorException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Encountered an unknown color during legacy color migration."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <return>return <expr><call><name><name>ContactColorsLegacy</name><operator>.</operator><name>generateFor</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+            }</block></catch></try>
+          }</block></then></if>
+          <return>return <expr><call><name><name>ContactColorsLegacy</name><operator>.</operator><name>generateFor</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Color migration took "</literal> <operator>+</operator> <operator>(</operator><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>startTime</name><operator>)</operator> <operator>+</operator> <literal type="string">" ms"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>UNIDENTIFIED_DELIVERY</name></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isMultiDevice</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"MultiDevice: Disabling UD (will be re-enabled if possible after pending refresh)."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setIsUnidentifiedDeliveryEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Scheduling UD attributes refresh."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RefreshAttributesJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>&lt;</operator> <name>SIGNALING_KEY_DEPRECATION</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Scheduling a RefreshAttributesJob to remove the signaling key remotely."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                          <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RefreshAttributesJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>schedulePendingIncomingParts</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>AttachmentDatabase</name></type>       <name>attachmentDb</name>       <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>MmsDatabase</name></type>              <name>mmsDb</name>              <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>pendingAttachments</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getPendingAttachments</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>pendingAttachments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" pending parts."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <for>for <control>(<init><decl><type><name>DatabaseAttachment</name></type> <name>attachment</name> <range>: <expr><name>pendingAttachments</name></expr></range></decl></init>)</control> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Reader</name></type>        <name>reader</name> <init>= <expr><call><name><name>mmsDb</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><call><name><name>mmsDb</name><operator>.</operator><name>getMessage</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getMmsId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>MessageRecord</name></type> <name>record</name> <init>= <expr><call><name><name>reader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>attachment</name><operator>.</operator><name>hasData</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"corrected a pending media part "</literal> <operator>+</operator> <call><name><name>attachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"that already had data."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>attachmentDb</name><operator>.</operator><name>setTransferState</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getMmsId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>AttachmentDatabase</name><operator>.</operator><name>TRANSFER_PROGRESS_DONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><name>record</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>record</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>record</name><operator>.</operator><name>isPush</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"queuing new attachment download job for incoming push part "</literal> <operator>+</operator> <call><name><name>attachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                            <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                            <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>AttachmentDownloadJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getMmsId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif></if>
+        <expr_stmt><expr><call><name><name>reader</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>scheduleMessagesInPushDatabase</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>PushDatabase</name></type> <name>pushDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getPushDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Cursor</name></type>       <name>pushReader</name>   <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><name>pushReader</name> <operator>=</operator> <call><name><name>pushDatabase</name><operator>.</operator><name>getPending</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <while>while <condition>(<expr><name>pushReader</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>pushReader</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+          <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                            <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                            <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>PushDecryptJob</name><argument_list>(<argument><expr><call><name>getApplicationContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                    <argument><expr><call><name><name>pushReader</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>pushReader</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>PushDatabase</name><operator>.</operator><name>ID</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></while>
+      }</block> <finally>finally <block>{
+        <if>if <condition>(<expr><name>pushReader</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+          <block type="pseudo"><expr_stmt><expr><call><name><name>pushReader</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></finally></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onProgressUpdate</name><parameter_list>(<parameter><decl><type><name>Double</name><modifier>...</modifier></type> <name>update</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>indeterminateProgress</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>determinateProgress</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>double</name></type> <name>scaler</name> <init>= <expr><name><name>update</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>determinateProgress</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><operator>(</operator><name>int</name><operator>)</operator><call><name><name>Math</name><operator>.</operator><name>floor</name></name><argument_list>(<argument><expr><call><name><name>determinateProgress</name><operator>.</operator><name>getMax</name></name><argument_list>()</argument_list></call> <operator>*</operator> <name>scaler</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Void</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>VersionTracker</name><operator>.</operator><name>updateLastSeenVersion</name></name><argument_list>(<argument><expr><name><name>DatabaseUpgradeActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>updateNotifications</name><argument_list>(<argument><expr><name><name>DatabaseUpgradeActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><operator>(</operator><name>Intent</name><operator>)</operator><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><literal type="string">"next_intent"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setProgress</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>progress</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>total</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>publishProgress</name><argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>double</name><operator>)</operator><name>progress</name> <operator>/</operator> <operator>(</operator><name>double</name><operator>)</operator><name>total</name><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

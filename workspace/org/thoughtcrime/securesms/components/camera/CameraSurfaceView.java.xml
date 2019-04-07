@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\camera\CameraSurfaceView.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>camera</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>SurfaceHolder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>SurfaceView</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CameraSurfaceView</name> <super><extends>extends <name>SurfaceView</name></extends> <implements>implements <name><name>SurfaceHolder</name><operator>.</operator><name>Callback</name></name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>ready</name></decl>;</decl_stmt>
+
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"deprecation"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>CameraSurfaceView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getHolder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setType</name><argument_list>(<argument><expr><name><name>SurfaceHolder</name><operator>.</operator><name>SURFACE_TYPE_PUSH_BUFFERS</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getHolder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addCallback</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isReady</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>ready</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>surfaceCreated</name><parameter_list>(<parameter><decl><type><name>SurfaceHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>ready</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>surfaceChanged</name><parameter_list>(<parameter><decl><type><name>SurfaceHolder</name></type> <name>holder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>format</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>surfaceDestroyed</name><parameter_list>(<parameter><decl><type><name>SurfaceHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>ready</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

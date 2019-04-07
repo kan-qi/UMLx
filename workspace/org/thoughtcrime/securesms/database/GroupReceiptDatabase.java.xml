@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\GroupReceiptDatabase.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>net</name><operator>.</operator><name>sqlcipher</name><operator>.</operator><name>database</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>helpers</name><operator>.</operator><name>SQLCipherOpenHelper</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>GroupReceiptDatabase</name> <super><extends>extends <name>Database</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TABLE_NAME</name> <init>= <expr><literal type="string">"group_receipts"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>           <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MMS_ID</name>       <init>= <expr><literal type="string">"mms_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS</name>      <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>STATUS</name>       <init>= <expr><literal type="string">"status"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TIMESTAMP</name>    <init>= <expr><literal type="string">"timestamp"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNIDENTIFIED</name> <init>= <expr><literal type="string">"unidentified"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATUS_UNKNOWN</name>     <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATUS_UNDELIVERED</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATUS_DELIVERED</name>   <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATUS_READ</name>        <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CREATE_TABLE</name> <init>= <expr><literal type="string">"CREATE TABLE "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>ID</name> <operator>+</operator> <literal type="string">" INTEGER PRIMARY KEY, "</literal>                          <operator>+</operator>
+      <name>MMS_ID</name> <operator>+</operator> <literal type="string">" INTEGER, "</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <name>STATUS</name> <operator>+</operator> <literal type="string">" INTEGER, "</literal> <operator>+</operator> <name>TIMESTAMP</name> <operator>+</operator> <literal type="string">" INTEGER, "</literal> <operator>+</operator> <name>UNIDENTIFIED</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0);"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>CREATE_INDEXES</name> <init>= <expr><block>{
+      <expr><literal type="string">"CREATE INDEX IF NOT EXISTS group_receipt_mms_id_index ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>MMS_ID</name> <operator>+</operator> <literal type="string">");"</literal></expr>,
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>GroupReceiptDatabase</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>SQLCipherOpenHelper</name></type> <name>databaseHelper</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>databaseHelper</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>insert</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>addresses</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>status</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timestamp</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>Address</name></type> <name>address</name> <range>: <expr><name>addresses</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>MMS_ID</name></expr></argument>, <argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>STATUS</name></expr></argument>, <argument><expr><name>status</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TIMESTAMP</name></expr></argument>, <argument><expr><name>timestamp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>update</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>status</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timestamp</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>     <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>STATUS</name></expr></argument>, <argument><expr><name>status</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TIMESTAMP</name></expr></argument>, <argument><expr><name>timestamp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>STATUS</name> <operator>+</operator> <literal type="string">" &lt; ?"</literal></expr></argument>,
+              <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>, <expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>, <expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>status</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setUnidentified</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unidentified</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>     <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>UNIDENTIFIED</name></expr></argument>, <argument><expr><ternary><condition><expr><name>unidentified</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+              <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>, <expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GroupReceiptInfo</name></argument>&gt;</argument_list></name></type> <name>getGroupReceiptInfo</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>         <name>db</name>      <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GroupReceiptInfo</name></argument>&gt;</argument_list></name></type> <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>GroupReceiptInfo</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                         <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>STATUS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                         <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>TIMESTAMP</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                         <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>UNIDENTIFIED</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>deleteRowsForMessage</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>deleteAllRows</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>GroupReceiptInfo</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Address</name></type> <name>address</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>     <name>status</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>timestamp</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>unidentified</name></decl>;</decl_stmt>
+
+    <constructor><name>GroupReceiptInfo</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>status</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>timestamp</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unidentified</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name>      <operator>=</operator> <name>address</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>status</name></name>       <operator>=</operator> <name>status</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>timestamp</name></name>    <operator>=</operator> <name>timestamp</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unidentified</name></name> <operator>=</operator> <name>unidentified</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>Address</name></type> <name>getAddress</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>address</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getStatus</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>status</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>long</name></type> <name>getTimestamp</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>timestamp</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isUnidentified</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>unidentified</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\emoji\AnimatingImageSpan.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name><operator>.</operator><name>Callback</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>ImageSpan</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AnimatingImageSpan</name> <super><extends>extends <name>ImageSpan</name></extends></super> <block>{
+  <constructor><specifier>public</specifier> <name>AnimatingImageSpan</name><parameter_list>(<parameter><decl><type><name>Drawable</name></type> <name>drawable</name></decl></parameter>, <parameter><decl><type><name>Callback</name></type> <name>callback</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>drawable</name></expr></argument>, <argument><expr><name>ALIGN_BOTTOM</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>drawable</name><operator>.</operator><name>setCallback</name></name><argument_list>(<argument><expr><name>callback</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+}</block></class>
+</unit>

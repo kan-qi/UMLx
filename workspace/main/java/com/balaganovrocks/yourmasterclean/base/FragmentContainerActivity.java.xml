@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\base\FragmentContainerActivity.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ActivityInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>FragmentArgs</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Method</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>FragmentContainerActivity</name> <super><extends>extends <name>BaseSwipeBackActivity</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * å¯å¨ä¸ä¸ªçé¢
+     *
+     * @param activity
+     * @param clazz
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>launch</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>?</name> <extends>extends <name>Fragment</name></extends></argument>&gt;</argument_list></name></type> <name>clazz</name></decl></parameter>, <parameter><decl><type><name>FragmentArgs</name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>FragmentContainerActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><literal type="string">"className"</literal></expr></argument>, <argument><expr><call><name><name>clazz</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>args</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+            <block type="pseudo"><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><literal type="string">"args"</literal></expr></argument>, <argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <constructor><specifier>public</specifier> <name>FragmentContainerActivity</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>launchForResult</name><parameter_list>(<parameter><decl><type><name>Fragment</name></type> <name>fragment</name></decl></parameter>, <parameter><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>?</name> <extends>extends <name>Fragment</name></extends></argument>&gt;</argument_list></name></type> <name>clazz</name></decl></parameter>, <parameter><decl><type><name>FragmentArgs</name></type> <name>args</name></decl></parameter>,
+                                       <parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name><name>fragment</name><operator>.</operator><name>getActivity</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>
+            <block type="pseudo"><return>return;</return></block></then></if>
+        <decl_stmt><decl><type><name>Activity</name></type> <name>activity</name> <init>= <expr><call><name><name>fragment</name><operator>.</operator><name>getActivity</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>FragmentContainerActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><literal type="string">"className"</literal></expr></argument>, <argument><expr><call><name><name>clazz</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>args</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+            <block type="pseudo"><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><literal type="string">"args"</literal></expr></argument>, <argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>startActivityForResult</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><block>{<expr><literal type="string">"rawtypes"</literal></expr>, <argument><expr><literal type="string">"unchecked"</literal></expr></argument>}</block></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>className</name> <init>= <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><literal type="string">"className"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>className</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <return>return;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>FragmentArgs</name></type> <name>values</name> <init>= <expr><operator>(</operator><name>FragmentArgs</name><operator>)</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSerializableExtra</name><argument_list>(<argument><expr><literal type="string">"args"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>savedInstanceState</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <try>try <block>{
+                <decl_stmt><decl><type><name>Class</name></type> <name>clazz</name> <init>= <expr><call><name><name>Class</name><operator>.</operator><name>forName</name></name><argument_list>(<argument><expr><name>className</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>(</operator><name>Fragment</name><operator>)</operator> <call><name><name>clazz</name><operator>.</operator><name>newInstance</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <if>if <condition>(<expr><name>values</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <try>try <block>{
+                        <decl_stmt><decl><type><name>Method</name></type> <name>method</name> <init>= <expr><call><name><name>clazz</name><operator>.</operator><name>getMethod</name></name><argument_list>(<argument><expr><literal type="string">"setArguments"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>Class</name><index>[]</index></name><block>{<expr><name><name>Bundle</name><operator>.</operator><name>class</name></name></expr>}</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                        <expr_stmt><expr><call><name><name>method</name><operator>.</operator><name>invoke</name></name><argument_list>(<argument><expr><name>fragment</name></expr></argument>, <argument><expr><call><name><name>FragmentArgs</name><operator>.</operator><name>transToBundle</name></name><argument_list>(<argument><expr><name>values</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+<comment type="line">//						e.printStackTrace();</comment>
+                    }</block></catch></try>
+                }</block></then></if>
+
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <return>return;</return>
+            }</block></catch></try>
+            <expr_stmt><expr><call><name>setRequestedOrientation</name><argument_list>(<argument><expr><name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_PORTRAIT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>ui_fragment_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>getFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>fragmentContainer</name></name></expr></argument>, <argument><expr><name>fragment</name></expr></argument>, <argument><expr><name>className</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>commit</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>getActionBar</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+            <block type="pseudo"><expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayShowHomeEnabled</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+
+        <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+            <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>
+                <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+            <default>default:</default>
+
+                <break>break;</break>
+        }</block></switch>
+
+        <return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\scribbles\viewmodel\Font.java"><comment type="block" format="javadoc">/**
+ * Copyright (c) 2016 UPTech
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>scribbles</name><operator>.</operator><name>viewmodel</name></name>;</package>
+
+
+<class><specifier>public</specifier> class <name>Font</name> <block>{
+
+  <comment type="block" format="javadoc">/**
+   * color value (ex: 0xFF00FF)
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>color</name></decl>;</decl_stmt>
+  <comment type="block" format="javadoc">/**
+   * name of the font
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>typeface</name></decl>;</decl_stmt>
+  <comment type="block" format="javadoc">/**
+   * size of the font, relative to parent
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>size</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>Font</name><parameter_list>()</parameter_list> <block>{
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>increaseSize</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>diff</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>size</name> <operator>+</operator> <name>diff</name> <operator>&lt;=</operator> <name><name>Limits</name><operator>.</operator><name>MAX_FONT_SIZE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>size</name> <operator>=</operator> <name>size</name> <operator>+</operator> <name>diff</name></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>decreaseSize</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>diff</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>size</name> <operator>-</operator> <name>diff</name> <operator>&gt;=</operator> <name><name>Limits</name><operator>.</operator><name>MIN_FONT_SIZE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>size</name> <operator>=</operator> <name>size</name> <operator>-</operator> <name>diff</name></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getColor</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>color</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name> <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getTypeface</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>typeface</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTypeface</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>typeface</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>typeface</name></name> <operator>=</operator> <name>typeface</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>float</name></type> <name>getSize</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>size</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setSize</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>size</name></name> <operator>=</operator> <name>size</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>private</specifier> interface <name>Limits</name> <block>{
+    <decl_stmt><decl><type><name>float</name></type> <name>MIN_FONT_SIZE</name> <init>= <expr><literal type="number">0.01F</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>float</name></type> <name>MAX_FONT_SIZE</name> <init>= <expr><literal type="number">0.46F</literal></expr></init></decl>;</decl_stmt>
+  }</block></interface>
+}</block></class></unit>

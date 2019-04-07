@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\crypto\MasterCipher.java"><comment type="block" format="javadoc">/** 
+ * Copyright (C) 2011 Whisper Systems
+ * Copyright (C) 2013 Open Whisper Systems
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Hex</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidMessageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>ecc</name><operator>.</operator><name>Curve</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>ecc</name><operator>.</operator><name>ECPrivateKey</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>GeneralSecurityException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>InvalidAlgorithmParameterException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>InvalidKeyException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>BadPaddingException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>Cipher</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>IllegalBlockSizeException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>Mac</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>NoSuchPaddingException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>spec</name><operator>.</operator><name>IvParameterSpec</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>spec</name><operator>.</operator><name>SecretKeySpec</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Class that handles encryption for local storage.
+ * 
+ * The protocol format is roughly:
+ * 
+ * 1) 16 byte random IV.
+ * 2) AES-CBC(plaintext)
+ * 3) HMAC-SHA1 of 1 and 2
+ * 
+ * @author Moxie Marlinspike
+ */</comment>
+
+<class><specifier>public</specifier> class <name>MasterCipher</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MasterCipher</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MasterSecret</name></type> <name>masterSecret</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Cipher</name></type> <name>encryptingCipher</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Cipher</name></type> <name>decryptingCipher</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Mac</name></type> <name>hmac</name></decl>;</decl_stmt>
+	
+  <constructor><specifier>public</specifier> <name>MasterCipher</name><parameter_list>(<parameter><decl><type><name>MasterSecret</name></type> <name>masterSecret</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>masterSecret</name></name> <operator>=</operator> <name>masterSecret</name></expr>;</expr_stmt>		
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>encryptingCipher</name></name> <operator>=</operator> <call><name><name>Cipher</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"AES/CBC/PKCS5Padding"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>decryptingCipher</name></name> <operator>=</operator> <call><name><name>Cipher</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"AES/CBC/PKCS5Padding"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>hmac</name></name>             <operator>=</operator> <call><name><name>Mac</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"HmacSHA1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchPaddingException</name></type> | <type><name>NoSuchAlgorithmException</name></type> <name>nspe</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>nspe</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>encryptKey</name><parameter_list>(<parameter><decl><type><name>ECPrivateKey</name></type> <name>privateKey</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>encryptBytes</name><argument_list>(<argument><expr><call><name><name>privateKey</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>encryptBody</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>String</name></type> <name>body</name></decl></parameter>)</parameter_list>  <block>{
+    <return>return <expr><call><name>encryptAndEncodeBytes</name><argument_list>(<argument><expr><call><name><name>body</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>decryptBody</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InvalidMessageException</name></expr></argument></throws> <block>{
+    <return>return <expr><operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><call><name>decodeAndDecryptBytes</name><argument_list>(<argument><expr><name>body</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>public</specifier> <type><name>ECPrivateKey</name></type> <name>decryptKey</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>key</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidKeyException</name></name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>Curve</name><operator>.</operator><name>decodePrivatePoint</name></name><argument_list>(<argument><expr><call><name>decryptBytes</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidMessageException</name></type> <name>ime</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidKeyException</name></name><argument_list>(<argument><expr><name>ime</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+	
+  <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>decryptBytes</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>decodedBody</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InvalidMessageException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Mac</name></type> <name>mac</name>              <init>= <expr><call><name>getMac</name><argument_list>(<argument><expr><call><name><name>masterSecret</name><operator>.</operator><name>getMacKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedBody</name> <init>= <expr><call><name>verifyMacBody</name><argument_list>(<argument><expr><name>mac</name></expr></argument>, <argument><expr><name>decodedBody</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			
+      <decl_stmt><decl><type><name>Cipher</name></type> <name>cipher</name>        <init>= <expr><call><name>getDecryptingCipher</name><argument_list>(<argument><expr><call><name><name>masterSecret</name><operator>.</operator><name>getEncryptionKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>encryptedBody</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encrypted</name>     <init>= <expr><call><name>getDecryptedBody</name><argument_list>(<argument><expr><name>cipher</name></expr></argument>, <argument><expr><name>encryptedBody</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			
+      <return>return <expr><name>encrypted</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>GeneralSecurityException</name></type> <name>ge</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>InvalidMessageException</name><argument_list>(<argument><expr><name>ge</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+	
+  <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>encryptBytes</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>body</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Cipher</name></type> <name>cipher</name>              <init>= <expr><call><name>getEncryptingCipher</name><argument_list>(<argument><expr><call><name><name>masterSecret</name><operator>.</operator><name>getEncryptionKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Mac</name></type>    <name>mac</name>                 <init>= <expr><call><name>getMac</name><argument_list>(<argument><expr><call><name><name>masterSecret</name><operator>.</operator><name>getMacKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedBody</name>       <init>= <expr><call><name>getEncryptedBody</name><argument_list>(<argument><expr><name>cipher</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedAndMacBody</name> <init>= <expr><call><name>getMacBody</name><argument_list>(<argument><expr><name>mac</name></expr></argument>, <argument><expr><name>encryptedBody</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		
+      <return>return <expr><name>encryptedAndMacBody</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>GeneralSecurityException</name></type> <name>ge</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"bodycipher"</literal></expr></argument>, <argument><expr><name>ge</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>	
+		
+  }</block></function>
+	
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>verifyMacFor</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>content</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>theirMac</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>ourMac</name> <init>= <expr><call><name>getMacFor</name><argument_list>(<argument><expr><name>content</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Our Mac: "</literal> <operator>+</operator> <call><name><name>Hex</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><name>ourMac</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Thr Mac: "</literal> <operator>+</operator> <call><name><name>Hex</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><name>theirMac</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>Arrays</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>ourMac</name></expr></argument>, <argument><expr><name>theirMac</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getMacFor</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>content</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Macing: "</literal> <operator>+</operator> <name>content</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Mac</name></type> <name>mac</name> <init>= <expr><call><name>getMac</name><argument_list>(<argument><expr><call><name><name>masterSecret</name><operator>.</operator><name>getMacKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>mac</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><call><name><name>content</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>GeneralSecurityException</name></type> <name>ike</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>ike</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>decodeAndDecryptBytes</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InvalidMessageException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>decodedBody</name> <init>= <expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name>decryptBytes</name><argument_list>(<argument><expr><name>decodedBody</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>InvalidMessageException</name><argument_list>(<argument><expr><literal type="string">"Bad Base64 Encoding..."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>encryptAndEncodeBytes</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedAndMacBody</name> <init>= <expr><call><name>encryptBytes</name><argument_list>(<argument><expr><name>bytes</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>Base64</name><operator>.</operator><name>encodeBytes</name></name><argument_list>(<argument><expr><name>encryptedAndMacBody</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>verifyMacBody</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Mac</name></type> <name>hmac</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>encryptedAndMac</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InvalidMessageException</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><name><name>encryptedAndMac</name><operator>.</operator><name>length</name></name> <operator>&lt;</operator> <call><name><name>hmac</name><operator>.</operator><name>getMacLength</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>InvalidMessageException</name><argument_list>(<argument><expr><literal type="string">"length(encrypted body + MAC) &lt; length(MAC)"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encrypted</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name><name>encryptedAndMac</name><operator>.</operator><name>length</name></name> <operator>-</operator> <call><name><name>hmac</name><operator>.</operator><name>getMacLength</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>encryptedAndMac</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>encrypted</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>encrypted</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>remoteMac</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><call><name><name>hmac</name><operator>.</operator><name>getMacLength</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>encryptedAndMac</name></expr></argument>, <argument><expr><name><name>encryptedAndMac</name><operator>.</operator><name>length</name></name> <operator>-</operator> <name><name>remoteMac</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name>remoteMac</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>remoteMac</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>localMac</name>  <init>= <expr><call><name><name>hmac</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><name>encrypted</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>Arrays</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>remoteMac</name></expr></argument>, <argument><expr><name>localMac</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+      <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>InvalidMessageException</name><argument_list>(<argument><expr><literal type="string">"MAC doesen't match."</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+		
+    <return>return <expr><name>encrypted</name></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getDecryptedBody</name><parameter_list>(<parameter><decl><type><name>Cipher</name></type> <name>cipher</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedBody</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IllegalBlockSizeException</name></expr></argument>, <argument><expr><name>BadPaddingException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>cipher</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><name>encryptedBody</name></expr></argument>, <argument><expr><call><name><name>cipher</name><operator>.</operator><name>getBlockSize</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>encryptedBody</name><operator>.</operator><name>length</name></name> <operator>-</operator> <call><name><name>cipher</name><operator>.</operator><name>getBlockSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getEncryptedBody</name><parameter_list>(<parameter><decl><type><name>Cipher</name></type> <name>cipher</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>body</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IllegalBlockSizeException</name></expr></argument>, <argument><expr><name>BadPaddingException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encrypted</name> <init>= <expr><call><name><name>cipher</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><name>body</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>iv</name>        <init>= <expr><call><name><name>cipher</name><operator>.</operator><name>getIV</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>ivAndBody</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name><name>iv</name><operator>.</operator><name>length</name></name> <operator>+</operator> <name><name>encrypted</name><operator>.</operator><name>length</name></name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>iv</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>ivAndBody</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>iv</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>encrypted</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>ivAndBody</name></expr></argument>, <argument><expr><name><name>iv</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name><name>encrypted</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+    <return>return <expr><name>ivAndBody</name></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name>Mac</name></type> <name>getMac</name><parameter_list>(<parameter><decl><type><name>SecretKeySpec</name></type> <name>key</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>NoSuchAlgorithmException</name></expr></argument>, <argument><expr><name>InvalidKeyException</name></expr></argument></throws> <block>{
+    <comment type="line">//		Mac hmac = Mac.getInstance("HmacSHA1");</comment>
+    <expr_stmt><expr><call><name><name>hmac</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>hmac</name></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getMacBody</name><parameter_list>(<parameter><decl><type><name>Mac</name></type> <name>hmac</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedBody</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>mac</name>             <init>= <expr><call><name><name>hmac</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><name>encryptedBody</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedAndMac</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name><name>encryptedBody</name><operator>.</operator><name>length</name></name> <operator>+</operator> <name><name>mac</name><operator>.</operator><name>length</name></name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>encryptedBody</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>encryptedAndMac</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>encryptedBody</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>mac</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>encryptedAndMac</name></expr></argument>, <argument><expr><name><name>encryptedBody</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name><name>mac</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+    <return>return <expr><name>encryptedAndMac</name></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name>Cipher</name></type> <name>getDecryptingCipher</name><parameter_list>(<parameter><decl><type><name>SecretKeySpec</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encryptedBody</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InvalidKeyException</name></expr></argument>, <argument><expr><name>InvalidAlgorithmParameterException</name></expr></argument>, <argument><expr><name>NoSuchAlgorithmException</name></expr></argument>, <argument><expr><name>NoSuchPaddingException</name></expr></argument></throws> <block>{
+    <comment type="line">//		Cipher cipher      = Cipher.getInstance("AES/CBC/PKCS5Padding");</comment>
+    <decl_stmt><decl><type><name>IvParameterSpec</name></type> <name>iv</name> <init>= <expr><operator>new</operator> <call><name>IvParameterSpec</name><argument_list>(<argument><expr><name>encryptedBody</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>decryptingCipher</name><operator>.</operator><name>getBlockSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>decryptingCipher</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name><name>Cipher</name><operator>.</operator><name>DECRYPT_MODE</name></name></expr></argument>, <argument><expr><name>key</name></expr></argument>, <argument><expr><name>iv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+    <return>return <expr><name>decryptingCipher</name></expr>;</return>
+  }</block></function>
+	
+  <function><specifier>private</specifier> <type><name>Cipher</name></type> <name>getEncryptingCipher</name><parameter_list>(<parameter><decl><type><name>SecretKeySpec</name></type> <name>key</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InvalidKeyException</name></expr></argument>, <argument><expr><name>NoSuchAlgorithmException</name></expr></argument>, <argument><expr><name>NoSuchPaddingException</name></expr></argument></throws> <block>{
+    <comment type="line">//		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");</comment>
+    <expr_stmt><expr><call><name><name>encryptingCipher</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name><name>Cipher</name><operator>.</operator><name>ENCRYPT_MODE</name></name></expr></argument>, <argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		
+    <return>return <expr><name>encryptingCipher</name></expr>;</return>
+  }</block></function>
+	
+}</block></class>
+</unit>

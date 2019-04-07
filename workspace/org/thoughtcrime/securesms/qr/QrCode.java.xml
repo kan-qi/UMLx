@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\qr\QrCode.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>BarcodeFormat</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>WriterException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>common</name><operator>.</operator><name>BitMatrix</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>zxing</name><operator>.</operator><name>qrcode</name><operator>.</operator><name>QRCodeWriter</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>QrCode</name> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>QrCode</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Bitmap</name></type> <name>create</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>BitMatrix</name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name>QRCodeWriter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>encode</name><argument_list>(<argument><expr><name>data</name></expr></argument>, <argument><expr><name><name>BarcodeFormat</name><operator>.</operator><name>QR_CODE</name></name></expr></argument>, <argument><expr><literal type="number">512</literal></expr></argument>, <argument><expr><literal type="number">512</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Bitmap</name></type>    <name>bitmap</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>result</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>ARGB_8888</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>y</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>y</name> <operator>&lt;</operator> <call><name><name>result</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>y</name><operator>++</operator></expr></incr>)</control> <block>{
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>x</name> <operator>&lt;</operator> <call><name><name>result</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>x</name><operator>++</operator></expr></incr>)</control> <block>{
+          <if>if <condition>(<expr><call><name><name>result</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>bitmap</name><operator>.</operator><name>setPixel</name></name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>BLACK</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></for>
+      }</block></for>
+
+      <return>return <expr><name>bitmap</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>WriterException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><literal type="number">512</literal></expr></argument>, <argument><expr><literal type="number">512</literal></expr></argument>, <argument><expr><name><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>ARGB_8888</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+}</block></class>
+</unit>

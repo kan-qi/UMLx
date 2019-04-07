@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\AttachmentTypeSelector.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>BitmapDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>LoaderManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Gravity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewAnimationUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewTreeObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>AnimationSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>OvershootInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>ScaleAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>TranslateAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>PopupWindow</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AttachmentTypeSelector</name> <super><extends>extends <name>PopupWindow</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ADD_GALLERY</name>       <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ADD_DOCUMENT</name>      <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ADD_SOUND</name>         <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ADD_CONTACT_INFO</name>  <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TAKE_PHOTO</name>        <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ADD_LOCATION</name>      <init>= <expr><literal type="number">6</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ADD_GIF</name>           <init>= <expr><literal type="number">7</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ANIMATION_DURATION</name> <init>= <expr><literal type="number">300</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AttachmentTypeSelector</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>LoaderManager</name></type>       <name>loaderManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RecentPhotoViewRail</name></type> <name>recentRail</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>imageButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>audioButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>documentButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>contactButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>cameraButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>locationButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>gifButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>           <name>closeButton</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>View</name></type>                      <name>currentAnchor</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>AttachmentClickedListener</name></type> <name>listener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AttachmentTypeSelector</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LoaderManager</name></type> <name>loaderManager</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttachmentClickedListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>LayoutInflater</name></type> <name>inflater</name> <init>= <expr><operator>(</operator><name>LayoutInflater</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>LAYOUT_INFLATER_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>LinearLayout</name></type>   <name>layout</name>   <init>= <expr><operator>(</operator><name>LinearLayout</name><operator>)</operator> <call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>attachment_type_selector</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name>       <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>loaderManager</name></name>  <operator>=</operator> <name>loaderManager</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recentRail</name></name>     <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>recent_photos</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>imageButton</name></name>    <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>gallery_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>audioButton</name></name>    <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>audio_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>documentButton</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>document_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contactButton</name></name>  <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>contact_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cameraButton</name></name>   <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>camera_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>locationButton</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>location_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>gifButton</name></name>      <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>giphy_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>closeButton</name></name>    <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>close_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>imageButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>ADD_GALLERY</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>audioButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>ADD_SOUND</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>documentButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>ADD_DOCUMENT</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>contactButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>ADD_CONTACT_INFO</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>TAKE_PHOTO</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>locationButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>ADD_LOCATION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>gifButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PropagatingClickListener</name><argument_list>(<argument><expr><name>ADD_GIF</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>closeButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>CloseClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recentRail</name><operator>.</operator><name>setListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RecentPhotoSelectedListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>location_linear_layout</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setVisibility</name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name>layout</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setWidth</name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>MATCH_PARENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setHeight</name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setBackgroundDrawable</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BitmapDrawable</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setAnimationStyle</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setInputMethodMode</name><argument_list>(<argument><expr><name><name>PopupWindow</name><operator>.</operator><name>INPUT_METHOD_NOT_NEEDED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setFocusable</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setTouchable</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>loaderManager</name><operator>.</operator><name>initLoader</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>recentRail</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>show</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>anchor</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>Permissions</name><operator>.</operator><name>hasAll</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_EXTERNAL_STORAGE</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>recentRail</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>loaderManager</name><operator>.</operator><name>restartLoader</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>recentRail</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>recentRail</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentAnchor</name></name> <operator>=</operator> <name>anchor</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>showAtLocation</name><argument_list>(<argument><expr><name>anchor</name></expr></argument>, <argument><expr><name><name>Gravity</name><operator>.</operator><name>BOTTOM</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>getContentView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getViewTreeObserver</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addOnGlobalLayoutListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>ViewTreeObserver</name><operator>.</operator><name>OnGlobalLayoutListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onGlobalLayout</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name>getContentView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getViewTreeObserver</name><argument_list>()</argument_list></call><operator>.</operator><call><name>removeGlobalOnLayoutListener</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>animateWindowInCircular</name><argument_list>(<argument><expr><name>anchor</name></expr></argument>, <argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name>animateWindowInTranslate</name><argument_list>(<argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>imageButton</name></expr></argument>, <argument><expr><name>ANIMATION_DURATION</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>cameraButton</name></expr></argument>, <argument><expr><name>ANIMATION_DURATION</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>audioButton</name></expr></argument>, <argument><expr><name>ANIMATION_DURATION</name> <operator>/</operator> <literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>locationButton</name></expr></argument>, <argument><expr><name>ANIMATION_DURATION</name> <operator>/</operator> <literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>documentButton</name></expr></argument>, <argument><expr><name>ANIMATION_DURATION</name> <operator>/</operator> <literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>gifButton</name></expr></argument>, <argument><expr><name>ANIMATION_DURATION</name> <operator>/</operator> <literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>contactButton</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>animateButtonIn</name><argument_list>(<argument><expr><name>closeButton</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>dismiss</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>animateWindowOutCircular</name><argument_list>(<argument><expr><name>currentAnchor</name></expr></argument>, <argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>animateWindowOutTranslate</name><argument_list>(<argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttachmentClickedListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>animateButtonIn</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>button</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>delay</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>AnimationSet</name></type> <name>animation</name> <init>= <expr><operator>new</operator> <call><name>AnimationSet</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Animation</name></type> <name>scale</name> <init>= <expr><operator>new</operator> <call><name>ScaleAnimation</name><argument_list>(<argument><expr><literal type="number">0.0f</literal></expr></argument>, <argument><expr><literal type="number">1.0f</literal></expr></argument>, <argument><expr><literal type="number">0.0f</literal></expr></argument>, <argument><expr><literal type="number">1.0f</literal></expr></argument>,
+                                         <argument><expr><name><name>Animation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>, <argument><expr><name><name>Animation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.0f</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>addAnimation</name></name><argument_list>(<argument><expr><name>scale</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OvershootInterpolator</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>ANIMATION_DURATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setStartOffset</name></name><argument_list>(<argument><expr><name>delay</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>button</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><name>animation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>animateWindowInCircular</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>View</name></type> <name>anchor</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>contentView</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>coordinates</name> <init>= <expr><call><name>getClickOrigin</name><argument_list>(<argument><expr><name>anchor</name></expr></argument>, <argument><expr><name>contentView</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Animator</name></type> <name>animator</name> <init>= <expr><call><name><name>ViewAnimationUtils</name><operator>.</operator><name>createCircularReveal</name></name><argument_list>(<argument><expr><name>contentView</name></expr></argument>,
+                                                                <argument><expr><name><name>coordinates</name><operator>.</operator><name>first</name></name></expr></argument>,
+                                                                <argument><expr><name><name>coordinates</name><operator>.</operator><name>second</name></name></expr></argument>,
+                                                                <argument><expr><literal type="number">0</literal></expr></argument>,
+                                                                <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name><name>contentView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>contentView</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>ANIMATION_DURATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>animateWindowInTranslate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>contentView</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Animation</name></type> <name>animation</name> <init>= <expr><operator>new</operator> <call><name>TranslateAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>contentView</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>ANIMATION_DURATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>getContentView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>startAnimation</name><argument_list>(<argument><expr><name>animation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>animateWindowOutCircular</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>View</name></type> <name>anchor</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>contentView</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>coordinates</name> <init>= <expr><call><name>getClickOrigin</name><argument_list>(<argument><expr><name>anchor</name></expr></argument>, <argument><expr><name>contentView</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Animator</name></type>               <name>animator</name>    <init>= <expr><call><name><name>ViewAnimationUtils</name><operator>.</operator><name>createCircularReveal</name></name><argument_list>(<argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                                 <argument><expr><name><name>coordinates</name><operator>.</operator><name>first</name></name></expr></argument>,
+                                                                                 <argument><expr><name><name>coordinates</name><operator>.</operator><name>second</name></name></expr></argument>,
+                                                                                 <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getWidth</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                                 <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>ANIMATION_DURATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animator</name><operator>.</operator><name>AnimatorListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>AttachmentTypeSelector</name><operator>.</operator><name>super</name><operator>.</operator><name>dismiss</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationCancel</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>animator</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>animateWindowOutTranslate</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>contentView</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Animation</name></type> <name>animation</name> <init>= <expr><operator>new</operator> <call><name>TranslateAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>contentView</name><operator>.</operator><name>getTop</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>contentView</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>ANIMATION_DURATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setAnimationListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animation</name><operator>.</operator><name>AnimationListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>AttachmentTypeSelector</name><operator>.</operator><name>super</name><operator>.</operator><name>dismiss</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>getContentView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>startAnimation</name><argument_list>(<argument><expr><name>animation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>getClickOrigin</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>View</name></type> <name>anchor</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>contentView</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>anchor</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>int</name><index>[]</index></name></type> <name>anchorCoordinates</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>anchor</name><operator>.</operator><name>getLocationOnScreen</name></name><argument_list>(<argument><expr><name>anchorCoordinates</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>anchorCoordinates</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>+=</operator> <call><name><name>anchor</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>anchorCoordinates</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>+=</operator> <call><name><name>anchor</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>int</name><index>[]</index></name></type> <name>contentCoordinates</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentView</name><operator>.</operator><name>getLocationOnScreen</name></name><argument_list>(<argument><expr><name>contentCoordinates</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>x</name> <init>= <expr><name><name>anchorCoordinates</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>-</operator> <name><name>contentCoordinates</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>y</name> <init>= <expr><name><name>anchorCoordinates</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>-</operator> <name><name>contentCoordinates</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>RecentPhotoSelectedListener</name> <super><implements>implements <name><name>RecentPhotoViewRail</name><operator>.</operator><name>OnItemClickedListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onItemClicked</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>mimeType</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>bucketId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>dateTaken</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>animateWindowOutTranslate</name><argument_list>(<argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onQuickAttachment</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>, <argument><expr><name>mimeType</name></expr></argument>, <argument><expr><name>bucketId</name></expr></argument>, <argument><expr><name>dateTaken</name></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>PropagatingClickListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>type</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>PropagatingClickListener</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>type</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>type</name></name> <operator>=</operator> <name>type</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>animateWindowOutTranslate</name><argument_list>(<argument><expr><call><name>getContentView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onClick</name></name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>CloseClickListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>dismiss</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <interface><specifier>public</specifier> interface <name>AttachmentClickedListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>type</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onQuickAttachment</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>mimeType</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>bucketId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>dateTaken</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+}</block></class>
+</unit>

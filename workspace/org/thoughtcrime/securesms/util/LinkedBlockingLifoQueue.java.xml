@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\LinkedBlockingLifoQueue.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>LinkedBlockingDeque</name></name>;</import>
+
+<class><specifier>public</specifier> class <name><name>LinkedBlockingLifoQueue</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>LinkedBlockingDeque</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>put</name><parameter_list>(<parameter><decl><type><name>E</name></type> <name>runnable</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>InterruptedException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>putFirst</name></name><argument_list>(<argument><expr><name>runnable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>E</name></type> <name>runnable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>addFirst</name></name><argument_list>(<argument><expr><name>runnable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>offer</name><parameter_list>(<parameter><decl><type><name>E</name></type> <name>runnable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>addFirst</name></name><argument_list>(<argument><expr><name>runnable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

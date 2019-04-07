@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\model\CacheListItem.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>model</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CacheListItem</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type> <name>mCacheSize</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>mPackageName</name></decl>, <decl><type ref="prev"/><name>mApplicationName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Drawable</name></type> <name>mIcon</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>CacheListItem</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>packageName</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>applicationName</name></decl></parameter>, <parameter><decl><type><name>Drawable</name></type> <name>icon</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>cacheSize</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mCacheSize</name> <operator>=</operator> <name>cacheSize</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mPackageName</name> <operator>=</operator> <name>packageName</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mApplicationName</name> <operator>=</operator> <name>applicationName</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mIcon</name> <operator>=</operator> <name>icon</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>Drawable</name></type> <name>getApplicationIcon</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mIcon</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getApplicationName</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mApplicationName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>long</name></type> <name>getCacheSize</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mCacheSize</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getPackageName</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mPackageName</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

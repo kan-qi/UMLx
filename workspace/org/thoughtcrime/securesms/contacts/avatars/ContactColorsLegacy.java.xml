@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\avatars\ContactColorsLegacy.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColors</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Used for migrating legacy colors to modern colors. For normal color generation, use
+ * {@link ContactColors}.
+ */</comment>
+<class><specifier>public</specifier> class <name>ContactColorsLegacy</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>LEGACY_PALETTE</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{
+      <expr><literal type="string">"red"</literal></expr>,
+      <expr><literal type="string">"pink"</literal></expr>,
+      <expr><literal type="string">"purple"</literal></expr>,
+      <expr><literal type="string">"deep_purple"</literal></expr>,
+      <expr><literal type="string">"indigo"</literal></expr>,
+      <expr><literal type="string">"blue"</literal></expr>,
+      <expr><literal type="string">"light_blue"</literal></expr>,
+      <expr><literal type="string">"cyan"</literal></expr>,
+      <expr><literal type="string">"teal"</literal></expr>,
+      <expr><literal type="string">"green"</literal></expr>,
+      <expr><literal type="string">"light_green"</literal></expr>,
+      <expr><literal type="string">"orange"</literal></expr>,
+      <expr><literal type="string">"deep_orange"</literal></expr>,
+      <expr><literal type="string">"amber"</literal></expr>,
+      <expr><literal type="string">"blue_grey"</literal></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>MaterialColor</name></type> <name>generateFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type> <name>serialized</name> <init>= <expr><name><name>LEGACY_PALETTE</name><index>[<expr><call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>%</operator> <name><name>LEGACY_PALETTE</name><operator>.</operator><name>length</name></name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <try>try <block>{
+      <return>return <expr><call><name><name>MaterialColor</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>serialized</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>MaterialColor</name><operator>.</operator><name>UnknownColorException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>ContactColors</name><operator>.</operator><name>generateFor</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

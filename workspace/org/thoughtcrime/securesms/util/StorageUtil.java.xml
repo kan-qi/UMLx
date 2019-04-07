@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\StorageUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Objects</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>NoExternalStorageException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>StorageUtil</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getBackupDirectory</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>File</name></type> <name>storage</name> <init>= <expr><call><name><name>Environment</name><operator>.</operator><name>getExternalStorageDirectory</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>storage</name><operator>.</operator><name>canWrite</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>NoExternalStorageException</name><argument_list>()</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>File</name></type> <name>signal</name> <init>= <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><name>storage</name></expr></argument>, <argument><expr><literal type="string">"Signal"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>File</name></type> <name>backups</name> <init>= <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><name>signal</name></expr></argument>, <argument><expr><literal type="string">"Backups"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>backups</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>backups</name><operator>.</operator><name>mkdirs</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>NoExternalStorageException</name><argument_list>(<argument><expr><literal type="string">"Unable to create backup directory..."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></then></if>
+    }</block></then></if>
+
+    <return>return <expr><name>backups</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getBackupCacheDirectory</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>context</name><operator>.</operator><name>getExternalCacheDir</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getSignalStorageDir</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>File</name></type> <name>storage</name> <init>= <expr><call><name><name>Environment</name><operator>.</operator><name>getExternalStorageDirectory</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>storage</name><operator>.</operator><name>canWrite</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>NoExternalStorageException</name><argument_list>()</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <return>return <expr><name>storage</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>canWriteInSignalStorageDir</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>File</name></type> <name>storage</name></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>storage</name> <operator>=</operator> <call><name>getSignalStorageDir</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoExternalStorageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></catch></try>
+
+    <return>return <expr><call><name><name>storage</name><operator>.</operator><name>canWrite</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getLegacyBackupDirectory</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name>getSignalStorageDir</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getVideoDir</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <return>return <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getSignalStorageDir</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Environment</name><operator>.</operator><name>DIRECTORY_MOVIES</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getAudioDir</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <return>return <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getSignalStorageDir</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Environment</name><operator>.</operator><name>DIRECTORY_MUSIC</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getImageDir</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <return>return <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getSignalStorageDir</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Environment</name><operator>.</operator><name>DIRECTORY_PICTURES</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>File</name></type> <name>getDownloadDir</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>NoExternalStorageException</name></expr></argument></throws> <block>{
+    <return>return <expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getSignalStorageDir</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Environment</name><operator>.</operator><name>DIRECTORY_DOWNLOADS</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getCleanFileName</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>fileName</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>fileName</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+    <expr_stmt><expr><name>fileName</name> <operator>=</operator> <call><name><name>fileName</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="char">'\u202D'</literal></expr></argument>, <argument><expr><literal type="char">'\uFFFD'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>fileName</name> <operator>=</operator> <call><name><name>fileName</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="char">'\u202E'</literal></expr></argument>, <argument><expr><literal type="char">'\uFFFD'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>fileName</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

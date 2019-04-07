@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\RetrieveProfileJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>UnidentifiedAccessUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name><operator>.</operator><name>UnidentifiedAccessMode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>IncomingMessageObserver</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>IdentityUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>IdentityKey</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidKeyException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceMessagePipe</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceMessageReceiver</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ProfileCipher</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>crypto</name><operator>.</operator><name>UnidentifiedAccess</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>crypto</name><operator>.</operator><name>UnidentifiedAccessPair</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>profiles</name><operator>.</operator><name>SignalServiceProfile</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>SignalServiceAddress</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>exceptions</name><operator>.</operator><name>NonSuccessfulResponseCodeException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>util</name><operator>.</operator><name>InvalidNumberException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>RetrieveProfileJob</name> <super><extends>extends <name>ContextJob</name></extends> <implements>implements <name>InjectableType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>RetrieveProfileJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_ADDRESS</name> <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>transient</specifier> <type><name>SignalServiceMessageReceiver</name></type> <name>receiver</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Recipient</name></type> <name>recipient</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>RetrieveProfileJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>RetrieveProfileJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withNetworkRequirement</name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withRetryCount</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name> <operator>=</operator> <name>recipient</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>recipient</name> <operator>=</operator> <call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>KEY_ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>KEY_ADDRESS</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name>InvalidKeyException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <if>if <condition>(<expr><call><name><name>recipient</name><operator>.</operator><name>isGroupRecipient</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>handleGroupRecipient</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+      <else>else                              <block type="pseudo"><expr_stmt><expr><call><name>handleIndividualRecipient</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidNumberException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{}</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleIndividualRecipient</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name>InvalidKeyException</name></expr></argument>, <argument><expr><name>InvalidNumberException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>String</name></type>                       <name>number</name>             <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toPhoneString</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>UnidentifiedAccess</name></argument>&gt;</argument_list></name></type> <name>unidentifiedAccess</name> <init>= <expr><call><name>getUnidentifiedAccess</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>SignalServiceProfile</name></type> <name>profile</name></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>profile</name> <operator>=</operator> <call><name>retrieveProfile</name><argument_list>(<argument><expr><name>number</name></expr></argument>, <argument><expr><name>unidentifiedAccess</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NonSuccessfulResponseCodeException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>unidentifiedAccess</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>profile</name> <operator>=</operator> <call><name>retrieveProfile</name><argument_list>(<argument><expr><name>number</name></expr></argument>, <argument><expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <throw>throw <expr><name>e</name></expr>;</throw>
+      }</block></else></if>
+    }</block></catch></try>
+
+    <expr_stmt><expr><call><name>setIdentityKey</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><call><name><name>profile</name><operator>.</operator><name>getIdentityKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setProfileName</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><call><name><name>profile</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setProfileAvatar</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><call><name><name>profile</name><operator>.</operator><name>getAvatar</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setUnidentifiedAccessMode</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><call><name><name>profile</name><operator>.</operator><name>getUnidentifiedAccess</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>profile</name><operator>.</operator><name>isUnrestrictedUnidentifiedAccess</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleGroupRecipient</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>group</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name>InvalidKeyException</name></expr></argument>, <argument><expr><name>InvalidNumberException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>recipients</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroupMembers</name><argument_list>(<argument><expr><call><name><name>group</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toGroupString</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>recipient</name> <range>: <expr><name>recipients</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name>handleIndividualRecipient</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>SignalServiceProfile</name></type> <name>retrieveProfile</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>number</name></decl></parameter>, <parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>UnidentifiedAccess</name></argument>&gt;</argument_list></name></type> <name>unidentifiedAccess</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>SignalServiceMessagePipe</name></type> <name>authPipe</name>         <init>= <expr><call><name><name>IncomingMessageObserver</name><operator>.</operator><name>getPipe</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SignalServiceMessagePipe</name></type> <name>unidentifiedPipe</name> <init>= <expr><call><name><name>IncomingMessageObserver</name><operator>.</operator><name>getUnidentifiedPipe</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SignalServiceMessagePipe</name></type> <name>pipe</name>             <init>= <expr><ternary><condition><expr><name>unidentifiedPipe</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>unidentifiedAccess</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><name>unidentifiedPipe</name></expr>
+                                                                                                           </then><else>: <expr><name>authPipe</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>pipe</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <return>return <expr><call><name><name>pipe</name><operator>.</operator><name>getProfile</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SignalServiceAddress</name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>unidentifiedAccess</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>receiver</name><operator>.</operator><name>retrieveProfile</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SignalServiceAddress</name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>unidentifiedAccess</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setIdentityKey</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>identityKeyValue</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>identityKeyValue</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Identity key is missing on profile!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>IdentityKey</name></type> <name>identityKey</name> <init>= <expr><operator>new</operator> <call><name>IdentityKey</name><argument_list>(<argument><expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>identityKeyValue</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>DatabaseFactory</name><operator>.</operator><name>getIdentityDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>getIdentity</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                          <operator>.</operator><call><name>isPresent</name><argument_list>()</argument_list></call></expr>)</condition><then>
+      <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Still first use..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>IdentityUtil</name><operator>.</operator><name>saveIdentity</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toPhoneString</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>identityKey</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidKeyException</name></type> | <type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setUnidentifiedAccessMode</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>unidentifiedAccessVerifier</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unrestrictedUnidentifiedAccess</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>RecipientDatabase</name></type> <name>recipientDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>            <name>profileKey</name>        <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getProfileKey</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>unrestrictedUnidentifiedAccess</name> <operator>&amp;&amp;</operator> <name>unidentifiedAccessVerifier</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Marking recipient UD status as unrestricted."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>recipientDatabase</name><operator>.</operator><name>setUnidentifiedAccessMode</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name><name>UnidentifiedAccessMode</name><operator>.</operator><name>UNRESTRICTED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>profileKey</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name>unidentifiedAccessVerifier</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Marking recipient UD status as disabled."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>recipientDatabase</name><operator>.</operator><name>setUnidentifiedAccessMode</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name><name>UnidentifiedAccessMode</name><operator>.</operator><name>DISABLED</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <decl_stmt><decl><type><name>ProfileCipher</name></type> <name>profileCipher</name> <init>= <expr><operator>new</operator> <call><name>ProfileCipher</name><argument_list>(<argument><expr><name>profileKey</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>boolean</name></type> <name>verifiedUnidentifiedAccess</name></decl>;</decl_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><name>verifiedUnidentifiedAccess</name> <operator>=</operator> <call><name><name>profileCipher</name><operator>.</operator><name>verifyUnidentifiedAccess</name></name><argument_list>(<argument><expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>unidentifiedAccessVerifier</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>verifiedUnidentifiedAccess</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+      }</block></catch></try>
+
+      <decl_stmt><decl><type><name>UnidentifiedAccessMode</name></type> <name>mode</name> <init>= <expr><ternary><condition><expr><name>verifiedUnidentifiedAccess</name></expr> ?</condition><then> <expr><name><name>UnidentifiedAccessMode</name><operator>.</operator><name>ENABLED</name></name></expr> </then><else>: <expr><name><name>UnidentifiedAccessMode</name><operator>.</operator><name>DISABLED</name></name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Marking recipient UD status as "</literal> <operator>+</operator> <call><name><name>mode</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" after verification."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>recipientDatabase</name><operator>.</operator><name>setUnidentifiedAccessMode</name></name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>mode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setProfileName</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>profileKey</name> <init>= <expr><call><name><name>recipient</name><operator>.</operator><name>getProfileKey</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>profileKey</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>plaintextProfileName</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>profileName</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>ProfileCipher</name></type> <name>profileCipher</name> <init>= <expr><operator>new</operator> <call><name>ProfileCipher</name><argument_list>(<argument><expr><name>profileKey</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>plaintextProfileName</name> <operator>=</operator> <operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><call><name><name>profileCipher</name><operator>.</operator><name>decryptName</name></name><argument_list>(<argument><expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>Util</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>plaintextProfileName</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getProfileName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setProfileName</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>plaintextProfileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>ProfileCipher</name><operator>.</operator><name>InvalidCiphertextException</name></name></type> | <type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setProfileAvatar</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>profileAvatar</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>recipient</name><operator>.</operator><name>getProfileKey</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>Util</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>profileAvatar</name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getProfileAvatar</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RetrieveProfileAvatarJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>profileAvatar</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>UnidentifiedAccess</name></argument>&gt;</argument_list></name></type> <name>getUnidentifiedAccess</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>UnidentifiedAccessPair</name></argument>&gt;</argument_list></name></type> <name>unidentifiedAccess</name> <init>= <expr><call><name><name>UnidentifiedAccessUtil</name><operator>.</operator><name>getAccessFor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>unidentifiedAccess</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>unidentifiedAccess</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTargetUnidentifiedAccess</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

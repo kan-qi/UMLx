@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\ContactSelectionListAdapter.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spanned</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>ForegroundColorSpan</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>RecyclerViewFastScroller</name><operator>.</operator><name>FastScrollAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactSelectionListAdapter</name><operator>.</operator><name>HeaderViewHolder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactSelectionListAdapter</name><operator>.</operator><name>ViewHolder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>CursorRecyclerViewAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>StickyHeaderDecoration</name><operator>.</operator><name>StickyHeaderAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * List adapter to display all contacts and their related information
+ *
+ * @author Jake McGinty
+ */</comment>
+<class><specifier>public</specifier> class <name>ContactSelectionListAdapter</name> <super><extends>extends <name><name>CursorRecyclerViewAdapter</name><argument_list type="generic">&lt;<argument><name>ViewHolder</name></argument>&gt;</argument_list></name></extends>
+                                         <implements>implements <name>FastScrollAdapter</name>,
+                                                    <name><name>StickyHeaderAdapter</name><argument_list type="generic">&lt;<argument><name>HeaderViewHolder</name></argument>&gt;</argument_list></name></implements></super>
+<block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ContactSelectionListAdapter</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>VIEW_TYPE_CONTACT</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>VIEW_TYPE_DIVIDER</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>int</name></type> <name><name>STYLE_ATTRIBUTES</name><index>[]</index></name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[]</index></name><block>{<expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>contact_selection_push_user</name></name></expr>,
+                                                          <expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>contact_selection_lay_user</name></name></expr>}</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type>           <name>multiSelect</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>LayoutInflater</name></type>    <name>li</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TypedArray</name></type>        <name>drawables</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ItemClickListener</name></type> <name>clickListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GlideRequests</name></type>     <name>glideRequests</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>selectedContacts</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <class><specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>ViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+
+    <constructor><specifier>public</specifier> <name>ViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>number</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>label</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>multiSelect</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>unbind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>setChecked</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>checked</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>ContactViewHolder</name> <super><extends>extends <name>ViewHolder</name></extends></super> <block>{
+    <constructor><name>ContactViewHolder</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <specifier>final</specifier> <name>View</name></type> <name>itemView</name></decl></parameter>,
+                      <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <specifier>final</specifier> <name>ItemClickListener</name></type> <name>clickListener</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+        <if>if <condition>(<expr><name>clickListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>clickListener</name><operator>.</operator><name>onItemClick</name></name><argument_list>(<argument><expr><call><name>getView</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>ContactSelectionListItem</name></type> <name>getView</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>ContactSelectionListItem</name><operator>)</operator> <name>itemView</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>number</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>label</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>multiSelect</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>getView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>set</name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>type</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>number</name></expr></argument>, <argument><expr><name>label</name></expr></argument>, <argument><expr><name>color</name></expr></argument>, <argument><expr><name>multiSelect</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>unbind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>getView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>unbind</name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setChecked</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>checked</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>getView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setChecked</name><argument_list>(<argument><expr><name>checked</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>DividerViewHolder</name> <super><extends>extends <name>ViewHolder</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TextView</name></type> <name>label</name></decl>;</decl_stmt>
+
+    <constructor><name>DividerViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>label</name></name> <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>label</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>number</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>label</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>multiSelect</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>label</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>unbind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setChecked</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>checked</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+  }</block></class>
+
+  <class><specifier>static</specifier> class <name>HeaderViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+    <constructor><name>HeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+  <constructor><specifier>public</specifier> <name>ContactSelectionListAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>Context</name></type> <name>context</name></decl></parameter>,
+                                     <parameter><decl><type><annotation>@<name>NonNull</name></annotation>  <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>,
+                                     <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>,
+                                     <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>ItemClickListener</name></type> <name>clickListener</name></decl></parameter>,
+                                     <parameter><decl><type><name>boolean</name></type> <name>multiSelect</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>li</name></name>            <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name> <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>drawables</name></name>     <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>STYLE_ATTRIBUTES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>multiSelect</name></name>   <operator>=</operator> <name>multiSelect</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>clickListener</name></name> <operator>=</operator> <name>clickListener</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getHeaderId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>isActiveCursor</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>contactType</name> <init>= <expr><call><name>getContactType</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>contactType</name> <operator>==</operator> <name><name>ContactsDatabase</name><operator>.</operator><name>DIVIDER_TYPE</name></name></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <return>return <expr><call><name><name>Util</name><operator>.</operator><name>hashCode</name></name><argument_list>(<argument><expr><call><name>getHeaderString</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getContactType</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>ViewHolder</name></type> <name>onCreateItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>viewType</name> <operator>==</operator> <name>VIEW_TYPE_CONTACT</name></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>ContactViewHolder</name><argument_list>(<argument><expr><call><name><name>li</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>contact_selection_list_item</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>clickListener</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><operator>new</operator> <call><name>DividerViewHolder</name><argument_list>(<argument><expr><call><name><name>li</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>contact_selection_list_divider</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type>    <name>contactType</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>CONTACT_TYPE_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>name</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>NAME_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>number</name>      <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>NUMBER_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>    <name>numberType</name>  <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>NUMBER_TYPE_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>label</name>       <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>LABEL_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>labelText</name>   <init>= <expr><call><name><name>ContactsContract</name><operator>.</operator><name>CommonDataKinds</name><operator>.</operator><name>Phone</name><operator>.</operator><name>getTypeLabel</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                             <argument><expr><name>numberType</name></expr></argument>, <argument><expr><name>label</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>color</name> <init>= <expr><ternary><condition><expr><operator>(</operator><name>contactType</name> <operator>==</operator> <name><name>ContactsDatabase</name><operator>.</operator><name>PUSH_TYPE</name></name><operator>)</operator></expr> ?</condition><then> <expr><call><name><name>drawables</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0xa0000000</literal></expr></argument>)</argument_list></call></expr> </then><else>:
+                <expr><call><name><name>drawables</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0xff000000</literal></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>unbind</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>contactType</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>number</name></expr></argument>, <argument><expr><name>labelText</name></expr></argument>, <argument><expr><name>color</name></expr></argument>, <argument><expr><name>multiSelect</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><call><name><name>selectedContacts</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getItemViewType</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>CONTACT_TYPE_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <name><name>ContactsDatabase</name><operator>.</operator><name>DIVIDER_TYPE</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><name>VIEW_TYPE_DIVIDER</name></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><name>VIEW_TYPE_CONTACT</name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>HeaderViewHolder</name></type> <name>onCreateHeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>HeaderViewHolder</name><argument_list>(<argument><expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>contact_selection_recyclerview_header</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindHeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>HeaderViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>TextView</name><operator>)</operator><name><name>viewHolder</name><operator>.</operator><name>itemView</name></name><operator>)</operator><operator>.</operator><call><name>setText</name><argument_list>(<argument><expr><call><name>getSpannedHeaderString</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onItemViewRecycled</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>unbind</name></name><argument_list>(<argument><expr><name>glideRequests</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>CharSequence</name></type> <name>getBubbleText</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getHeaderString</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getSelectedContacts</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>selectedContacts</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>CharSequence</name></type> <name>getSpannedHeaderString</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>headerString</name> <init>= <expr><call><name>getHeaderString</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name>isPush</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>SpannableString</name></type> <name>spannable</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>headerString</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>spannable</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ForegroundColorSpan</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>signal_primary</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>headerString</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Spanned</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>spannable</name></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><name>headerString</name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getHeaderString</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>contactType</name> <init>= <expr><call><name>getContactType</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>contactType</name> <operator>==</operator> <name><name>ContactsDatabase</name><operator>.</operator><name>RECENT_TYPE</name></name> <operator>||</operator> <name>contactType</name> <operator>==</operator> <name><name>ContactsDatabase</name><operator>.</operator><name>DIVIDER_TYPE</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">" "</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name>getCursorAtPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>letter</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>NAME_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>letter</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>firstChar</name> <init>= <expr><call><name><name>letter</name><operator>.</operator><name>trim</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>substring</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>toUpperCase</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><call><name><name>Character</name><operator>.</operator><name>isLetterOrDigit</name></name><argument_list>(<argument><expr><call><name><name>firstChar</name><operator>.</operator><name>codePointAt</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><name>firstChar</name></expr>;</return>
+      }</block></then></if>
+    }</block></then></if>
+
+    <return>return <expr><literal type="string">"#"</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getContactType</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name>getCursorAtPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsDatabase</name><operator>.</operator><name>CONTACT_TYPE_COLUMN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>isPush</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getContactType</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call> <operator>==</operator> <name><name>ContactsDatabase</name><operator>.</operator><name>PUSH_TYPE</name></name></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>ItemClickListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onItemClick</name><parameter_list>(<parameter><decl><type><name>ContactSelectionListItem</name></type> <name>item</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

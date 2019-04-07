@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\john\waveview\Solid.java"><package>package <name><name>com</name><operator>.</operator><name>john</name><operator>.</operator><name>waveview</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Created by John on 2014/10/15.
+ */</comment>
+<class>class <name>Solid</name> <super><extends>extends <name>View</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Paint</name></type> <name>aboveWavePaint</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Paint</name></type> <name>blowWavePaint</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>Solid</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>Solid</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name></name></type> <name>params</name> <init>= <expr><operator>new</operator> <call><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name></name><argument_list>(<argument><expr><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>MATCH_PARENT</name></name></expr></argument>, <argument><expr><name><name>LinearLayout</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>WRAP_CONTENT</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name><name>params</name><operator>.</operator><name>weight</name></name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setLayoutParams</name><argument_list>(<argument><expr><name>params</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setAboveWavePaint</name><parameter_list>(<parameter><decl><type><name>Paint</name></type> <name>aboveWavePaint</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>aboveWavePaint</name></name> <operator>=</operator> <name>aboveWavePaint</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setBlowWavePaint</name><parameter_list>(<parameter><decl><type><name>Paint</name></type> <name>blowWavePaint</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>blowWavePaint</name></name> <operator>=</operator> <name>blowWavePaint</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onDraw</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDraw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawRect</name></name><argument_list>(<argument><expr><call><name>getLeft</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name>getRight</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getBottom</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>blowWavePaint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawRect</name></name><argument_list>(<argument><expr><call><name>getLeft</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name>getRight</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getBottom</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>aboveWavePaint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

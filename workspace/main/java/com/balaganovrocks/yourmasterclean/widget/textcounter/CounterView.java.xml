@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\widget\textcounter\CounterView.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>CommaSeparatedDecimalFormatter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>IntegerFormatter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>NoFormatter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>CommaSeparatedDecimalFormatter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>DecimalFormatter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>IntegerFormatter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>textcounter</name><operator>.</operator><name>formatters</name><operator>.</operator><name>NoFormatter</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Created by prem on 10/28/14.
+ *
+ * A TextView that counts values depending on the attributes set via xml or via java.
+ * Depending on the value set in {@link #setAutoStart(boolean)}, the counter will start.
+ * You may call {@link #start()} to start manually at any time.
+ */</comment>
+<class><specifier>public</specifier> class <name>CounterView</name> <super><extends>extends <name>TextView</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * 5 milliseconds
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>DEFAULT_INTERVAL</name> <init>= <expr><literal type="number">5l</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * increment by 10 units for each time interval
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>DEFAULT_INCREMENT</name> <init>= <expr><literal type="number">10f</literal></expr></init></decl>;</decl_stmt>
+
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>String</name></type> <name>text</name></decl>, <decl><type ref="prev"/><name>prefix</name></decl>, <decl><type ref="prev"/><name>suffix</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Using floats because android's attributes do not support longs
+     */</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>long</name></type> <name>timeInterval</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>float</name></type> <name>increment</name></decl>, <decl><type ref="prev"/><name>startValue</name></decl>, <decl><type ref="prev"/><name>endValue</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>CounterType</name></type> <name>counterType</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>boolean</name></type> <name>autoStart</name></decl>, <decl><type ref="prev"/><name>autoFormat</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>Counter</name></type> <name>counter</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>Formatter</name></type> <name>formatter</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>CounterView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>CounterView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>CounterView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>public</specifier> <name>CounterView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>init</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>attrs</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>prefix</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>suffix</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>text</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>timeInterval</name></name> <operator>=</operator> <name>DEFAULT_INTERVAL</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>increment</name></name> <operator>=</operator> <name>DEFAULT_INCREMENT</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>startValue</name></name> <operator>=</operator> <literal type="number">0f</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endValue</name></name> <operator>=</operator> <literal type="number">0f</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>autoStart</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>autoFormat</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>counterType</name></name> <operator>=</operator> <name><name>CounterType</name><operator>.</operator><name>NUMBER</name></name></expr>;</expr_stmt>
+            <return>return;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(
+                <argument><expr><name>attrs</name></expr></argument>,
+                <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView</name></name></expr></argument>,
+                <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <try>try <block>{
+            <decl_stmt><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>prefix</name> <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_prefix</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>prefix</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name><name>this</name><operator>.</operator><name>prefix</name></name> <operator>=</operator> <call><name><name>prefix</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><name><name>this</name><operator>.</operator><name>prefix</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+            }</block></else></if>
+
+            <decl_stmt><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>suffix</name> <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_suffix</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>suffix</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name><name>this</name><operator>.</operator><name>suffix</name></name> <operator>=</operator> <call><name><name>suffix</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><name><name>this</name><operator>.</operator><name>suffix</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+            }</block></else></if>
+
+            <decl_stmt><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>text</name> <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_android_text</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>text</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name><name>this</name><operator>.</operator><name>text</name></name> <operator>=</operator> <call><name><name>text</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><name><name>this</name><operator>.</operator><name>text</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+            }</block></else></if>
+
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>timeInterval</name></name> <operator>=</operator> <operator>(</operator><name>long</name><operator>)</operator> <call><name><name>typedArray</name><operator>.</operator><name>getFloat</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_timeInterval</name></name></expr></argument>, <argument><expr><name>DEFAULT_INTERVAL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>increment</name></name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getFloat</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_incrementValue</name></name></expr></argument>, <argument><expr><name>DEFAULT_INCREMENT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>startValue</name></name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getFloat</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_startValue</name></name></expr></argument>, <argument><expr><literal type="number">0f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endValue</name></name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getFloat</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_endValue</name></name></expr></argument>, <argument><expr><literal type="number">0f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>autoStart</name></name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_autoStart</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>autoFormat</name></name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_formatText</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>type</name> <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getInteger</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>CounterView_type</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <switch>switch<condition>(<expr><name>type</name></expr>)</condition> <block>{
+                <case>case <expr><literal type="number">0</literal></expr>:</case>
+                    <expr_stmt><expr><name>counterType</name> <operator>=</operator> <name><name>CounterType</name><operator>.</operator><name>NUMBER</name></name></expr>;</expr_stmt>
+                    <break>break;</break>
+                <case>case <expr><literal type="number">1</literal></expr>:</case>
+                    <expr_stmt><expr><name>counterType</name> <operator>=</operator> <name><name>CounterType</name><operator>.</operator><name>DECIMAL</name></name></expr>;</expr_stmt>
+                    <break>break;</break>
+                <case>case <expr><literal type="number">2</literal></expr>:</case>
+                    <expr_stmt><expr><name>counterType</name> <operator>=</operator> <name><name>CounterType</name><operator>.</operator><name>BOTH</name></name></expr>;</expr_stmt>
+                    <break>break;</break>
+            }</block></switch>
+        }</block> <finally>finally <block>{
+            <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></finally></try>
+
+        <expr_stmt><expr><name>counter</name> <operator>=</operator> <operator>new</operator> <call><name>Counter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>startValue</name></expr></argument>, <argument><expr><name>endValue</name></expr></argument>, <argument><expr><name>timeInterval</name></expr></argument>, <argument><expr><name>increment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>updateCounterType</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>updateCounterType</name><parameter_list>()</parameter_list> <block>{
+        <switch>switch<condition>(<expr><name>counterType</name></expr>)</condition> <block>{
+            <case>case <expr><name>NUMBER</name></expr>:</case>
+                <expr_stmt><expr><name>formatter</name> <operator>=</operator> <operator>new</operator> <call><name>IntegerFormatter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+            <case>case <expr><name>DECIMAL</name></expr>:</case>
+                <expr_stmt><expr><name>formatter</name> <operator>=</operator> <operator>new</operator> <call><name>DecimalFormatter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+            <case>case <expr><name>BOTH</name></expr>:</case>
+                <expr_stmt><expr><name>formatter</name> <operator>=</operator> <operator>new</operator> <call><name>CommaSeparatedDecimalFormatter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+        }</block></switch>
+    }</block></function>
+
+    <function><type><name>void</name></type> <name>setCurrentTextValue</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>number</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>text</name> <operator>=</operator> <call><name><name>formatter</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>prefix</name></expr></argument>, <argument><expr><name>suffix</name></expr></argument>, <argument><expr><name>number</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setText</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onAttachedToWindow</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAttachedToWindow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>autoStart</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Start the counter. This method will be called if autostart is set to true
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>start</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name>removeCallbacks</name><argument_list>(<argument><expr><name>counter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>post</name><argument_list>(<argument><expr><name>counter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the prefix for the number
+     * @param prefix
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setPrefix</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>prefix</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>prefix</name></name> <operator>=</operator> <name>prefix</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the suffix for the number
+     * @param suffix
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setSuffix</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>suffix</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>suffix</name></name> <operator>=</operator> <name>suffix</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the time interval between each increment. Default is {@link #DEFAULT_INTERVAL}
+     * @param timeInterval
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setTimeInterval</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>timeInterval</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>timeInterval</name></name> <operator>=</operator> <name>timeInterval</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>counter</name> <operator>=</operator> <operator>new</operator> <call><name>Counter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>startValue</name></expr></argument>, <argument><expr><name>endValue</name></expr></argument>, <argument><expr><name>timeInterval</name></expr></argument>, <argument><expr><name>increment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the increment between the two values. Can be negative or positive. Default is
+     * {@link #DEFAULT_INCREMENT}
+     * @param increment
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setIncrement</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>increment</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>increment</name></name> <operator>=</operator> <name>increment</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>counter</name> <operator>=</operator> <operator>new</operator> <call><name>Counter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>startValue</name></expr></argument>, <argument><expr><name>endValue</name></expr></argument>, <argument><expr><name>timeInterval</name></expr></argument>, <argument><expr><name>increment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the value the counter should start at
+     * @param startValue
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setStartValue</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>startValue</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>startValue</name></name> <operator>=</operator> <name>startValue</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>counter</name> <operator>=</operator> <operator>new</operator> <call><name>Counter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>startValue</name></expr></argument>, <argument><expr><name>endValue</name></expr></argument>, <argument><expr><name>timeInterval</name></expr></argument>, <argument><expr><name>increment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the value the counter should end at
+     * @param endValue
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setEndValue</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>endValue</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endValue</name></name> <operator>=</operator> <name>endValue</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>counter</name> <operator>=</operator> <operator>new</operator> <call><name>Counter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>startValue</name></expr></argument>, <argument><expr><name>endValue</name></expr></argument>, <argument><expr><name>timeInterval</name></expr></argument>, <argument><expr><name>increment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+
+    <comment type="block" format="javadoc">/**
+     * Set the counterType. See for further details
+     * @param counterType
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setCounterType</name><parameter_list>(<parameter><decl><type><name>CounterType</name></type> <name>counterType</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>counterType</name></name> <operator>=</operator> <name>counterType</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>updateCounterType</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setAutoStart</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>autoStart</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>autoStart</name></name> <operator>=</operator> <name>autoStart</name></expr>;</expr_stmt>
+    }</block></function>
+
+
+    <comment type="block" format="javadoc">/**
+     * Allow the view to auto format the number depending on the
+     * set using {@link #setCounterType(CounterType)}
+     * @param formatText
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setAutoFormat</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>formatText</name></decl></parameter>)</parameter_list> <block>{
+        <if>if<condition>(<expr><name>autoFormat</name></expr>)</condition><then> <block>{
+            <if>if <condition>(<expr><name>counterType</name> <operator>==</operator> <name><name>CounterType</name><operator>.</operator><name>NUMBER</name></name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>formatter</name> <operator>=</operator> <operator>new</operator> <call><name>IntegerFormatter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><name>formatter</name> <operator>=</operator> <operator>new</operator> <call><name>DecimalFormatter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>formatter</name> <operator>=</operator> <operator>new</operator> <call><name>NoFormatter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>autoFormat</name></name> <operator>=</operator> <name>formatText</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set a custom  to format the text before
+     * {@link #setText(CharSequence)} is called
+     * @param formatter
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setFormatter</name><parameter_list>(<parameter><decl><type><name>Formatter</name></type> <name>formatter</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>formatter</name></name> <operator>=</operator> <name>formatter</name></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

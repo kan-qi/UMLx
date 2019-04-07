@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\LRUCache.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedHashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name><name>LRUCache</name><parameter_list>&lt;<parameter><name>K</name></parameter>,<parameter><name>V</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>LinkedHashMap</name><argument_list type="generic">&lt;<argument><name>K</name></argument>,<argument><name>V</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>maxSize</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>LRUCache</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>maxSize</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>maxSize</name></name> <operator>=</operator> <name>maxSize</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>boolean</name></type> <name>removeEldestEntry</name> <parameter_list>(<parameter><decl><type><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>K</name></argument>,<argument><name>V</name></argument>&gt;</argument_list></name></name></type> <name>eldest</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>size</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <name>maxSize</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

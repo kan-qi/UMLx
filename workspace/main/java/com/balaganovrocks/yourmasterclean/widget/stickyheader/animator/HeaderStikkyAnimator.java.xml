@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\widget\stickyheader\animator\HeaderStikkyAnimator.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>stickyheader</name><operator>.</operator><name>animator</name></name>;</package>
+
+<class><specifier>public</specifier> class <name>HeaderStikkyAnimator</name> <super><extends>extends <name>BaseStickyHeaderAnimator</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>mBoundedTranslatedRatio</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>AnimatorBuilder</name></type> <name>mAnimatorBuilder</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>hasAnimatorBundles</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onAnimatorReady</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAnimatorReady</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mAnimatorBuilder</name> <operator>=</operator> <call><name>getAnimatorBuilder</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>hasAnimatorBundles</name> <operator>=</operator> <operator>(</operator><name>mAnimatorBuilder</name> <operator>!=</operator> <literal type="null">null</literal><operator>)</operator> <operator>&amp;&amp;</operator> <operator>(</operator><call><name><name>mAnimatorBuilder</name><operator>.</operator><name>hasAnimatorBundles</name></name><argument_list>()</argument_list></call><operator>)</operator></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Override if you want to load the animator builder
+     */</comment>
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>getAnimatorBuilder</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onScroll</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>scrolledY</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onScroll</name></name><argument_list>(<argument><expr><name>scrolledY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>mBoundedTranslatedRatio</name> <operator>=</operator> <call><name>clamp</name><argument_list>(<argument><expr><call><name>getTranslationRatio</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0f</literal></expr></argument>, <argument><expr><literal type="number">1f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>hasAnimatorBundles</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>mAnimatorBuilder</name><operator>.</operator><name>animateOnScroll</name></name><argument_list>(<argument><expr><name>mBoundedTranslatedRatio</name></expr></argument>, <argument><expr><call><name>getHeader</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTranslationY</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>float</name></type> <name>getBoundedTransletedRatio</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mBoundedTranslatedRatio</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

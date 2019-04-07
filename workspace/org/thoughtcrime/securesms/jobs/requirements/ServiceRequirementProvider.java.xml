@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\requirements\ServiceRequirementProvider.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>requirements</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>PhoneStateListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>ServiceState</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>TelephonyManager</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>requirements</name><operator>.</operator><name>RequirementListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>requirements</name><operator>.</operator><name>RequirementProvider</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>atomic</name><operator>.</operator><name>AtomicBoolean</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ServiceRequirementProvider</name> <super><implements>implements <name>RequirementProvider</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TelephonyManager</name></type>     <name>telephonyManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ServiceStateListener</name></type> <name>serviceStateListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AtomicBoolean</name></type>        <name>listeningForServiceState</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>RequirementListener</name></type> <name>requirementListener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ServiceRequirementProvider</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>telephonyManager</name></name>         <operator>=</operator> <operator>(</operator><name>TelephonyManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>TELEPHONY_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>serviceStateListener</name></name>     <operator>=</operator> <operator>new</operator> <call><name>ServiceStateListener</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listeningForServiceState</name></name> <operator>=</operator> <operator>new</operator> <call><name>AtomicBoolean</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setListener</name><parameter_list>(<parameter><decl><type><name>RequirementListener</name></type> <name>requirementListener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>requirementListener</name></name> <operator>=</operator> <name>requirementListener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>start</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>listeningForServiceState</name><operator>.</operator><name>compareAndSet</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>telephonyManager</name><operator>.</operator><name>listen</name></name><argument_list>(<argument><expr><name>serviceStateListener</name></expr></argument>, <argument><expr><name><name>PhoneStateListener</name><operator>.</operator><name>LISTEN_SERVICE_STATE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleInService</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>listeningForServiceState</name><operator>.</operator><name>compareAndSet</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>telephonyManager</name><operator>.</operator><name>listen</name></name><argument_list>(<argument><expr><name>serviceStateListener</name></expr></argument>, <argument><expr><name><name>PhoneStateListener</name><operator>.</operator><name>LISTEN_NONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>requirementListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>requirementListener</name><operator>.</operator><name>onRequirementStatusChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>ServiceStateListener</name> <super><extends>extends <name>PhoneStateListener</name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onServiceStateChanged</name><parameter_list>(<parameter><decl><type><name>ServiceState</name></type> <name>serviceState</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>serviceState</name><operator>.</operator><name>getState</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ServiceState</name><operator>.</operator><name>STATE_IN_SERVICE</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>handleInService</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

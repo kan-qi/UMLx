@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\spans\CenterAlignedRelativeSizeSpan.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>spans</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextPaint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>style</name><operator>.</operator><name>MetricAffectingSpan</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CenterAlignedRelativeSizeSpan</name> <super><extends>extends <name>MetricAffectingSpan</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>relativeSize</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CenterAlignedRelativeSizeSpan</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>relativeSize</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>relativeSize</name></name> <operator>=</operator> <name>relativeSize</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>updateMeasureState</name><parameter_list>(<parameter><decl><type><name>TextPaint</name></type> <name>p</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>updateDrawState</name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>updateDrawState</name><parameter_list>(<parameter><decl><type><name>TextPaint</name></type> <name>tp</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>tp</name><operator>.</operator><name>setTextSize</name></name><argument_list>(<argument><expr><call><name><name>tp</name><operator>.</operator><name>getTextSize</name></name><argument_list>()</argument_list></call> <operator>*</operator> <name>relativeSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>tp</name><operator>.</operator><name>baselineShift</name></name> <operator>+=</operator> <call>(<name>int</name>) <argument_list>(<argument><expr><call><name><name>tp</name><operator>.</operator><name>ascent</name></name><argument_list>()</argument_list></call> <operator>*</operator> <name>relativeSize</name></expr></argument>)</argument_list></call> <operator>/</operator> <literal type="number">4</literal></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

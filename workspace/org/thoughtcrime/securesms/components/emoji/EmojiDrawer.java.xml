@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\emoji\EmojiDrawer.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>PagerAdapter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewPager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>EmojiPageViewGridAdapter</name><operator>.</operator><name>VariationSelectorListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>KeyEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name><operator>.</operator><name>ScaleType</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>astuetz</name><operator>.</operator><name>PagerSlidingTabStrip</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>InputAwareLayout</name><operator>.</operator><name>InputView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>RepeatableImageKey</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>RepeatableImageKey</name><operator>.</operator><name>KeyEventListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>EmojiPageView</name><operator>.</operator><name>EmojiSelectionListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ResUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>EmojiDrawer</name> <super><extends>extends <name>LinearLayout</name></extends> <implements>implements <name>InputView</name>, <name>EmojiSelectionListener</name>, <name>VariationSelectorListener</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>EmojiDrawer</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>KeyEvent</name></type> <name>DELETE_KEY_EVENT</name> <init>= <expr><operator>new</operator> <call><name>KeyEvent</name><argument_list>(<argument><expr><name><name>KeyEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr></argument>, <argument><expr><name><name>KeyEvent</name><operator>.</operator><name>KEYCODE_DEL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ViewPager</name></type>            <name>pager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>EmojiPageModel</name></argument>&gt;</argument_list></name></type> <name>models</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>PagerSlidingTabStrip</name></type> <name>strip</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>RecentEmojiPageModel</name></type> <name>recentModel</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EmojiEventListener</name></type>   <name>listener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EmojiDrawerListener</name></type>  <name>drawerListener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>EmojiDrawer</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>EmojiDrawer</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setOrientation</name><argument_list>(<argument><expr><name>VERTICAL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initView</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>View</name></type> <name>v</name> <init>= <expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>emoji_drawer</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>(<argument><expr><name>v</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializePageModels</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeEmojiGrid</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setEmojiEventListener</name><parameter_list>(<parameter><decl><type><name>EmojiEventListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDrawerListener</name><parameter_list>(<parameter><decl><type><name>EmojiDrawerListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>drawerListener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"initializeResources()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pager</name></name>     <operator>=</operator> <operator>(</operator><name>ViewPager</name><operator>)</operator>            <call><name><name>v</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>emoji_pager</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>strip</name></name>     <operator>=</operator> <operator>(</operator><name>PagerSlidingTabStrip</name><operator>)</operator> <call><name><name>v</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>tabs</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>RepeatableImageKey</name></type> <name>backspace</name> <init>= <expr><operator>(</operator><name>RepeatableImageKey</name><operator>)</operator><call><name><name>v</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>backspace</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>backspace</name><operator>.</operator><name>setOnKeyEventListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>KeyEventListener</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onKeyEvent</name><parameter_list>()</parameter_list> <block>{
+        <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onKeyEvent</name></name><argument_list>(<argument><expr><name>DELETE_KEY_EVENT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>isShowing</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>getVisibility</name><argument_list>()</argument_list></call> <operator>==</operator> <name>VISIBLE</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>show</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>immediate</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>pager</name></name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>initView</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    <decl_stmt><decl><type><name><name>ViewGroup</name><operator>.</operator><name>LayoutParams</name></name></type> <name>params</name> <init>= <expr><call><name>getLayoutParams</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name><name>params</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"showing emoji drawer with height "</literal> <operator>+</operator> <name><name>params</name><operator>.</operator><name>height</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setLayoutParams</name><argument_list>(<argument><expr><name>params</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setVisibility</name><argument_list>(<argument><expr><name>VISIBLE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>drawerListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>drawerListener</name><operator>.</operator><name>onShown</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>hide</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>immediate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setVisibility</name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>drawerListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>drawerListener</name><operator>.</operator><name>onHidden</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"hide()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onEmojiSelected</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>emoji</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>recentModel</name><operator>.</operator><name>onCodePointSelected</name></name><argument_list>(<argument><expr><name>emoji</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onEmojiSelected</name></name><argument_list>(<argument><expr><name>emoji</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onVariationSelectorStateChanged</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>open</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><operator>!</operator><name>open</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeEmojiGrid</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EmojiPagerAdapter</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>models</name></expr></argument>, <argument><expr><name>this</name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>recentModel</name><operator>.</operator><name>getDisplayEmoji</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setCurrentItem</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <expr_stmt><expr><call><name><name>strip</name><operator>.</operator><name>setViewPager</name></name><argument_list>(<argument><expr><name>pager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializePageModels</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>models</name></name> <operator>=</operator> <operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recentModel</name></name> <operator>=</operator> <operator>new</operator> <call><name>RecentEmojiPageModel</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>models</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>recentModel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>models</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name><name>EmojiPages</name><operator>.</operator><name>DISPLAY_PAGES</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>EmojiPagerAdapter</name> <super><extends>extends <name>PagerAdapter</name></extends>
+      <implements>implements <name><name>PagerSlidingTabStrip</name><operator>.</operator><name>CustomTabProvider</name></name></implements></super>
+  <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Context</name></type>                   <name>context</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>EmojiPageModel</name></argument>&gt;</argument_list></name></type>      <name>pages</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>EmojiSelectionListener</name></type>    <name>emojiSelectionListener</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>VariationSelectorListener</name></type> <name>variationSelectorListener</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>EmojiPagerAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>EmojiPageModel</name></argument>&gt;</argument_list></name></type> <name>pages</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>EmojiSelectionListener</name></type> <name>emojiSelectionListener</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>VariationSelectorListener</name></type> <name>variationSelectorListener</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>                   <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pages</name></name>                     <operator>=</operator> <name>pages</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>emojiSelectionListener</name></name>    <operator>=</operator> <name>emojiSelectionListener</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>variationSelectorListener</name></name> <operator>=</operator> <name>variationSelectorListener</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>pages</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Object</name></type> <name>instantiateItem</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>EmojiPageView</name></type> <name>page</name> <init>= <expr><operator>new</operator> <call><name>EmojiPageView</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>emojiSelectionListener</name></expr></argument>, <argument><expr><name>variationSelectorListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>page</name><operator>.</operator><name>setModel</name></name><argument_list>(<argument><expr><call><name><name>pages</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>addView</name></name><argument_list>(<argument><expr><name>page</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>page</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>destroyItem</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>removeView</name></name><argument_list>(<argument><expr><operator>(</operator><name>View</name><operator>)</operator><name>object</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setPrimaryItem</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>EmojiPageView</name></type> <name>current</name> <init>= <expr><operator>(</operator><name>EmojiPageView</name><operator>)</operator> <name>object</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>current</name><operator>.</operator><name>onSelected</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setPrimaryItem</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name>position</name></expr></argument>, <argument><expr><name>object</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>isViewFromObject</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><name>view</name> <operator>==</operator> <name>object</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>getCustomTabView</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>ImageView</name></type>  <name>image</name> <init>= <expr><operator>new</operator> <call><name>ImageView</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>image</name><operator>.</operator><name>setScaleType</name></name><argument_list>(<argument><expr><name><name>ScaleType</name><operator>.</operator><name>CENTER_INSIDE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>image</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><call><name><name>ResUtil</name><operator>.</operator><name>getDrawableRes</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>pages</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getIconAttr</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name>image</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <interface><specifier>public</specifier> interface <name>EmojiEventListener</name> <super><extends>extends <name>EmojiSelectionListener</name></extends></super> <block>{
+    <function_decl><type><name>void</name></type> <name>onKeyEvent</name><parameter_list>(<parameter><decl><type><name>KeyEvent</name></type> <name>keyEvent</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface><specifier>public</specifier> interface <name>EmojiDrawerListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onShown</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onHidden</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

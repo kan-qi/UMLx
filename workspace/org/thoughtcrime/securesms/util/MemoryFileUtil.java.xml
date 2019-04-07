@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\MemoryFileUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>MemoryFile</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>ParcelFileDescriptor</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileDescriptor</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Field</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>InvocationTargetException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Method</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MemoryFileUtil</name> <block>{
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>ParcelFileDescriptor</name></type> <name>getParcelFileDescriptor</name><parameter_list>(<parameter><decl><type><name>MemoryFile</name></type> <name>file</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Method</name></type>         <name>method</name>         <init>= <expr><call><name><name>MemoryFile</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getDeclaredMethod</name></name></name><argument_list>(<argument><expr><literal type="string">"getFileDescriptor"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>FileDescriptor</name></type> <name>fileDescriptor</name> <init>= <expr><operator>(</operator><name>FileDescriptor</name><operator>)</operator> <call><name><name>method</name><operator>.</operator><name>invoke</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>Field</name></type>  <name>field</name>  <init>= <expr><call><name><name>fileDescriptor</name><operator>.</operator><name>getClass</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDeclaredField</name><argument_list>(<argument><expr><literal type="string">"descriptor"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>field</name><operator>.</operator><name>setAccessible</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>int</name></type> <name>fd</name> <init>= <expr><call><name><name>field</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>fileDescriptor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">13</literal></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>ParcelFileDescriptor</name><operator>.</operator><name>adoptFd</name></name><argument_list>(<argument><expr><name>fd</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>ParcelFileDescriptor</name><operator>.</operator><name>dup</name></name><argument_list>(<argument><expr><name>fileDescriptor</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalAccessException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>InvocationTargetException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchMethodException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchFieldException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\loaders\BucketedThreadMediaLoader.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>ContentObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>AsyncTaskLoader</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Database</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MediaDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>text</name><operator>.</operator><name>SimpleDateFormat</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Calendar</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>BucketedThreadMediaLoader</name> <super><extends>extends <name><name>AsyncTaskLoader</name><argument_list type="generic">&lt;<argument><name><name>BucketedThreadMediaLoader</name><operator>.</operator><name>BucketedThreadMedia</name></name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>BucketedThreadMediaLoader</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Address</name></type>         <name>address</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ContentObserver</name></type> <name>observer</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>BucketedThreadMediaLoader</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name>  <operator>=</operator> <name>address</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>observer</name></name> <operator>=</operator> <operator>new</operator> <call><name>ForceLoadContentObserver</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>onContentChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onStartLoading</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>takeContentChanged</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>forceLoad</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onStopLoading</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>cancelLoad</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onAbandon</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMediaDatabase</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>unsubscribeToMediaChanges</name><argument_list>(<argument><expr><name>observer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>BucketedThreadMedia</name></type> <name>loadInBackground</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>BucketedThreadMedia</name></type> <name>result</name>   <init>= <expr><operator>new</operator> <call><name>BucketedThreadMedia</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>                <name>threadId</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdFor</name><argument_list>(<argument><expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMediaDatabase</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>subscribeToMediaChanges</name><argument_list>(<argument><expr><name>observer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMediaDatabase</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGalleryMediaForThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>BucketedThreadMedia</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TimeBucket</name></type>   <name>TODAY</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TimeBucket</name></type>   <name>YESTERDAY</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TimeBucket</name></type>   <name>THIS_WEEK</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TimeBucket</name></type>   <name>THIS_MONTH</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MonthBuckets</name></type> <name>OLDER</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>TimeBucket</name><index>[]</index></name></type> <name>TIME_SECTIONS</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>BucketedThreadMedia</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>TODAY</name></name>         <operator>=</operator> <operator>new</operator> <call><name>TimeBucket</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>BucketedThreadMedia_Today</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>YESTERDAY</name></name>     <operator>=</operator> <operator>new</operator> <call><name>TimeBucket</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>BucketedThreadMedia_Yesterday</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>THIS_WEEK</name></name>     <operator>=</operator> <operator>new</operator> <call><name>TimeBucket</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>BucketedThreadMedia_This_week</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">7</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>THIS_MONTH</name></name>    <operator>=</operator> <operator>new</operator> <call><name>TimeBucket</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>BucketedThreadMedia_This_month</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">30</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>TimeBucket</name><operator>.</operator><name>addToCalendar</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">7</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>TIME_SECTIONS</name></name> <operator>=</operator> <operator>new</operator> <name><name>TimeBucket</name><index>[]</index></name><block>{<expr><name>TODAY</name></expr>, <expr><name>YESTERDAY</name></expr>, <expr><name>THIS_WEEK</name></expr>, <expr><name>THIS_MONTH</name></expr>}</block></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>OLDER</name></name>         <operator>=</operator> <operator>new</operator> <call><name>MonthBuckets</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name></decl></parameter>)</parameter_list> <block>{
+      <for>for <control>(<init><decl><type><name>TimeBucket</name></type> <name>timeSection</name> <range>: <expr><name>TIME_SECTIONS</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><call><name><name>timeSection</name><operator>.</operator><name>inRange</name></name><argument_list>(<argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>timeSection</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>mediaRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return;</return>
+        }</block></then></if>
+      }</block></for>
+
+      <expr_stmt><expr><call><name><name>OLDER</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>mediaRecord</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getSectionCount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>int</name><operator>)</operator><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>TIME_SECTIONS</name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>timeBucket</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><call><name><name>timeBucket</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>count</name><argument_list>()</argument_list></call> <operator>+</operator>
+             <call><name><name>OLDER</name><operator>.</operator><name>getSectionCount</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getSectionItemCount</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>TimeBucket</name></argument>&gt;</argument_list></name></type> <name>activeTimeBuckets</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>TIME_SECTIONS</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>timeBucket</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><call><name><name>timeBucket</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>section</name> <operator>&lt;</operator> <call><name><name>activeTimeBuckets</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>activeTimeBuckets</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getItemCount</name><argument_list>()</argument_list></call></expr>;</return></block></then>
+      <else>else                                    <block type="pseudo"><return>return <expr><call><name><name>OLDER</name><operator>.</operator><name>getSectionItemCount</name></name><argument_list>(<argument><expr><name>section</name> <operator>-</operator> <call><name><name>activeTimeBuckets</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return></block></else></if>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>get</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>TimeBucket</name></argument>&gt;</argument_list></name></type> <name>activeTimeBuckets</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>TIME_SECTIONS</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>timeBucket</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><call><name><name>timeBucket</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>section</name> <operator>&lt;</operator> <call><name><name>activeTimeBuckets</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>activeTimeBuckets</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getItem</name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return></block></then>
+      <else>else                                    <block type="pseudo"><return>return <expr><call><name><name>OLDER</name><operator>.</operator><name>getItem</name></name><argument_list>(<argument><expr><name>section</name> <operator>-</operator> <call><name><name>activeTimeBuckets</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return></block></else></if>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getName</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>, <parameter><decl><type><name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>TimeBucket</name></argument>&gt;</argument_list></name></type> <name>activeTimeBuckets</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>TIME_SECTIONS</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>timeBucket</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><call><name><name>timeBucket</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>section</name> <operator>&lt;</operator> <call><name><name>activeTimeBuckets</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>activeTimeBuckets</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getName</name><argument_list>()</argument_list></call></expr>;</return></block></then>
+      <else>else                                    <block type="pseudo"><return>return <expr><call><name><name>OLDER</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><name>section</name> <operator>-</operator> <call><name><name>activeTimeBuckets</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr>;</return></block></else></if>
+    }</block></function>
+
+    <class><specifier>private</specifier> <specifier>static</specifier> class <name>TimeBucket</name> <block>{
+
+      <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></argument>&gt;</argument_list></name></type> <name>records</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>   <name>startTime</name></decl>;</decl_stmt>
+      <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>   <name>endtime</name></decl>;</decl_stmt>
+      <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl>;</decl_stmt>
+
+      <constructor><name>TimeBucket</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>startTime</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>endtime</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>      <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>startTime</name></name> <operator>=</operator> <name>startTime</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endtime</name></name>   <operator>=</operator> <name>endtime</name></expr>;</expr_stmt>
+      }</block></constructor>
+
+      <function><type><name>void</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>records</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>record</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><type><name>boolean</name></type> <name>inRange</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>timestamp</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><name>timestamp</name> <operator>&gt;</operator> <name>startTime</name> <operator>&amp;&amp;</operator> <name>timestamp</name> <operator>&lt;=</operator> <name>endtime</name></expr>;</return>
+      }</block></function>
+
+      <function><type><name>boolean</name></type> <name>isEmpty</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name><name>records</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name>int</name></type> <name>getItemCount</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name><name>records</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name><name>records</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name>String</name></type> <name>getName</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>name</name></expr>;</return>
+      }</block></function>
+
+      <function><specifier>static</specifier> <type><name>long</name></type> <name>addToCalendar</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>field</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>amount</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Calendar</name></type> <name>calendar</name> <init>= <expr><call><name><name>Calendar</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>calendar</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>field</name></expr></argument>, <argument><expr><name>amount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><call><name><name>calendar</name><operator>.</operator><name>getTimeInMillis</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></function>
+    }</block></class>
+
+    <class><specifier>private</specifier> <specifier>static</specifier> class <name>MonthBuckets</name> <block>{
+
+      <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Date</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>months</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <function><type><name>void</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Calendar</name></type> <name>calendar</name> <init>= <expr><call><name><name>Calendar</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>calendar</name><operator>.</operator><name>setTimeInMillis</name></name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type>  <name>year</name>  <init>= <expr><call><name><name>calendar</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>YEAR</name></name></expr></argument>)</argument_list></call> <operator>-</operator> <literal type="number">1900</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type>  <name>month</name> <init>= <expr><call><name><name>calendar</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>MONTH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Date</name></type> <name>date</name>  <init>= <expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><name>year</name></expr></argument>, <argument><expr><name>month</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>months</name><operator>.</operator><name>containsKey</name></name><argument_list>(<argument><expr><name>date</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>months</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>date</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>record</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></argument>&gt;</argument_list></name></type> <name>list</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>list</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>record</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>months</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>date</name></expr></argument>, <argument><expr><name>list</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></function>
+
+      <function><type><name>int</name></type> <name>getSectionCount</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name><name>months</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name>int</name></type> <name>getSectionItemCount</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name><name>months</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><call><name>getSection</name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name><name>months</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><call><name>getSection</name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name>Date</name></type> <name>getSection</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>Date</name></argument>&gt;</argument_list></name></type> <name>keys</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>months</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>Collections</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name>keys</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>reverseOrder</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><call><name><name>keys</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><type><name>String</name></type> <name>getName</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>section</name></decl></parameter>, <parameter><decl><type><name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Date</name></type> <name>sectionDate</name> <init>= <expr><call><name>getSection</name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <return>return <expr><operator>new</operator> <call><name>SimpleDateFormat</name><argument_list>(<argument><expr><literal type="string">"MMMM, yyyy"</literal></expr></argument>, <argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>sectionDate</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+    }</block></class>
+  }</block></class>
+}</block></class>
+</unit>

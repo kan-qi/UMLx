@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\preferences\NotificationsPreferenceFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>Ringtone</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>RingtoneManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>Settings</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>ListPreference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationPreferencesActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>SwitchPreferenceCompat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>MessageNotifier</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>NotificationChannels</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>NotificationsPreferenceFragment</name> <super><extends>extends <name>ListSummaryPreferenceFragment</name></extends></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>NotificationsPreferenceFragment</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>paramBundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>paramBundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Preference</name></type> <name>ledBlinkPref</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>LED_BLINK_PREF</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>NotificationChannels</name><operator>.</operator><name>supported</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ledBlinkPref</name><operator>.</operator><name>setVisible</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>getMessageRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setNotificationVibrateEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>getMessageVibrate</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>ledBlinkPref</name><operator>.</operator><name>setOnPreferenceChangeListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ListSummaryListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>initializeListSummary</name><argument_list>(<argument><expr><operator>(</operator><name>ListPreference</name><operator>)</operator> <name>ledBlinkPref</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>LED_COLOR_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>LedColorChangeListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>RINGTONE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RingtoneSummaryListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>REPEAT_ALERTS_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ListSummaryListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>NOTIFICATION_PRIVACY_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>NotificationPrivacyListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>NOTIFICATION_PRIORITY_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ListSummaryListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CALL_RINGTONE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>RingtoneSummaryListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>VIBRATE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>preference</name></decl></parameter>, <parameter><decl><name>newValue</name></decl></parameter>)</parameter_list> -&gt; <block>{
+          <expr_stmt><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>updateMessageVibrate</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>(</operator><name>boolean</name><operator>)</operator> <name>newValue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>RINGTONE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>preference</name></decl></parameter></parameter_list> -&gt; <block>{
+          <decl_stmt><decl><type><name>Uri</name></type> <name>current</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>ACTION_RINGTONE_PICKER</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_SHOW_DEFAULT</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_SHOW_SILENT</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_TYPE</name></name></expr></argument>, <argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>TYPE_NOTIFICATION</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_DEFAULT_URI</name></name></expr></argument>, <argument><expr><name><name>Settings</name><operator>.</operator><name>System</name><operator>.</operator><name>DEFAULT_NOTIFICATION_URI</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_EXISTING_URI</name></name></expr></argument>, <argument><expr><name>current</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CALL_RINGTONE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>preference</name></decl></parameter></parameter_list> -&gt; <block>{
+          <decl_stmt><decl><type><name>Uri</name></type> <name>current</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getCallNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>ACTION_RINGTONE_PICKER</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_SHOW_DEFAULT</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_SHOW_SILENT</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_TYPE</name></name></expr></argument>, <argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>TYPE_RINGTONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_DEFAULT_URI</name></name></expr></argument>, <argument><expr><name><name>Settings</name><operator>.</operator><name>System</name><operator>.</operator><name>DEFAULT_RINGTONE_URI</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_EXISTING_URI</name></name></expr></argument>, <argument><expr><name>current</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeListSummary</name><argument_list>(<argument><expr><operator>(</operator><name>ListPreference</name><operator>)</operator> <call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>LED_COLOR_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeListSummary</name><argument_list>(<argument><expr><operator>(</operator><name>ListPreference</name><operator>)</operator> <call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>REPEAT_ALERTS_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeListSummary</name><argument_list>(<argument><expr><operator>(</operator><name>ListPreference</name><operator>)</operator> <call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>NOTIFICATION_PRIVACY_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>NotificationChannels</name><operator>.</operator><name>supported</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>findPreference</name></name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>NOTIFICATION_PRIORITY_PREF</name></name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>preference</name></decl></parameter></parameter_list> -&gt; <block>{
+            <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Settings</name><operator>.</operator><name>ACTION_CHANNEL_NOTIFICATION_SETTINGS</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>Settings</name><operator>.</operator><name>EXTRA_CHANNEL_ID</name></name></expr></argument>, <argument><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>getMessagesChannel</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>Settings</name><operator>.</operator><name>EXTRA_APP_PACKAGE</name></name></expr></argument>, <argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPackageName</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+          }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>initializeListSummary</name><argument_list>(<argument><expr><operator>(</operator><name>ListPreference</name><operator>)</operator> <call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>NOTIFICATION_PRIORITY_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name>initializeRingtoneSummary</name><argument_list>(<argument><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>RINGTONE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeCallRingtoneSummary</name><argument_list>(<argument><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CALL_RINGTONE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeMessageVibrateSummary</name><argument_list>(<argument><expr><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>VIBRATE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeCallVibrateSummary</name><argument_list>(<argument><expr><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CALL_VIBRATE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreatePreferences</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>rootKey</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>addPreferencesFromResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>xml</name><operator>.</operator><name>preferences_notifications</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ApplicationPreferencesActivity</name><operator>)</operator> <call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__notifications</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>requestCode</name> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>resultCode</name> <operator>==</operator> <name>RESULT_OK</name> <operator>&amp;&amp;</operator> <name>data</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Uri</name></type> <name>uri</name> <init>= <expr><call><name><name>data</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_PICKED_URI</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>Settings</name><operator>.</operator><name>System</name><operator>.</operator><name>DEFAULT_NOTIFICATION_URI</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>updateMessageRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>removeNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><name>uri</name> <operator>=</operator> <ternary><condition><expr><name>uri</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name><name>Uri</name><operator>.</operator><name>EMPTY</name></name></expr> </then><else>: <expr><name>uri</name></expr></else></ternary></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>updateMessageRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>uri</name></expr></argument> )</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>uri</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <expr_stmt><expr><call><name>initializeRingtoneSummary</name><argument_list>(<argument><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>RINGTONE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>requestCode</name> <operator>==</operator> <literal type="number">2</literal> <operator>&amp;&amp;</operator> <name>resultCode</name> <operator>==</operator> <name>RESULT_OK</name> <operator>&amp;&amp;</operator> <name>data</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Uri</name></type> <name>uri</name> <init>= <expr><call><name><name>data</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>RingtoneManager</name><operator>.</operator><name>EXTRA_RINGTONE_PICKED_URI</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>Settings</name><operator>.</operator><name>System</name><operator>.</operator><name>DEFAULT_RINGTONE_URI</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>removeCallNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setCallNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><ternary><condition><expr><name>uri</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>uri</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><call><name><name>Uri</name><operator>.</operator><name>EMPTY</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <expr_stmt><expr><call><name>initializeCallRingtoneSummary</name><argument_list>(<argument><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>CALL_RINGTONE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>RingtoneSummaryListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Uri</name></type> <name>value</name> <init>= <expr><operator>(</operator><name>Uri</name><operator>)</operator> <name>newValue</name></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>value</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>value</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__silent</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <decl_stmt><decl><type><name>Ringtone</name></type> <name>tone</name> <init>= <expr><call><name><name>RingtoneManager</name><operator>.</operator><name>getRingtone</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>tone</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name><name>tone</name><operator>.</operator><name>getTitle</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></else></if>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeRingtoneSummary</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>pref</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>RingtoneSummaryListener</name></type> <name>listener</name> <init>= <expr><operator>(</operator><name>RingtoneSummaryListener</name><operator>)</operator> <call><name><name>pref</name><operator>.</operator><name>getOnPreferenceChangeListener</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Uri</name></type>                     <name>uri</name>      <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onPreferenceChange</name></name><argument_list>(<argument><expr><name>pref</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeCallRingtoneSummary</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>pref</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>RingtoneSummaryListener</name></type> <name>listener</name> <init>= <expr><operator>(</operator><name>RingtoneSummaryListener</name><operator>)</operator> <call><name><name>pref</name><operator>.</operator><name>getOnPreferenceChangeListener</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Uri</name></type>                     <name>uri</name>      <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getCallNotificationRingtone</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onPreferenceChange</name></name><argument_list>(<argument><expr><name>pref</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeMessageVibrateSummary</name><parameter_list>(<parameter><decl><type><name>SwitchPreferenceCompat</name></type> <name>pref</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>pref</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isNotificationVibrateEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeCallVibrateSummary</name><parameter_list>(<parameter><decl><type><name>SwitchPreferenceCompat</name></type> <name>pref</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>pref</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isCallNotificationVibrateEnabled</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>getSummary</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>onCapsResId</name>   <init>= <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_On</name></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>offCapsResId</name>  <init>= <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_Off</name></name></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isNotificationsEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><name>onCapsResId</name></expr> </then><else>: <expr><name>offCapsResId</name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>NotificationPrivacyListener</name> <super><extends>extends <name>ListSummaryListener</name></extends></super> <block>{
+    <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>updateNotification</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></function>
+      }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>onPreferenceChange</name></name><argument_list>(<argument><expr><name>preference</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> class <name>LedColorChangeListener</name> <super><extends>extends <name>ListSummaryListener</name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>NotificationChannels</name><operator>.</operator><name>supported</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>voids</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>updateMessagesLedColor</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator> <name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+          }</block></function>
+        }</block></class><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>onPreferenceChange</name></name><argument_list>(<argument><expr><name>preference</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

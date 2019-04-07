@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\glide\OkHttpStreamFetcher.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>glide</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>Priority</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>DataSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>data</name><operator>.</operator><name>DataFetcher</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>model</name><operator>.</operator><name>GlideUrl</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>util</name><operator>.</operator><name>ContentLengthInputStream</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Response</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>ResponseBody</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Fetches an {@link InputStream} using the okhttp library.
+ */</comment>
+<class>class <name>OkHttpStreamFetcher</name> <super><implements>implements <name><name>DataFetcher</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>OkHttpStreamFetcher</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>OkHttpClient</name></type> <name>client</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GlideUrl</name></type>     <name>url</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>InputStream</name></type>  <name>stream</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>ResponseBody</name></type> <name>responseBody</name></decl>;</decl_stmt>
+
+  <constructor><name>OkHttpStreamFetcher</name><parameter_list>(<parameter><decl><type><name>OkHttpClient</name></type> <name>client</name></decl></parameter>, <parameter><decl><type><name>GlideUrl</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name> <operator>=</operator> <name>client</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>url</name></name> <operator>=</operator> <name>url</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>loadData</name><parameter_list>(<parameter><decl><type><name>Priority</name></type> <name>priority</name></decl></parameter>, <parameter><decl><type><name><name>DataCallback</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <name>InputStream</name></super></argument>&gt;</argument_list></name></type> <name>callback</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name><name>Request</name><operator>.</operator><name>Builder</name></name></type> <name>requestBuilder</name> <init>= <expr><operator>new</operator> <call><name><name>Request</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+          <operator>.</operator><call><name>url</name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>toStringUrl</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></name></type> <name>headerEntry</name> <range>: <expr><call><name><name>url</name><operator>.</operator><name>getHeaders</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>entrySet</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>key</name> <init>= <expr><call><name><name>headerEntry</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>requestBuilder</name><operator>.</operator><name>addHeader</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>, <argument><expr><call><name><name>headerEntry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <decl_stmt><decl><type><name>Request</name></type>  <name>request</name>  <init>= <expr><call><name><name>requestBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Response</name></type> <name>response</name> <init>= <expr><call><name><name>client</name><operator>.</operator><name>newCall</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name>responseBody</name> <operator>=</operator> <call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>response</name><operator>.</operator><name>isSuccessful</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Request failed with code: "</literal> <operator>+</operator> <call><name><name>response</name><operator>.</operator><name>code</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>long</name></type> <name>contentLength</name> <init>= <expr><call><name><name>responseBody</name><operator>.</operator><name>contentLength</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><name>stream</name> <operator>=</operator> <call><name><name>ContentLengthInputStream</name><operator>.</operator><name>obtain</name></name><argument_list>(<argument><expr><call><name><name>responseBody</name><operator>.</operator><name>byteStream</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>contentLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onDataReady</name></name><argument_list>(<argument><expr><name>stream</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>callback</name><operator>.</operator><name>onLoadFailed</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>cleanup</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>stream</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>stream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// Ignored</comment>
+      }</block></catch></try>
+    }</block></then></if>
+    <if>if <condition>(<expr><name>responseBody</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>responseBody</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>cancel</name><parameter_list>()</parameter_list> <block>{
+    <comment type="line">// TODO: call cancel on the client when this method is called on a background thread. See #257</comment>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></type> <name>getDataClass</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>InputStream</name><operator>.</operator><name>class</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>DataSource</name></type> <name>getDataSource</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>DataSource</name><operator>.</operator><name>REMOTE</name></name></expr>;</return>
+  }</block></function>
+}</block></class></unit>

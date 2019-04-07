@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\utils\Utils.java"><comment type="block">/*
+ * Copyright (C) 2012 www.amsoft.cn
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name></name>;</package>
+
+<comment type="line">// TODO: Auto-generated Javadoc</comment>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ApplicationInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>IPackageStatsObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageStats</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ResolveInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Looper</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>RemoteException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>InvocationTargetException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>reflect</name><operator>.</operator><name>Method</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ *
+ */</comment>
+<class><specifier>public</specifier> class <name>Utils</name> <block>{
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isSystemApp</name><parameter_list>(<parameter><decl><type><name>PackageInfo</name></type> <name>pInfo</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>(</operator><operator>(</operator><name><name>pInfo</name><operator>.</operator><name>applicationInfo</name><operator>.</operator><name>flags</name></name> <operator>&amp;</operator> <name><name>ApplicationInfo</name><operator>.</operator><name>FLAG_SYSTEM</name></name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal><operator>)</operator></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isSystemUpdateApp</name><parameter_list>(<parameter><decl><type><name>PackageInfo</name></type> <name>pInfo</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>(</operator><operator>(</operator><name><name>pInfo</name><operator>.</operator><name>applicationInfo</name><operator>.</operator><name>flags</name></name> <operator>&amp;</operator> <name><name>ApplicationInfo</name><operator>.</operator><name>FLAG_UPDATED_SYSTEM_APP</name></name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal><operator>)</operator></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isUserApp</name><parameter_list>(<parameter><decl><type><name>PackageInfo</name></type> <name>pInfo</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>(</operator><operator>!</operator><call><name>isSystemApp</name><argument_list>(<argument><expr><name>pInfo</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name>isSystemUpdateApp</name><argument_list>(<argument><expr><name>pInfo</name></expr></argument>)</argument_list></call><operator>)</operator></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>long</name></type> <name>getPkgSize</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>pkgName</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>NoSuchMethodException</name></expr></argument>,
+            <argument><expr><name>InvocationTargetException</name></expr></argument>,
+            <argument><expr><name>IllegalAccessException</name></expr></argument></throws> <block>{
+       <decl_stmt><decl><type><name>long</name></type> <name>pkgSize</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+        <comment type="line">// getPackageSizeInfoæ¯PackageManagerä¸­çä¸ä¸ªprivateæ¹æ³ï¼æä»¥éè¦éè¿åå°çæºå¶æ¥è°ç¨</comment>
+        <decl_stmt><decl><type><name>Method</name></type> <name>method</name> <init>= <expr><call><name><name>PackageManager</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getMethod</name></name></name><argument_list>(<argument><expr><literal type="string">"getPackageSizeInfo"</literal></expr></argument>,
+                <argument><expr><operator>new</operator> <name><name>Class</name><index>[]</index></name><block>{<expr><name><name>String</name><operator>.</operator><name>class</name></name></expr>, <expr><name><name>IPackageStatsObserver</name><operator>.</operator><name>class</name></name></expr>}</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// è°ç¨ getPackageSizeInfo æ¹æ³ï¼éè¦ä¸¤ä¸ªåæ°ï¼1ãéè¦æ£æµçåºç¨ååï¼2ãåè°</comment>
+        <expr_stmt><expr><call><name><name>method</name><operator>.</operator><name>invoke</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <name><name>Object</name><index>[]</index></name><block>{
+                <expr><name>pkgName</name></expr>,
+                <expr><operator>new</operator> <class><super><name><name>IPackageStatsObserver</name><operator>.</operator><name>Stub</name></name></super><argument_list>()</argument_list> <block>{
+                    <function><annotation>@<name>Override</name></annotation>
+                    <specifier>public</specifier> <type><name>void</name></type> <name>onGetStatsCompleted</name><parameter_list>(<parameter><decl><type><name>PackageStats</name></type> <name>pStats</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>succeeded</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>RemoteException</name></expr></argument></throws> <block>{
+                        <comment type="line">// å­çº¿ç¨ä¸­é»è®¤æ æ³å¤çæ¶æ¯å¾ªç¯ï¼èªç¶ä¹å°±ä¸è½æ¾ç¤ºToastï¼æä»¥éè¦æå¨Looperä¸ä¸</comment>
+                        <expr_stmt><expr><call><name><name>Looper</name><operator>.</operator><name>prepare</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        <comment type="line">// ä»pStatsä¸­æååä¸ªæéæ°æ®</comment>
+
+
+                      <comment type="line">//  pkgSize= pStats.cacheSize+pStats.dataSize+pStats.codeSize;</comment>
+<comment type="line">//                        Toast.makeText(context,</comment>
+<comment type="line">//                                "ç¼å­å¤§å°=" + Formatter.formatFileSize(context, pStats.cacheSize) +</comment>
+<comment type="line">//                                        "\næ°æ®å¤§å°=" + Formatter.formatFileSize(context, pStats.dataSize) +</comment>
+<comment type="line">//                                        "\nç¨åºå¤§å°=" + Formatter.formatFileSize(context, pStats.codeSize),</comment>
+<comment type="line">//                                Toast.LENGTH_LONG).show();</comment>
+                        <comment type="line">// éåä¸æ¬¡æ¶æ¯éåï¼å¼¹åºToast</comment>
+                        <expr_stmt><expr><call><name><name>Looper</name><operator>.</operator><name>loop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt/></block></function></block></class></expr>}</block></expr></argument></argument_list></call></expr></expr_stmt>
+                }</block></function>
+        }</block></class>)<empty_stmt>;</empty_stmt>
+
+        <return>return <expr><name>pkgSize</name></expr>;</return>
+    }
+    public <function><specifier>static</specifier> <type><name>void</name></type> <name>launchBrowser</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>from</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_VIEW</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>Uri</name></type> <name>content_url</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setData</name></name><argument_list>(<argument><expr><name>content_url</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>from</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isIntentSafe</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>mapCall</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_VIEW</name></name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>PackageManager</name></type> <name>packageManager</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>ResolveInfo</name></argument>&gt;</argument_list></name></type> <name>activities</name> <init>= <expr><call><name><name>packageManager</name><operator>.</operator><name>queryIntentActivities</name></name><argument_list>(<argument><expr><name>mapCall</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>activities</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+}
+</unit>

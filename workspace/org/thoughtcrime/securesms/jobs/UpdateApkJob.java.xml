@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\UpdateApkJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>DownloadManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonProperty</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>UpdateApkReadyListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>FileUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Hex</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>JsonUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Response</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>UpdateApkJob</name> <super><extends>extends <name>ContextJob</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>UpdateApkJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>UpdateApkJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>UpdateApkJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withGroupId</name><argument_list>(<argument><expr><call><name><name>UpdateApkJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>withNetworkRequirement</name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withRetryCount</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><operator>!</operator><name><name>BuildConfig</name><operator>.</operator><name>PLAY_STORE_DISABLED</name></name></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Checking for APK update..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>OkHttpClient</name></type> <name>client</name>  <init>= <expr><operator>new</operator> <call><name>OkHttpClient</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Request</name></type>      <name>request</name> <init>= <expr><operator>new</operator> <call><name><name>Request</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>url</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"%s/latest.json"</literal></expr></argument>, <argument><expr><name><name>BuildConfig</name><operator>.</operator><name>NOPLAY_UPDATE_URL</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Response</name></type> <name>response</name> <init>= <expr><call><name><name>client</name><operator>.</operator><name>newCall</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>response</name><operator>.</operator><name>isSuccessful</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Bad response: "</literal> <operator>+</operator> <call><name><name>response</name><operator>.</operator><name>message</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>UpdateDescriptor</name></type> <name>updateDescriptor</name> <init>= <expr><call><name><name>JsonUtils</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>string</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>UpdateDescriptor</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>           <name>digest</name>           <init>= <expr><call><name><name>Hex</name><operator>.</operator><name>fromStringCondensed</name></name><argument_list>(<argument><expr><call><name><name>updateDescriptor</name><operator>.</operator><name>getDigest</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got descriptor: "</literal> <operator>+</operator> <name>updateDescriptor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>updateDescriptor</name><operator>.</operator><name>getVersionCode</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <call><name>getVersionCode</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>DownloadStatus</name></type> <name>downloadStatus</name> <init>= <expr><call><name>getDownloadStatus</name><argument_list>(<argument><expr><call><name><name>updateDescriptor</name><operator>.</operator><name>getUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>digest</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Download status: "</literal>  <operator>+</operator> <call><name><name>downloadStatus</name><operator>.</operator><name>getStatus</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>downloadStatus</name><operator>.</operator><name>getStatus</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>DownloadStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>COMPLETE</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Download status complete, notifying..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>handleDownloadNotify</name><argument_list>(<argument><expr><call><name><name>downloadStatus</name><operator>.</operator><name>getDownloadId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>downloadStatus</name><operator>.</operator><name>getStatus</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>DownloadStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>MISSING</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Download status missing, starting download..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>handleDownloadStart</name><argument_list>(<argument><expr><call><name><name>updateDescriptor</name><operator>.</operator><name>getUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>updateDescriptor</name><operator>.</operator><name>getVersionName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>digest</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>e</name> <operator>instanceof</operator>  <name>IOException</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Update check failed"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getVersionCode</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>PackageManager</name></type> <name>packageManager</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>PackageInfo</name></type>    <name>packageInfo</name>    <init>= <expr><call><name><name>packageManager</name><operator>.</operator><name>getPackageInfo</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><name><name>packageInfo</name><operator>.</operator><name>versionCode</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>DownloadStatus</name></type> <name>getDownloadStatus</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>theirDigest</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>DownloadManager</name></type>       <name>downloadManager</name> <init>= <expr><operator>(</operator><name>DownloadManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>DOWNLOAD_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>DownloadManager</name><operator>.</operator><name>Query</name></name></type> <name>query</name>           <init>= <expr><operator>new</operator> <call><name><name>DownloadManager</name><operator>.</operator><name>Query</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>query</name><operator>.</operator><name>setFilterByStatus</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>STATUS_PAUSED</name></name> <operator>|</operator> <name><name>DownloadManager</name><operator>.</operator><name>STATUS_PENDING</name></name> <operator>|</operator> <name><name>DownloadManager</name><operator>.</operator><name>STATUS_RUNNING</name></name> <operator>|</operator> <name><name>DownloadManager</name><operator>.</operator><name>STATUS_SUCCESSFUL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>long</name></type>   <name>pendingDownloadId</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getUpdateApkDownloadId</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>pendingDigest</name>     <init>= <expr><call><name>getPendingDigest</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>            <init>= <expr><call><name><name>downloadManager</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <decl_stmt><decl><type><name>DownloadStatus</name></type> <name>status</name> <init>= <expr><operator>new</operator> <call><name>DownloadStatus</name><argument_list>(<argument><expr><name><name>DownloadStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>MISSING</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>int</name></type>    <name>jobStatus</name>         <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>COLUMN_STATUS</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>jobRemoteUri</name>      <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>COLUMN_URI</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>long</name></type>   <name>downloadId</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>COLUMN_ID</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>digest</name>            <init>= <expr><call><name>getDigestForDownloadId</name><argument_list>(<argument><expr><name>downloadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>jobRemoteUri</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>jobRemoteUri</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <name>downloadId</name> <operator>==</operator> <name>pendingDownloadId</name></expr>)</condition><then> <block>{
+
+          <if>if <condition>(<expr><name>jobStatus</name> <operator>==</operator> <name><name>DownloadManager</name><operator>.</operator><name>STATUS_SUCCESSFUL</name></name>    <operator>&amp;&amp;</operator>
+              <name>digest</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>pendingDigest</name> <operator>!=</operator> <literal type="null">null</literal>           <operator>&amp;&amp;</operator>
+              <call><name><name>MessageDigest</name><operator>.</operator><name>isEqual</name></name><argument_list>(<argument><expr><name>pendingDigest</name></expr></argument>, <argument><expr><name>theirDigest</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+              <call><name><name>MessageDigest</name><operator>.</operator><name>isEqual</name></name><argument_list>(<argument><expr><name>digest</name></expr></argument>, <argument><expr><name>theirDigest</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+          <block>{
+            <return>return <expr><operator>new</operator> <call><name>DownloadStatus</name><argument_list>(<argument><expr><name><name>DownloadStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>COMPLETE</name></name></expr></argument>, <argument><expr><name>downloadId</name></expr></argument>)</argument_list></call></expr>;</return>
+          }</block></then> <elseif>else <if>if <condition>(<expr><name>jobStatus</name> <operator>!=</operator> <name><name>DownloadManager</name><operator>.</operator><name>STATUS_SUCCESSFUL</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>status</name> <operator>=</operator> <operator>new</operator> <call><name>DownloadStatus</name><argument_list>(<argument><expr><name><name>DownloadStatus</name><operator>.</operator><name>Status</name><operator>.</operator><name>PENDING</name></name></expr></argument>, <argument><expr><name>downloadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if></elseif></if>
+        }</block></then></if>
+      }</block></while>
+
+      <return>return <expr><name>status</name></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleDownloadStart</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>versionName</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>digest</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>DownloadManager</name></type>         <name>downloadManager</name> <init>= <expr><operator>(</operator><name>DownloadManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>DOWNLOAD_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>DownloadManager</name><operator>.</operator><name>Request</name></name></type> <name>downloadRequest</name> <init>= <expr><operator>new</operator> <call><name><name>DownloadManager</name><operator>.</operator><name>Request</name></name><argument_list>(<argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>downloadRequest</name><operator>.</operator><name>setAllowedNetworkTypes</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>Request</name><operator>.</operator><name>NETWORK_WIFI</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>downloadRequest</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><literal type="string">"Downloading Signal update"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>downloadRequest</name><operator>.</operator><name>setDescription</name></name><argument_list>(<argument><expr><literal type="string">"Downloading Signal "</literal> <operator>+</operator> <name>versionName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>downloadRequest</name><operator>.</operator><name>setVisibleInDownloadsUi</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>downloadRequest</name><operator>.</operator><name>setDestinationInExternalFilesDir</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="string">"signal-update.apk"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">11</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>downloadRequest</name><operator>.</operator><name>setNotificationVisibility</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>Request</name><operator>.</operator><name>VISIBILITY_HIDDEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>long</name></type> <name>downloadId</name> <init>= <expr><call><name><name>downloadManager</name><operator>.</operator><name>enqueue</name></name><argument_list>(<argument><expr><name>downloadRequest</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setUpdateApkDownloadId</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>downloadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setUpdateApkDigest</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>Hex</name><operator>.</operator><name>toStringCondensed</name></name><argument_list>(<argument><expr><name>digest</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleDownloadNotify</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>downloadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>ACTION_DOWNLOAD_COMPLETE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>DownloadManager</name><operator>.</operator><name>EXTRA_DOWNLOAD_ID</name></name></expr></argument>, <argument><expr><name>downloadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <call><name>UpdateApkReadyListener</name><argument_list>()</argument_list></call><operator>.</operator><call><name>onReceive</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>byte</name><index>[]</index></name></type> <name>getDigestForDownloadId</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>downloadId</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>DownloadManager</name></type> <name>downloadManager</name> <init>= <expr><operator>(</operator><name>DownloadManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>DOWNLOAD_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>FileInputStream</name></type> <name>fin</name>             <init>= <expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><call><name><name>downloadManager</name><operator>.</operator><name>openDownloadedFile</name></name><argument_list>(<argument><expr><name>downloadId</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getFileDescriptor</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>          <name>digest</name>          <init>= <expr><call><name><name>FileUtils</name><operator>.</operator><name>getFileDigest</name></name><argument_list>(<argument><expr><name>fin</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>fin</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>digest</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>byte</name><index>[]</index></name></type> <name>getPendingDigest</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>encodedDigest</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getUpdateApkDigest</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>encodedDigest</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+      <return>return <expr><call><name><name>Hex</name><operator>.</operator><name>fromStringCondensed</name></name><argument_list>(<argument><expr><name>encodedDigest</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>UpdateDescriptor</name> <block>{
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><name>int</name></type> <name>versionCode</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><name>String</name></type> <name>versionName</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><name>String</name></type> <name>url</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><name>String</name></type> <name>sha256sum</name></decl>;</decl_stmt>
+
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getVersionCode</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>versionCode</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getVersionName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>versionName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getUrl</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>url</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>toString</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="string">"["</literal>  <operator>+</operator> <name>versionCode</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>versionName</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>url</name> <operator>+</operator> <literal type="string">"]"</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>getDigest</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>sha256sum</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>DownloadStatus</name> <block>{
+    <enum>enum <name>Status</name> <block>{
+      <decl><name>PENDING</name></decl>,
+      <decl><name>COMPLETE</name></decl>,
+      <decl><name>MISSING</name></decl>
+    }</block></enum>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Status</name></type> <name>status</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>   <name>downloadId</name></decl>;</decl_stmt>
+
+    <constructor><name>DownloadStatus</name><parameter_list>(<parameter><decl><type><name>Status</name></type> <name>status</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>downloadId</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>status</name></name>     <operator>=</operator> <name>status</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadId</name></name> <operator>=</operator> <name>downloadId</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>Status</name></type> <name>getStatus</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>status</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>long</name></type> <name>getDownloadId</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>downloadId</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

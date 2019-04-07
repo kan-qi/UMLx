@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\Hex.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Utility for generating hex dumps.
+ */</comment>
+<class><specifier>public</specifier> class <name>Hex</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>int</name></type> <name>HEX_DIGITS_START</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>int</name></type> <name>ASCII_TEXT_START</name> <init>= <expr><name>HEX_DIGITS_START</name> <operator>+</operator> <operator>(</operator><literal type="number">16</literal><operator>*</operator><literal type="number">2</literal> <operator>+</operator> <operator>(</operator><literal type="number">16</literal><operator>/</operator><literal type="number">2</literal><operator>)</operator><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><type><specifier>final</specifier> <specifier>static</specifier> <name>String</name></type> <name>EOL</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>getProperty</name></name><argument_list>(<argument><expr><literal type="string">"line.separator"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name><name>char</name><index>[]</index></name></type> <name>HEX_DIGITS</name> <init>= <expr><block>{
+    <expr><literal type="char">'0'</literal></expr>, <expr><literal type="char">'1'</literal></expr>, <expr><literal type="char">'2'</literal></expr>, <expr><literal type="char">'3'</literal></expr>, <expr><literal type="char">'4'</literal></expr>, <expr><literal type="char">'5'</literal></expr>, <expr><literal type="char">'6'</literal></expr>, <expr><literal type="char">'7'</literal></expr>, <expr><literal type="char">'8'</literal></expr>, <expr><literal type="char">'9'</literal></expr>, <expr><literal type="char">'a'</literal></expr>, <expr><literal type="char">'b'</literal></expr>, <expr><literal type="char">'c'</literal></expr>, <expr><literal type="char">'d'</literal></expr>, <expr><literal type="char">'e'</literal></expr>, <expr><literal type="char">'f'</literal></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>toString</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>toString</name><argument_list>(<argument><expr><name>bytes</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>bytes</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>toString</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>StringBuffer</name></type> <name>buf</name> <init>= <expr><operator>new</operator> <call><name>StringBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>length</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <expr_stmt><expr><call><name>appendHexChar</name><argument_list>(<argument><expr><name>buf</name></expr></argument>, <argument><expr><name><name>bytes</name><index>[<expr><name>offset</name> <operator>+</operator> <name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+    <return>return <expr><call><name><name>buf</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>toStringCondensed</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>StringBuffer</name></type> <name>buf</name> <init>= <expr><operator>new</operator> <call><name>StringBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name><name>bytes</name><operator>.</operator><name>length</name></name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <expr_stmt><expr><call><name>appendHexChar</name><argument_list>(<argument><expr><name>buf</name></expr></argument>, <argument><expr><name><name>bytes</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+    <return>return <expr><call><name><name>buf</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>fromStringCondensed</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>encoded</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>char</name><index>[]</index></name></type> <name>data</name> <init>= <expr><call><name><name>encoded</name><operator>.</operator><name>toCharArray</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type>    <name>len</name>  <init>= <expr><name><name>data</name><operator>.</operator><name>length</name></name></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>(</operator><name>len</name> <operator>&amp;</operator> <literal type="number">0x01</literal><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Odd number of characters."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>out</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name>len</name> <operator>&gt;&gt;</operator> <literal type="number">1</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// two characters form the hex value.</comment>
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>j</name> <operator>&lt;</operator> <name>len</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>f</name> <init>= <expr><call><name><name>Character</name><operator>.</operator><name>digit</name></name><argument_list>(<argument><expr><name><name>data</name><index>[<expr><name>j</name></expr>]</index></name></expr></argument>, <argument><expr><literal type="number">16</literal></expr></argument>)</argument_list></call> <operator>&lt;&lt;</operator> <literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><name>j</name><operator>++</operator></expr>;</expr_stmt>
+      <expr_stmt><expr><name>f</name> <operator>=</operator> <name>f</name> <operator>|</operator> <call><name><name>Character</name><operator>.</operator><name>digit</name></name><argument_list>(<argument><expr><name><name>data</name><index>[<expr><name>j</name></expr>]</index></name></expr></argument>, <argument><expr><literal type="number">16</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>j</name><operator>++</operator></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>out</name><index>[<expr><name>i</name></expr>]</index></name> <operator>=</operator> <call>(<name>byte</name>) <argument_list>(<argument><expr><name>f</name> <operator>&amp;</operator> <literal type="number">0xFF</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>out</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>dump</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>dump</name><argument_list>(<argument><expr><name>bytes</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>bytes</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>dump</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>StringBuffer</name></type> <name>buf</name> <init>= <expr><operator>new</operator> <call><name>StringBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>lines</name> <init>= <expr><operator>(</operator><operator>(</operator><name>length</name> <operator>-</operator> <literal type="number">1</literal><operator>)</operator> <operator>/</operator> <literal type="number">16</literal><operator>)</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>lineOffset</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>lineLength</name></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>lines</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <expr_stmt><expr><name>lineOffset</name> <operator>=</operator> <operator>(</operator><name>i</name> <operator>*</operator> <literal type="number">16</literal><operator>)</operator> <operator>+</operator> <name>offset</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name>lineLength</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><literal type="number">16</literal></expr></argument>, <argument><expr><operator>(</operator><name>length</name> <operator>-</operator> <operator>(</operator><name>i</name> <operator>*</operator> <literal type="number">16</literal><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>appendDumpLine</name><argument_list>(<argument><expr><name>buf</name></expr></argument>, <argument><expr><name>i</name></expr></argument>, <argument><expr><name>bytes</name></expr></argument>, <argument><expr><name>lineOffset</name></expr></argument>, <argument><expr><name>lineLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>EOL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><call><name><name>buf</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>appendDumpLine</name><parameter_list>(<parameter><decl><type><name>StringBuffer</name></type> <name>buf</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>line</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>bytes</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>lineOffset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>lineLength</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator> <literal type="number">28</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator> <literal type="number">24</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator> <literal type="number">20</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator> <literal type="number">16</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator> <literal type="number">12</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator>  <literal type="number">8</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name> <operator>&gt;&gt;</operator>  <literal type="number">4</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>line</name>      <operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">": "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">16</literal></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>idx</name> <init>= <expr><name>i</name> <operator>+</operator> <name>lineOffset</name></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>i</name> <operator>&lt;</operator> <name>lineLength</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>b</name> <init>= <expr><name><name>bytes</name><index>[<expr><name>idx</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>appendHexChar</name><argument_list>(<argument><expr><name>buf</name></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">"  "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+      <if>if <condition>(<expr><operator>(</operator><name>i</name> <operator>%</operator> <literal type="number">2</literal><operator>)</operator> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">16</literal> <operator>&amp;&amp;</operator> <name>i</name> <operator>&lt;</operator> <name>lineLength</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>idx</name> <init>= <expr><name>i</name> <operator>+</operator> <name>lineOffset</name></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>b</name> <init>= <expr><name><name>bytes</name><index>[<expr><name>idx</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>b</name> <operator>&gt;=</operator> <literal type="number">0x20</literal> <operator>&amp;&amp;</operator> <name>b</name> <operator>&lt;=</operator> <literal type="number">0x7e</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><operator>(</operator><name>char</name><operator>)</operator><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">'.'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>appendHexChar</name><parameter_list>(<parameter><decl><type><name>StringBuffer</name></type> <name>buf</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><operator>(</operator><name>b</name> <operator>&gt;&gt;</operator> <literal type="number">4</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>buf</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>HEX_DIGITS</name><index>[<expr><name>b</name> <operator>&amp;</operator> <literal type="number">0xf</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+}</block></class>
+</unit>

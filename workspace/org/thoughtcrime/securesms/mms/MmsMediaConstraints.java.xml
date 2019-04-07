@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\MmsMediaConstraints.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>service_alt</name><operator>.</operator><name>MmsConfig</name></name>;</import>
+
+<class>class <name>MmsMediaConstraints</name> <super><extends>extends <name>MediaConstraints</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DEFAULT_MAX_IMAGE_DIMEN</name>  <init>= <expr><literal type="number">1024</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DEFAULT_MAX_MESSAGE_SIZE</name> <init>= <expr><literal type="number">280</literal> <operator>*</operator> <literal type="number">1024</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>subscriptionId</name></decl>;</decl_stmt>
+
+  <constructor><name>MmsMediaConstraints</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>subscriptionId</name></name> <operator>=</operator> <name>subscriptionId</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getImageMaxWidth</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MmsConfig</name></type> <name>mmsConfig</name> <init>= <expr><call><name><name>MmsConfigManager</name><operator>.</operator><name>getMmsConfig</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>mmsConfig</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name><name>MmsConfig</name><operator>.</operator><name>Overridden</name></name></type> <name>overridden</name> <init>= <expr><operator>new</operator> <call><name><name>MmsConfig</name><operator>.</operator><name>Overridden</name></name><argument_list>(<argument><expr><name>mmsConfig</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>overridden</name><operator>.</operator><name>getMaxImageWidth</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><name>DEFAULT_MAX_IMAGE_DIMEN</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getImageMaxHeight</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MmsConfig</name></type> <name>mmsConfig</name> <init>= <expr><call><name><name>MmsConfigManager</name><operator>.</operator><name>getMmsConfig</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>mmsConfig</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name><name>MmsConfig</name><operator>.</operator><name>Overridden</name></name></type> <name>overridden</name> <init>= <expr><operator>new</operator> <call><name><name>MmsConfig</name><operator>.</operator><name>Overridden</name></name><argument_list>(<argument><expr><name>mmsConfig</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>overridden</name><operator>.</operator><name>getMaxImageHeight</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><name>DEFAULT_MAX_IMAGE_DIMEN</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getImageMaxSize</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMaxMessageSize</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getGifMaxSize</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMaxMessageSize</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getVideoMaxSize</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMaxMessageSize</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getAudioMaxSize</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMaxMessageSize</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getDocumentMaxSize</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getMaxMessageSize</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getMaxMessageSize</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MmsConfig</name></type> <name>mmsConfig</name> <init>= <expr><call><name><name>MmsConfigManager</name><operator>.</operator><name>getMmsConfig</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>subscriptionId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>mmsConfig</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name><name>MmsConfig</name><operator>.</operator><name>Overridden</name></name></type> <name>overridden</name> <init>= <expr><operator>new</operator> <call><name><name>MmsConfig</name><operator>.</operator><name>Overridden</name></name><argument_list>(<argument><expr><name>mmsConfig</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>overridden</name><operator>.</operator><name>getMaxMessageSize</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><name>DEFAULT_MAX_MESSAGE_SIZE</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\DirectoryRefreshJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DirectoryHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>exceptions</name><operator>.</operator><name>PushNetworkException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DirectoryRefreshJob</name> <super><extends>extends <name>ContextJob</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>DirectoryRefreshJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_ADDRESS</name>             <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_NOTIFY_OF_NEW_USERS</name> <init>= <expr><literal type="string">"notify_of_new_users"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Nullable</name></annotation> <specifier>private</specifier> <specifier>transient</specifier> <type><name>Recipient</name></type>    <name>recipient</name></decl>;</decl_stmt>
+            <decl_stmt><decl><specifier>private</specifier> <specifier>transient</specifier> <type><name>boolean</name></type>      <name>notifyOfNewUsers</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>DirectoryRefreshJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>DirectoryRefreshJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>notifyOfNewUsers</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>notifyOfNewUsers</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>DirectoryRefreshJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                             <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Recipient</name></type> <name>recipient</name></decl></parameter>,
+                                       <parameter><decl><type><name>boolean</name></type> <name>notifyOfNewUsers</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withGroupId</name><argument_list>(<argument><expr><call><name><name>DirectoryRefreshJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>withNetworkRequirement</name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>        <operator>=</operator> <name>recipient</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>notifyOfNewUsers</name></name> <operator>=</operator> <name>notifyOfNewUsers</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type>  <name>serializedAddress</name> <init>= <expr><call><name><name>data</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>KEY_ADDRESS</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Address</name></type> <name>address</name>           <init>= <expr><ternary><condition><expr><name>serializedAddress</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>serializedAddress</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>recipient</name>        <operator>=</operator> <ternary><condition><expr><name>address</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</expr_stmt>
+    <expr_stmt><expr><name>notifyOfNewUsers</name> <operator>=</operator> <call><name><name>data</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><name>KEY_NOTIFY_OF_NEW_USERS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>KEY_ADDRESS</name></expr></argument>, <argument><expr><ternary><condition><expr><name>recipient</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>)</argument_list></call>
+                      <operator>.</operator><call><name>putBoolean</name><argument_list>(<argument><expr><name>KEY_NOTIFY_OF_NEW_USERS</name></expr></argument>, <argument><expr><name>notifyOfNewUsers</name></expr></argument>)</argument_list></call>
+                      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"DirectoryRefreshJob.onRun()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>recipient</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>DirectoryHelper</name><operator>.</operator><name>refreshDirectory</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>notifyOfNewUsers</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>DirectoryHelper</name><operator>.</operator><name>refreshDirectoryFor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>exception</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>exception</name> <operator>instanceof</operator> <name>PushNetworkException</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">true</literal></expr>;</return></block></then></if>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{}</block></function>
+}</block></class>
+</unit>

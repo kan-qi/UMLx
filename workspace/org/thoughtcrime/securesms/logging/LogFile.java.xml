@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\logging\LogFile.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Conversions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>EOFException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>PushbackInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>RandomAccessFile</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>InvalidAlgorithmParameterException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>InvalidKeyException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>SecureRandom</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>BadPaddingException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>Cipher</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>IllegalBlockSizeException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>NoSuchPaddingException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ShortBufferException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>spec</name><operator>.</operator><name>IvParameterSpec</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>spec</name><operator>.</operator><name>SecretKeySpec</name></name>;</import>
+
+<class>class <name>LogFile</name> <block>{
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Writer</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>        <name>ivBuffer</name>         <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">16</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GrowingBuffer</name></type> <name>ciphertextBuffer</name> <init>= <expr><operator>new</operator> <call><name>GrowingBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>               <name>secret</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>File</name></type>                 <name>file</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Cipher</name></type>               <name>cipher</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>BufferedOutputStream</name></type> <name>outputStream</name></decl>;</decl_stmt>
+
+    <constructor><name>Writer</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>secret</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>File</name></type> <name>file</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>secret</name></name>       <operator>=</operator> <name>secret</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>file</name></name>         <operator>=</operator> <name>file</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>outputStream</name></name> <operator>=</operator> <operator>new</operator> <call><name>BufferedOutputStream</name><argument_list>(<argument><expr><operator>new</operator> <call><name>FileOutputStream</name><argument_list>(<argument><expr><name>file</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cipher</name></name> <operator>=</operator> <call><name><name>Cipher</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"AES/CBC/PKCS5Padding"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> | <type><name>NoSuchPaddingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></constructor>
+
+    <function><type><name>void</name></type> <name>writeEntry</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>entry</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>SecureRandom</name><argument_list>()</argument_list></call><operator>.</operator><call><name>nextBytes</name><argument_list>(<argument><expr><name>ivBuffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>plaintext</name> <init>= <expr><call><name><name>entry</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>cipher</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name><name>Cipher</name><operator>.</operator><name>ENCRYPT_MODE</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SecretKeySpec</name><argument_list>(<argument><expr><name>secret</name></expr></argument>, <argument><expr><literal type="string">"AES"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name>IvParameterSpec</name><argument_list>(<argument><expr><name>ivBuffer</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type>    <name>cipherLength</name> <init>= <expr><call><name><name>cipher</name><operator>.</operator><name>getOutputSize</name></name><argument_list>(<argument><expr><name><name>plaintext</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>ciphertext</name>   <init>= <expr><call><name><name>ciphertextBuffer</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>cipherLength</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>cipherLength</name> <operator>=</operator> <call><name><name>cipher</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><name>plaintext</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>plaintext</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name>ciphertext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>outputStream</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>ivBuffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>outputStream</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><call><name><name>Conversions</name><operator>.</operator><name>intToByteArray</name></name><argument_list>(<argument><expr><name>cipherLength</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>outputStream</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>ciphertext</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>cipherLength</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>outputStream</name><operator>.</operator><name>flush</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ShortBufferException</name></type> | <type><name>InvalidAlgorithmParameterException</name></type> | <type><name>InvalidKeyException</name></type> | <type><name>BadPaddingException</name></type> | <type><name>IllegalBlockSizeException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><type><name>long</name></type> <name>getLogSize</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>file</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>close</name></name><argument_list>(<argument><expr><name>outputStream</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>static</specifier> class <name>Reader</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>        <name>ivBuffer</name>         <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">16</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>        <name>intBuffer</name>        <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">4</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GrowingBuffer</name></type> <name>ciphertextBuffer</name> <init>= <expr><operator>new</operator> <call><name>GrowingBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type>              <name>secret</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Cipher</name></type>              <name>cipher</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>BufferedInputStream</name></type> <name>inputStream</name></decl>;</decl_stmt>
+
+    <constructor><name>Reader</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>secret</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>File</name></type> <name>file</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>secret</name></name>      <operator>=</operator> <name>secret</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>inputStream</name></name> <operator>=</operator> <operator>new</operator> <call><name>BufferedInputStream</name><argument_list>(<argument><expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cipher</name></name> <operator>=</operator> <call><name><name>Cipher</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"AES/CBC/PKCS5Padding"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> | <type><name>NoSuchPaddingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></constructor>
+
+    <function><type><name>String</name></type> <name>readAll</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <decl_stmt><decl><type><name>StringBuilder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>entry</name></decl>;</decl_stmt>
+      <while>while <condition>(<expr><operator>(</operator><name>entry</name> <operator>=</operator> <call><name>readEntry</name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>entry</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+
+      <return>return <expr><call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>String</name></type> <name>readEntry</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>readFully</name></name><argument_list>(<argument><expr><name>inputStream</name></expr></argument>, <argument><expr><name>ivBuffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>readFully</name></name><argument_list>(<argument><expr><name>inputStream</name></expr></argument>, <argument><expr><name>intBuffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type>    <name>length</name>     <init>= <expr><call><name><name>Conversions</name><operator>.</operator><name>byteArrayToInt</name></name><argument_list>(<argument><expr><name>intBuffer</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>ciphertext</name> <init>= <expr><call><name><name>ciphertextBuffer</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>readFully</name></name><argument_list>(<argument><expr><name>inputStream</name></expr></argument>, <argument><expr><name>ciphertext</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>cipher</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name><name>Cipher</name><operator>.</operator><name>DECRYPT_MODE</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SecretKeySpec</name><argument_list>(<argument><expr><name>secret</name></expr></argument>, <argument><expr><literal type="string">"AES"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name>IvParameterSpec</name><argument_list>(<argument><expr><name>ivBuffer</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>plaintext</name> <init>= <expr><call><name><name>cipher</name><operator>.</operator><name>doFinal</name></name><argument_list>(<argument><expr><name>ciphertext</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <return>return <expr><operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><name>plaintext</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidKeyException</name></type> | <type><name>InvalidAlgorithmParameterException</name></type> | <type><name>IllegalBlockSizeException</name></type> | <type><name>BadPaddingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></catch></try>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>EOFException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></catch></try>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\conversation\ConversationSearchViewModel.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>conversation</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Application</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>AndroidViewModel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>LiveData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>ContactAccessor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>CursorList</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>search</name><operator>.</operator><name>SearchRepository</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>search</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageResult</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>CloseableLiveData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Debouncer</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Closeable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ConversationSearchViewModel</name> <super><extends>extends <name>AndroidViewModel</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SearchRepository</name></type>                <name>searchRepository</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>CloseableLiveData</name><argument_list type="generic">&lt;<argument><name>SearchResult</name></argument>&gt;</argument_list></name></type> <name>result</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Debouncer</name></type>                       <name>debouncer</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>firstSearch</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>searchOpen</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type>  <name>activeQuery</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>    <name>activeThreadId</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ConversationSearchViewModel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Application</name></type> <name>application</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>application</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>Context</name></type> <name>context</name> <init>= <expr><call><name><name>application</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>result</name>           <operator>=</operator> <operator>new</operator> <call><name><name>CloseableLiveData</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>debouncer</name>        <operator>=</operator> <operator>new</operator> <call><name>Debouncer</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>searchRepository</name> <operator>=</operator> <operator>new</operator> <call><name>SearchRepository</name><argument_list>(<argument><expr><name>context</name></expr></argument>,
+                                            <argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSearchDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>,
+                                            <argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getContactsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>,
+                                            <argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>,
+                                            <argument><expr><call><name><name>ContactAccessor</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                            <argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><type><name><name>LiveData</name><argument_list type="generic">&lt;<argument><name>SearchResult</name></argument>&gt;</argument_list></name></type> <name>getSearchResults</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>onQueryUpdated</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>query</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>firstSearch</name> <operator>&amp;&amp;</operator> <call><name><name>query</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&lt;</operator> <literal type="number">2</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>postValue</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SearchResult</name><argument_list>(<argument><expr><call><name><name>CursorList</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>query</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>activeQuery</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>updateQuery</name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>onMissingResult</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>activeQuery</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>updateQuery</name><argument_list>(<argument><expr><name>activeQuery</name></expr></argument>, <argument><expr><name>activeThreadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>onMoveUp</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>debouncer</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name><name>CursorList</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name></type> <name>messages</name> <init>= <expr><operator>(</operator><name><name>CursorList</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name><operator>)</operator> <call><name><name>result</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResults</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>                       <name>position</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPosition</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="number">1</literal></expr></argument>, <argument><expr><call><name><name>messages</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SearchResult</name><argument_list>(<argument><expr><name>messages</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>onMoveDown</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>debouncer</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name><name>CursorList</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name></type> <name>messages</name> <init>= <expr><operator>(</operator><name><name>CursorList</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name><operator>)</operator> <call><name><name>result</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResults</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>                       <name>position</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPosition</name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SearchResult</name><argument_list>(<argument><expr><name>messages</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+
+  <function><type><name>void</name></type> <name>onSearchOpened</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>searchOpen</name>  <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name>firstSearch</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>onSearchClosed</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>searchOpen</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>debouncer</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCleared</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCleared</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateQuery</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>query</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>activeQuery</name>    <operator>=</operator> <name>query</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>activeThreadId</name> <operator>=</operator> <name>threadId</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>debouncer</name><operator>.</operator><name>publish</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <expr_stmt><expr><name>firstSearch</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>searchRepository</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>messages</name></decl></parameter></parameter_list> -&gt; <block>{
+        <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+          <if>if <condition>(<expr><name>searchOpen</name> <operator>&amp;&amp;</operator> <call><name><name>query</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>activeQuery</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SearchResult</name><argument_list>(<argument><expr><name>messages</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>messages</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          }</block></else></if>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>static</specifier> class <name>SearchResult</name> <super><implements>implements <name>Closeable</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>CursorList</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name></type> <name>results</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>                       <name>position</name></decl>;</decl_stmt>
+
+    <constructor><name>SearchResult</name><parameter_list>(<parameter><decl><type><name><name>CursorList</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name></type> <name>results</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>results</name></name>  <operator>=</operator> <name>results</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>position</name></name> <operator>=</operator> <name>position</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>MessageResult</name></argument>&gt;</argument_list></name></type> <name>getResults</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>results</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getPosition</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>position</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

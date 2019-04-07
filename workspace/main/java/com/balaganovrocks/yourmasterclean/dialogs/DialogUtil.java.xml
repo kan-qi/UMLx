@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\dialogs\DialogUtil.java"><comment type="block">/*
+ * Copyright (C) 2012 www.amsoft.cn
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>dialogs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentTransaction</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentActivity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>DialogUtil</name> <block>{
+
+	<comment type="block" format="javadoc">/** dialog tag */</comment>
+	<decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>mDialogTag</name> <init>= <expr><literal type="string">"dialog"</literal></expr></init></decl>;</decl_stmt>
+	
+	
+	
+	
+	
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼å¯¹è¯æ¡dialog ï¼å¾æ ï¼æ é¢ï¼Stringåå®¹ï¼.
+	 * @param context
+	 * @param icon
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 *
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>,<parameter><decl><type><name>int</name></type> <name>icon</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><name>context</name></expr></init></decl>;</decl_stmt> 
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>icon</name></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><name>message</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+	    <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+	    <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æ¾ç¤ºä¸ä¸ªä¸è¬çå¯¹è¯æ¡ï¼å¾æ ï¼æ é¢ï¼stringåå®¹ï¼ç¡®è®¤ï¼åæ¶ï¼.
+	 * @param context
+	 * @param icon
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 * @param message å¯¹è¯æ¡æç¤ºåå®¹
+	 * @param onClickListener ç¹å»ç¡®è®¤æé®çäºä»¶çå¬
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>,<parameter><decl><type><name>int</name></type> <name>icon</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>,<parameter><decl><type><name><name>AlertDialogFragment</name><operator>.</operator><name>DialogOnClickListener</name></name></type> <name>onClickListener</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><name>context</name></expr></init></decl>;</decl_stmt> 
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>icon</name></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><name>message</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>onClickListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	
+	<comment type="block" format="javadoc">/**
+	 * æ¾ç¤ºä¸ä¸ªä¸è¬çå¯¹è¯æ¡ï¼æ é¢ï¼Stringåå®¹ï¼ç¡®è®¤ï¼åæ¶ï¼.
+	 * @param context
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 * @param message å¯¹è¯æ¡æç¤ºåå®¹
+	 * @param onClickListener ç¹å»ç¡®è®¤æé®çäºä»¶çå¬
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>,<parameter><decl><type><name><name>AlertDialogFragment</name><operator>.</operator><name>DialogOnClickListener</name></name></type> <name>onClickListener</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><name>context</name></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><name>message</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>onClickListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æ¾ç¤ºä¸ä¸ªä¸è¬çå¯¹è¯æ¡ï¼Viewåå®¹ï¼.
+	 * @param view å¯¹è¯æ¡æ é¢åå®¹
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><call><name><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>view</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æ¾ç¤ºä¸ä¸ªä¸è¬çå¯¹è¯æ¡ï¼Stringåå®¹ï¼.
+	 * @param context
+	 *
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><name>context</name></expr></init></decl>;</decl_stmt> 
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>message</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼å¯¹è¯æ¡dialog ï¼å¾æ ï¼æ é¢ï¼Viewåå®¹ï¼.
+	 * @param icon
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 * @param view  å¯¹è¯æ¡æç¤ºåå®¹
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>icon</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><call><name><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>icon</name></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>view</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æ¾ç¤ºä¸ä¸ªä¸è¬çå¯¹è¯æ¡ï¼å¾æ ï¼æ é¢ï¼Viewåå®¹ï¼ç¡®è®¤ï¼åæ¶ï¼.
+	 * @param icon
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 * @param view å¯¹è¯æ¡æç¤ºåå®¹
+	 * @param onClickListener ç¹å»ç¡®è®¤æé®çäºä»¶çå¬
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>icon</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>,<parameter><decl><type><name><name>AlertDialogFragment</name><operator>.</operator><name>DialogOnClickListener</name></name></type> <name>onClickListener</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><call><name><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>icon</name></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>view</name></expr></argument>,<argument><expr><name>onClickListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼å¯¹è¯æ¡dialog ï¼æ é¢ï¼Viewåå®¹ï¼.
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 * @param view  å¯¹è¯æ¡æç¤ºåå®¹
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><call><name><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>view</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æ¾ç¤ºä¸ä¸ªä¸è¬çå¯¹è¯æ¡ï¼æ é¢ï¼Viewåå®¹ï¼ç¡®è®¤ï¼åæ¶ï¼.
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 * @param view å¯¹è¯æ¡æç¤ºåå®¹
+	 * @param onClickListener ç¹å»ç¡®è®¤æé®çäºä»¶çå¬
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>,<parameter><decl><type><name><name>AlertDialogFragment</name><operator>.</operator><name>DialogOnClickListener</name></name></type> <name>onClickListener</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><call><name><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt> 
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><name>view</name></expr></argument>,<argument><expr><name>onClickListener</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼å¯¹è¯æ¡dialog ï¼æ é¢ï¼Stringåå®¹ï¼.
+	 * @param context
+	 * @param title å¯¹è¯æ¡æ é¢åå®¹
+	 *
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>AlertDialogFragment</name></type> <name>showAlertDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>title</name></decl></parameter>,<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator><name>context</name></expr></init></decl>;</decl_stmt> 
+		<decl_stmt><decl><type><name>AlertDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>AlertDialogFragment</name><operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>,<argument><expr><name>title</name></expr></argument>,<argument><expr><name>message</name></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>,<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»   </comment>
+        <expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼æ¾ç¤ºè¿åº¦æ¡.
+	 * 
+	 * @param context
+	 *            the context
+	 * @param indeterminateDrawable
+	 *            ç¨é»è®¤è¯·å0
+	 * @param message
+	 *            the message
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>ProgressDialogFragment</name></type> <name>showProgressDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>,
+			<parameter><decl><type><name>int</name></type> <name>indeterminateDrawable</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator> <name>context</name></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>ProgressDialogFragment</name></type> <name>newFragment</name> <init>= <expr><call><name><name>ProgressDialogFragment</name>
+				<operator>.</operator><name>newInstance</name></name><argument_list>(<argument><expr><name>indeterminateDrawable</name></expr></argument>, <argument><expr><name>message</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call>
+				<operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»</comment>
+		<expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_OPEN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>newFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>ft</name></expr></argument>, <argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<return>return <expr><name>newFragment</name></expr>;</return>
+	}</block></function>
+	
+	
+
+
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼ç§»é¤Fragment.
+	 * 
+	 * @param context
+	 *            the context
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>removeDialog</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+		<try>try <block>{
+			<decl_stmt><decl><type><name>FragmentActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>FragmentActivity</name><operator>)</operator> <name>context</name></expr></init></decl>;</decl_stmt>
+			<decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>ft</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call>
+					<operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+			<comment type="line">// æå®ä¸ä¸ªç³»ç»è½¬åºå¨ç»</comment>
+			<expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>setTransition</name></name><argument_list>(<argument><expr><name><name>FragmentTransaction</name><operator>.</operator><name>TRANSIT_FRAGMENT_CLOSE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<decl_stmt><decl><type><name>Fragment</name></type> <name>prev</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getFragmentManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>findFragmentByTag</name><argument_list>(
+					<argument><expr><name>mDialogTag</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+			<if>if <condition>(<expr><name>prev</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+				<expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>prev</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			}</block></then></if>
+			<expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>addToBackStack</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name><name>ft</name><operator>.</operator><name>commit</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		}</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+			<comment type="line">// å¯è½æActivityå·²ç»è¢«éæ¯çå¼å¸¸</comment>
+			<expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		}</block></catch></try>
+	}</block></function>
+
+	<comment type="block" format="javadoc">/**
+	 * æè¿°ï¼ç§»é¤FragmentåView
+	 * 
+	 * @param view
+	 */</comment>
+	<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>removeDialog</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name>removeDialog</name><argument_list>(<argument><expr><call><name><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>removeSelfFromParent</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+
+}</block></class>
+</unit>

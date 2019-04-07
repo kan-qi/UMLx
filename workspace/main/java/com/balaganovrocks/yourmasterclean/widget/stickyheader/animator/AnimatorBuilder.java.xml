@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\widget\stickyheader\animator\AnimatorBuilder.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>widget</name><operator>.</operator><name>stickyheader</name><operator>.</operator><name>animator</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Point</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Rect</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AnimatorBuilder</name> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>DEFAULT_VELOCITY_ANIMATOR</name> <init>= <expr><literal type="number">0.5f</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>AnimatorBundle</name></argument>&gt;</argument_list></name></type> <name>mListAnimatorBundles</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>AnimatorBuilder</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>mListAnimatorBundles</name> <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>AnimatorBuilder</name></type> <name>create</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>AnimatorBuilder</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyScale</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToScale</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>finalRect</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToScale</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>Rect</name></type> <name>from</name> <init>= <expr><call><name>buildViewRect</name><argument_list>(<argument><expr><name>viewToScale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Float</name></type> <name>scaleX</name> <init>= <expr><call><name>calculateScaleX</name><argument_list>(<argument><expr><name>from</name></expr></argument>, <argument><expr><name>finalRect</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Float</name></type> <name>scaleY</name> <init>= <expr><call><name>calculateScaleY</name><argument_list>(<argument><expr><name>from</name></expr></argument>, <argument><expr><name>finalRect</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <return>return <expr><call><name>applyScale</name><argument_list>(<argument><expr><name>viewToScale</name></expr></argument>, <argument><expr><name>scaleX</name></expr></argument>, <argument><expr><name>scaleY</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyScale</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToScale</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>scaleX</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>scaleY</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToScale</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>AnimatorBundle</name></type> <name>animatorScale</name> <init>= <expr><call><name><name>AnimatorBundle</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>SCALE</name></name></expr></argument>, <argument><expr><name>viewToScale</name></expr></argument>, <argument><expr><name>scaleX</name></expr></argument>, <argument><expr><name>scaleY</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name>adjustTranslation</name><argument_list>(<argument><expr><name>animatorScale</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>mListAnimatorBundles</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>animatorScale</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>this</name></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Translate the top-left point of the view to finalPoint
+     * @param viewToTranslate
+     * @param finalPoint
+     * @return
+     */</comment>
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyTranslation</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToTranslate</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Point</name></type> <name>finalPoint</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToTranslate</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Point</name></type> <name>from</name> <init>= <expr><call><name>buildPointView</name><argument_list>(<argument><expr><name>viewToTranslate</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Float</name></type> <name>translationX</name> <init>= <expr><call><name>calculateTranslationX</name><argument_list>(<argument><expr><name>from</name></expr></argument>, <argument><expr><name>finalPoint</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Float</name></type> <name>translationY</name> <init>= <expr><call><name>calculateTranslationY</name><argument_list>(<argument><expr><name>from</name></expr></argument>, <argument><expr><name>finalPoint</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <return>return <expr><call><name>applyTranslation</name><argument_list>(<argument><expr><name>viewToTranslate</name></expr></argument>, <argument><expr><name>translationX</name></expr></argument>, <argument><expr><name>translationY</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyTranslation</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToTranslate</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>translateX</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>translateY</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToTranslate</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>AnimatorBundle</name></type> <name>animatorTranslation</name> <init>= <expr><call><name><name>AnimatorBundle</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>TRANSLATION</name></name></expr></argument>, <argument><expr><name>viewToTranslate</name></expr></argument>, <argument><expr><name>translateX</name></expr></argument>, <argument><expr><name>translateY</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name>adjustTranslation</name><argument_list>(<argument><expr><name>animatorTranslation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>mListAnimatorBundles</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>animatorTranslation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>this</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyFade</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToFade</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>fade</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToFade</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>mListAnimatorBundles</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>AnimatorBundle</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>FADE</name></name></expr></argument>, <argument><expr><name>viewToFade</name></expr></argument>, <argument><expr><name>fade</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>this</name></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * @param viewToParallax
+     * @param velocityParallax the velocity to apply to the view in order to show the parallax effect. choose a velocity between 0 and 1 for better results
+     * @return
+     */</comment>
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyVerticalParallax</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToParallax</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>velocityParallax</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToParallax</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>mListAnimatorBundles</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>AnimatorBundle</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>PARALLAX</name></name></expr></argument>, <argument><expr><name>viewToParallax</name></expr></argument>, <argument><expr><name>velocityParallax</name> <operator>*</operator> <operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>this</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>AnimatorBuilder</name></type> <name>applyVerticalParallax</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>viewToParallax</name></decl></parameter>)</parameter_list> <block>{
+
+        <if>if <condition>(<expr><name>viewToParallax</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"You passed a null view"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>mListAnimatorBundles</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>AnimatorBundle</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>PARALLAX</name></name></expr></argument>, <argument><expr><name>viewToParallax</name></expr></argument>, <argument><expr><name>DEFAULT_VELOCITY_ANIMATOR</name> <operator>*</operator> <operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>this</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>adjustTranslation</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>AnimatorBundle</name></type> <name>newAnimator</name></decl></parameter>)</parameter_list> <block>{
+
+        <decl_stmt><decl><type><name>AnimatorBundle</name></type> <name>animatorScale</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl><type ref="prev"/><name>animatorTranslation</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>AnimatorBundle</name></type> <name>animator</name> <range>: <expr><name>mListAnimatorBundles</name></expr></range></decl></init>)</control> <block>{
+
+            <if>if <condition>(<expr><name><name>newAnimator</name><operator>.</operator><name>mView</name></name> <operator>==</operator> <name><name>animator</name><operator>.</operator><name>mView</name></name></expr>)</condition><then> <block>{
+
+                <if>if <condition>(<expr><name><name>newAnimator</name><operator>.</operator><name>mTypeAnimation</name></name> <operator>==</operator> <name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>SCALE</name></name> <operator>&amp;&amp;</operator> <name><name>animator</name><operator>.</operator><name>mTypeAnimation</name></name> <operator>==</operator> <name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>TRANSLATION</name></name></expr>)</condition><then> <block>{
+
+                    <expr_stmt><expr><name>animatorScale</name> <operator>=</operator> <name>newAnimator</name></expr>;</expr_stmt>
+                    <expr_stmt><expr><name>animatorTranslation</name> <operator>=</operator> <name>animator</name></expr>;</expr_stmt>
+
+                }</block></then> <elseif>else <if>if <condition>(<expr><name><name>newAnimator</name><operator>.</operator><name>mTypeAnimation</name></name> <operator>==</operator> <name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>TRANSLATION</name></name> <operator>&amp;&amp;</operator> <name><name>animator</name><operator>.</operator><name>mTypeAnimation</name></name> <operator>==</operator> <name><name>AnimatorBundle</name><operator>.</operator><name>TypeAnimation</name><operator>.</operator><name>SCALE</name></name></expr>)</condition><then> <block>{
+
+                    <expr_stmt><expr><name>animatorScale</name> <operator>=</operator> <name>animator</name></expr>;</expr_stmt>
+                    <expr_stmt><expr><name>animatorTranslation</name> <operator>=</operator> <name>newAnimator</name></expr>;</expr_stmt>
+
+                }</block></then></if></elseif></if>
+
+                <if>if <condition>(<expr><name>animatorScale</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <decl_stmt><decl><type><name>Float</name></type> <name>translationX</name> <init>= <expr><operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorTranslation</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>-</operator> <operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <call><name><name>animatorTranslation</name><operator>.</operator><name>mView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>*</operator> <operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorScale</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>/</operator> <literal type="number">2f</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+                    <decl_stmt><decl><type><name>Float</name></type> <name>translationY</name> <init>= <expr><operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorTranslation</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>-</operator> <operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <call><name><name>animatorTranslation</name><operator>.</operator><name>mView</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call> <operator>*</operator> <operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorScale</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>/</operator> <literal type="number">2f</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+                    <expr_stmt><expr><name><name>animatorTranslation</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>=</operator> <name>translationX</name></expr>;</expr_stmt>
+                    <expr_stmt><expr><name><name>animatorTranslation</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>=</operator> <name>translationY</name></expr>;</expr_stmt>
+
+                    <break>break;</break>
+                }</block></then></if>
+            }</block></then></if>
+
+        }</block></for>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>animateOnScroll</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>boundedRatioTranslationY</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>translationY</name></decl></parameter>)</parameter_list> <block>{
+
+        <for>for <control>(<init><decl><type><name>AnimatorBundle</name></type> <name>animatorBundle</name> <range>: <expr><name>mListAnimatorBundles</name></expr></range></decl></init>)</control> <block>{
+
+            <switch>switch <condition>(<expr><name><name>animatorBundle</name><operator>.</operator><name>mTypeAnimation</name></name></expr>)</condition> <block>{
+
+                <case>case <expr><name>FADE</name></expr>:</case>
+                    <expr_stmt><expr><call><name><name>animatorBundle</name><operator>.</operator><name>mView</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><name>boundedRatioTranslationY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">//TODO performance issues?</comment>
+                    <break>break;</break>
+
+                <case>case <expr><name>TRANSLATION</name></expr>:</case>
+                    <expr_stmt><expr><call><name><name>animatorBundle</name><operator>.</operator><name>mView</name><operator>.</operator><name>setTranslationX</name></name><argument_list>(<argument><expr><operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorBundle</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>*</operator> <name>boundedRatioTranslationY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt><expr><call><name><name>animatorBundle</name><operator>.</operator><name>mView</name><operator>.</operator><name>setTranslationY</name></name><argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorBundle</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>*</operator> <name>boundedRatioTranslationY</name><operator>)</operator> <operator>-</operator> <name>translationY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <break>break;</break>
+
+                <case>case <expr><name>SCALE</name></expr>:</case>
+                    <expr_stmt><expr><call><name><name>animatorBundle</name><operator>.</operator><name>mView</name><operator>.</operator><name>setScaleX</name></name><argument_list>(<argument><expr><literal type="number">1f</literal> <operator>-</operator> <operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorBundle</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>*</operator> <name>boundedRatioTranslationY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt><expr><call><name><name>animatorBundle</name><operator>.</operator><name>mView</name><operator>.</operator><name>setScaleY</name></name><argument_list>(<argument><expr><literal type="number">1f</literal> <operator>-</operator> <operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorBundle</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>*</operator> <name>boundedRatioTranslationY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <break>break;</break>
+
+                <case>case <expr><name>PARALLAX</name></expr>:</case>
+                    <expr_stmt><expr><call><name><name>animatorBundle</name><operator>.</operator><name>mView</name><operator>.</operator><name>setTranslationY</name></name><argument_list>(<argument><expr><operator>(</operator><name>Float</name><operator>)</operator> <name><name>animatorBundle</name><operator>.</operator><name>mValues</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>*</operator> <name>translationY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <break>break;</break>
+
+                <default>default:</default>
+                    <break>break;</break>
+
+            }</block></switch>
+
+        }</block></for>
+
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>hasAnimatorBundles</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name><name>mListAnimatorBundles</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Rect</name></type> <name>buildViewRect</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">//TODO get coordinates related to the header</comment>
+        <return>return <expr><operator>new</operator> <call><name>Rect</name><argument_list>(<argument><expr><call><name><name>view</name><operator>.</operator><name>getLeft</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>view</name><operator>.</operator><name>getTop</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>view</name><operator>.</operator><name>getRight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>view</name><operator>.</operator><name>getBottom</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Point</name></type> <name>buildPointView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>Point</name><argument_list>(<argument><expr><call><name><name>view</name><operator>.</operator><name>getLeft</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>view</name><operator>.</operator><name>getTop</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>float</name></type> <name>calculateScaleX</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>from</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>to</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><literal type="number">1f</literal> <operator>-</operator> <operator>(</operator><name>float</name><operator>)</operator> <call><name><name>to</name><operator>.</operator><name>width</name></name><argument_list>()</argument_list></call> <operator>/</operator> <operator>(</operator><name>float</name><operator>)</operator> <call><name><name>from</name><operator>.</operator><name>width</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>float</name></type> <name>calculateScaleY</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>from</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>to</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><literal type="number">1f</literal> <operator>-</operator> <operator>(</operator><name>float</name><operator>)</operator> <call><name><name>to</name><operator>.</operator><name>height</name></name><argument_list>()</argument_list></call> <operator>/</operator> <operator>(</operator><name>float</name><operator>)</operator> <call><name><name>from</name><operator>.</operator><name>height</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>float</name></type> <name>calculateTranslationX</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Point</name></type> <name>from</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Point</name></type> <name>to</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><name><name>to</name><operator>.</operator><name>x</name></name> <operator>-</operator> <name><name>from</name><operator>.</operator><name>x</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>float</name></type> <name>calculateTranslationY</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Point</name></type> <name>from</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Point</name></type> <name>to</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><name><name>to</name><operator>.</operator><name>y</name></name> <operator>-</operator> <name><name>from</name><operator>.</operator><name>y</name></name></expr>;</return>
+    }</block></function>
+
+    <class><specifier>public</specifier> <specifier>static</specifier> class <name>AnimatorBundle</name> <block>{
+
+        <enum><specifier>public</specifier> enum <name>TypeAnimation</name> <block>{
+            <decl><name>SCALE</name></decl>, <decl><name>FADE</name></decl>, <decl><name>TRANSLATION</name></decl>, <decl><name>PARALLAX</name></decl>
+        }</block></enum>
+
+        <decl_stmt><decl><specifier>private</specifier> <type><name><name>Object</name><index>[]</index></name></type> <name>mValues</name></decl>;</decl_stmt>
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TypeAnimation</name></type> <name>mTypeAnimation</name></decl>;</decl_stmt>
+        <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>mView</name></decl>;</decl_stmt>
+
+        <constructor><name>AnimatorBundle</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TypeAnimation</name></type> <name>typeAnimation</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name>mTypeAnimation</name> <operator>=</operator> <name>typeAnimation</name></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <function><specifier>public</specifier> <specifier>static</specifier> <type><name>AnimatorBundle</name></type> <name>create</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TypeAnimation</name></type> <name>typeAnimation</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Object</name><modifier>...</modifier></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>AnimatorBundle</name></type> <name>animatorBundle</name> <init>= <expr><operator>new</operator> <call><name>AnimatorBundle</name><argument_list>(<argument><expr><name>typeAnimation</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <expr_stmt><expr><name><name>animatorBundle</name><operator>.</operator><name>mView</name></name> <operator>=</operator> <name>view</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>animatorBundle</name><operator>.</operator><name>mValues</name></name> <operator>=</operator> <name>values</name></expr>;</expr_stmt>
+
+            <return>return <expr><name>animatorBundle</name></expr>;</return>
+        }</block></function>
+
+    }</block></class>
+
+
+}</block></class>
+</unit>

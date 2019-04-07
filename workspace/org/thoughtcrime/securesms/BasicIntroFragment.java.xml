@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\BasicIntroFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>BasicIntroFragment</name> <super><extends>extends <name>Fragment</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ARG_DRAWABLE</name> <init>= <expr><literal type="string">"drawable"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ARG_TEXT</name>     <init>= <expr><literal type="string">"text"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ARG_SUBTEXT</name>  <init>= <expr><literal type="string">"subtext"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>drawable</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>text</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>subtext</name></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>BasicIntroFragment</name></type> <name>newInstance</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>drawable</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>text</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subtext</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>BasicIntroFragment</name></type> <name>fragment</name> <init>= <expr><operator>new</operator> <call><name>BasicIntroFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putInt</name></name><argument_list>(<argument><expr><name>ARG_DRAWABLE</name></expr></argument>, <argument><expr><name>drawable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putInt</name></name><argument_list>(<argument><expr><name>ARG_TEXT</name></expr></argument>, <argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putInt</name></name><argument_list>(<argument><expr><name>ARG_SUBTEXT</name></expr></argument>, <argument><expr><name>subtext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>fragment</name></expr>;</return>
+  }</block></function>
+
+  <constructor><specifier>public</specifier> <name>BasicIntroFragment</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><call><name>getArguments</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>drawable</name> <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInt</name><argument_list>(<argument><expr><name>ARG_DRAWABLE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>text</name>     <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInt</name><argument_list>(<argument><expr><name>ARG_TEXT</name></expr></argument>    )</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>subtext</name>  <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInt</name><argument_list>(<argument><expr><name>ARG_SUBTEXT</name></expr></argument> )</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>,
+                           <parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>View</name></type> <name>v</name> <init>= <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>color_fragment</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ImageView</name><operator>)</operator><call><name><name>v</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>watermark</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>setImageResource</name><argument_list>(<argument><expr><name>drawable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>TextView</name><operator>)</operator><call><name><name>v</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>blurb</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>setText</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>TextView</name><operator>)</operator><call><name><name>v</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>subblurb</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>setText</name><argument_list>(<argument><expr><name>subtext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>v</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

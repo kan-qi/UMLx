@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\audio\AudioCodec.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>audio</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>AudioFormat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>AudioRecord</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaCodec</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaCodecInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaFormat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaRecorder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>OutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>nio</name><operator>.</operator><name>ByteBuffer</name></name>;</import>
+
+<class><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>AudioCodec</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AudioCodec</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type>    <name>SAMPLE_RATE</name>       <init>= <expr><literal type="number">44100</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type>    <name>SAMPLE_RATE_INDEX</name> <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type>    <name>CHANNELS</name>          <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type>    <name>BIT_RATE</name>          <init>= <expr><literal type="number">32000</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>         <name>bufferSize</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MediaCodec</name></type>  <name>mediaCodec</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AudioRecord</name></type> <name>audioRecord</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>running</name>  <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>finished</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AudioCodec</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>bufferSize</name></name>  <operator>=</operator> <call><name><name>AudioRecord</name><operator>.</operator><name>getMinBufferSize</name></name><argument_list>(<argument><expr><name>SAMPLE_RATE</name></expr></argument>, <argument><expr><name><name>AudioFormat</name><operator>.</operator><name>CHANNEL_IN_MONO</name></name></expr></argument>, <argument><expr><name><name>AudioFormat</name><operator>.</operator><name>ENCODING_PCM_16BIT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>audioRecord</name></name> <operator>=</operator> <call><name>createAudioRecord</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>bufferSize</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mediaCodec</name></name>  <operator>=</operator> <call><name>createMediaCodec</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>bufferSize</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>mediaCodec</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>audioRecord</name><operator>.</operator><name>startRecording</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>release</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>stop</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>running</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <while>while <condition>(<expr><operator>!</operator><name>finished</name></expr>)</condition> <block type="pseudo"><expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>wait</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></while>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>start</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>OutputStream</name></type> <name>outputStream</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><operator>new</operator> <call><name>Thread</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name><name>MediaCodec</name><operator>.</operator><name>BufferInfo</name></name></type> <name>bufferInfo</name>         <init>= <expr><operator>new</operator> <call><name><name>MediaCodec</name><operator>.</operator><name>BufferInfo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>                <name>audioRecordData</name>    <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name>bufferSize</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>ByteBuffer</name><index>[]</index></name></type>          <name>codecInputBuffers</name>  <init>= <expr><call><name><name>mediaCodec</name><operator>.</operator><name>getInputBuffers</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>ByteBuffer</name><index>[]</index></name></type>          <name>codecOutputBuffers</name> <init>= <expr><call><name><name>mediaCodec</name><operator>.</operator><name>getOutputBuffers</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <try>try <block>{
+          <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{
+            <decl_stmt><decl><type><name>boolean</name></type> <name>running</name> <init>= <expr><call><name>isRunning</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <expr_stmt><expr><call><name>handleCodecInput</name><argument_list>(<argument><expr><name>audioRecord</name></expr></argument>, <argument><expr><name>audioRecordData</name></expr></argument>, <argument><expr><name>mediaCodec</name></expr></argument>, <argument><expr><name>codecInputBuffers</name></expr></argument>, <argument><expr><name>running</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>handleCodecOutput</name><argument_list>(<argument><expr><name>mediaCodec</name></expr></argument>, <argument><expr><name>codecOutputBuffers</name></expr></argument>, <argument><expr><name>bufferInfo</name></expr></argument>, <argument><expr><name>outputStream</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <if>if <condition>(<expr><operator>!</operator><name>running</name></expr>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if>
+          }</block></while>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch> <finally>finally <block>{
+          <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>stop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>audioRecord</name><operator>.</operator><name>stop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>release</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>audioRecord</name><operator>.</operator><name>release</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+          <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>close</name></name><argument_list>(<argument><expr><name>outputStream</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>setFinished</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></finally></try>
+      }</block></function>
+    }</block></class></expr></argument>, <argument><expr><call><name><name>AudioCodec</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>start</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>synchronized</specifier> <type><name>boolean</name></type> <name>isRunning</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>running</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>setFinished</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>finished</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCodecInput</name><parameter_list>(<parameter><decl><type><name>AudioRecord</name></type> <name>audioRecord</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>audioRecordData</name></decl></parameter>,
+                                <parameter><decl><type><name>MediaCodec</name></type> <name>mediaCodec</name></decl></parameter>, <parameter><decl><type><name><name>ByteBuffer</name><index>[]</index></name></type> <name>codecInputBuffers</name></decl></parameter>,
+                                <parameter><decl><type><name>boolean</name></type> <name>running</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>length</name>                <init>= <expr><call><name><name>audioRecord</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>audioRecordData</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>audioRecordData</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>codecInputBufferIndex</name> <init>= <expr><call><name><name>mediaCodec</name><operator>.</operator><name>dequeueInputBuffer</name></name><argument_list>(<argument><expr><literal type="number">10</literal> <operator>*</operator> <literal type="number">1000</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>codecInputBufferIndex</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>ByteBuffer</name></type> <name>codecBuffer</name> <init>= <expr><name><name>codecInputBuffers</name><index>[<expr><name>codecInputBufferIndex</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>codecBuffer</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>codecBuffer</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>audioRecordData</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>queueInputBuffer</name></name><argument_list>(<argument><expr><name>codecInputBufferIndex</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>length</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><ternary><condition><expr><name>running</name></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><name><name>MediaCodec</name><operator>.</operator><name>BUFFER_FLAG_END_OF_STREAM</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCodecOutput</name><parameter_list>(<parameter><decl><type><name>MediaCodec</name></type> <name>mediaCodec</name></decl></parameter>,
+                                 <parameter><decl><type><name><name>ByteBuffer</name><index>[]</index></name></type> <name>codecOutputBuffers</name></decl></parameter>,
+                                 <parameter><decl><type><name><name>MediaCodec</name><operator>.</operator><name>BufferInfo</name></name></type> <name>bufferInfo</name></decl></parameter>,
+                                 <parameter><decl><type><name>OutputStream</name></type> <name>outputStream</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>codecOutputBufferIndex</name> <init>= <expr><call><name><name>mediaCodec</name><operator>.</operator><name>dequeueOutputBuffer</name></name><argument_list>(<argument><expr><name>bufferInfo</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <while>while <condition>(<expr><name>codecOutputBufferIndex</name> <operator>!=</operator> <name><name>MediaCodec</name><operator>.</operator><name>INFO_TRY_AGAIN_LATER</name></name></expr>)</condition> <block>{
+      <if>if <condition>(<expr><name>codecOutputBufferIndex</name> <operator>&gt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>ByteBuffer</name></type> <name>encoderOutputBuffer</name> <init>= <expr><name><name>codecOutputBuffers</name><index>[<expr><name>codecOutputBufferIndex</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>encoderOutputBuffer</name><operator>.</operator><name>position</name></name><argument_list>(<argument><expr><name><name>bufferInfo</name><operator>.</operator><name>offset</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>encoderOutputBuffer</name><operator>.</operator><name>limit</name></name><argument_list>(<argument><expr><name><name>bufferInfo</name><operator>.</operator><name>offset</name></name> <operator>+</operator> <name><name>bufferInfo</name><operator>.</operator><name>size</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><operator>(</operator><name><name>bufferInfo</name><operator>.</operator><name>flags</name></name> <operator>&amp;</operator> <name><name>MediaCodec</name><operator>.</operator><name>BUFFER_FLAG_CODEC_CONFIG</name></name><operator>)</operator> <operator>!=</operator> <name><name>MediaCodec</name><operator>.</operator><name>BUFFER_FLAG_CODEC_CONFIG</name></name></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>header</name> <init>= <expr><call><name>createAdtsHeader</name><argument_list>(<argument><expr><name><name>bufferInfo</name><operator>.</operator><name>size</name></name> <operator>-</operator> <name><name>bufferInfo</name><operator>.</operator><name>offset</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+
+          <expr_stmt><expr><call><name><name>outputStream</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>header</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>data</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><call><name><name>encoderOutputBuffer</name><operator>.</operator><name>remaining</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name><name>encoderOutputBuffer</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>outputStream</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>encoderOutputBuffer</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>releaseOutputBuffer</name></name><argument_list>(<argument><expr><name>codecOutputBufferIndex</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then>  <elseif>else <if>if <condition>(<expr><name>codecOutputBufferIndex</name><operator>==</operator> <name><name>MediaCodec</name><operator>.</operator><name>INFO_OUTPUT_BUFFERS_CHANGED</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>codecOutputBuffers</name> <operator>=</operator> <call><name><name>mediaCodec</name><operator>.</operator><name>getOutputBuffers</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+
+      <expr_stmt><expr><name>codecOutputBufferIndex</name> <operator>=</operator> <call><name><name>mediaCodec</name><operator>.</operator><name>dequeueOutputBuffer</name></name><argument_list>(<argument><expr><name>bufferInfo</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></while>
+
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>createAdtsHeader</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type>    <name>frameLength</name> <init>= <expr><name>length</name> <operator>+</operator> <literal type="number">7</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>adtsHeader</name>  <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">7</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">0</literal></expr>]</index></name>  <operator>=</operator> <operator>(</operator><name>byte</name><operator>)</operator> <literal type="number">0xFF</literal></expr>;</expr_stmt> <comment type="line">// Sync Word</comment>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">1</literal></expr>]</index></name>  <operator>=</operator> <operator>(</operator><name>byte</name><operator>)</operator> <literal type="number">0xF1</literal></expr>;</expr_stmt> <comment type="line">// MPEG-4, Layer (0), No CRC</comment>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">2</literal></expr>]</index></name>  <operator>=</operator> <call>(<name>byte</name>) <argument_list>(<argument><expr><operator>(</operator><name><name>MediaCodecInfo</name><operator>.</operator><name>CodecProfileLevel</name><operator>.</operator><name>AACObjectLC</name></name> <operator>-</operator> <literal type="number">1</literal><operator>)</operator> <operator>&lt;&lt;</operator> <literal type="number">6</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">2</literal></expr>]</index></name> <operator>|=</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>byte</name><operator>)</operator> <name>SAMPLE_RATE_INDEX</name><operator>)</operator> <operator>&lt;&lt;</operator> <literal type="number">2</literal><operator>)</operator></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">2</literal></expr>]</index></name> <operator>|=</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>byte</name><operator>)</operator> <name>CHANNELS</name><operator>)</operator> <operator>&gt;&gt;</operator> <literal type="number">2</literal><operator>)</operator></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">3</literal></expr>]</index></name>  <operator>=</operator> <call>(<name>byte</name>) <argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>CHANNELS</name> <operator>&amp;</operator> <literal type="number">3</literal><operator>)</operator> <operator>&lt;&lt;</operator> <literal type="number">6</literal><operator>)</operator> <operator>|</operator> <operator>(</operator><operator>(</operator><name>frameLength</name> <operator>&gt;&gt;</operator> <literal type="number">11</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0x03</literal><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">4</literal></expr>]</index></name>  <operator>=</operator> <call>(<name>byte</name>) <argument_list>(<argument><expr><operator>(</operator><name>frameLength</name> <operator>&gt;&gt;</operator> <literal type="number">3</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xFF</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">5</literal></expr>]</index></name>  <operator>=</operator> <call>(<name>byte</name>) <argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>frameLength</name> <operator>&amp;</operator> <literal type="number">0x07</literal><operator>)</operator> <operator>&lt;&lt;</operator> <literal type="number">5</literal><operator>)</operator> <operator>|</operator> <literal type="number">0x1f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>adtsHeader</name><index>[<expr><literal type="number">6</literal></expr>]</index></name>  <operator>=</operator> <operator>(</operator><name>byte</name><operator>)</operator> <literal type="number">0xFC</literal></expr>;</expr_stmt>
+
+    <return>return <expr><name>adtsHeader</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>AudioRecord</name></type> <name>createAudioRecord</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>bufferSize</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AudioRecord</name><argument_list>(<argument><expr><name><name>MediaRecorder</name><operator>.</operator><name>AudioSource</name><operator>.</operator><name>MIC</name></name></expr></argument>, <argument><expr><name>SAMPLE_RATE</name></expr></argument>,
+                           <argument><expr><name><name>AudioFormat</name><operator>.</operator><name>CHANNEL_IN_MONO</name></name></expr></argument>,
+                           <argument><expr><name><name>AudioFormat</name><operator>.</operator><name>ENCODING_PCM_16BIT</name></name></expr></argument>, <argument><expr><name>bufferSize</name> <operator>*</operator> <literal type="number">10</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>MediaCodec</name></type> <name>createMediaCodec</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>bufferSize</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>MediaCodec</name></type>  <name>mediaCodec</name>  <init>= <expr><call><name><name>MediaCodec</name><operator>.</operator><name>createEncoderByType</name></name><argument_list>(<argument><expr><literal type="string">"audio/mp4a-latm"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>MediaFormat</name></type> <name>mediaFormat</name> <init>= <expr><operator>new</operator> <call><name>MediaFormat</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>mediaFormat</name><operator>.</operator><name>setString</name></name><argument_list>(<argument><expr><name><name>MediaFormat</name><operator>.</operator><name>KEY_MIME</name></name></expr></argument>, <argument><expr><literal type="string">"audio/mp4a-latm"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>mediaFormat</name><operator>.</operator><name>setInteger</name></name><argument_list>(<argument><expr><name><name>MediaFormat</name><operator>.</operator><name>KEY_SAMPLE_RATE</name></name></expr></argument>, <argument><expr><name>SAMPLE_RATE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>mediaFormat</name><operator>.</operator><name>setInteger</name></name><argument_list>(<argument><expr><name><name>MediaFormat</name><operator>.</operator><name>KEY_CHANNEL_COUNT</name></name></expr></argument>, <argument><expr><name>CHANNELS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>mediaFormat</name><operator>.</operator><name>setInteger</name></name><argument_list>(<argument><expr><name><name>MediaFormat</name><operator>.</operator><name>KEY_MAX_INPUT_SIZE</name></name></expr></argument>, <argument><expr><name>bufferSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>mediaFormat</name><operator>.</operator><name>setInteger</name></name><argument_list>(<argument><expr><name><name>MediaFormat</name><operator>.</operator><name>KEY_BIT_RATE</name></name></expr></argument>, <argument><expr><name>BIT_RATE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>mediaFormat</name><operator>.</operator><name>setInteger</name></name><argument_list>(<argument><expr><name><name>MediaFormat</name><operator>.</operator><name>KEY_AAC_PROFILE</name></name></expr></argument>, <argument><expr><name><name>MediaCodecInfo</name><operator>.</operator><name>CodecProfileLevel</name><operator>.</operator><name>AACObjectLC</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>configure</name></name><argument_list>(<argument><expr><name>mediaFormat</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name><name>MediaCodec</name><operator>.</operator><name>CONFIGURE_FLAG_ENCODE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>mediaCodec</name><operator>.</operator><name>release</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+
+    <return>return <expr><name>mediaCodec</name></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

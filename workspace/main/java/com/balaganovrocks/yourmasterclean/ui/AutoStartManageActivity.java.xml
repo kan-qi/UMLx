@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\ui\AutoStartManageActivity.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>ActionBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ActivityInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewPager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>DisplayMetrics</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>TypedValue</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Window</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>base</name><operator>.</operator><name>BaseSwipeBackActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>AutoStartFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>WeakFragmentPagerAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>SystemBarTintManager</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>UIElementsHelper</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>views</name><operator>.</operator><name>SlidingTab</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>InjectView</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>AutoStartManageActivity</name> <super><extends>extends <name>BaseSwipeBackActivity</name></extends></super> <block>{
+
+    <decl_stmt><decl><type><name>ActionBar</name></type> <name>ab</name></decl>;</decl_stmt>
+
+
+    <decl_stmt><decl><type><name>Resources</name></type> <name>res</name></decl>;</decl_stmt>
+
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>tabs</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>SlidingTab</name></type> <name>tabs</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>InjectView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>pagerFragmentTask</name></name></expr></argument>)</argument_list></annotation>
+    <type><name>ViewPager</name></type> <name>pager</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>MyPagerAdapter</name></type> <name>adapter</name></decl>;</decl_stmt>
+
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_autostart_manage</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setHomeButtonEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <comment type="line">//  applyKitKatTranslucency();</comment>
+
+
+        <expr_stmt><expr><name>res</name> <operator>=</operator> <call><name>getResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>adapter</name> <operator>=</operator> <operator>new</operator> <call><name>MyPagerAdapter</name><argument_list>(<argument><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>pageMargin</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(
+                <argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><literal type="number">4</literal></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>getDisplayMetrics</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setPageMargin</name></name><argument_list>(<argument><expr><name>pageMargin</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setViewPager</name></name><argument_list>(<argument><expr><name>pager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setTabsValue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setRequestedOrientation</name><argument_list>(<argument><expr><name><name>ActivityInfo</name><operator>.</operator><name>SCREEN_ORIENTATION_PORTRAIT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setTabsValue</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>DisplayMetrics</name></type> <name>dm</name> <init>= <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDisplayMetrics</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// è®¾ç½®Tabæ¯èªå¨å¡«åæ»¡å±å¹ç</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setShouldExpand</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// è®¾ç½®Tabçåå²çº¿æ¯éæç</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setDividerColor</name></name><argument_list>(<argument><expr><name><name>Color</name><operator>.</operator><name>TRANSPARENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// è®¾ç½®Tabåºé¨çº¿çé«åº¦</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setUnderlineHeight</name></name><argument_list>(<argument><expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(
+                <argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><name>dm</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// è®¾ç½®Tab Indicatorçé«åº¦</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setIndicatorHeight</name></name><argument_list>(<argument><expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(
+                <argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_DIP</name></name></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>, <argument><expr><name>dm</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// è®¾ç½®Tabæ é¢æå­çå¤§å°</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setTextSize</name></name><argument_list>(<argument><expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>TypedValue</name><operator>.</operator><name>applyDimension</name></name><argument_list>(
+                <argument><expr><name><name>TypedValue</name><operator>.</operator><name>COMPLEX_UNIT_SP</name></name></expr></argument>, <argument><expr><literal type="number">16</literal></expr></argument>, <argument><expr><name>dm</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// è®¾ç½®Tab Indicatorçé¢è²</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#ffffff"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setIndicatorColor</name></name><argument_list>(<argument><expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#ffffff"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// è®¾ç½®éä¸­Tabæå­çé¢è² (è¿æ¯æèªå®ä¹çä¸ä¸ªæ¹æ³)</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setSelectedTextColor</name></name><argument_list>(<argument><expr><call><name><name>Color</name><operator>.</operator><name>parseColor</name></name><argument_list>(<argument><expr><literal type="string">"#ffffff"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// åæ¶ç¹å»Tabæ¶çèæ¯è²</comment>
+        <expr_stmt><expr><call><name><name>tabs</name><operator>.</operator><name>setTabBackground</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></function>
+
+
+    <comment type="block" format="javadoc">/**
+     * Apply KitKat specific translucency.
+     */</comment>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>applyKitKatTranslucency</name><parameter_list>()</parameter_list> <block>{
+
+        <comment type="line">// KitKat translucent navigation/status bar.</comment>
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>KITKAT</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>setTranslucentStatus</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>SystemBarTintManager</name></type> <name>mTintManager</name> <init>= <expr><operator>new</operator> <call><name>SystemBarTintManager</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setStatusBarTintEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setNavigationBarTintEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <comment type="line">// mTintManager.setTintColor(0xF00099CC);</comment>
+
+            <expr_stmt><expr><call><name><name>mTintManager</name><operator>.</operator><name>setTintDrawable</name></name><argument_list>(<argument><expr><call><name><name>UIElementsHelper</name>
+                    <operator>.</operator><name>getGeneralActionBarBackground</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+
+            <expr_stmt><expr><call><name>getActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(
+                    <argument><expr><call><name><name>UIElementsHelper</name><operator>.</operator><name>getGeneralActionBarBackground</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        }</block></then></if>
+
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO Auto-generated method stub</comment>
+        <if>if <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></then></if>
+        <return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+
+    <class><specifier>public</specifier> class <name>MyPagerAdapter</name> <super><extends>extends <name>WeakFragmentPagerAdapter</name></extends></super> <block>{
+
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>TITLES</name> <init>= <expr><block>{<expr><literal type="string">"ÐÐ±ÑÐµÐµ Ð¿ÑÐ¾Ð³ÑÐ°Ð¼Ð¼Ð½Ð¾Ðµ Ð¾Ð±ÐµÑÐ¿ÐµÑÐµÐ½Ð¸Ðµ"</literal></expr>,
+                <expr><literal type="string">"Ð¡Ð¸ÑÑÐµÐ¼Ð½Ð¾Ðµ Ð¿ÑÐ¾Ð³ÑÐ°Ð¼Ð¼Ð½Ð¾Ðµ Ð¾Ð±ÐµÑÐ¿ÐµÑÐµÐ½Ð¸Ðµ"</literal></expr>}</block></expr></init></decl>;</decl_stmt>
+
+        <constructor><specifier>public</specifier> <name>MyPagerAdapter</name><parameter_list>(<parameter><decl><type><name>FragmentManager</name></type> <name>fm</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>fm</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>CharSequence</name></type> <name>getPageTitle</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+            <return>return <expr><name><name>TITLES</name><index>[<expr><name>position</name></expr>]</index></name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+            <return>return <expr><name><name>TITLES</name><operator>.</operator><name>length</name></name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>Fragment</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+            <comment type="line">// return SuperAwesomeCardFragment.newInstance(position);return</comment>
+            <decl_stmt><decl><type><name>AutoStartFragment</name></type> <name>fragment</name> <init>= <expr><operator>new</operator> <call><name>AutoStartFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>Bundle</name></type> <name>bundle</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <expr_stmt><expr><call><name><name>bundle</name><operator>.</operator><name>putInt</name></name><argument_list>(<argument><expr><literal type="string">"position"</literal></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>saveFragment</name><argument_list>(<argument><expr><name>fragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <return>return <expr><name>fragment</name></expr>;</return>
+
+        }</block></function>
+
+    }</block></class>
+
+
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><literal type="number">19</literal></expr></argument>)</argument_list></annotation>
+    <specifier>private</specifier> <type><name>void</name></type> <name>setTranslucentStatus</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>on</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Window</name></type> <name>win</name> <init>= <expr><call><name>getWindow</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name></name></type> <name>winParams</name> <init>= <expr><call><name><name>win</name><operator>.</operator><name>getAttributes</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>bits</name> <init>= <expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>FLAG_TRANSLUCENT_STATUS</name></name></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>on</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name><name>winParams</name><operator>.</operator><name>flags</name></name> <operator>|=</operator> <name>bits</name></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name><name>winParams</name><operator>.</operator><name>flags</name></name> <operator>&amp;=</operator> <operator>~</operator><name>bits</name></expr>;</expr_stmt>
+        }</block></else></if>
+        <expr_stmt><expr><call><name><name>win</name><operator>.</operator><name>setAttributes</name></name><argument_list>(<argument><expr><name>winParams</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

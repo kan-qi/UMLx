@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobmanager\requirements\Requirement.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>requirements</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>Job</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Serializable</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A Requirement that must be satisfied before a Job can run.
+ */</comment>
+<interface><specifier>public</specifier> interface <name>Requirement</name> <super><extends>extends <name>Serializable</name></extends></super> <block>{
+  <comment type="block" format="javadoc">/**
+   * @return true if the requirement is satisfied, false otherwise.
+   */</comment>
+  <function_decl><type><name>boolean</name></type> <name>isPresent</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Job</name></type> <name>job</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function_decl><type><name>void</name></type> <name>onRetry</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Job</name></type> <name>job</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

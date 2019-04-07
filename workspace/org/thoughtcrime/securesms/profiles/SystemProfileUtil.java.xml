@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\profiles\SystemProfileUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>profiles</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>Account</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>AccountManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MediaConstraints</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapDecodingException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ListenableFuture</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>SettableFuture</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SystemProfileUtil</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SystemProfileUtil</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier>  <specifier>static</specifier> <type><name><name>ListenableFuture</name><argument_list type="generic">&lt;<argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></type> <name>getSystemProfileAvatar</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>MediaConstraints</name></type> <name>mediaConstraints</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>SettableFuture</name><argument_list type="generic">&lt;<argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></type> <name>future</name> <init>= <expr><operator>new</operator> <call><name><name>SettableFuture</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>byte</name><index>[]</index></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">14</literal></expr>)</condition><then> <block>{
+          <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getContentResolver</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>query</name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>CONTENT_URI</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+            <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+              <decl_stmt><decl><type><name>String</name></type> <name>photoUri</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>PHOTO_URI</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+              <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>photoUri</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <try>try <block>{
+                  <decl_stmt><decl><type><name><name>BitmapUtil</name><operator>.</operator><name>ScaleResult</name></name></type> <name>result</name> <init>= <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>createScaledBytes</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>photoUri</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>mediaConstraints</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                  <return>return <expr><call><name><name>result</name><operator>.</operator><name>getBitmap</name></name><argument_list>()</argument_list></call></expr>;</return>
+                }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>BitmapDecodingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                  <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></catch></try>
+              }</block></then></if>
+            }</block></while>
+          }</block></try> <catch>catch <parameter_list>(<parameter><decl><type><name>SecurityException</name></type> <name>se</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>se</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch>
+        }</block></then></if>
+
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>future</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>future</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <type><name><name>ListenableFuture</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getSystemProfileName</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>SettableFuture</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>future</name> <init>= <expr><operator>new</operator> <call><name><name>SettableFuture</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>String</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>name</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">14</literal></expr>)</condition><then> <block>{
+          <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>=  <expr><call><name><name>context</name><operator>.</operator><name>getContentResolver</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>query</name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>CONTENT_URI</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+            <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+              <expr_stmt><expr><name>name</name> <operator>=</operator> <call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>DISPLAY_NAME</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+          }</block></try> <catch>catch <parameter_list>(<parameter><decl><type><name>SecurityException</name></type> <name>se</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>se</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><name>name</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>AccountManager</name></type> <name>accountManager</name> <init>= <expr><call><name><name>AccountManager</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><type><name><name>Account</name><index>[]</index></name></type>      <name>accounts</name>       <init>= <expr><call><name><name>accountManager</name><operator>.</operator><name>getAccountsByType</name></name><argument_list>(<argument><expr><literal type="string">"com.google"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <for>for <control>(<init><decl><type><name>Account</name></type> <name>account</name> <range>: <expr><name>accounts</name></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name><name>account</name><operator>.</operator><name>name</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+              <if>if <condition>(<expr><call><name><name>account</name><operator>.</operator><name>name</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><literal type="string">"@"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>name</name> <operator>=</operator> <call><name><name>account</name><operator>.</operator><name>name</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>account</name><operator>.</operator><name>name</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="string">"@"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><literal type="char">'.'</literal></expr></argument>, <argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              }</block></then> <else>else <block>{
+                <expr_stmt><expr><name>name</name> <operator>=</operator> <call><name><name>account</name><operator>.</operator><name>name</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="char">'.'</literal></expr></argument>, <argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              }</block></else></if>
+
+              <break>break;</break>
+            }</block></then></if>
+          }</block></for>
+        }</block></then></if>
+
+        <return>return <expr><name>name</name></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>future</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>future</name></expr>;</return>
+  }</block></function>
+
+
+}</block></class>
+</unit>

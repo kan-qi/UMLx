@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\ListenableFutureTask.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Callable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Executor</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>FutureTask</name></name>;</import>
+
+<class><specifier>public</specifier> class <name><name>ListenableFutureTask</name><parameter_list>&lt;<parameter><name>V</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>FutureTask</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>FutureTaskListener</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>listeners</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Nullable</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name>Object</name></type> <name>identifier</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Nullable</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name>Executor</name></type> <name>callbackExecutor</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ListenableFutureTask</name><parameter_list>(<parameter><decl><type><name><name>Callable</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>callable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>callable</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ListenableFutureTask</name><parameter_list>(<parameter><decl><type><name><name>Callable</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>callable</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>identifier</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>callable</name></expr></argument>, <argument><expr><name>identifier</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ListenableFutureTask</name><parameter_list>(<parameter><decl><type><name><name>Callable</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>callable</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>identifier</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Executor</name></type> <name>callbackExecutor</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>callable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>identifier</name></name>       <operator>=</operator> <name>identifier</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>callbackExecutor</name></name> <operator>=</operator> <name>callbackExecutor</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+
+  <constructor><specifier>public</specifier> <name>ListenableFutureTask</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>V</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>result</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>ListenableFutureTask</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>V</name></type> <name>result</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>identifier</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Callable</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>V</name></type> <name>call</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+        <return>return <expr><name>result</name></expr>;</return>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>identifier</name></name>       <operator>=</operator> <name>identifier</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>callbackExecutor</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>addListener</name><parameter_list>(<parameter><decl><type><name><name>FutureTaskListener</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>isDone</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>callback</name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>listeners</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>removeListener</name><parameter_list>(<parameter><decl><type><name><name>FutureTaskListener</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>listeners</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>done</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>callback</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>callback</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Runnable</name></type> <name>callbackRunnable</name> <init>= <expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+        <for>for <control>(<init><decl><type><name><name>FutureTaskListener</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>listener</name> <range>: <expr><name>listeners</name></expr></range></decl></init>)</control> <block>{
+          <expr_stmt><expr><call><name>callback</name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>callbackExecutor</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>callbackRunnable</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then>
+    <else>else                          <block type="pseudo"><expr_stmt><expr><call><name><name>callbackExecutor</name><operator>.</operator><name>execute</name></name><argument_list>(<argument><expr><name>callbackRunnable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>callback</name><parameter_list>(<parameter><decl><type><name><name>FutureTaskListener</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onSuccess</name></name><argument_list>(<argument><expr><call><name>get</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>ExecutionException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onFailure</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>equals</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>other</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>other</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>other</name> <operator>instanceof</operator> <name>ListenableFutureTask</name> <operator>&amp;&amp;</operator> <name><name>this</name><operator>.</operator><name>identifier</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>identifier</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>other</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><call><name><name>super</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>other</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>hashCode</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>identifier</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>identifier</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call></expr>;</return></block></then>
+    <else>else                    <block type="pseudo"><return>return <expr><call><name><name>super</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call></expr>;</return></block></else></if>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\BindableConversationListItem.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>ThreadRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>BindableConversationListItem</name> <super><extends>extends <name>Unbindable</name></extends></super> <block>{
+
+  <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ThreadRecord</name></type> <name>thread</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>typingThreads</name></decl></parameter>,
+                   <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>selectedThreads</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>batchMode</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

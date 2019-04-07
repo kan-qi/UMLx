@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\DeviceListItem.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>devicelist</name><operator>.</operator><name>Device</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DateUtils</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DeviceListItem</name> <super><extends>extends <name>LinearLayout</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>     <name>deviceId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type> <name>name</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type> <name>created</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type> <name>lastActive</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>DeviceListItem</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>DeviceListItem</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onFinishInflate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onFinishInflate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>       <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>created</name></name>    <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>created</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastActive</name></name> <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>active</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>set</name><parameter_list>(<parameter><decl><type><name>Device</name></type> <name>deviceInfo</name></decl></parameter>, <parameter><decl><type><name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>deviceInfo</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>name</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>DeviceListItem_unnamed_device</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+    <else>else                                         <block type="pseudo"><expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>name</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>deviceInfo</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>created</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>DeviceListItem_linked_s</name></name></expr></argument>,
+                                                <argument><expr><call><name><name>DateUtils</name><operator>.</operator><name>getDayPrecisionTimeSpanString</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                                        <argument><expr><name>locale</name></expr></argument>,
+                                                                                        <argument><expr><call><name><name>deviceInfo</name><operator>.</operator><name>getCreated</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lastActive</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>DeviceListItem_last_active_s</name></name></expr></argument>,
+                                                   <argument><expr><call><name><name>DateUtils</name><operator>.</operator><name>getDayPrecisionTimeSpanString</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                                           <argument><expr><name>locale</name></expr></argument>,
+                                                                                           <argument><expr><call><name><name>deviceInfo</name><operator>.</operator><name>getLastSeen</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>deviceId</name></name> <operator>=</operator> <call><name><name>deviceInfo</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getDeviceId</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>deviceId</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getDeviceName</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>name</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

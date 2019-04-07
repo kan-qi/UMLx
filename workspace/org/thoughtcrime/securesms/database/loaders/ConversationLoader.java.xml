@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\loaders\ConversationLoader.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>AbstractCursorLoader</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ConversationLoader</name> <super><extends>extends <name>AbstractCursorLoader</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>    <name>threadId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>int</name></type>     <name>offset</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>int</name></type>     <name>limit</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>long</name></type>    <name>lastSeen</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>       <type><name>boolean</name></type> <name>hasSent</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ConversationLoader</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>offset</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>limit</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>lastSeen</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>threadId</name></name> <operator>=</operator> <name>threadId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>offset</name></name>   <operator>=</operator> <name>offset</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>limit</name></name>    <operator>=</operator> <name>limit</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastSeen</name></name> <operator>=</operator> <name>lastSeen</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>hasSent</name></name>  <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>hasLimit</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>limit</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>hasOffset</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>offset</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getOffset</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>offset</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getLastSeen</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>lastSeen</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>hasSent</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>hasSent</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Cursor</name></type> <name>getCursor</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>lastSeenAndHasSent</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getThreadDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getLastSeenAndHasSent</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>hasSent</name></name> <operator>=</operator> <call><name><name>lastSeenAndHasSent</name><operator>.</operator><name>second</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>lastSeen</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastSeen</name></name> <operator>=</operator> <call><name><name>lastSeenAndHasSent</name><operator>.</operator><name>first</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getConversation</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>limit</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

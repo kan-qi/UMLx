@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\preferences\ChatsPreferenceFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>EditTextPreference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>ListPreference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>preference</name><operator>.</operator><name>Preference</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>EventBus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>Subscribe</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>ThreadMode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationPreferencesActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>backup</name><operator>.</operator><name>BackupDialog</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>backup</name><operator>.</operator><name>FullBackupBase</name><operator>.</operator><name>BackupEvent</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>SwitchPreferenceCompat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>LocalBackupJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>preferences</name><operator>.</operator><name>widgets</name><operator>.</operator><name>ProgressPreference</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BackupUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Trimmer</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ChatsPreferenceFragment</name> <super><extends>extends <name>ListSummaryPreferenceFragment</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ChatsPreferenceFragment</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>paramBundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>paramBundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MEDIA_DOWNLOAD_MOBILE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaDownloadChangeListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MEDIA_DOWNLOAD_WIFI_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaDownloadChangeListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MEDIA_DOWNLOAD_ROAMING_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MediaDownloadChangeListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MESSAGE_BODY_TEXT_SIZE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ListSummaryListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>THREAD_TRIM_NOW</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>TrimNowClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>THREAD_TRIM_LENGTH</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceChangeListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>TrimLengthValidationListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>BACKUP_ENABLED</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BackupClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>BACKUP_NOW</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setOnPreferenceClickListener</name><argument_list>(<argument><expr><operator>new</operator> <call><name>BackupCreateListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeListSummary</name><argument_list>(<argument><expr><operator>(</operator><name>ListPreference</name><operator>)</operator> <call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MESSAGE_BODY_TEXT_SIZE_PREF</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>register</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreatePreferences</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>rootKey</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>addPreferencesFromResource</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>xml</name><operator>.</operator><name>preferences_chats</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>ApplicationPreferencesActivity</name><operator>)</operator><call><name>getActivity</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__chats</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setMediaDownloadSummaries</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setBackupSummary</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>unregister</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRequestPermissionsResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>String</name><index>[]</index></name></type> <name>permissions</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>int</name><index>[]</index></name></type> <name>grantResults</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>onRequestPermissionsResult</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>permissions</name></expr></argument>, <argument><expr><name>grantResults</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Subscribe</name><argument_list>(<argument><expr><name>threadMode</name> <operator>=</operator> <name><name>ThreadMode</name><operator>.</operator><name>MAIN</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onEvent</name><parameter_list>(<parameter><decl><type><name>BackupEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ProgressPreference</name></type> <name>preference</name> <init>= <expr><operator>(</operator><name>ProgressPreference</name><operator>)</operator><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>BACKUP_NOW</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>event</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>BackupEvent</name><operator>.</operator><name>Type</name><operator>.</operator><name>PROGRESS</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ChatsPreferenceFragment_in_progress</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><call><name><name>event</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>event</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>BackupEvent</name><operator>.</operator><name>Type</name><operator>.</operator><name>FINISHED</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setProgressVisible</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setBackupSummary</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setBackupSummary</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>BACKUP_NOW</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ChatsPreferenceFragment_last_backup_s</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>BackupUtil</name><operator>.</operator><name>getLastBackupTime</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Locale</name><operator>.</operator><name>US</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setMediaDownloadSummaries</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MEDIA_DOWNLOAD_MOBILE_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name>getSummaryForMediaPreference</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getMobileMediaDownloadAllowed</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MEDIA_DOWNLOAD_WIFI_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name>getSummaryForMediaPreference</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getWifiMediaDownloadAllowed</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>MEDIA_DOWNLOAD_ROAMING_PREF</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setSummary</name><argument_list>(<argument><expr><call><name>getSummaryForMediaPreference</name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getRoamingMediaDownloadAllowed</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>CharSequence</name></type> <name>getSummaryForMediaPreference</name><parameter_list>(<parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>allowedNetworks</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type>     <name>keys</name>      <init>= <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringArray</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>array</name><operator>.</operator><name>pref_media_download_entries</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type>     <name>values</name>    <init>= <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringArray</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>array</name><operator>.</operator><name>pref_media_download_values</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>outValues</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>allowedNetworks</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name><name>keys</name><operator>.</operator><name>length</name></name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>allowedNetworks</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name><name>keys</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>outValues</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name><name>values</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></for>
+
+    <return>return <expr><ternary><condition><expr><call><name><name>outValues</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preferences__none</name></name></expr></argument>)</argument_list></call></expr>
+                               </then><else>: <expr><call><name><name>TextUtils</name><operator>.</operator><name>join</name></name><argument_list>(<argument><expr><literal type="string">", "</literal></expr></argument>, <argument><expr><name>outValues</name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>BackupClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name><name>ChatsPreferenceFragment</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_EXTERNAL_STORAGE</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+                 <operator>.</operator><call><name>onAllGranted</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+                   <if>if <condition>(<expr><operator>!</operator><operator>(</operator><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><name>preference</name><operator>)</operator><operator>.</operator><call><name>isChecked</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                     <expr_stmt><expr><call><name><name>BackupDialog</name><operator>.</operator><name>showEnableBackupDialog</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><name>preference</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                   }</block></then> <else>else <block>{
+                     <expr_stmt><expr><call><name><name>BackupDialog</name><operator>.</operator><name>showDisableBackupDialog</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>(</operator><name>SwitchPreferenceCompat</name><operator>)</operator><name>preference</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                   }</block></else></if>
+                 }</block></lambda></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>withPermanentDenialDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ChatsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>BackupCreateListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name><name>ChatsPreferenceFragment</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_EXTERNAL_STORAGE</name></name></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+                 <operator>.</operator><call><name>onAllGranted</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+                   <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Queing backup..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                   <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                     <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                                     <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>LocalBackupJob</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                 }</block></lambda></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>withPermanentDenialDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ChatsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                 <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>TrimNowClickListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceClick</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>threadLengthLimit</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getThreadTrimLength</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_delete_all_old_messages_now</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setMessage</name></name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getQuantityString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>plurals</name><operator>.</operator><name>ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages</name></name></expr></argument>,
+                                                          <argument><expr><name>threadLengthLimit</name></expr></argument>, <argument><expr><name>threadLengthLimit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setPositiveButton</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ApplicationPreferencesActivity_delete</name></name></expr></argument>,
+        <argument><expr><operator>new</operator> <class><super><name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>Override</name></annotation>
+          <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Trimmer</name><operator>.</operator><name>trimAllThreads</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>threadLengthLimit</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setNegativeButton</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>show</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>MediaDownloadChangeListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unchecked"</literal></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onPreferenceChange"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name>getSummaryForMediaPreference</name><argument_list>(<argument><expr><operator>(</operator><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name><operator>)</operator><name>newValue</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>TrimLengthValidationListener</name> <super><implements>implements <name><name>Preference</name><operator>.</operator><name>OnPreferenceChangeListener</name></name></implements></super> <block>{
+
+    <constructor><specifier>public</specifier> <name>TrimLengthValidationListener</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>EditTextPreference</name></type> <name>preference</name> <init>= <expr><operator>(</operator><name>EditTextPreference</name><operator>)</operator><call><name>findPreference</name><argument_list>(<argument><expr><name><name>TextSecurePreferences</name><operator>.</operator><name>THREAD_TRIM_LENGTH</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>onPreferenceChange</name><argument_list>(<argument><expr><name>preference</name></expr></argument>, <argument><expr><call><name><name>preference</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPreferenceChange</name><parameter_list>(<parameter><decl><type><name>Preference</name></type> <name>preference</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>newValue</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>newValue</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>(</operator><operator>(</operator><name>String</name><operator>)</operator><name>newValue</name><operator>)</operator><operator>.</operator><call><name>trim</name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>int</name></type> <name>value</name></decl>;</decl_stmt>
+      <try>try <block>{
+        <expr_stmt><expr><name>value</name> <operator>=</operator> <call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><operator>(</operator><name>String</name><operator>)</operator><name>newValue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NumberFormatException</name></type> <name>nfe</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>nfe</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></catch></try>
+
+      <if>if <condition>(<expr><name>value</name> <operator>&lt;</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>preference</name><operator>.</operator><name>setSummary</name></name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getQuantityString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>plurals</name><operator>.</operator><name>ApplicationPreferencesActivity_messages_per_conversation</name></name></expr></argument>, <argument><expr><name>value</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>getSummary</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

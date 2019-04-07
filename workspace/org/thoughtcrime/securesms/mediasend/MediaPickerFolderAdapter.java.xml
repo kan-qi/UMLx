@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mediasend\MediaPickerFolderAdapter.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mediasend</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>resource</name><operator>.</operator><name>drawable</name><operator>.</operator><name>DrawableTransitionOptions</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class>class <name>MediaPickerFolderAdapter</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name><name>Adapter</name><argument_list type="generic">&lt;<argument><name><name>MediaPickerFolderAdapter</name><operator>.</operator><name>FolderViewHolder</name></name></argument>&gt;</argument_list></name></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GlideRequests</name></type>     <name>glideRequests</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>EventListener</name></type>     <name>eventListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MediaFolder</name></argument>&gt;</argument_list></name></type> <name>folders</name></decl>;</decl_stmt>
+
+  <constructor><name>MediaPickerFolderAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>EventListener</name></type> <name>eventListener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name> <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>eventListener</name></name> <operator>=</operator> <name>eventListener</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>folders</name></name>       <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>FolderViewHolder</name></type> <name>onCreateViewHolder</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>FolderViewHolder</name><argument_list>(<argument><expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name><name>viewGroup</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>mediapicker_folder_item</name></name></expr></argument>, <argument><expr><name>viewGroup</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>FolderViewHolder</name></type> <name>folderViewHolder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>folderViewHolder</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><call><name><name>folders</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>glideRequests</name></expr></argument>, <argument><expr><name>eventListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onViewRecycled</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>FolderViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getItemCount</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>folders</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>setFolders</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MediaFolder</name></argument>&gt;</argument_list></name></type> <name>folders</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>folders</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>folders</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>folders</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>static</specifier> class <name>FolderViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ImageView</name></type> <name>thumbnail</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ImageView</name></type> <name>icon</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TextView</name></type>  <name>title</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TextView</name></type>  <name>count</name></decl>;</decl_stmt>
+
+    <constructor><name>FolderViewHolder</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>thumbnail</name> <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_folder_item_thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>icon</name>      <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_folder_item_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>title</name>     <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_folder_item_title</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>count</name>     <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>mediapicker_folder_item_count</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MediaFolder</name></type> <name>folder</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>EventListener</name></type> <name>eventListener</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>title</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>folder</name><operator>.</operator><name>getTitle</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>count</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>folder</name><operator>.</operator><name>getItemCount</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>icon</name><operator>.</operator><name>setImageResource</name></name><argument_list>(<argument><expr><ternary><condition><expr><call><name><name>folder</name><operator>.</operator><name>getFolderType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>MediaFolder</name><operator>.</operator><name>FolderType</name><operator>.</operator><name>CAMERA</name></name></expr> ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_camera_alt_white_24dp</name></name></expr> </then><else>: <expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_folder_white_48dp</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>load</name></name><argument_list>(<argument><expr><call><name><name>folder</name><operator>.</operator><name>getThumbnailUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>transition</name><argument_list>(<argument><expr><call><name><name>DrawableTransitionOptions</name><operator>.</operator><name>withCrossFade</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>thumbnail</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>eventListener</name><operator>.</operator><name>onFolderClicked</name></name><argument_list>(<argument><expr><name>folder</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><type><name>void</name></type> <name>recycle</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>itemView</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <interface>interface <name>EventListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onFolderClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MediaFolder</name></type> <name>mediaFolder</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

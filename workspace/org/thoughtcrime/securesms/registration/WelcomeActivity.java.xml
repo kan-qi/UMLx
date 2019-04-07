@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\registration\WelcomeActivity.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>registration</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BaseActionBarActivity</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>CommunicationActions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>WelcomeActivity</name> <super><extends>extends <name>BaseActionBarActivity</name></extends></super> <block>{
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>registration_welcome_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>welcome_terms_button</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnClickListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>onTermsClicked</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>welcome_continue_button</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setOnClickListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>onContinueClicked</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRequestPermissionsResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>String</name><index>[]</index></name></type> <name>permissions</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>int</name><index>[]</index></name></type> <name>grantResults</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>onRequestPermissionsResult</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>permissions</name></expr></argument>, <argument><expr><name>grantResults</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>onTermsClicked</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>CommunicationActions</name><operator>.</operator><name>openBrowserLink</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="string">"https://signal.org/legal"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>onContinueClicked</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_CONTACTS</name></name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>READ_CONTACTS</name></name></expr></argument>,
+            <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_EXTERNAL_STORAGE</name></name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>READ_EXTERNAL_STORAGE</name></name></expr></argument>,
+            <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>READ_PHONE_STATE</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>withRationaleDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>RegistrationActivity_signal_needs_access_to_your_contacts_and_media_in_order_to_connect_with_friends</name></name></expr></argument>)</argument_list></call></expr></argument>,
+            <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_contacts_white_48dp</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_folder_white_48dp</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>onAnyResult</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setHasSeenWelcomeScreen</name></name><argument_list>(<argument><expr><name><name>WelcomeActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+          <decl_stmt><decl><type><name>Intent</name></type> <name>nextIntent</name> <init>= <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><literal type="string">"next_intent"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><name>nextIntent</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>IllegalStateException</name><argument_list>(<argument><expr><literal type="string">"Was not supplied a next_intent."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+          }</block></then></if>
+
+          <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>nextIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>overridePendingTransition</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_from_right</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_scale_out</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

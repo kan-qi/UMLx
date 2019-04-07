@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\PlayServicesUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>ApplicationInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>common</name><operator>.</operator><name>ConnectionResult</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>common</name><operator>.</operator><name>GoogleApiAvailability</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>PlayServicesUtil</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>PlayServicesUtil</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <enum><specifier>public</specifier> enum <name>PlayServicesStatus</name> <block>{
+    <decl><name>SUCCESS</name></decl>,
+    <decl><name>MISSING</name></decl>,
+    <decl><name>NEEDS_UPDATE</name></decl>,
+    <decl><name>TRANSIENT_ERROR</name></decl>
+  }</block></enum>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>PlayServicesStatus</name></type> <name>getPlayServicesStatus</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>gcmStatus</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>gcmStatus</name> <operator>=</operator> <call><name><name>GoogleApiAvailability</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isGooglePlayServicesAvailable</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><name><name>PlayServicesStatus</name><operator>.</operator><name>MISSING</name></name></expr>;</return>
+    }</block></catch></try>
+
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Play Services: "</literal> <operator>+</operator> <name>gcmStatus</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><name>gcmStatus</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>SUCCESS</name></name></expr>:</case>
+        <return>return <expr><name><name>PlayServicesStatus</name><operator>.</operator><name>SUCCESS</name></name></expr>;</return>
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>SERVICE_VERSION_UPDATE_REQUIRED</name></name></expr>:</case>
+        <try>try <block>{
+          <decl_stmt><decl><type><name>ApplicationInfo</name></type> <name>applicationInfo</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getApplicationInfo</name><argument_list>(<argument><expr><literal type="string">"com.google.android.gms"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><name>applicationInfo</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><name><name>applicationInfo</name><operator>.</operator><name>enabled</name></name></expr>)</condition><then> <block>{
+            <return>return <expr><name><name>PlayServicesStatus</name><operator>.</operator><name>MISSING</name></name></expr>;</return>
+          }</block></then></if>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+
+        <return>return <expr><name><name>PlayServicesStatus</name><operator>.</operator><name>NEEDS_UPDATE</name></name></expr>;</return>
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>SERVICE_DISABLED</name></name></expr>:</case>
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>SERVICE_MISSING</name></name></expr>:</case>
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>SERVICE_INVALID</name></name></expr>:</case>
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>API_UNAVAILABLE</name></name></expr>:</case>
+      <case>case <expr><name><name>ConnectionResult</name><operator>.</operator><name>SERVICE_MISSING_PERMISSION</name></name></expr>:</case>
+        <return>return <expr><name><name>PlayServicesStatus</name><operator>.</operator><name>MISSING</name></name></expr>;</return>
+      <default>default:</default>
+        <return>return <expr><name><name>PlayServicesStatus</name><operator>.</operator><name>TRANSIENT_ERROR</name></name></expr>;</return>
+    }</block></switch>
+  }</block></function>
+
+}</block></class>
+</unit>

@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\VerifyIdentityActivity.java"><comment type="block">/*
+ * Copyright (C) 2016-2017 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>TypeEvaluator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>ValueAnimator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ActivityNotFoundException</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapFactory</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>BitmapDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ColorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Vibrator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>DrawableRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RequiresApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentTransaction</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>SwitchCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Html</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>method</name><operator>.</operator><name>LinkMovementMethod</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ContextMenu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ContextMenu</name><operator>.</operator><name>ContextMenuInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>AnticipateInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>OvershootInterpolator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>ScaleAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>CompoundButton</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>camera</name><operator>.</operator><name>CameraView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>IdentityKeyParcelable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>IdentityKeyUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>IdentityDatabase</name><operator>.</operator><name>VerifiedStatus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MultiDeviceVerifiedUpdateJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name><operator>.</operator><name>QrCode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name><operator>.</operator><name>ScanListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>qr</name><operator>.</operator><name>ScanningThread</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>RecipientModifiedListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>IdentityUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>IdentityKey</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>fingerprint</name><operator>.</operator><name>Fingerprint</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>fingerprint</name><operator>.</operator><name>FingerprintParsingException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>fingerprint</name><operator>.</operator><name>FingerprintVersionMismatchException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>fingerprint</name><operator>.</operator><name>NumericFingerprintGenerator</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>UnsupportedEncodingException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>nio</name><operator>.</operator><name>charset</name><operator>.</operator><name>Charset</name></name>;</import>
+
+<import>import static <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>SessionCipher</name><operator>.</operator><name>SESSION_LOCK</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity for verifying identity keys.
+ *
+ * @author Moxie Marlinspike
+ */</comment>
+<class><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>VerifyIdentityActivity</name> <super><extends>extends <name>PassphraseRequiredActionBarActivity</name></extends> <implements>implements <name>RecipientModifiedListener</name>, <name>ScanListener</name>, <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>VerifyIdentityActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS_EXTRA</name>  <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>IDENTITY_EXTRA</name> <init>= <expr><literal type="string">"recipient_identity"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>VERIFIED_EXTRA</name> <init>= <expr><literal type="string">"verified_state"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>VerifyDisplayFragment</name></type> <name>displayFragment</name> <init>= <expr><operator>new</operator> <call><name>VerifyDisplayFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>VerifyScanFragment</name></type>    <name>scanFragment</name>    <init>= <expr><operator>new</operator> <call><name>VerifyScanFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPreCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>state</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>ready</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>AndroidManifest__verify_safety_number</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Recipient</name></type> <name>recipient</name> <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>(</operator><name>Address</name><operator>)</operator><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>ADDRESS_EXTRA</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setActionBarNotificationBarColor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Bundle</name></type> <name>extras</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>extras</name><operator>.</operator><name>putParcelable</name></name><argument_list>(<argument><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>REMOTE_ADDRESS</name></name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>ADDRESS_EXTRA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>extras</name><operator>.</operator><name>putParcelable</name></name><argument_list>(<argument><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>REMOTE_IDENTITY</name></name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>IDENTITY_EXTRA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>extras</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>REMOTE_NUMBER</name></name></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toPhoneString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>extras</name><operator>.</operator><name>putParcelable</name></name><argument_list>(<argument><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>LOCAL_IDENTITY</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>IdentityKeyParcelable</name><argument_list>(<argument><expr><call><name><name>IdentityKeyUtil</name><operator>.</operator><name>getIdentityKey</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>extras</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>LOCAL_NUMBER</name></name></expr></argument>, <argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>extras</name><operator>.</operator><name>putBoolean</name></name><argument_list>(<argument><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>VERIFIED_STATE</name></name></expr></argument>, <argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBooleanExtra</name><argument_list>(<argument><expr><name>VERIFIED_EXTRA</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>scanFragment</name><operator>.</operator><name>setScanListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>displayFragment</name><operator>.</operator><name>setClickListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initFragment</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>, <argument><expr><name>displayFragment</name></expr></argument>, <argument><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>getCurrentLocale</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>extras</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case> <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></switch>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onModified</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name>setActionBarNotificationBarColor</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onQrDataFound</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>Vibrator</name><operator>)</operator><call><name>getSystemService</name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>VIBRATOR_SERVICE</name></name></expr></argument>)</argument_list></call><operator>)</operator><operator>.</operator><call><name>vibrate</name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>popBackStack</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>displayFragment</name><operator>.</operator><name>setScannedFingerprint</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+               <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>CAMERA</name></name></expr></argument>)</argument_list></call>
+               <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+               <operator>.</operator><call><name>withPermanentDenialDialog</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code_but_it_has_been_permanently_denied</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+               <operator>.</operator><call><name>onAllGranted</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+                 <decl_stmt><decl><type><name>FragmentTransaction</name></type> <name>transaction</name> <init>= <expr><call><name>getSupportFragmentManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>beginTransaction</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                 <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>setCustomAnimations</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_from_top</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_to_bottom</name></name></expr></argument>,
+                                                 <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_from_bottom</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_to_top</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                 <expr_stmt><expr><call><name><name>transaction</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>, <argument><expr><name>scanFragment</name></expr></argument>)</argument_list></call>
+                            <operator>.</operator><call><name>addToBackStack</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+                            <operator>.</operator><call><name>commitAllowingStateLoss</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+               }</block></lambda></expr></argument>)</argument_list></call>
+               <operator>.</operator><call><name>onAnyDenied</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+               <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRequestPermissionsResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>String</name><index>[]</index></name></type> <name>permissions</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>int</name><index>[]</index></name></type> <name>grantResults</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>onRequestPermissionsResult</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>permissions</name></expr></argument>, <argument><expr><name>grantResults</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setActionBarNotificationBarColor</name><parameter_list>(<parameter><decl><type><name>MaterialColor</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setBackgroundDrawable</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><call><name><name>color</name><operator>.</operator><name>toActionBarColor</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setStatusBarColor</name><argument_list>(<argument><expr><call><name><name>color</name><operator>.</operator><name>toStatusBarColor</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>VerifyDisplayFragment</name> <super><extends>extends <name>Fragment</name></extends> <implements>implements <name>RecipientModifiedListener</name>, <name><name>CompoundButton</name><operator>.</operator><name>OnCheckedChangeListener</name></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>REMOTE_ADDRESS</name>  <init>= <expr><literal type="string">"remote_address"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>REMOTE_NUMBER</name>   <init>= <expr><literal type="string">"remote_number"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>REMOTE_IDENTITY</name> <init>= <expr><literal type="string">"remote_identity"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCAL_IDENTITY</name>  <init>= <expr><literal type="string">"local_identity"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LOCAL_NUMBER</name>    <init>= <expr><literal type="string">"local_number"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>VERIFIED_STATE</name>  <init>= <expr><literal type="string">"verified_state"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Recipient</name></type>    <name>recipient</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type>       <name>localNumber</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type>       <name>remoteNumber</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>IdentityKey</name></type> <name>localIdentity</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>IdentityKey</name></type> <name>remoteIdentity</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Fingerprint</name></type> <name>fingerprint</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>                 <name>container</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>                 <name>numbersContainer</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>            <name>qrCode</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>            <name>qrVerified</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>             <name>tapLabel</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type>             <name>description</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></type> <name>clickListener</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>SwitchCompat</name></type>         <name>verified</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>TextView</name><index>[]</index></name></type> <name>codes</name>                <init>= <expr><operator>new</operator> <name><name>TextView</name><index>[<expr><literal type="number">12</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type>    <name>animateSuccessOnDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type>    <name>animateFailureOnDraw</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>        <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name>inflater</name></expr></argument>, <argument><expr><name>viewGroup</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>verify_display_fragment</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>numbersContainer</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>number_table</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>qrCode</name></name>           <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>qr_code</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>verified</name></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>verified_switch</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>qrVerified</name></name>       <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>qr_verified</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>description</name></name>      <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>description</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>tapLabel</name></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>tap_label</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">0</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_first</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">1</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_second</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">2</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_third</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">3</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_fourth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">4</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_fifth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">5</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_sixth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">6</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_seventh</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">7</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_eighth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">8</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_ninth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">9</literal></expr>]</index></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_tenth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">10</literal></expr>]</index></name>        <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_eleventh</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>codes</name><index>[<expr><literal type="number">11</literal></expr>]</index></name>        <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>code_twelth</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>qrCode</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>clickListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>registerForContextMenu</name></name><argument_list>(<argument><expr><name>numbersContainer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>verified</name><operator>.</operator><name>setChecked</name></name><argument_list>(<argument><expr><call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBoolean</name><argument_list>(<argument><expr><name>VERIFIED_STATE</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>verified</name><operator>.</operator><name>setOnCheckedChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>container</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>Address</name></type>               <name>address</name>                  <init>= <expr><call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelable</name><argument_list>(<argument><expr><name>REMOTE_ADDRESS</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>IdentityKeyParcelable</name></type> <name>localIdentityParcelable</name>  <init>= <expr><call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelable</name><argument_list>(<argument><expr><name>LOCAL_IDENTITY</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>IdentityKeyParcelable</name></type> <name>remoteIdentityParcelable</name> <init>= <expr><call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelable</name><argument_list>(<argument><expr><name>REMOTE_IDENTITY</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>address</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>                  <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"Address required"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+      <if>if <condition>(<expr><name>localIdentityParcelable</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>  <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"local identity required"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+      <if>if <condition>(<expr><name>remoteIdentityParcelable</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"remote identity required"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then></if>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>localNumber</name></name>    <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name>LOCAL_NUMBER</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>localIdentity</name></name>  <operator>=</operator> <call><name><name>localIdentityParcelable</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>remoteNumber</name></name>   <operator>=</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name>REMOTE_NUMBER</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recipient</name></name>      <operator>=</operator> <call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>remoteIdentity</name></name> <operator>=</operator> <call><name><name>remoteIdentityParcelable</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>recipient</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Fingerprint</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>Fingerprint</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+          <return>return <expr><operator>new</operator> <call><name>NumericFingerprintGenerator</name><argument_list>(<argument><expr><literal type="number">5200</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>createFor</name><argument_list>(<argument><expr><name>localNumber</name></expr></argument>, <argument><expr><name>localIdentity</name></expr></argument>,
+                                                                 <argument><expr><name>remoteNumber</name></expr></argument>, <argument><expr><name>remoteIdentity</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><name><name>VerifyDisplayFragment</name><operator>.</operator><name>this</name><operator>.</operator><name>fingerprint</name></name> <operator>=</operator> <name>fingerprint</name></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>setFingerprintViews</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>supportInvalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>setHasOptionsMenu</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onModified</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name>setRecipientText</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>setRecipientText</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>fingerprint</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>setFingerprintViews</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name>animateSuccessOnDraw</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>animateSuccessOnDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>animateVerifiedSuccess</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><name>animateFailureOnDraw</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>animateFailureOnDraw</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>animateVerifiedFailure</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>recipient</name><operator>.</operator><name>removeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreateContextMenu</name><parameter_list>(<parameter><decl><type><name>ContextMenu</name></type> <name>menu</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>,
+                                    <parameter><decl><type><name>ContextMenuInfo</name></type> <name>menuInfo</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreateContextMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>, <argument><expr><name>view</name></expr></argument>, <argument><expr><name>menuInfo</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>fingerprint</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>MenuInflater</name></type> <name>inflater</name> <init>= <expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getMenuInflater</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>verify_display_fragment_context_menu</name></name></expr></argument>, <argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onContextItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>fingerprint</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>super</name><operator>.</operator><name>onContextItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if>
+
+      <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_copy</name></name></expr>:</case>    <expr_stmt><expr><call><name>handleCopyToClipboard</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><name><name>codes</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>menu_compare</name></name></expr>:</case> <expr_stmt><expr><call><name>handleCompareWithClipboard</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>          <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        <default>default:</default>                <return>return <expr><call><name><name>super</name><operator>.</operator><name>onContextItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreateOptionsMenu</name><parameter_list>(<parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>, <parameter><decl><type><name>MenuInflater</name></type> <name>inflater</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreateOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>, <argument><expr><name>inflater</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>fingerprint</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>verify_identity</name></name></expr></argument>, <argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+      <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>verify_identity__share</name></name></expr>:</case> <expr_stmt><expr><call><name>handleShare</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><name><name>codes</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></switch>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setScannedFingerprint</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>scanned</name></decl></parameter>)</parameter_list> <block>{
+      <try>try <block>{
+        <if>if <condition>(<expr><call><name><name>fingerprint</name><operator>.</operator><name>getScannableFingerprint</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>compareTo</name><argument_list>(<argument><expr><call><name><name>scanned</name><operator>.</operator><name>getBytes</name></name><argument_list>(<argument><expr><literal type="string">"ISO-8859-1"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name><name>this</name><operator>.</operator><name>animateSuccessOnDraw</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><name><name>this</name><operator>.</operator><name>animateFailureOnDraw</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>FingerprintVersionMismatchException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><call><name><name>e</name><operator>.</operator><name>getOurVersion</name></name><argument_list>()</argument_list></call> <operator>&lt;</operator> <call><name><name>e</name><operator>.</operator><name>getTheirVersion</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>FingerprintParsingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_the_scanned_qr_code_is_not_a_correctly_formatted_safety_number</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>UnsupportedEncodingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setClickListener</name><parameter_list>(<parameter><decl><type><name><name>View</name><operator>.</operator><name>OnClickListener</name></name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>clickListener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getFormattedSafetyNumbers</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>segmentCount</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type>      <name>segments</name> <init>= <expr><call><name>getSegments</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><name>segmentCount</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>StringBuilder</name></type> <name>result</name>   <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name><name>segments</name><operator>.</operator><name>length</name></name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name><name>segments</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>i</name> <operator>!=</operator> <name><name>segments</name><operator>.</operator><name>length</name></name> <operator>-</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+          <if>if <condition>(<expr><operator>(</operator><operator>(</operator><name>i</name><operator>+</operator><literal type="number">1</literal><operator>)</operator> <operator>%</operator> <literal type="number">4</literal><operator>)</operator> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+          <else>else                  <block type="pseudo"><expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+        }</block></then></if>
+      }</block></for>
+
+      <return>return <expr><call><name><name>result</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCopyToClipboard</name><parameter_list>(<parameter><decl><type><name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>segmentCount</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>writeTextToClipboard</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getFormattedSafetyNumbers</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><name>segmentCount</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>handleCompareWithClipboard</name><parameter_list>(<parameter><decl><type><name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>clipboardData</name> <init>= <expr><call><name><name>Util</name><operator>.</operator><name>readTextFromClipboard</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>clipboardData</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_no_safety_number_to_compare_was_found_in_the_clipboard</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>numericClipboardData</name> <init>= <expr><call><name><name>clipboardData</name><operator>.</operator><name>replaceAll</name></name><argument_list>(<argument><expr><literal type="string">"\\D"</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>numericClipboardData</name></expr></argument>)</argument_list></call> <operator>||</operator> <call><name><name>numericClipboardData</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">60</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_no_safety_number_to_compare_was_found_in_the_clipboard</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><call><name><name>fingerprint</name><operator>.</operator><name>getDisplayableFingerprint</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDisplayText</name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>numericClipboardData</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>animateVerifiedSuccess</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name>animateVerifiedFailure</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>handleShare</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>segmentCount</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>shareString</name> <init>=
+          <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_our_signal_safety_number</name></name></expr></argument>)</argument_list></call> <operator>+</operator> <literal type="string">"\n"</literal> <operator>+</operator>
+              <call><name>getFormattedSafetyNumbers</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><name>segmentCount</name></expr></argument>)</argument_list></call> <operator>+</operator> <literal type="string">"\n"</literal></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setAction</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_SEND</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>EXTRA_TEXT</name></name></expr></argument>, <argument><expr><name>shareString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setType</name></name><argument_list>(<argument><expr><literal type="string">"text/plain"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <try>try <block>{
+        <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><call><name><name>Intent</name><operator>.</operator><name>createChooser</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_share_safety_number_via</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ActivityNotFoundException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>VerifyIdentityActivity_no_app_to_share_to</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setRecipientText</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>description</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>Html</name><operator>.</operator><name>fromHtml</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>verify_display_fragment__if_you_wish_to_verify_the_security_of_your_end_to_end_encryption_with_s</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>toShortString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>description</name><operator>.</operator><name>setMovementMethod</name></name><argument_list>(<argument><expr><call><name><name>LinkMovementMethod</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setFingerprintViews</name><parameter_list>(<parameter><decl><type><name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>animate</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>segments</name> <init>= <expr><call><name>getSegments</name><argument_list>(<argument><expr><name>fingerprint</name></expr></argument>, <argument><expr><name><name>codes</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name><name>codes</name><operator>.</operator><name>length</name></name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <if>if <condition>(<expr><name>animate</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>setCodeSegment</name><argument_list>(<argument><expr><name><name>codes</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>, <argument><expr><name><name>segments</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+        <else>else         <block type="pseudo"><expr_stmt><expr><name><name>codes</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>setText</name><argument_list>(<argument><expr><name><name>segments</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+      }</block></for>
+
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>qrCodeData</name>   <init>= <expr><call><name><name>fingerprint</name><operator>.</operator><name>getScannableFingerprint</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSerialized</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>qrCodeString</name> <init>= <expr><operator>new</operator> <call><name>String</name><argument_list>(<argument><expr><name>qrCodeData</name></expr></argument>, <argument><expr><call><name><name>Charset</name><operator>.</operator><name>forName</name></name><argument_list>(<argument><expr><literal type="string">"ISO-8859-1"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>qrCodeBitmap</name> <init>= <expr><call><name><name>QrCode</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>qrCodeString</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>qrCode</name><operator>.</operator><name>setImageBitmap</name></name><argument_list>(<argument><expr><name>qrCodeBitmap</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>animate</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>fadeIn</name></name><argument_list>(<argument><expr><name>qrCode</name></expr></argument>, <argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>fadeIn</name></name><argument_list>(<argument><expr><name>tapLabel</name></expr></argument>, <argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>qrCode</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>tapLabel</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setCodeSegment</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>codeView</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>segment</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <literal type="number">11</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>ValueAnimator</name></type> <name>valueAnimator</name> <init>= <expr><operator>new</operator> <call><name>ValueAnimator</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>valueAnimator</name><operator>.</operator><name>setObjectValues</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><name>segment</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>valueAnimator</name><operator>.</operator><name>addUpdateListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>ValueAnimator</name><operator>.</operator><name>AnimatorUpdateListener</name></name></super><argument_list>()</argument_list> <block>{
+          <function><annotation>@<name>RequiresApi</name><argument_list>(<argument><expr><name>api</name> <operator>=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB</name></name></expr></argument>)</argument_list></annotation>
+          <annotation>@<name>Override</name></annotation>
+          <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationUpdate</name><parameter_list>(<parameter><decl><type><name>ValueAnimator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>value</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>animation</name><operator>.</operator><name>getAnimatedValue</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>codeView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"%05d"</literal></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>valueAnimator</name><operator>.</operator><name>setEvaluator</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>TypeEvaluator</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+          <function><specifier>public</specifier> <type><name>Integer</name></type> <name>evaluate</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>fraction</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>startValue</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>endValue</name></decl></parameter>)</parameter_list> <block>{
+            <return>return <expr><call><name><name>Math</name><operator>.</operator><name>round</name></name><argument_list>(<argument><expr><name>startValue</name> <operator>+</operator> <operator>(</operator><name>endValue</name> <operator>-</operator> <name>startValue</name><operator>)</operator> <operator>*</operator> <name>fraction</name></expr></argument>)</argument_list></call></expr>;</return>
+          }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>valueAnimator</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>valueAnimator</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>codeView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>segment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name><name>String</name><index>[]</index></name></type> <name>getSegments</name><parameter_list>(<parameter><decl><type><name>Fingerprint</name></type> <name>fingerprint</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>segmentCount</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>segments</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[<expr><name>segmentCount</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type>   <name>digits</name>   <init>= <expr><call><name><name>fingerprint</name><operator>.</operator><name>getDisplayableFingerprint</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDisplayText</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>      <name>partSize</name> <init>= <expr><call><name><name>digits</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>/</operator> <name>segmentCount</name></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><name>segmentCount</name></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+        <expr_stmt><expr><name><name>segments</name><index>[<expr><name>i</name></expr>]</index></name> <operator>=</operator> <call><name><name>digits</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>i</name> <operator>*</operator> <name>partSize</name></expr></argument>, <argument><expr><operator>(</operator><name>i</name> <operator>*</operator> <name>partSize</name><operator>)</operator> <operator>+</operator> <name>partSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <return>return <expr><name>segments</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>Bitmap</name></type> <name>createVerifiedBitmap</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>, <parameter><decl><type><annotation>@<name>DrawableRes</name></annotation> <name>int</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>, <argument><expr><name><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>ARGB_8888</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Canvas</name></type> <name>canvas</name> <init>= <expr><operator>new</operator> <call><name>Canvas</name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>check</name>  <init>= <expr><call><name><name>BitmapFactory</name><operator>.</operator><name>decodeResource</name></name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>float</name></type>  <name>offset</name> <init>= <expr><operator>(</operator><name>width</name> <operator>-</operator> <call><name><name>check</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawBitmap</name></name><argument_list>(<argument><expr><name>check</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>bitmap</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>animateVerifiedSuccess</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>qrBitmap</name>  <init>= <expr><operator>(</operator><operator>(</operator><name>BitmapDrawable</name><operator>)</operator><call><name><name>qrCode</name><operator>.</operator><name>getDrawable</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getBitmap</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>qrSuccess</name> <init>= <expr><call><name>createVerifiedBitmap</name><argument_list>(<argument><expr><call><name><name>qrBitmap</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>qrBitmap</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_check_white_48dp</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>qrVerified</name><operator>.</operator><name>setImageBitmap</name></name><argument_list>(<argument><expr><name>qrSuccess</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>qrVerified</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>MULTIPLY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>animateVerified</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>animateVerifiedFailure</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>qrBitmap</name>  <init>= <expr><operator>(</operator><operator>(</operator><name>BitmapDrawable</name><operator>)</operator><call><name><name>qrCode</name><operator>.</operator><name>getDrawable</name></name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getBitmap</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>qrSuccess</name> <init>= <expr><call><name>createVerifiedBitmap</name><argument_list>(<argument><expr><call><name><name>qrBitmap</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>qrBitmap</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_close_white_48dp</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>qrVerified</name><operator>.</operator><name>setImageBitmap</name></name><argument_list>(<argument><expr><name>qrSuccess</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>qrVerified</name><operator>.</operator><name>getBackground</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>red_500</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>MULTIPLY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>animateVerified</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>animateVerified</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>ScaleAnimation</name></type> <name>scaleAnimation</name> <init>= <expr><operator>new</operator> <call><name>ScaleAnimation</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>,
+                                                         <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>,
+                                                         <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OvershootInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">800</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setAnimationListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animation</name><operator>.</operator><name>AnimationListener</name></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>qrVerified</name><operator>.</operator><name>postDelayed</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+              <decl_stmt><decl><type><name>ScaleAnimation</name></type> <name>scaleAnimation</name> <init>= <expr><operator>new</operator> <call><name>ScaleAnimation</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>,
+                                                                 <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>,
+                                                                 <argument><expr><name><name>ScaleAnimation</name><operator>.</operator><name>RELATIVE_TO_SELF</name></name></expr></argument>, <argument><expr><literal type="number">0.5f</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+              <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setInterpolator</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AnticipateInterpolator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>animateOut</name></name><argument_list>(<argument><expr><name>qrVerified</name></expr></argument>, <argument><expr><name>scaleAnimation</name></expr></argument>, <argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+          }</block></class></expr></argument>, <argument><expr><literal type="number">2000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animation</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>ViewUtil</name><operator>.</operator><name>animateIn</name></name><argument_list>(<argument><expr><name>qrVerified</name></expr></argument>, <argument><expr><name>scaleAnimation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCheckedChanged</name><parameter_list>(<parameter><decl><type><name>CompoundButton</name></type> <name>buttonView</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>isChecked</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Recipient</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+          <synchronized>synchronized <init>(<expr><name>SESSION_LOCK</name></expr>)</init> <block>{
+            <if>if <condition>(<expr><name>isChecked</name></expr>)</condition><then> <block>{
+              <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Saving identity: "</literal> <operator>+</operator> <name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getIdentityDatabase</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                             <operator>.</operator><call><name>saveIdentity</name><argument_list>(<argument><expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call></expr></argument>,
+                                           <argument><expr><name>remoteIdentity</name></expr></argument>,
+                                           <argument><expr><name><name>VerifiedStatus</name><operator>.</operator><name>VERIFIED</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>,
+                                           <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+              <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getIdentityDatabase</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                             <operator>.</operator><call><name>setVerified</name><argument_list>(<argument><expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call></expr></argument>,
+                                          <argument><expr><name>remoteIdentity</name></expr></argument>,
+                                          <argument><expr><name><name>VerifiedStatus</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+
+            <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                              <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+                              <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceVerifiedUpdateJob</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>,
+                                                                    <argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                                                    <argument><expr><name>remoteIdentity</name></expr></argument>,
+                                                                    <argument><expr><ternary><condition><expr><name>isChecked</name></expr> ?</condition><then> <expr><name><name>VerifiedStatus</name><operator>.</operator><name>VERIFIED</name></name></expr> </then><else>:
+                                                                                <expr><name><name>VerifiedStatus</name><operator>.</operator><name>DEFAULT</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><call><name><name>IdentityUtil</name><operator>.</operator><name>markIdentityVerified</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>isChecked</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></synchronized>
+          <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></function>
+      }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>VerifyScanFragment</name> <super><extends>extends <name>Fragment</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>           <name>container</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>CameraView</name></type>     <name>cameraView</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ScanningThread</name></type> <name>scanningThread</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ScanListener</name></type>   <name>scanListener</name></decl>;</decl_stmt>
+
+    <function><specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>  <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name>inflater</name></expr></argument>, <argument><expr><name>viewGroup</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>verify_scan_fragment</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cameraView</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>scanner</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>container</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>scanningThread</name></name> <operator>=</operator> <operator>new</operator> <call><name>ScanningThread</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>setScanListener</name></name><argument_list>(<argument><expr><name>scanListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>setCharacterSet</name></name><argument_list>(<argument><expr><literal type="string">"ISO-8859-1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraView</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraView</name><operator>.</operator><name>setPreviewCallback</name></name><argument_list>(<argument><expr><name>scanningThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraView</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>scanningThread</name><operator>.</operator><name>stopScanning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfiguration</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfiguration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraView</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraView</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cameraView</name><operator>.</operator><name>setPreviewCallback</name></name><argument_list>(<argument><expr><name>scanningThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setScanListener</name><parameter_list>(<parameter><decl><type><name>ScanListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>scanningThread</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>scanningThread</name><operator>.</operator><name>setScanListener</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>scanListener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+    }</block></function>
+
+  }</block></class>
+
+}</block></class>
+</unit>

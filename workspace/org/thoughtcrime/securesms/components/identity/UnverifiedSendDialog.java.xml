@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\identity\UnverifiedSendDialog.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>identity</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>DialogInterface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>IdentityDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>IdentityDatabase</name><operator>.</operator><name>IdentityRecord</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import static <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>SessionCipher</name><operator>.</operator><name>SESSION_LOCK</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>UnverifiedSendDialog</name> <super><extends>extends <name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name></extends> <implements>implements <name><name>DialogInterface</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>IdentityRecord</name></argument>&gt;</argument_list></name></type> <name>untrustedRecords</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ResendListener</name></type>       <name>resendListener</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>UnverifiedSendDialog</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>message</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>IdentityRecord</name></argument>&gt;</argument_list></name></type> <name>untrustedRecords</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ResendListener</name></type> <name>resendListener</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>untrustedRecords</name></name> <operator>=</operator> <name>untrustedRecords</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>resendListener</name></name>   <operator>=</operator> <name>resendListener</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setTitle</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>UnverifiedSendDialog_send_message</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setIconAttribute</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>dialog_alert_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setMessage</name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setPositiveButton</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>UnverifiedSendDialog_send</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setNegativeButton</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>cancel</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>DialogInterface</name></type> <name>dialog</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>which</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>IdentityDatabase</name></type> <name>identityDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getIdentityDatabase</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <synchronized>synchronized <init>(<expr><name>SESSION_LOCK</name></expr>)</init> <block>{
+          <for>for <control>(<init><decl><type><name>IdentityRecord</name></type> <name>identityRecord</name> <range>: <expr><name>untrustedRecords</name></expr></range></decl></init>)</control> <block>{
+            <expr_stmt><expr><call><name><name>identityDatabase</name><operator>.</operator><name>setVerified</name></name><argument_list>(<argument><expr><call><name><name>identityRecord</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                         <argument><expr><call><name><name>identityRecord</name><operator>.</operator><name>getIdentityKey</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                         <argument><expr><name><name>IdentityDatabase</name><operator>.</operator><name>VerifiedStatus</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></for>
+        }</block></synchronized>
+
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Void</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>resendListener</name><operator>.</operator><name>onResendMessage</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>ResendListener</name> <block>{
+    <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onResendMessage</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

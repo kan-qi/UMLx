@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\bean\AppProcessInfo.java"><comment type="block">/*
+ * Copyright (C) 2012 www.amsoft.cn
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>bean</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+
+
+<comment type="line">// TODO: Auto-generated Javadoc</comment>
+
+<comment type="block" format="javadoc">/**
+ * @author
+ * @version v1.0
+ * @dateï¼2013-11-13 ä¸å9:00:52
+ */</comment>
+<class><specifier>public</specifier> class <name>AppProcessInfo</name> <super><implements>implements <name><name>Comparable</name><argument_list type="generic">&lt;<argument><name>AppProcessInfo</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * The app name.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>appName</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * The name of the process that this object is associated with.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>processName</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * The pid of this process; 0 if none.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>pid</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * The user id of this process.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>uid</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * The icon.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>Drawable</name></type> <name>icon</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * å ç¨çåå­.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>long</name></type> <name>memory</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * å ç¨çåå­.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>cpu</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * è¿ç¨çç¶æï¼å¶ä¸­Sè¡¨ç¤ºä¼ç ï¼Rè¡¨ç¤ºæ­£å¨è¿è¡ï¼Zè¡¨ç¤ºåµæ­»ç¶æï¼Nè¡¨ç¤ºè¯¥è¿ç¨ä¼åå¼æ¯è´æ°.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>status</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * å½åä½¿ç¨ççº¿ç¨æ°.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>threadsCount</name></decl>;</decl_stmt>
+
+
+    <decl_stmt><decl><specifier>public</specifier> <type><name>boolean</name></type> <name>checked</name><init>=<expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * æ¯å¦æ¯ç³»ç»è¿ç¨.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>boolean</name></type> <name>isSystem</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Instantiates a new ab process info.
+     */</comment>
+    <constructor><specifier>public</specifier> <name>AppProcessInfo</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * Instantiates a new ab process info.
+     *
+     * @param processName the process name
+     * @param pid         the pid
+     * @param uid         the uid
+     */</comment>
+    <constructor><specifier>public</specifier> <name>AppProcessInfo</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>processName</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>pid</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>uid</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>processName</name></name> <operator>=</operator> <name>processName</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pid</name></name> <operator>=</operator> <name>pid</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>uid</name></name> <operator>=</operator> <name>uid</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block">/* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */</comment>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>compareTo</name><parameter_list>(<parameter><decl><type><name>AppProcessInfo</name></type> <name>another</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>processName</name><operator>.</operator><name>compareTo</name></name><argument_list>(<argument><expr><name><name>another</name><operator>.</operator><name>processName</name></name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>memory</name></name> <operator>&lt;</operator> <name><name>another</name><operator>.</operator><name>memory</name></name></expr>)</condition><then> <block>{
+                <return>return <expr><literal type="number">1</literal></expr>;</return>
+            }</block></then> <elseif>else <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>memory</name></name> <operator>==</operator> <name><name>another</name><operator>.</operator><name>memory</name></name></expr>)</condition><then> <block>{
+                <return>return <expr><literal type="number">0</literal></expr>;</return>
+            }</block></then></if></elseif> <else>else <block>{
+                <return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return>
+            }</block></else></if>
+        }</block></then> <else>else <block>{
+            <return>return <expr><call><name><name>this</name><operator>.</operator><name>processName</name><operator>.</operator><name>compareTo</name></name><argument_list>(<argument><expr><name><name>another</name><operator>.</operator><name>processName</name></name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></else></if>
+    }</block></function>
+
+}</block></class>
+</unit>

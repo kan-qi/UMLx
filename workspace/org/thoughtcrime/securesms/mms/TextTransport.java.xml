@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\TextTransport.java"><comment type="block" format="javadoc">/** 
+ * Copyright (C) 2011 Whisper Systems
+ * Copyright (C) 2014 Open Whisper Systems
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>TextTransport</name> <block>{
+
+  <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getDecodedMessage</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>encodedMessageBytes</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name>encodedMessageBytes</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getEncodedMessage</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>messageWithMac</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Base64</name><operator>.</operator><name>encodeBytes</name></name><argument_list>(<argument><expr><name>messageWithMac</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

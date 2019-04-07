@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\RecipientsEditor.java"><comment type="block">/*
+ * Copyright (C) 2008 Esmertec AG.
+ * Copyright (C) 2008 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>AppCompatMultiAutoCompleteTextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>PhoneNumberUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Annotation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Editable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Layout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spannable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableString</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableStringBuilder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spanned</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextWatcher</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ContextMenu</name><operator>.</operator><name>ContextMenuInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>inputmethod</name><operator>.</operator><name>EditorInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>MultiAutoCompleteTextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>RecipientsFormatter</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Provide UI for editing the recipients of multi-media messages.
+ */</comment>
+<class><specifier>public</specifier> class <name>RecipientsEditor</name> <super><extends>extends <name>AppCompatMultiAutoCompleteTextView</name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mLongPressedPosition</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>RecipientsEditorTokenizer</name></type> <name>mTokenizer</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>char</name></type> <name>mLastSeparator</name> <init>= <expr><literal type="char">','</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Context</name></type> <name>mContext</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>RecipientsEditor</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mContext</name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mTokenizer</name> <operator>=</operator> <operator>new</operator> <call><name>RecipientsEditorTokenizer</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setTokenizer</name><argument_list>(<argument><expr><name>mTokenizer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <comment type="line">// For the focus to move to the message body when soft Next is pressed</comment>
+        <expr_stmt><expr><call><name>setImeOptions</name><argument_list>(<argument><expr><name><name>EditorInfo</name><operator>.</operator><name>IME_ACTION_NEXT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <comment type="block">/*
+         * The point of this TextWatcher is that when the user chooses
+         * an address completion from the AutoCompleteTextView menu, it
+         * is marked up with Annotation objects to tie it back to the
+         * address book entry that it came from.  If the user then goes
+         * back and edits that part of the text, it no longer corresponds
+         * to that address book entry and needs to have the Annotations
+         * claiming that it does removed.
+         */</comment>
+        <expr_stmt><expr><call><name>addTextChangedListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>TextWatcher</name></super><argument_list>()</argument_list> <block>{
+            <decl_stmt><decl><specifier>private</specifier> <type><name><name>Annotation</name><index>[]</index></name></type> <name>mAffected</name></decl>;</decl_stmt>
+
+            <function><specifier>public</specifier> <type><name>void</name></type> <name>beforeTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>,
+                    <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>after</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><name>mAffected</name> <operator>=</operator> <operator>(</operator><operator>(</operator><name>Spanned</name><operator>)</operator> <name>s</name><operator>)</operator><operator>.</operator><call><name>getSpans</name><argument_list>(<argument><expr><name>start</name></expr></argument>, <argument><expr><name>start</name> <operator>+</operator> <name>count</name></expr></argument>,
+                        <argument><expr><name><name>Annotation</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></function>
+
+            <function><specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>,
+                    <parameter><decl><type><name>int</name></type> <name>before</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>after</name></decl></parameter>)</parameter_list> <block>{
+                <if>if <condition>(<expr><name>before</name> <operator>==</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>after</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{    <comment type="line">// inserting a character</comment>
+                    <decl_stmt><decl><type><name>char</name></type> <name>c</name> <init>= <expr><call><name><name>s</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>start</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <if>if <condition>(<expr><name>c</name> <operator>==</operator> <literal type="char">','</literal> <operator>||</operator> <name>c</name> <operator>==</operator> <literal type="char">';'</literal></expr>)</condition><then> <block>{
+                        <comment type="line">// Remember the delimiter the user typed to end this recipient. We'll</comment>
+                        <comment type="line">// need it shortly in terminateToken().</comment>
+                        <expr_stmt><expr><name>mLastSeparator</name> <operator>=</operator> <name>c</name></expr>;</expr_stmt>
+                    }</block></then></if>
+                }</block></then></if>
+            }</block></function>
+
+            <function><specifier>public</specifier> <type><name>void</name></type> <name>afterTextChanged</name><parameter_list>(<parameter><decl><type><name>Editable</name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{
+                <if>if <condition>(<expr><name>mAffected</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <for>for <control>(<init><decl><type><name>Annotation</name></type> <name>a</name> <range>: <expr><name>mAffected</name></expr></range></decl></init>)</control> <block>{
+                        <expr_stmt><expr><call><name><name>s</name><operator>.</operator><name>removeSpan</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block></for>
+                }</block></then></if>
+
+                <expr_stmt><expr><name>mAffected</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+            }</block></function>
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>enoughToFilter</name><parameter_list>()</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>super</name><operator>.</operator><name>enoughToFilter</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></then></if>
+        <comment type="line">// If the user is in the middle of editing an existing recipient, don't offer the</comment>
+        <comment type="line">// auto-complete menu. Without this, when the user selects an auto-complete menu item,</comment>
+        <comment type="line">// it will get added to the list of recipients so we end up with the old before-editing</comment>
+        <comment type="line">// recipient and the new post-editing recipient. As a precedent, gmail does not show</comment>
+        <comment type="line">// the auto-complete menu when editing an existing recipient.</comment>
+        <decl_stmt><decl><type><name>int</name></type> <name>end</name> <init>= <expr><call><name>getSelectionEnd</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>len</name> <init>= <expr><call><name>getText</name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <return>return <expr><name>end</name> <operator>==</operator> <name>len</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getRecipientCount</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name><name>mTokenizer</name><operator>.</operator><name>getNumbers</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getNumbers</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name><name>mTokenizer</name><operator>.</operator><name>getNumbers</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+<comment type="line">//    public Recipients constructContactsFromInput() {</comment>
+<comment type="line">//      return RecipientFactory.getRecipientsFromString(mContext, mTokenizer.getRawString(), false);</comment>
+<comment type="line">//    }</comment>
+
+    <function><specifier>private</specifier> <type><name>boolean</name></type> <name>isValidAddress</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>number</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isMms</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="block">/*if (isMms) {
+            return MessageUtils.isValidMmsAddress(number);
+        } else {*/</comment>
+            <comment type="line">// TODO: PhoneNumberUtils.isWellFormedSmsAddress() only check if the number is a valid</comment>
+            <comment type="line">// GSM SMS address. If the address contains a dialable char, it considers it a well</comment>
+            <comment type="line">// formed SMS addr. CDMA doesn't work that way and has a different parser for SMS</comment>
+            <comment type="line">// address (see CdmaSmsAddress.parse(String address)). We should definitely fix this!!!</comment>
+        <return>return <expr><call><name><name>PhoneNumberUtils</name><operator>.</operator><name>isWellFormedSmsAddress</name></name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>hasValidRecipient</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isMms</name></decl></parameter>)</parameter_list> <block>{
+        <for>for <control>(<init><decl><type><name>String</name></type> <name>number</name> <range>: <expr><call><name><name>mTokenizer</name><operator>.</operator><name>getNumbers</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><call><name>isValidAddress</name><argument_list>(<argument><expr><name>number</name></expr></argument>, <argument><expr><name>isMms</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+                <block type="pseudo"><return>return <expr><literal type="boolean">true</literal></expr>;</return></block></then></if>
+        }</block></for>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+
+    <comment type="block">/*public boolean hasInvalidRecipient(boolean isMms) {
+        for (String number : mTokenizer.getNumbers()) {
+            if (!isValidAddress(number, isMms)) {
+                /* TODO if (MmsConfig.getEmailGateway() == null) {
+                    return true;
+                } else if (!MessageUtils.isAlias(number)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }*/</comment>
+
+    <function><specifier>public</specifier> <type><name>String</name></type> <name>formatInvalidNumbers</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isMms</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>StringBuilder</name></type> <name>sb</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>String</name></type> <name>number</name> <range>: <expr><call><name><name>mTokenizer</name><operator>.</operator><name>getNumbers</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><operator>!</operator><call><name>isValidAddress</name><argument_list>(<argument><expr><name>number</name></expr></argument>, <argument><expr><name>isMms</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <if>if <condition>(<expr><call><name><name>sb</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">", "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></then></if>
+                <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></for>
+        <return>return <expr><call><name><name>sb</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block">/*public boolean containsEmail() {
+        if (TextUtils.indexOf(getText(), '@') == -1)
+            return false;
+
+        List&lt;String&gt; numbers = mTokenizer.getNumbers();
+        for (String number : numbers) {
+            if (Mms.isEmailAddress(number))
+                return true;
+        }
+        return false;
+    }*/</comment>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>contactToToken</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>name</name>       <init>= <expr><call><name><name>c</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>number</name>     <init>= <expr><call><name><name>c</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SpannableString</name></type> <name>s</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><call><name><name>RecipientsFormatter</name><operator>.</operator><name>formatNameAndNumber</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>number</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>len</name>           <init>= <expr><call><name><name>s</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>len</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <return>return <expr><name>s</name></expr>;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>s</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Annotation</name><argument_list>(<argument><expr><literal type="string">"number"</literal></expr></argument>, <argument><expr><call><name><name>c</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>len</name></expr></argument>,
+                <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>s</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>populate</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>list</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>SpannableStringBuilder</name></type> <name>sb</name> <init>= <expr><operator>new</operator> <call><name>SpannableStringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>Recipient</name></type> <name>c</name> <range>: <expr><name>list</name></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><call><name><name>sb</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">", "</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+
+            <expr_stmt><expr><call><name><name>sb</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name>contactToToken</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+
+        <expr_stmt><expr><call><name>setText</name><argument_list>(<argument><expr><name>sb</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>int</name></type> <name>pointToPosition</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>x</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>y</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>x</name> <operator>-=</operator> <call><name>getCompoundPaddingLeft</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>y</name> <operator>-=</operator> <call><name>getExtendedPaddingTop</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>x</name> <operator>+=</operator> <call><name>getScrollX</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>y</name> <operator>+=</operator> <call><name>getScrollY</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>Layout</name></type> <name>layout</name> <init>= <expr><call><name>getLayout</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>layout</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>line</name> <init>= <expr><call><name><name>layout</name><operator>.</operator><name>getLineForVertical</name></name><argument_list>(<argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>off</name> <init>= <expr><call><name><name>layout</name><operator>.</operator><name>getOffsetForHorizontal</name></name><argument_list>(<argument><expr><name>line</name></expr></argument>, <argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <return>return <expr><name>off</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>ev</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>action</name> <init>= <expr><call><name><name>ev</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>x</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>ev</name><operator>.</operator><name>getX</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>y</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>ev</name><operator>.</operator><name>getY</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>action</name> <operator>==</operator> <name><name>MotionEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>mLongPressedPosition</name> <operator>=</operator> <call><name>pointToPosition</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <return>return <expr><call><name><name>super</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>ev</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getNumberAt</name><parameter_list>(<parameter><decl><type><name>Spanned</name></type> <name>sp</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>end</name></decl></parameter>, <parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name>getFieldAt</name><argument_list>(<argument><expr><literal type="string">"number"</literal></expr></argument>, <argument><expr><name>sp</name></expr></argument>, <argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>, <argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>getSpanLength</name><parameter_list>(<parameter><decl><type><name>Spanned</name></type> <name>sp</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>end</name></decl></parameter>, <parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// TODO: there's a situation where the span can lose its annotations:</comment>
+        <comment type="line">//   - add an auto-complete contact</comment>
+        <comment type="line">//   - add another auto-complete contact</comment>
+        <comment type="line">//   - delete that second contact and keep deleting into the first</comment>
+        <comment type="line">//   - we lose the annotation and can no longer get the span.</comment>
+        <comment type="line">// Need to fix this case because it breaks auto-complete contacts with commas in the name.</comment>
+        <decl_stmt><decl><type><name><name>Annotation</name><index>[]</index></name></type> <name>a</name> <init>= <expr><call><name><name>sp</name><operator>.</operator><name>getSpans</name></name><argument_list>(<argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>, <argument><expr><name><name>Annotation</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name><name>a</name><operator>.</operator><name>length</name></name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <return>return <expr><call><name><name>sp</name><operator>.</operator><name>getSpanEnd</name></name><argument_list>(<argument><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></then></if>
+        <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getFieldAt</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>field</name></decl></parameter>, <parameter><decl><type><name>Spanned</name></type> <name>sp</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>end</name></decl></parameter>,
+            <parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name><name>Annotation</name><index>[]</index></name></type> <name>a</name> <init>= <expr><call><name><name>sp</name><operator>.</operator><name>getSpans</name></name><argument_list>(<argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>, <argument><expr><name><name>Annotation</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>fieldValue</name> <init>= <expr><call><name>getAnnotation</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>field</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>fieldValue</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>fieldValue</name> <operator>=</operator> <call><name><name>TextUtils</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>sp</name></expr></argument>, <argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <return>return <expr><name>fieldValue</name></expr>;</return>
+
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getAnnotation</name><parameter_list>(<parameter><decl><type><name><name>Annotation</name><index>[]</index></name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name><name>a</name><operator>.</operator><name>length</name></name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+            <if>if <condition>(<expr><name><name>a</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>getKey</name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <return>return <expr><name><name>a</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>getValue</name><argument_list>()</argument_list></call></expr>;</return>
+            }</block></then></if>
+        }</block></for>
+
+        <return>return <expr><literal type="string">""</literal></expr>;</return>
+    }</block></function>
+
+    <class><specifier>private</specifier> class <name>RecipientsEditorTokenizer</name>
+            <super><implements>implements <name><name>MultiAutoCompleteTextView</name><operator>.</operator><name>Tokenizer</name></name></implements></super> <block>{
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>MultiAutoCompleteTextView</name></type> <name>mList</name></decl>;</decl_stmt>
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>mContext</name></decl>;</decl_stmt>
+
+        <constructor><name>RecipientsEditorTokenizer</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>MultiAutoCompleteTextView</name></type> <name>list</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name>mList</name> <operator>=</operator> <name>list</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>mContext</name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <comment type="block" format="javadoc">/**
+         * Returns the start of the token that ends at offset
+         * &lt;code&gt;cursor&lt;/code&gt; within &lt;code&gt;text&lt;/code&gt;.
+         * It is a method from the MultiAutoCompleteTextView.Tokenizer interface.
+         */</comment>
+        <function><specifier>public</specifier> <type><name>int</name></type> <name>findTokenStart</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>text</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name>cursor</name></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>char</name></type> <name>c</name></decl>;</decl_stmt>
+
+            <while>while <condition>(<expr><name>i</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>(</operator><name>c</name> <operator>=</operator> <call><name><name>text</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="char">','</literal> <operator>&amp;&amp;</operator> <name>c</name> <operator>!=</operator> <literal type="char">';'</literal></expr>)</condition> <block>{
+                <expr_stmt><expr><name>i</name><operator>--</operator></expr>;</expr_stmt>
+            }</block></while>
+            <while>while <condition>(<expr><name>i</name> <operator>&lt;</operator> <name>cursor</name> <operator>&amp;&amp;</operator> <call><name><name>text</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="char">' '</literal></expr>)</condition> <block>{
+                <expr_stmt><expr><name>i</name><operator>++</operator></expr>;</expr_stmt>
+            }</block></while>
+
+            <return>return <expr><name>i</name></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Returns the end of the token (minus trailing punctuation)
+         * that begins at offset &lt;code&gt;cursor&lt;/code&gt; within &lt;code&gt;text&lt;/code&gt;.
+         * It is a method from the MultiAutoCompleteTextView.Tokenizer interface.
+         */</comment>
+        <function><specifier>public</specifier> <type><name>int</name></type> <name>findTokenEnd</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>text</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name>cursor</name></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type> <name>len</name> <init>= <expr><call><name><name>text</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>char</name></type> <name>c</name></decl>;</decl_stmt>
+
+            <while>while <condition>(<expr><name>i</name> <operator>&lt;</operator> <name>len</name></expr>)</condition> <block>{
+                <if>if <condition>(<expr><operator>(</operator><name>c</name> <operator>=</operator> <call><name><name>text</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>)</operator> <operator>==</operator> <literal type="char">','</literal> <operator>||</operator> <name>c</name> <operator>==</operator> <literal type="char">';'</literal></expr>)</condition><then> <block>{
+                    <return>return <expr><name>i</name></expr>;</return>
+                }</block></then> <else>else <block>{
+                    <expr_stmt><expr><name>i</name><operator>++</operator></expr>;</expr_stmt>
+                }</block></else></if>
+            }</block></while>
+
+            <return>return <expr><name>len</name></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Returns &lt;code&gt;text&lt;/code&gt;, modified, if necessary, to ensure that
+         * it ends with a token terminator (for example a space or comma).
+         * It is a method from the MultiAutoCompleteTextView.Tokenizer interface.
+         */</comment>
+        <function><specifier>public</specifier> <type><name>CharSequence</name></type> <name>terminateToken</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><call><name><name>text</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <while>while <condition>(<expr><name>i</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <call><name><name>text</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="char">' '</literal></expr>)</condition> <block>{
+                <expr_stmt><expr><name>i</name><operator>--</operator></expr>;</expr_stmt>
+            }</block></while>
+
+            <decl_stmt><decl><type><name>char</name></type> <name>c</name></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>i</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>(</operator><operator>(</operator><name>c</name> <operator>=</operator> <call><name><name>text</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call><operator>)</operator> <operator>==</operator> <literal type="char">','</literal> <operator>||</operator> <name>c</name> <operator>==</operator> <literal type="char">';'</literal><operator>)</operator></expr>)</condition><then> <block>{
+                <return>return <expr><name>text</name></expr>;</return>
+            }</block></then> <else>else <block>{
+                <comment type="line">// Use the same delimiter the user just typed.</comment>
+                <comment type="line">// This lets them have a mixture of commas and semicolons in their list.</comment>
+                <decl_stmt><decl><type><name>String</name></type> <name>separator</name> <init>= <expr><name>mLastSeparator</name> <operator>+</operator> <literal type="string">" "</literal></expr></init></decl>;</decl_stmt>
+                <if>if <condition>(<expr><name>text</name> <operator>instanceof</operator> <name>Spanned</name></expr>)</condition><then> <block>{
+                    <decl_stmt><decl><type><name>SpannableString</name></type> <name>sp</name> <init>= <expr><operator>new</operator> <call><name>SpannableString</name><argument_list>(<argument><expr><name>text</name> <operator>+</operator> <name>separator</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <expr_stmt><expr><call><name><name>TextUtils</name><operator>.</operator><name>copySpansFrom</name></name><argument_list>(<argument><expr><operator>(</operator><name>Spanned</name><operator>)</operator> <name>text</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>text</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                            <argument><expr><name><name>Object</name><operator>.</operator><name>class</name></name></expr></argument>, <argument><expr><name>sp</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <return>return <expr><name>sp</name></expr>;</return>
+                }</block></then> <else>else <block>{
+                    <return>return <expr><name>text</name> <operator>+</operator> <name>separator</name></expr>;</return>
+                }</block></else></if>
+            }</block></else></if>
+        }</block></function>
+        <function><specifier>public</specifier> <type><name>String</name></type> <name>getRawString</name><parameter_list>()</parameter_list> <block>{
+        	<return>return <expr><call><name><name>mList</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+        }</block></function>
+        <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getNumbers</name><parameter_list>()</parameter_list> <block>{
+            <decl_stmt><decl><type><name>Spanned</name></type> <name>sp</name> <init>= <expr><call><name><name>mList</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type> <name>len</name> <init>= <expr><call><name><name>sp</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>list</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <decl_stmt><decl><type><name>int</name></type> <name>start</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <while>while <condition>(<expr><name>i</name> <operator>&lt;</operator> <name>len</name> <operator>+</operator> <literal type="number">1</literal></expr>)</condition> <block>{
+                <decl_stmt><decl><type><name>char</name></type> <name>c</name></decl>;</decl_stmt>
+                <if>if <condition>(<expr><operator>(</operator><name>i</name> <operator>==</operator> <name>len</name><operator>)</operator> <operator>||</operator> <operator>(</operator><operator>(</operator><name>c</name> <operator>=</operator> <call><name><name>sp</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>)</operator> <operator>==</operator> <literal type="char">','</literal><operator>)</operator> <operator>||</operator> <operator>(</operator><name>c</name> <operator>==</operator> <literal type="char">';'</literal><operator>)</operator></expr>)</condition><then> <block>{
+                    <if>if <condition>(<expr><name>i</name> <operator>&gt;</operator> <name>start</name></expr>)</condition><then> <block>{
+                        <expr_stmt><expr><call><name><name>list</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name>getNumberAt</name><argument_list>(<argument><expr><name>sp</name></expr></argument>, <argument><expr><name>start</name></expr></argument>, <argument><expr><name>i</name></expr></argument>, <argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                        <comment type="line">// calculate the recipients total length. This is so if the name contains</comment>
+                        <comment type="line">// commas or semis, we'll skip over the whole name to the next</comment>
+                        <comment type="line">// recipient, rather than parsing this single name into multiple</comment>
+                        <comment type="line">// recipients.</comment>
+                        <decl_stmt><decl><type><name>int</name></type> <name>spanLen</name> <init>= <expr><call><name>getSpanLength</name><argument_list>(<argument><expr><name>sp</name></expr></argument>, <argument><expr><name>start</name></expr></argument>, <argument><expr><name>i</name></expr></argument>, <argument><expr><name>mContext</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                        <if>if <condition>(<expr><name>spanLen</name> <operator>&gt;</operator> <name>i</name></expr>)</condition><then> <block>{
+                            <expr_stmt><expr><name>i</name> <operator>=</operator> <name>spanLen</name></expr>;</expr_stmt>
+                        }</block></then></if>
+                    }</block></then></if>
+
+                    <expr_stmt><expr><name>i</name><operator>++</operator></expr>;</expr_stmt>
+
+                    <while>while <condition>(<expr><operator>(</operator><name>i</name> <operator>&lt;</operator> <name>len</name><operator>)</operator> <operator>&amp;&amp;</operator> <operator>(</operator><call><name><name>sp</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="char">' '</literal><operator>)</operator></expr>)</condition> <block>{
+                        <expr_stmt><expr><name>i</name><operator>++</operator></expr>;</expr_stmt>
+                    }</block></while>
+
+                    <expr_stmt><expr><name>start</name> <operator>=</operator> <name>i</name></expr>;</expr_stmt>
+                }</block></then> <else>else <block>{
+                    <expr_stmt><expr><name>i</name><operator>++</operator></expr>;</expr_stmt>
+                }</block></else></if>
+            }</block></while>
+
+            <return>return <expr><name>list</name></expr>;</return>
+        }</block></function>
+    }</block></class>
+
+    <class><specifier>static</specifier> class <name>RecipientContextMenuInfo</name> <super><implements>implements <name>ContextMenuInfo</name></implements></super> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Recipient</name></type> <name>recipient</name></decl>;</decl_stmt>
+
+        <constructor><name>RecipientContextMenuInfo</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>r</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name>recipient</name> <operator>=</operator> <name>r</name></expr>;</expr_stmt>
+        }</block></constructor>
+    }</block></class>
+}</block></class>
+</unit>

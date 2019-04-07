@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\DocumentSlide.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>StorageUtil</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DocumentSlide</name> <super><extends>extends <name>Slide</name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>DocumentSlide</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Attachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>DocumentSlide</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>,
+                       <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>contentType</name></decl></parameter>,  <parameter><decl><type><name>long</name></type> <name>size</name></decl></parameter>,
+                       <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>fileName</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name>constructAttachmentFromUri</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>, <argument><expr><name>contentType</name></expr></argument>, <argument><expr><name>size</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><call><name><name>StorageUtil</name><operator>.</operator><name>getCleanFileName</name></name><argument_list>(<argument><expr><name>fileName</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>hasDocument</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

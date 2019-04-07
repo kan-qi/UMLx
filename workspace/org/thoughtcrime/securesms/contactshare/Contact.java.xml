@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contactshare\Contact.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonCreator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonIgnore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonProperty</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>AttachmentId</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>UriAttachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>JsonUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>Contact</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name>Name</name></type>                <name>name</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>              <name>organization</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Phone</name></argument>&gt;</argument_list></name></type>         <name>phoneNumbers</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Email</name></argument>&gt;</argument_list></name></type>         <name>emails</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>PostalAddress</name></argument>&gt;</argument_list></name></type> <name>postalAddresses</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+  <specifier>private</specifier> <type><specifier>final</specifier> <name>Avatar</name></type>              <name>avatar</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>Contact</name><parameter_list>(<parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"name"</literal></expr></argument>)</argument_list></annotation>            <annotation>@<name>NonNull</name></annotation>  <name>Name</name></type>                <name>name</name></decl></parameter>,
+                 <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"organization"</literal></expr></argument>)</argument_list></annotation>    <annotation>@<name>Nullable</name></annotation> <name>String</name></type>              <name>organization</name></decl></parameter>,
+                 <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"phoneNumbers"</literal></expr></argument>)</argument_list></annotation>    <annotation>@<name>NonNull</name></annotation>  <name><name>List</name><argument_list type="generic">&lt;<argument><name>Phone</name></argument>&gt;</argument_list></name></type>         <name>phoneNumbers</name></decl></parameter>,
+                 <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"emails"</literal></expr></argument>)</argument_list></annotation>          <annotation>@<name>NonNull</name></annotation>  <name><name>List</name><argument_list type="generic">&lt;<argument><name>Email</name></argument>&gt;</argument_list></name></type>         <name>emails</name></decl></parameter>,
+                 <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"postalAddresses"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>NonNull</name></annotation>  <name><name>List</name><argument_list type="generic">&lt;<argument><name>PostalAddress</name></argument>&gt;</argument_list></name></type> <name>postalAddresses</name></decl></parameter>,
+                 <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"avatar"</literal></expr></argument>)</argument_list></annotation>          <annotation>@<name>Nullable</name></annotation> <name>Avatar</name></type>              <name>avatar</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>            <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>organization</name></name>    <operator>=</operator> <name>organization</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>phoneNumbers</name></name>    <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>unmodifiableList</name></name><argument_list>(<argument><expr><name>phoneNumbers</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>emails</name></name>          <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>unmodifiableList</name></name><argument_list>(<argument><expr><name>emails</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>postalAddresses</name></name> <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>unmodifiableList</name></name><argument_list>(<argument><expr><name>postalAddresses</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>avatar</name></name>          <operator>=</operator> <name>avatar</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>Contact</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Contact</name></type> <name>contact</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Avatar</name></type> <name>avatar</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><call><name><name>contact</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>contact</name><operator>.</operator><name>getOrganization</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>contact</name><operator>.</operator><name>getPhoneNumbers</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>contact</name><operator>.</operator><name>getEmails</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>contact</name><operator>.</operator><name>getPostalAddresses</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>private</specifier> <name>Contact</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readParcelable</name></name><argument_list>(<argument><expr><call><name><name>Name</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getClassLoader</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>in</name><operator>.</operator><name>createTypedArrayList</name></name><argument_list>(<argument><expr><name><name>Phone</name><operator>.</operator><name>CREATOR</name></name></expr></argument>)</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>in</name><operator>.</operator><name>createTypedArrayList</name></name><argument_list>(<argument><expr><name><name>Email</name><operator>.</operator><name>CREATOR</name></name></expr></argument>)</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>in</name><operator>.</operator><name>createTypedArrayList</name></name><argument_list>(<argument><expr><name><name>PostalAddress</name><operator>.</operator><name>CREATOR</name></name></expr></argument>)</argument_list></call></expr></argument>,
+         <argument><expr><call><name><name>in</name><operator>.</operator><name>readParcelable</name></name><argument_list>(<argument><expr><call><name><name>Avatar</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getClassLoader</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Name</name></type> <name>getName</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>name</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getOrganization</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>organization</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Phone</name></argument>&gt;</argument_list></name></type> <name>getPhoneNumbers</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>phoneNumbers</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Email</name></argument>&gt;</argument_list></name></type> <name>getEmails</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>emails</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>PostalAddress</name></argument>&gt;</argument_list></name></type> <name>getPostalAddresses</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>postalAddresses</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Avatar</name></type> <name>getAvatar</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>avatar</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>JsonIgnore</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Attachment</name></type> <name>getAvatarAttachment</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><name>avatar</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>avatar</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>serialize</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>JsonUtils</name><operator>.</operator><name>toJson</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Contact</name></type> <name>deserialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>serialized</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>JsonUtils</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><name>serialized</name></expr></argument>, <argument><expr><name><name>Contact</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeParcelable</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>flags</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>organization</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeTypedList</name></name><argument_list>(<argument><expr><name>phoneNumbers</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeTypedList</name></name><argument_list>(<argument><expr><name>emails</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeTypedList</name></name><argument_list>(<argument><expr><name>postalAddresses</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeParcelable</name></name><argument_list>(<argument><expr><name>avatar</name></expr></argument>, <argument><expr><name>flags</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Contact</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name>Contact</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Contact</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <name><name>Contact</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+    }</block></function>
+  }</block></class></expr></init></decl>;</decl_stmt>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Name</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>displayName</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>givenName</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>familyName</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>prefix</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>suffix</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>middleName</name></decl>;</decl_stmt>
+
+    <constructor><name>Name</name><parameter_list>(<parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"displayName"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>displayName</name></decl></parameter>,
+         <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"givenName"</literal></expr></argument>)</argument_list></annotation>   <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>givenName</name></decl></parameter>,
+         <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"familyName"</literal></expr></argument>)</argument_list></annotation>  <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>familyName</name></decl></parameter>,
+         <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"prefix"</literal></expr></argument>)</argument_list></annotation>      <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>prefix</name></decl></parameter>,
+         <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"suffix"</literal></expr></argument>)</argument_list></annotation>      <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>suffix</name></decl></parameter>,
+         <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"middleName"</literal></expr></argument>)</argument_list></annotation>  <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>middleName</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>displayName</name></name> <operator>=</operator> <name>displayName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>givenName</name></name>  <operator>=</operator> <name>givenName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>familyName</name></name> <operator>=</operator> <name>familyName</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>prefix</name></name>     <operator>=</operator> <name>prefix</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>suffix</name></name>     <operator>=</operator> <name>suffix</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>middleName</name></name> <operator>=</operator> <name>middleName</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>private</specifier> <name>Name</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getDisplayName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>displayName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getGivenName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>givenName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getFamilyName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>familyName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getPrefix</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>prefix</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getSuffix</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>suffix</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getMiddleName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>middleName</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isEmpty</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>displayName</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+             <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>givenName</name></expr></argument>)</argument_list></call>   <operator>&amp;&amp;</operator>
+             <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>familyName</name></expr></argument>)</argument_list></call>  <operator>&amp;&amp;</operator>
+             <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>prefix</name></expr></argument>)</argument_list></call>      <operator>&amp;&amp;</operator>
+             <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>suffix</name></expr></argument>)</argument_list></call>      <operator>&amp;&amp;</operator>
+             <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>middleName</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>displayName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>givenName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>familyName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>prefix</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>suffix</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>middleName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Name</name></argument>&gt;</argument_list></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Name</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>Name</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>Name</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name><name>Name</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <name><name>Name</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Phone</name> <super><implements>implements <name>Selectable</name>, <name>Parcelable</name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>number</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>Type</name></type>   <name>type</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>label</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonIgnore</name></annotation>
+    <specifier>private</specifier> <type><name>boolean</name></type> <name>selected</name></decl>;</decl_stmt>
+
+    <constructor><name>Phone</name><parameter_list>(<parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"number"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>NonNull</name></annotation>  <name>String</name></type> <name>number</name></decl></parameter>,
+          <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"type"</literal></expr></argument>)</argument_list></annotation>   <annotation>@<name>NonNull</name></annotation>  <name>Type</name></type>   <name>type</name></decl></parameter>,
+          <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"label"</literal></expr></argument>)</argument_list></annotation>  <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>label</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>number</name></name>   <operator>=</operator> <name>number</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>type</name></name>     <operator>=</operator> <name>type</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>label</name></name>    <operator>=</operator> <name>label</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>private</specifier> <name>Phone</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Type</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getNumber</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>number</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Type</name></type> <name>getType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>type</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getLabel</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>label</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setSelected</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>selected</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name> <operator>=</operator> <name>selected</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>isSelected</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>selected</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><call><name><name>type</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>label</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Phone</name></argument>&gt;</argument_list></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Phone</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>Phone</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>Phone</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name><name>Phone</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <name><name>Phone</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <enum><specifier>public</specifier> enum <name>Type</name> <block>{
+      <decl><name>HOME</name></decl>, <decl><name>MOBILE</name></decl>, <decl><name>WORK</name></decl>, <decl><name>CUSTOM</name></decl>
+    }</block></enum>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Email</name> <super><implements>implements <name>Selectable</name>, <name>Parcelable</name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>email</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>Type</name></type>   <name>type</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>label</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonIgnore</name></annotation>
+    <specifier>private</specifier> <type><name>boolean</name></type> <name>selected</name></decl>;</decl_stmt>
+
+    <constructor><name>Email</name><parameter_list>(<parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"email"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>NonNull</name></annotation>  <name>String</name></type> <name>email</name></decl></parameter>,
+          <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"type"</literal></expr></argument>)</argument_list></annotation>  <annotation>@<name>NonNull</name></annotation>  <name>Type</name></type>   <name>type</name></decl></parameter>,
+          <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"label"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>label</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>email</name></name>    <operator>=</operator> <name>email</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>type</name></name>     <operator>=</operator> <name>type</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>label</name></name>    <operator>=</operator> <name>label</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>private</specifier> <name>Email</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Type</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getEmail</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>email</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Type</name></type> <name>getType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>type</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getLabel</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>label</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setSelected</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>selected</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name> <operator>=</operator> <name>selected</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>isSelected</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>selected</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>email</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><call><name><name>type</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>label</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Email</name></argument>&gt;</argument_list></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Email</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>Email</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>Email</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name><name>Email</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <name><name>Email</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <enum><specifier>public</specifier> enum <name>Type</name> <block>{
+      <decl><name>HOME</name></decl>, <decl><name>MOBILE</name></decl>, <decl><name>WORK</name></decl>, <decl><name>CUSTOM</name></decl>
+    }</block></enum>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>PostalAddress</name> <super><implements>implements <name>Selectable</name>, <name>Parcelable</name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>Type</name></type>   <name>type</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>label</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>street</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>poBox</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>neighborhood</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>city</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>region</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>postalCode</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>country</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonIgnore</name></annotation>
+    <specifier>private</specifier> <type><name>boolean</name></type> <name>selected</name></decl>;</decl_stmt>
+
+    <constructor><name>PostalAddress</name><parameter_list>(<parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"type"</literal></expr></argument>)</argument_list></annotation>         <annotation>@<name>NonNull</name></annotation>  <name>Type</name></type>   <name>type</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"label"</literal></expr></argument>)</argument_list></annotation>        <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>label</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"street"</literal></expr></argument>)</argument_list></annotation>       <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>street</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"poBox"</literal></expr></argument>)</argument_list></annotation>        <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>poBox</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"neighborhood"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>neighborhood</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"city"</literal></expr></argument>)</argument_list></annotation>         <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>city</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"region"</literal></expr></argument>)</argument_list></annotation>       <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>region</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"postalCode"</literal></expr></argument>)</argument_list></annotation>   <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>postalCode</name></decl></parameter>,
+                  <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"country"</literal></expr></argument>)</argument_list></annotation>      <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>country</name></decl></parameter>)</parameter_list>
+    <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>type</name></name>         <operator>=</operator> <name>type</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>label</name></name>        <operator>=</operator> <name>label</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>street</name></name>       <operator>=</operator> <name>street</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>poBox</name></name>        <operator>=</operator> <name>poBox</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>neighborhood</name></name> <operator>=</operator> <name>neighborhood</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>city</name></name>         <operator>=</operator> <name>city</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>region</name></name>       <operator>=</operator> <name>region</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>postalCode</name></name>   <operator>=</operator> <name>postalCode</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>country</name></name>      <operator>=</operator> <name>country</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name>     <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>private</specifier> <name>PostalAddress</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><call><name><name>Type</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><call><name><name>in</name><operator>.</operator><name>readString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Type</name></type> <name>getType</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>type</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getLabel</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>label</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getStreet</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>street</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getPoBox</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>poBox</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getNeighborhood</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>neighborhood</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getCity</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>city</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getRegion</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>region</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getPostalCode</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>postalCode</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getCountry</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>country</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setSelected</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>selected</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name> <operator>=</operator> <name>selected</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>isSelected</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>selected</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><call><name><name>type</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>label</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>street</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>poBox</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>neighborhood</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>city</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>postalCode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><name>country</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Creator</name><argument_list type="generic">&lt;<argument><name>PostalAddress</name></argument>&gt;</argument_list></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>PostalAddress</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>PostalAddress</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>PostalAddress</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name><name>PostalAddress</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <name><name>PostalAddress</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>String</name></type> <name>toString</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>StringBuilder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>street</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>street</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>poBox</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>poBox</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>neighborhood</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>neighborhood</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>city</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>city</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">", "</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>city</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>city</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>postalCode</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>postalCode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>country</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>country</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>trim</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <enum><specifier>public</specifier> enum <name>Type</name> <block>{
+      <decl><name>HOME</name></decl>, <decl><name>WORK</name></decl>, <decl><name>CUSTOM</name></decl>
+    }</block></enum>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Avatar</name> <super><implements>implements <name>Selectable</name>, <name>Parcelable</name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>AttachmentId</name></type> <name>attachmentId</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonProperty</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type>      <name>isProfile</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonIgnore</name></annotation>
+    <specifier>private</specifier> <type><specifier>final</specifier> <name>Attachment</name></type>   <name>attachment</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>JsonIgnore</name></annotation>
+    <specifier>private</specifier> <type><name>boolean</name></type> <name>selected</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>Avatar</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Attachment</name></type> <name>attachment</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isProfile</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachmentId</name></name> <operator>=</operator> <name>attachmentId</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachment</name></name>   <operator>=</operator> <name>attachment</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>isProfile</name></name>    <operator>=</operator> <name>isProfile</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name>     <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><name>Avatar</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>attachmentUri</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isProfile</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><call><name>attachmentFromUri</name><argument_list>(<argument><expr><name>attachmentUri</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>isProfile</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><annotation>@<name>JsonCreator</name></annotation>
+    <specifier>private</specifier> <name>Avatar</name><parameter_list>(<parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"attachmentId"</literal></expr></argument>)</argument_list></annotation> <annotation>@<name>Nullable</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><literal type="string">"isProfile"</literal></expr></argument>)</argument_list></annotation> <name>boolean</name></type> <name>isProfile</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>isProfile</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>private</specifier> <name>Avatar</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><operator>(</operator><name>Uri</name><operator>)</operator> <call><name><name>in</name><operator>.</operator><name>readParcelable</name></name><argument_list>(<argument><expr><call><name><name>Uri</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getClassLoader</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>in</name><operator>.</operator><name>readByte</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>AttachmentId</name></type> <name>getAttachmentId</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>attachmentId</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Attachment</name></type> <name>getAttachment</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>attachment</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isProfile</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>isProfile</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setSelected</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>selected</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>selected</name></name> <operator>=</operator> <name>selected</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>isSelected</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>selected</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>describeContents</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>Attachment</name></type> <name>attachmentFromUri</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>uri</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+      <return>return <expr><operator>new</operator> <call><name>UriAttachment</name><argument_list>(<argument><expr><name>uri</name></expr></argument>, <argument><expr><name><name>MediaUtil</name><operator>.</operator><name>IMAGE_JPEG</name></name></expr></argument>, <argument><expr><name><name>AttachmentDatabase</name><operator>.</operator><name>TRANSFER_PROGRESS_DONE</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>writeToParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>dest</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>flags</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeParcelable</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>attachment</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>, <argument><expr><name>flags</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>dest</name><operator>.</operator><name>writeByte</name></name><argument_list>(<argument><expr><call>(<name>byte</name>) <argument_list>(<argument><expr><ternary><condition><expr><name>isProfile</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Avatar</name></argument>&gt;</argument_list></name></type> <name>CREATOR</name> <init>= <expr><operator>new</operator> <class><super><name><name>Creator</name><argument_list type="generic">&lt;<argument><name>Avatar</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>Avatar</name></type> <name>createFromParcel</name><parameter_list>(<parameter><decl><type><name>Parcel</name></type> <name>in</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <call><name>Avatar</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name><name>Avatar</name><index>[]</index></name></type> <name>newArray</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>new</operator> <name><name>Avatar</name><index>[<expr><name>size</name></expr>]</index></name></expr>;</return>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+  }</block></class>
+}</block></class>
+</unit>

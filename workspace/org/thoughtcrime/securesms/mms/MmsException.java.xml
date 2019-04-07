@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\MmsException.java"><comment type="block">/*
+ * Copyright (C) 2007 Esmertec AG.
+ * Copyright (C) 2007 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<comment type="block" format="javadoc">/**
+ * A generic exception that is thrown by the Mms client.
+ */</comment>
+<class><specifier>public</specifier> class <name>MmsException</name> <super><extends>extends <name>Exception</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>serialVersionUID</name> <init>= <expr><operator>-</operator><literal type="number">7323249827281485390L</literal></expr></init></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new MmsException.
+   */</comment>
+  <constructor><specifier>public</specifier> <name>MmsException</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new MmsException with the specified detail message.
+   *
+   * @param message the detail message.
+   */</comment>
+  <constructor><specifier>public</specifier> <name>MmsException</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new MmsException with the specified cause.
+   *
+   * @param cause the cause.
+   */</comment>
+  <constructor><specifier>public</specifier> <name>MmsException</name><parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>cause</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>cause</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new MmsException with the specified detail message and cause.
+   *
+   * @param message the detail message.
+   * @param cause the cause.
+   */</comment>
+  <constructor><specifier>public</specifier> <name>MmsException</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>Throwable</name></type> <name>cause</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>message</name></expr></argument>, <argument><expr><name>cause</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+}</block></class>
+</unit>

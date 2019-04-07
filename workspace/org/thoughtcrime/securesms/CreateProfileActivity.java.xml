@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\CreateProfileActivity.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>Manifest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animator</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>MediaStore</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RequiresApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Editable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextWatcher</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>LabeledEditText</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>KeyEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewAnimationUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>WindowManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>EditText</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>dd</name><operator>.</operator><name>CircularProgressButton</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>soundcloud</name><operator>.</operator><name>android</name><operator>.</operator><name>crop</name><operator>.</operator><name>Crop</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>InputAwareLayout</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>EmojiDrawer</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>EmojiToggle</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name><operator>.</operator><name>avatars</name><operator>.</operator><name>ResourceContactPhoto</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ProfileKeyUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MultiDeviceProfileKeyUpdateJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>permissions</name><operator>.</operator><name>Permissions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>profiles</name><operator>.</operator><name>AvatarHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>profiles</name><operator>.</operator><name>ProfileMediaConstraints</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>profiles</name><operator>.</operator><name>SystemProfileUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapDecodingException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicRegistrationTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>FileProviderUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>IntentUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ListenableFuture</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceAccountManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ProfileCipher</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>util</name><operator>.</operator><name>StreamDetails</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>SecureRandom</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>MediaStore</name><operator>.</operator><name>EXTRA_OUTPUT</name></name>;</import>
+
+<class><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>CreateProfileActivity</name> <super><extends>extends <name>BaseActionBarActivity</name></extends> <implements>implements <name>InjectableType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>CreateProfileActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NEXT_INTENT</name>    <init>= <expr><literal type="string">"next_intent"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXCLUDE_SYSTEM</name> <init>= <expr><literal type="string">"exclude_system"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>REQUEST_CODE_AVATAR</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicRegistrationTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>SignalServiceAccountManager</name></type> <name>accountManager</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>InputAwareLayout</name></type>       <name>container</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ImageView</name></type>              <name>avatar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CircularProgressButton</name></type> <name>finishButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>LabeledEditText</name></type>        <name>name</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EmojiToggle</name></type>            <name>emojiToggle</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EmojiDrawer</name></type>            <name>emojiDrawer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type>                   <name>reveal</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Intent</name></type> <name>nextIntent</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>avatarBytes</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>File</name></type>   <name>captureFile</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>profile_create_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>getWindow</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setSoftInputMode</name><argument_list>(<argument><expr><name><name>WindowManager</name><operator>.</operator><name>LayoutParams</name><operator>.</operator><name>SOFT_INPUT_ADJUST_RESIZE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeEmojiInput</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeProfileName</name><argument_list>(<argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBooleanExtra</name><argument_list>(<argument><expr><name>EXCLUDE_SYSTEM</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeProfileAvatar</name><argument_list>(<argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBooleanExtra</name><argument_list>(<argument><expr><name>EXCLUDE_SYSTEM</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>injectDependencies</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBackPressed</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>container</name><operator>.</operator><name>isInputOpen</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>hideCurrentInput</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+    <else>else                         <block type="pseudo"><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBackPressed</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><name>Configuration</name></type> <name>newConfig</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onConfigurationChanged</name></name><argument_list>(<argument><expr><name>newConfig</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>container</name><operator>.</operator><name>getCurrentInput</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>emojiDrawer</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>hideAttachedInput</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRequestPermissionsResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name><name>permissions</name><index>[]</index></name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>int</name><index>[]</index></name></type> <name>grantResults</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Permissions</name><operator>.</operator><name>onRequestPermissionsResult</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>permissions</name></expr></argument>, <argument><expr><name>grantResults</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><name>requestCode</name></expr>)</condition> <block>{
+      <case>case <expr><name>REQUEST_CODE_AVATAR</name></expr>:</case>
+        <if>if <condition>(<expr><name>resultCode</name> <operator>==</operator> <name><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>Uri</name></type> <name>outputFile</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>fromFile</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name>getCacheDir</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"cropped"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><type><name>Uri</name></type> <name>inputFile</name>  <init>= <expr><operator>(</operator><ternary><condition><expr><name>data</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>data</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><name>inputFile</name> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>captureFile</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>inputFile</name> <operator>=</operator> <call><name><name>Uri</name><operator>.</operator><name>fromFile</name></name><argument_list>(<argument><expr><name>captureFile</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+
+          <if>if <condition>(<expr><name>data</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>data</name><operator>.</operator><name>getBooleanExtra</name></name><argument_list>(<argument><expr><literal type="string">"delete"</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>avatarBytes</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>avatar</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ResourceContactPhoto</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_camera_alt_white_24dp</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asDrawable</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>grey_400</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then> <else>else <block>{
+            <expr_stmt><expr><operator>new</operator> <call><name>Crop</name><argument_list>(<argument><expr><name>inputFile</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>output</name><argument_list>(<argument><expr><name>outputFile</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>asSquare</name><argument_list>()</argument_list></call><operator>.</operator><call><name>start</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></else></if>
+        }</block></then></if>
+
+        <break>break;</break>
+      <case>case <expr><name><name>Crop</name><operator>.</operator><name>REQUEST_CROP</name></name></expr>:</case>
+        <if>if <condition>(<expr><name>resultCode</name> <operator>==</operator> <name><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>protected</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+              <try>try <block>{
+                <decl_stmt><decl><type><name><name>BitmapUtil</name><operator>.</operator><name>ScaleResult</name></name></type> <name>result</name> <init>= <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>createScaledBytes</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><call><name><name>Crop</name><operator>.</operator><name>getOutput</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name>ProfileMediaConstraints</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <return>return <expr><call><name><name>result</name><operator>.</operator><name>getBitmap</name></name><argument_list>()</argument_list></call></expr>;</return>
+              }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>BitmapDecodingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <return>return <expr><literal type="null">null</literal></expr>;</return>
+              }</block></catch></try>
+            }</block></function>
+
+            <function><annotation>@<name>Override</name></annotation>
+            <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+              <if>if <condition>(<expr><name>result</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>avatarBytes</name> <operator>=</operator> <name>result</name></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><name>avatarBytes</name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>skipMemoryCache</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>NONE</name></name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>circleCrop</name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+              }</block></then> <else>else <block>{
+                <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>CreateProfileActivity_error_setting_profile_photo</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+              }</block></else></if>
+            }</block></function>
+          }</block></class><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <break>break;</break>
+    }</block></switch>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>TextView</name></type> <name>skipButton</name>       <init>= <expr><call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>skip_button</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>avatar</name></name>       <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>avatar</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name>         <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>emojiToggle</name></name>  <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>emoji_toggle</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>emojiDrawer</name></name>  <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>emoji_drawer</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>    <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>finishButton</name></name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>finish_button</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>reveal</name></name>       <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>reveal</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>nextIntent</name></name>   <operator>=</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>NEXT_INTENT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>avatar</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Permissions</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+                                                      <operator>.</operator><call><name>request</name><argument_list>(<argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>CAMERA</name></name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>WRITE_EXTERNAL_STORAGE</name></name></expr></argument>)</argument_list></call>
+                                                      <operator>.</operator><call><name>ifNecessary</name><argument_list>()</argument_list></call>
+                                                      <operator>.</operator><call><name>onAnyResult</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>handleAvatarSelectionWithPermissions</name></expr></argument>)</argument_list></call>
+                                                      <operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>addTextChangedListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>TextWatcher</name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>beforeTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>after</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>before</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>afterTextChanged</name><parameter_list>(<parameter><decl><type><name>Editable</name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><call><name><name>s</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBytes</name><argument_list>()</argument_list></call><operator>.</operator><name>length</name> <operator>&gt;</operator> <name><name>ProfileCipher</name><operator>.</operator><name>NAME_PADDED_LENGTH</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setError</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>CreateProfileActivity_too_long</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>finishButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getError</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>finishButton</name><operator>.</operator><name>isEnabled</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setError</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>finishButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif></if>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>finishButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>finishButton</name><operator>.</operator><name>setIndeterminateProgressMode</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>finishButton</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>handleUpload</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>skipButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><name>nextIntent</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>nextIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeProfileName</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>excludeSystem</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getProfileName</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>String</name></type> <name>profileName</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getProfileName</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setSelection</name><argument_list>(<argument><expr><call><name><name>profileName</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>profileName</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><operator>!</operator><name>excludeSystem</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>SystemProfileUtil</name><operator>.</operator><name>getSystemProfileName</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>addListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>ListenableFuture</name><operator>.</operator><name><name>Listener</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onSuccess</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+          <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setSelection</name><argument_list>(<argument><expr><call><name><name>result</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>result</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>ExecutionException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeProfileAvatar</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>excludeSystem</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Address</name></type> <name>ourAddress</name> <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>AvatarHelper</name><operator>.</operator><name>getAvatarFile</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>ourAddress</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>exists</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>AvatarHelper</name><operator>.</operator><name>getAvatarFile</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>ourAddress</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+          <try>try <block>{
+            <return>return <expr><call><name><name>Util</name><operator>.</operator><name>readFully</name></name><argument_list>(<argument><expr><call><name><name>AvatarHelper</name><operator>.</operator><name>getInputStreamFor</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>ourAddress</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+          }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+          }</block></catch></try>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+          <if>if <condition>(<expr><name>result</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>avatarBytes</name> <operator>=</operator> <name>result</name></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>circleCrop</name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></function>
+      }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><operator>!</operator><name>excludeSystem</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>SystemProfileUtil</name><operator>.</operator><name>getSystemProfileAvatar</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>ProfileMediaConstraints</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>addListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>ListenableFuture</name><operator>.</operator><name><name>Listener</name><argument_list type="generic">&lt;<argument><name><name>byte</name><index>[]</index></name></argument>&gt;</argument_list></name></name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onSuccess</name><parameter_list>(<parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+          <if>if <condition>(<expr><name>result</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>avatarBytes</name> <operator>=</operator> <name>result</name></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>circleCrop</name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>ExecutionException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeEmojiInput</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>emojiToggle</name><operator>.</operator><name>attach</name></name><argument_list>(<argument><expr><name>emojiDrawer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>emojiToggle</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><call><name><name>container</name><operator>.</operator><name>getCurrentInput</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>emojiDrawer</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>showSoftkey</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>emojiDrawer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>emojiDrawer</name><operator>.</operator><name>setEmojiEventListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>EmojiDrawer</name><operator>.</operator><name>EmojiEventListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onKeyEvent</name><parameter_list>(<parameter><decl><type><name>KeyEvent</name></type> <name>keyEvent</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>dispatchKeyEvent</name></name><argument_list>(<argument><expr><name>keyEvent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onEmojiSelected</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>emoji</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>start</name> <init>= <expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSelectionStart</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>end</name>   <init>= <expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSelectionEnd</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>replace</name><argument_list>(<argument><expr><call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>emoji</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setSelection</name><argument_list>(<argument><expr><name>start</name> <operator>+</operator> <call><name><name>emoji</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>container</name><operator>.</operator><name>addOnKeyboardShownListener</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>emojiToggle</name><operator>.</operator><name>setToEmoji</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>name</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>v</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>container</name><operator>.</operator><name>showSoftkey</name></name><argument_list>(<argument><expr><call><name><name>name</name><operator>.</operator><name>getInput</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Intent</name></type> <name>createAvatarSelectionIntent</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>File</name></type> <name>captureFile</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>includeClear</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>includeCamera</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Intent</name></argument>&gt;</argument_list></name></type> <name>extraIntents</name>  <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Intent</name></type>       <name>galleryIntent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_PICK</name></name></expr></argument>, <argument><expr><name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>MediaStore</name><operator>.</operator><name>Images</name><operator>.</operator><name>Media</name><operator>.</operator><name>INTERNAL_CONTENT_URI</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>galleryIntent</name><operator>.</operator><name>setType</name></name><argument_list>(<argument><expr><literal type="string">"image/*"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>IntentUtils</name><operator>.</operator><name>isResolvable</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name>galleryIntent</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>galleryIntent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_GET_CONTENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>galleryIntent</name><operator>.</operator><name>setType</name></name><argument_list>(<argument><expr><literal type="string">"image/*"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>includeCamera</name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Intent</name></type> <name>cameraIntent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>MediaStore</name><operator>.</operator><name>ACTION_IMAGE_CAPTURE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>captureFile</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cameraIntent</name><operator>.</operator><name>resolveActivity</name></name><argument_list>(<argument><expr><call><name>getPackageManager</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>cameraIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_OUTPUT</name></expr></argument>, <argument><expr><call><name><name>FileProviderUtil</name><operator>.</operator><name>getUriFor</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>captureFile</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>extraIntents</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>cameraIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>includeClear</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>extraIntents</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><literal type="string">"org.thoughtcrime.securesms.action.CLEAR_PROFILE_PHOTO"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Intent</name></type> <name>chooserIntent</name> <init>= <expr><call><name><name>Intent</name><operator>.</operator><name>createChooser</name></name><argument_list>(<argument><expr><name>galleryIntent</name></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>CreateProfileActivity_profile_photo</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>extraIntents</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>chooserIntent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>EXTRA_INITIAL_INTENTS</name></name></expr></argument>, <argument><expr><call><name><name>extraIntents</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>Intent</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+
+    <return>return <expr><name>chooserIntent</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleAvatarSelectionWithPermissions</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>boolean</name></type> <name>hasCameraPermission</name> <init>= <expr><call><name><name>Permissions</name><operator>.</operator><name>hasAll</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>Manifest</name><operator>.</operator><name>permission</name><operator>.</operator><name>CAMERA</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>hasCameraPermission</name></expr>)</condition><then> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><name>captureFile</name> <operator>=</operator> <call><name><name>File</name><operator>.</operator><name>createTempFile</name></name><argument_list>(<argument><expr><literal type="string">"capture"</literal></expr></argument>, <argument><expr><literal type="string">"jpg"</literal></expr></argument>, <argument><expr><call><name>getExternalCacheDir</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>captureFile</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>Intent</name></type> <name>chooserIntent</name> <init>= <expr><call><name>createAvatarSelectionIntent</name><argument_list>(<argument><expr><name>captureFile</name></expr></argument>, <argument><expr><name>avatarBytes</name> <operator>!=</operator> <literal type="null">null</literal></expr></argument>, <argument><expr><name>hasCameraPermission</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><name>chooserIntent</name></expr></argument>, <argument><expr><name>REQUEST_CODE_AVATAR</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleUpload</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type>        <name>name</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>StreamDetails</name></type> <name>avatar</name></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>name</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>name</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt></block></then>
+    <else>else                                                   <block type="pseudo"><expr_stmt><expr><name>name</name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>name</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+    <if>if <condition>(<expr><name>avatarBytes</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name><name>avatarBytes</name><operator>.</operator><name>length</name></name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>avatar</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt></block></then>
+    <else>else                                                <block type="pseudo"><expr_stmt><expr><name>avatar</name> <operator>=</operator> <operator>new</operator> <call><name>StreamDetails</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ByteArrayInputStream</name><argument_list>(<argument><expr><name>avatarBytes</name></expr></argument>)</argument_list></call></expr></argument>,
+                                                                                   <argument><expr><literal type="string">"image/jpeg"</literal></expr></argument>, <argument><expr><name><name>avatarBytes</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+    <expr_stmt><expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Boolean</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Context</name></type> <name>context</name>    <init>= <expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>  <name>profileKey</name> <init>= <expr><call><name><name>ProfileKeyUtil</name><operator>.</operator><name>getProfileKey</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>accountManager</name><operator>.</operator><name>setProfileName</name></name><argument_list>(<argument><expr><name>profileKey</name></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setProfileName</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></catch></try>
+
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>accountManager</name><operator>.</operator><name>setProfileAvatar</name></name><argument_list>(<argument><expr><name>profileKey</name></expr></argument>, <argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>AvatarHelper</name><operator>.</operator><name>setAvatar</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>avatarBytes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setProfileAvatarId</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SecureRandom</name><argument_list>()</argument_list></call><operator>.</operator><call><name>nextInt</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></catch></try>
+
+        <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceProfileKeyUpdateJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>Boolean</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostExecute</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>result</name></expr>)</condition><then> <block>{
+          <if>if <condition>(<expr><name>captureFile</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>captureFile</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+          <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>handleFinishedLollipop</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then>
+          <else>else                                                       <block type="pseudo"><expr_stmt><expr><call><name>handleFinishedLegacy</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></else></if>
+        }</block></then> <else>else        <block>{
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><name><name>CreateProfileActivity</name><operator>.</operator><name>this</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>CreateProfileActivity_problem_setting_profile</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></function>
+    }</block></class><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleFinishedLegacy</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>finishButton</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name>nextIntent</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>nextIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>RequiresApi</name><argument_list>(<argument><expr><name>api</name> <operator>=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>handleFinishedLollipop</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>int</name><index>[]</index></name></type> <name>finishButtonLocation</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>int</name><index>[]</index></name></type> <name>revealLocation</name>       <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>finishButton</name><operator>.</operator><name>getLocationInWindow</name></name><argument_list>(<argument><expr><name>finishButtonLocation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>reveal</name><operator>.</operator><name>getLocationInWindow</name></name><argument_list>(<argument><expr><name>revealLocation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>int</name></type> <name>finishX</name> <init>= <expr><name><name>finishButtonLocation</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>-</operator> <name><name>revealLocation</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>finishY</name> <init>= <expr><name><name>finishButtonLocation</name><index>[<expr><literal type="number">1</literal></expr>]</index></name> <operator>-</operator> <name><name>revealLocation</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name>finishX</name> <operator>+=</operator> <call><name><name>finishButton</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name>finishY</name> <operator>+=</operator> <call><name><name>finishButton</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Animator</name></type> <name>animation</name> <init>= <expr><call><name><name>ViewAnimationUtils</name><operator>.</operator><name>createCircularReveal</name></name><argument_list>(<argument><expr><name>reveal</name></expr></argument>, <argument><expr><name>finishX</name></expr></argument>, <argument><expr><name>finishY</name></expr></argument>, <argument><expr><literal type="number">0f</literal></expr></argument>, <argument><expr><operator>(</operator><name>float</name><operator>)</operator> <call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name><name>reveal</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>reveal</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>addListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Animator</name><operator>.</operator><name>AnimatorListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationStart</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationEnd</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>finishButton</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>nextIntent</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>  <block type="pseudo"><expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>nextIntent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationCancel</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onAnimationRepeat</name><parameter_list>(<parameter><decl><type><name>Animator</name></type> <name>animation</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>reveal</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>animation</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

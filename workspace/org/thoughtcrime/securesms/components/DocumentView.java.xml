@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\DocumentView.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>AttrRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>DrawableCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>pnikosis</name><operator>.</operator><name>materialishprogress</name><operator>.</operator><name>ProgressWheel</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>Subscribe</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>ThreadMode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>events</name><operator>.</operator><name>PartProgressEvent</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>DocumentSlide</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>SlideClickListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DocumentView</name> <super><extends>extends <name>FrameLayout</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>DocumentView</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AnimatingToggle</name></type> <name>controlToggle</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>       <name>downloadButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ProgressWheel</name></type>   <name>downloadProgress</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type>            <name>container</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type>       <name>iconContainer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>TextView</name></type>        <name>fileName</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>TextView</name></type>        <name>fileSize</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>TextView</name></type>        <name>document</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SlideClickListener</name></type> <name>downloadListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SlideClickListener</name></type> <name>viewListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>DocumentSlide</name></type>      <name>documentSlide</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>DocumentView</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>DocumentView</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>DocumentView</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><annotation>@<name>AttrRes</name></annotation> <name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>inflate</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>document_view</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>        <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>document_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>iconContainer</name></name>    <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>icon_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>controlToggle</name></name>    <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>control_toggle</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadButton</name></name>   <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>download</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadProgress</name></name> <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>download_progress</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fileName</name></name>         <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>file_name</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fileSize</name></name>         <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>file_size</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>document</name></name>         <operator>=</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>document</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>attrs</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name>   <init>= <expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTheme</name><argument_list>()</argument_list></call><operator>.</operator><call><name>obtainStyledAttributes</name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>DocumentView</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>        <name>titleColor</name>   <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>DocumentView_doc_titleColor</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>BLACK</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>        <name>captionColor</name> <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>DocumentView_doc_captionColor</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>BLACK</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>        <name>downloadTint</name> <init>= <expr><call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>DocumentView_doc_downloadButtonTint</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>fileName</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>titleColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>fileSize</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>captionColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>downloadButton</name><operator>.</operator><name>setColorFilter</name></name><argument_list>(<argument><expr><name>downloadTint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>MULTIPLY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>setBarColor</name></name><argument_list>(<argument><expr><name>downloadTint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDownloadClickListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>SlideClickListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadListener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDocumentClickListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>SlideClickListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewListener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDocument</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DocumentSlide</name></type> <name>documentSlide</name></decl></parameter>,
+                          <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>showControls</name></decl></parameter>)</parameter_list>
+  <block>{
+    <if>if <condition>(<expr><name>showControls</name> <operator>&amp;&amp;</operator> <call><name><name>documentSlide</name><operator>.</operator><name>isPendingDownload</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>downloadButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>downloadButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DownloadClickedListener</name><argument_list>(<argument><expr><name>documentSlide</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><call><name><name>downloadProgress</name><operator>.</operator><name>isSpinning</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>stopSpinning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>showControls</name> <operator>&amp;&amp;</operator> <call><name><name>documentSlide</name><operator>.</operator><name>getTransferState</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>AttachmentDatabase</name><operator>.</operator><name>TRANSFER_PROGRESS_STARTED</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>downloadProgress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>spin</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>iconContainer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><call><name><name>downloadProgress</name><operator>.</operator><name>isSpinning</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>stopSpinning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></else></if>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>documentSlide</name></name> <operator>=</operator> <name>documentSlide</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fileName</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>documentSlide</name><operator>.</operator><name>getFileName</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>or</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>DocumentView_unknown_file</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fileSize</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getPrettyFileSize</name></name><argument_list>(<argument><expr><call><name><name>documentSlide</name><operator>.</operator><name>getFileSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>document</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getFileType</name><argument_list>(<argument><expr><call><name><name>documentSlide</name><operator>.</operator><name>getFileName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OpenClickedListener</name><argument_list>(<argument><expr><name>documentSlide</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setFocusable</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>focusable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setClickable</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>clickable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setEnabled</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getFileType</name><parameter_list>(<parameter><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>fileName</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>fileName</name><operator>.</operator><name>isPresent</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="string">""</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>parts</name> <init>= <expr><call><name><name>fileName</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>split</name><argument_list>(<argument><expr><literal type="string">"\\."</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>parts</name><operator>.</operator><name>length</name></name> <operator>&lt;</operator> <literal type="number">2</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">""</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>String</name></type> <name>suffix</name> <init>= <expr><name><name>parts</name><index>[<expr><name><name>parts</name><operator>.</operator><name>length</name></name> <operator>-</operator> <literal type="number">1</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>suffix</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">3</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name>suffix</name></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><literal type="string">""</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Subscribe</name><argument_list>(<argument><expr><name>sticky</name> <operator>=</operator> <literal type="boolean">true</literal></expr></argument>, <argument><expr><name>threadMode</name> <operator>=</operator> <name><name>ThreadMode</name><operator>.</operator><name>ASYNC</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onEventAsync</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>PartProgressEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>documentSlide</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>event</name><operator>.</operator><name>attachment</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>documentSlide</name><operator>.</operator><name>asAttachment</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>setInstantProgress</name></name><argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name><name>event</name><operator>.</operator><name>progress</name></name><operator>)</operator> <operator>/</operator> <name><name>event</name><operator>.</operator><name>total</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>DownloadClickedListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DocumentSlide</name></type> <name>slide</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>DownloadClickedListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>DocumentSlide</name></type> <name>slide</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>slide</name></name> <operator>=</operator> <name>slide</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>downloadListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>downloadListener</name><operator>.</operator><name>onClick</name></name><argument_list>(<argument><expr><name>v</name></expr></argument>, <argument><expr><name>slide</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>OpenClickedListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DocumentSlide</name></type> <name>slide</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>OpenClickedListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>DocumentSlide</name></type> <name>slide</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>slide</name></name> <operator>=</operator> <name>slide</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>slide</name><operator>.</operator><name>isPendingDownload</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>slide</name><operator>.</operator><name>isInProgress</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <name>viewListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>viewListener</name><operator>.</operator><name>onClick</name></name><argument_list>(<argument><expr><name>v</name></expr></argument>, <argument><expr><name>slide</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

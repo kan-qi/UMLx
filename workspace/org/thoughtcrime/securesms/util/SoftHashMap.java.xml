@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\SoftHashMap.java"><comment type="block">/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>ref</name><operator>.</operator><name>ReferenceQueue</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>ref</name><operator>.</operator><name>SoftReference</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>*</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ConcurrentHashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ConcurrentLinkedQueue</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>locks</name><operator>.</operator><name>ReentrantLock</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A &lt;code&gt;&lt;em&gt;Soft&lt;/em&gt;HashMap&lt;/code&gt; is a memory-constrained map that stores its &lt;em&gt;values&lt;/em&gt; in
+ * {@link SoftReference SoftReference}s.  (Contrast this with the JDK's
+ * {@link WeakHashMap WeakHashMap}, which uses weak references for its &lt;em&gt;keys&lt;/em&gt;, which is of little value if you
+ * want the cache to auto-resize itself based on memory constraints).
+ * &lt;p/&gt;
+ * Having the values wrapped by soft references allows the cache to automatically reduce its size based on memory
+ * limitations and garbage collection.  This ensures that the cache will not cause memory leaks by holding strong
+ * references to all of its values.
+ * &lt;p/&gt;
+ * This class is a generics-enabled Map based on initial ideas from Heinz Kabutz's and Sydney Redelinghuys's
+ * &lt;a href="http://www.javaspecialists.eu/archive/Issue015.html"&gt;publicly posted version (with their approval)&lt;/a&gt;, with
+ * continued modifications.
+ * &lt;p/&gt;
+ * This implementation is thread-safe and usable in concurrent environments.
+ *
+ * @since 1.0
+ */</comment>
+<class><specifier>public</specifier> class <name><name>SoftHashMap</name><parameter_list>&lt;<parameter><name>K</name></parameter>, <parameter><name>V</name></parameter>&gt;</parameter_list></name> <super><implements>implements <name><name>Map</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+  <comment type="block" format="javadoc">/**
+   * The default value of the RETENTION_SIZE attribute, equal to 100.
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DEFAULT_RETENTION_SIZE</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * The internal HashMap that will hold the SoftReference.
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>map</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * The number of strong references to hold internally, that is, the number of instances to prevent
+   * from being garbage collected automatically (unlike other soft references).
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>RETENTION_SIZE</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * The FIFO list of strong references (not to be garbage collected), order of last access.
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Queue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>strongReferences</name></decl>;</decl_stmt> <comment type="line">//guarded by 'strongReferencesLock'</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ReentrantLock</name></type> <name>strongReferencesLock</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Reference queue for cleared SoftReference objects.
+   */</comment>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>ReferenceQueue</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <name>V</name></super></argument>&gt;</argument_list></name></type> <name>queue</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new SoftHashMap with a default retention size size of
+   * {@link #DEFAULT_RETENTION_SIZE DEFAULT_RETENTION_SIZE} (100 entries).
+   *
+   * @see #SoftHashMap(int)
+   */</comment>
+  <constructor><specifier>public</specifier> <name>SoftHashMap</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>DEFAULT_RETENTION_SIZE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new SoftHashMap with the specified retention size.
+   * &lt;p/&gt;
+   * The retention size (n) is the total number of most recent entries in the map that will be strongly referenced
+   * (ie 'retained') to prevent them from being eagerly garbage collected.  That is, the point of a SoftHashMap is to
+   * allow the garbage collector to remove as many entries from this map as it desires, but there will always be (n)
+   * elements retained after a GC due to the strong references.
+   * &lt;p/&gt;
+   * Note that in a highly concurrent environments the exact total number of strong references may differ slightly
+   * than the actual &lt;code&gt;retentionSize&lt;/code&gt; value.  This number is intended to be a best-effort retention low
+   * water mark.
+   *
+   * @param retentionSize the total number of most recent entries in the map that will be strongly referenced
+   *                      (retained), preventing them from being eagerly garbage collected by the JVM.
+   */</comment>
+  <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><block>{<expr><literal type="string">"unchecked"</literal></expr>}</block></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <name>SoftHashMap</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>retentionSize</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>RETENTION_SIZE</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>retentionSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>queue</name> <operator>=</operator> <operator>new</operator> <call><name><name>ReferenceQueue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>strongReferencesLock</name> <operator>=</operator> <operator>new</operator> <call><name>ReentrantLock</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>map</name> <operator>=</operator> <operator>new</operator> <call><name><name>ConcurrentHashMap</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>strongReferences</name> <operator>=</operator> <operator>new</operator> <call><name><name>ConcurrentLinkedQueue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a {@code SoftHashMap} backed by the specified {@code source}, with a default retention
+   * size of {@link #DEFAULT_RETENTION_SIZE DEFAULT_RETENTION_SIZE} (100 entries).
+   *
+   * @param source the backing map to populate this {@code SoftHashMap}
+   * @see #SoftHashMap(Map,int)
+   */</comment>
+  <constructor><specifier>public</specifier> <name>SoftHashMap</name><parameter_list>(<parameter><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>DEFAULT_RETENTION_SIZE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>putAll</name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a {@code SoftHashMap} backed by the specified {@code source}, with the specified retention size.
+   * &lt;p/&gt;
+   * The retention size (n) is the total number of most recent entries in the map that will be strongly referenced
+   * (ie 'retained') to prevent them from being eagerly garbage collected.  That is, the point of a SoftHashMap is to
+   * allow the garbage collector to remove as many entries from this map as it desires, but there will always be (n)
+   * elements retained after a GC due to the strong references.
+   * &lt;p/&gt;
+   * Note that in a highly concurrent environments the exact total number of strong references may differ slightly
+   * than the actual &lt;code&gt;retentionSize&lt;/code&gt; value.  This number is intended to be a best-effort retention low
+   * water mark.
+   *
+   * @param source        the backing map to populate this {@code SoftHashMap}
+   * @param retentionSize the total number of most recent entries in the map that will be strongly referenced
+   *                      (retained), preventing them from being eagerly garbage collected by the JVM.
+   */</comment>
+  <constructor><specifier>public</specifier> <name>SoftHashMap</name><parameter_list>(<parameter><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>retentionSize</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>retentionSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>putAll</name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>V</name></type> <name>get</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>V</name></type> <name>result</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name></type> <name>value</name> <init>= <expr><call><name><name>map</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>value</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <comment type="line">//unwrap the 'real' value from the SoftReference</comment>
+      <expr_stmt><expr><name>result</name> <operator>=</operator> <call><name><name>value</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name>result</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <comment type="line">//The wrapped value was garbage collected, so remove this entry from the backing map:</comment>
+        <comment type="line">//noinspection SuspiciousMethodCalls</comment>
+        <expr_stmt><expr><call><name><name>map</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <comment type="line">//Add this value to the beginning of the strong reference queue (FIFO).</comment>
+        <expr_stmt><expr><call><name>addToStrongReferences</name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></then></if>
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>addToStrongReferences</name><parameter_list>(<parameter><decl><type><name>V</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>strongReferencesLock</name><operator>.</operator><name>lock</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>strongReferences</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>trimStrongReferencesIfNecessary</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block> <finally>finally <block>{
+      <expr_stmt><expr><call><name><name>strongReferencesLock</name><operator>.</operator><name>unlock</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></finally></try>
+
+  }</block></function>
+
+  <comment type="line">//Guarded by the strongReferencesLock in the addToStrongReferences method</comment>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>trimStrongReferencesIfNecessary</name><parameter_list>()</parameter_list> <block>{
+    <comment type="line">//trim the strong ref queue if necessary:</comment>
+    <while>while <condition>(<expr><call><name><name>strongReferences</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <name>RETENTION_SIZE</name></expr>)</condition> <block>{
+      <expr_stmt><expr><call><name><name>strongReferences</name><operator>.</operator><name>poll</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></while>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Traverses the ReferenceQueue and removes garbage-collected SoftValue objects from the backing map
+   * by looking them up using the SoftValue.key data member.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>processQueue</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SoftValue</name></type> <name>sv</name></decl>;</decl_stmt>
+    <while>while <condition>(<expr><operator>(</operator><name>sv</name> <operator>=</operator> <operator>(</operator><name>SoftValue</name><operator>)</operator> <call><name><name>queue</name><operator>.</operator><name>poll</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+      <comment type="line">//noinspection SuspiciousMethodCalls</comment>
+      <expr_stmt><expr><call><name><name>map</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name><name>sv</name><operator>.</operator><name>key</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// we can access private data!</comment>
+    }</block></while>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isEmpty</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>map</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>containsKey</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>map</name><operator>.</operator><name>containsKey</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>containsValue</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>Collection</name></type> <name>values</name> <init>= <expr><call><name>values</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>values</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>values</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>putAll</name><parameter_list>(<parameter><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>?</name> <extends>extends <name>K</name></extends></argument>, <argument><name>?</name> <extends>extends <name>V</name></extends></argument>&gt;</argument_list></name></type> <name>m</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>m</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>m</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+    <for>for <control>(<init><decl><type><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name> <extends>extends <name>K</name></extends></argument>, <argument><name>?</name> <extends>extends <name>V</name></extends></argument>&gt;</argument_list></name></name></type> <name>entry</name> <range>: <expr><call><name><name>m</name><operator>.</operator><name>entrySet</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>K</name></argument>&gt;</argument_list></name></type> <name>keySet</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>map</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>values</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>K</name></argument>&gt;</argument_list></name></type> <name>keys</name> <init>= <expr><call><name><name>map</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>keys</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <comment type="line">//noinspection unchecked</comment>
+      <return>return <expr><name><name>Collections</name><operator>.</operator><name>EMPTY_SET</name></name></expr>;</return>
+    }</block></then></if>
+    <decl_stmt><decl><type><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>keys</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>K</name></type> <name>key</name> <range>: <expr><name>keys</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>V</name></type> <name>v</name> <init>= <expr><call><name>get</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>v</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>v</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+    <return>return <expr><name>values</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Creates a new entry, but wraps the value in a SoftValue instance to enable auto garbage collection.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>V</name></type> <name>put</name><parameter_list>(<parameter><decl><type><name>K</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><name>V</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <comment type="line">// throw out garbage collected values first</comment>
+    <decl_stmt><decl><type><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name></type> <name>sv</name> <init>= <expr><operator>new</operator> <call><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>value</name></expr></argument>, <argument><expr><name>key</name></expr></argument>, <argument><expr><name>queue</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name></type> <name>previous</name> <init>= <expr><call><name><name>map</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>, <argument><expr><name>sv</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>addToStrongReferences</name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><ternary><condition><expr><name>previous</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>previous</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>V</name></type> <name>remove</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <comment type="line">// throw out garbage collected values first</comment>
+    <decl_stmt><decl><type><name><name>SoftValue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>, <argument><name>K</name></argument>&gt;</argument_list></name></type> <name>raw</name> <init>= <expr><call><name><name>map</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><ternary><condition><expr><name>raw</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>raw</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>clear</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>strongReferencesLock</name><operator>.</operator><name>lock</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>strongReferences</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block> <finally>finally <block>{
+      <expr_stmt><expr><call><name><name>strongReferencesLock</name><operator>.</operator><name>unlock</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></finally></try>
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <comment type="line">// throw out garbage collected values</comment>
+    <expr_stmt><expr><call><name><name>map</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>size</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <comment type="line">// throw out garbage collected values first</comment>
+    <return>return <expr><call><name><name>map</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></type> <name>entrySet</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>processQueue</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <comment type="line">// throw out garbage collected values first</comment>
+    <decl_stmt><decl><type><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>K</name></argument>&gt;</argument_list></name></type> <name>keys</name> <init>= <expr><call><name><name>map</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>keys</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <comment type="line">//noinspection unchecked</comment>
+      <return>return <expr><name><name>Collections</name><operator>.</operator><name>EMPTY_SET</name></name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name></type> <name>kvPairs</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>K</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>keys</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>K</name></type> <name>key</name> <range>: <expr><name>keys</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>V</name></type> <name>v</name> <init>= <expr><call><name>get</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>v</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>kvPairs</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>, <argument><expr><name>v</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+    <return>return <expr><call><name><name>kvPairs</name><operator>.</operator><name>entrySet</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * We define our own subclass of SoftReference which contains
+   * not only the value but also the key to make it easier to find
+   * the entry in the HashMap after it's been garbage collected.
+   */</comment>
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name><name>SoftValue</name><parameter_list>&lt;<parameter><name>V</name></parameter>, <parameter><name>K</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>SoftReference</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>K</name></type> <name>key</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Constructs a new instance, wrapping the value, key, and queue, as
+     * required by the superclass.
+     *
+     * @param value the map value
+     * @param key   the map key
+     * @param queue the soft reference queue to poll to determine if the entry had been reaped by the GC.
+     */</comment>
+    <constructor><specifier>private</specifier> <name>SoftValue</name><parameter_list>(<parameter><decl><type><name>V</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><name>K</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><name><name>ReferenceQueue</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <name>V</name></super></argument>&gt;</argument_list></name></type> <name>queue</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>value</name></expr></argument>, <argument><expr><name>queue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>key</name></name> <operator>=</operator> <name>key</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+  }</block></class>
+}</block></class></unit>

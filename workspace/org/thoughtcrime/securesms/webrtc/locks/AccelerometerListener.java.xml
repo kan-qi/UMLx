@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\webrtc\locks\AccelerometerListener.java"><comment type="block">/*
+ * Copyright (C) 2009 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>locks</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>Sensor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>SensorEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>SensorEventListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>hardware</name><operator>.</operator><name>SensorManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Message</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * This class is used to listen to the accelerometer to monitor the
+ * orientation of the phone. The client of this class is notified when
+ * the orientation changes between horizontal and vertical.
+ */</comment>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>AccelerometerListener</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"AccelerometerListener"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>DEBUG</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>VDEBUG</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>SensorManager</name></type> <name>mSensorManager</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Sensor</name></type> <name>mSensor</name></decl>;</decl_stmt>
+
+    <comment type="line">// mOrientation is the orientation value most recently reported to the client.</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mOrientation</name></decl>;</decl_stmt>
+
+    <comment type="line">// mPendingOrientation is the latest orientation computed based on the sensor value.</comment>
+    <comment type="line">// This is sent to the client after a rebounce delay, at which point it is copied to</comment>
+    <comment type="line">// mOrientation.</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mPendingOrientation</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>OrientationListener</name></type> <name>mListener</name></decl>;</decl_stmt>
+
+    <comment type="line">// Device orientation</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ORIENTATION_UNKNOWN</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ORIENTATION_VERTICAL</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ORIENTATION_HORIZONTAL</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ORIENTATION_CHANGED</name> <init>= <expr><literal type="number">1234</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>VERTICAL_DEBOUNCE</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>HORIZONTAL_DEBOUNCE</name> <init>= <expr><literal type="number">500</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>double</name></type> <name>VERTICAL_ANGLE</name> <init>= <expr><literal type="number">50.0</literal></expr></init></decl>;</decl_stmt>
+
+    <interface><specifier>public</specifier> interface <name>OrientationListener</name> <block>{
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>orientationChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>orientation</name></decl></parameter>)</parameter_list>;</function_decl>
+    }</block></interface>
+
+    <constructor><specifier>public</specifier> <name>AccelerometerListener</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>OrientationListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mListener</name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mSensorManager</name> <operator>=</operator> <operator>(</operator><name>SensorManager</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>SENSOR_SERVICE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mSensor</name> <operator>=</operator> <call><name><name>mSensorManager</name><operator>.</operator><name>getDefaultSensor</name></name><argument_list>(<argument><expr><name><name>Sensor</name><operator>.</operator><name>TYPE_ACCELEROMETER</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>enable</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>enable</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>DEBUG</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"enable("</literal> <operator>+</operator> <name>enable</name> <operator>+</operator> <literal type="string">")"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+            <if>if <condition>(<expr><name>enable</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mOrientation</name> <operator>=</operator> <name>ORIENTATION_UNKNOWN</name></expr>;</expr_stmt>
+                <expr_stmt><expr><name>mPendingOrientation</name> <operator>=</operator> <name>ORIENTATION_UNKNOWN</name></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>mSensorManager</name><operator>.</operator><name>registerListener</name></name><argument_list>(<argument><expr><name>mSensorListener</name></expr></argument>, <argument><expr><name>mSensor</name></expr></argument>,
+                        <argument><expr><name><name>SensorManager</name><operator>.</operator><name>SENSOR_DELAY_NORMAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <expr_stmt><expr><call><name><name>mSensorManager</name><operator>.</operator><name>unregisterListener</name></name><argument_list>(<argument><expr><name>mSensorListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>mHandler</name><operator>.</operator><name>removeMessages</name></name><argument_list>(<argument><expr><name>ORIENTATION_CHANGED</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></else></if>
+        }</block></synchronized>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setOrientation</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>orientation</name></decl></parameter>)</parameter_list> <block>{
+        <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+            <if>if <condition>(<expr><name>mPendingOrientation</name> <operator>==</operator> <name>orientation</name></expr>)</condition><then> <block>{
+                <comment type="line">// Pending orientation has not changed, so do nothing.</comment>
+                <return>return;</return>
+            }</block></then></if>
+
+            <comment type="line">// Cancel any pending messages.</comment>
+            <comment type="line">// We will either start a new timer or cancel alltogether</comment>
+            <comment type="line">// if the orientation has not changed.</comment>
+            <expr_stmt><expr><call><name><name>mHandler</name><operator>.</operator><name>removeMessages</name></name><argument_list>(<argument><expr><name>ORIENTATION_CHANGED</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <if>if <condition>(<expr><name>mOrientation</name> <operator>!=</operator> <name>orientation</name></expr>)</condition><then> <block>{
+                <comment type="line">// Set timer to send an event if the orientation has changed since its</comment>
+                <comment type="line">// previously reported value.</comment>
+                <expr_stmt><expr><name>mPendingOrientation</name> <operator>=</operator> <name>orientation</name></expr>;</expr_stmt>
+                <decl_stmt><decl><type><name>Message</name></type> <name>m</name> <init>= <expr><call><name><name>mHandler</name><operator>.</operator><name>obtainMessage</name></name><argument_list>(<argument><expr><name>ORIENTATION_CHANGED</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <comment type="line">// set delay to our debounce timeout</comment>
+                <decl_stmt><decl><type><name>int</name></type> <name>delay</name> <init>= <expr><operator>(</operator><ternary><condition><expr><name>orientation</name> <operator>==</operator> <name>ORIENTATION_VERTICAL</name></expr> ?</condition><then> <expr><name>VERTICAL_DEBOUNCE</name></expr>
+                                                                 </then><else>: <expr><name>HORIZONTAL_DEBOUNCE</name></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name><name>mHandler</name><operator>.</operator><name>sendMessageDelayed</name></name><argument_list>(<argument><expr><name>m</name></expr></argument>, <argument><expr><name>delay</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <comment type="line">// no message is pending</comment>
+                <expr_stmt><expr><name>mPendingOrientation</name> <operator>=</operator> <name>ORIENTATION_UNKNOWN</name></expr>;</expr_stmt>
+            }</block></else></if>
+        }</block></synchronized>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>onSensorEvent</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>x</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>y</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>z</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>VDEBUG</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onSensorEvent("</literal> <operator>+</operator> <name>x</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>y</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>z</name> <operator>+</operator> <literal type="string">")"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+        <comment type="line">// If some values are exactly zero, then likely the sensor is not powered up yet.</comment>
+        <comment type="line">// ignore these events to avoid false horizontal positives.</comment>
+        <if>if <condition>(<expr><name>x</name> <operator>==</operator> <literal type="number">0.0</literal> <operator>||</operator> <name>y</name> <operator>==</operator> <literal type="number">0.0</literal> <operator>||</operator> <name>z</name> <operator>==</operator> <literal type="number">0.0</literal></expr>)</condition><then> <block type="pseudo"><return>return;</return></block></then></if>
+
+        <comment type="line">// magnitude of the acceleration vector projected onto XY plane</comment>
+        <decl_stmt><decl><type><name>double</name></type> <name>xy</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>sqrt</name></name><argument_list>(<argument><expr><name>x</name> <operator>*</operator> <name>x</name> <operator>+</operator> <name>y</name> <operator>*</operator> <name>y</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// compute the vertical angle</comment>
+        <decl_stmt><decl><type><name>double</name></type> <name>angle</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>atan2</name></name><argument_list>(<argument><expr><name>xy</name></expr></argument>, <argument><expr><name>z</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// convert to degrees</comment>
+        <expr_stmt><expr><name>angle</name> <operator>=</operator> <name>angle</name> <operator>*</operator> <literal type="number">180.0</literal> <operator>/</operator> <name><name>Math</name><operator>.</operator><name>PI</name></name></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>orientation</name> <init>= <expr><operator>(</operator><ternary><condition><expr><name>angle</name> <operator>&gt;</operator>  <name>VERTICAL_ANGLE</name></expr> ?</condition><then> <expr><name>ORIENTATION_VERTICAL</name></expr> </then><else>: <expr><name>ORIENTATION_HORIZONTAL</name></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>VDEBUG</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"angle: "</literal> <operator>+</operator> <name>angle</name> <operator>+</operator> <literal type="string">" orientation: "</literal> <operator>+</operator> <name>orientation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <expr_stmt><expr><call><name>setOrientation</name><argument_list>(<argument><expr><name>orientation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><type><name>SensorEventListener</name></type> <name>mSensorListener</name> <init>= <expr><operator>new</operator> <class><super><name>SensorEventListener</name></super><argument_list>()</argument_list> <block>{
+        <function><specifier>public</specifier> <type><name>void</name></type> <name>onSensorChanged</name><parameter_list>(<parameter><decl><type><name>SensorEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name>onSensorEvent</name><argument_list>(<argument><expr><name><name>event</name><operator>.</operator><name>values</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>event</name><operator>.</operator><name>values</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>event</name><operator>.</operator><name>values</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+
+        <function><specifier>public</specifier> <type><name>void</name></type> <name>onAccuracyChanged</name><parameter_list>(<parameter><decl><type><name>Sensor</name></type> <name>sensor</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>accuracy</name></decl></parameter>)</parameter_list> <block>{
+            <comment type="line">// ignore</comment>
+        }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Handler</name></type> <name>mHandler</name> <init>= <expr><operator>new</operator> <class><super><name>Handler</name></super><argument_list>()</argument_list> <block>{
+        <function><specifier>public</specifier> <type><name>void</name></type> <name>handleMessage</name><parameter_list>(<parameter><decl><type><name>Message</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+            <switch>switch <condition>(<expr><name><name>msg</name><operator>.</operator><name>what</name></name></expr>)</condition> <block>{
+            <case>case <expr><name>ORIENTATION_CHANGED</name></expr>:</case>
+                <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+                    <expr_stmt><expr><name>mOrientation</name> <operator>=</operator> <name>mPendingOrientation</name></expr>;</expr_stmt>
+                    <if>if <condition>(<expr><name>DEBUG</name></expr>)</condition><then> <block>{
+                        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"orientation: "</literal> <operator>+</operator>
+                            <operator>(</operator><ternary><condition><expr><name>mOrientation</name> <operator>==</operator> <name>ORIENTATION_HORIZONTAL</name></expr> ?</condition><then> <expr><literal type="string">"horizontal"</literal></expr>
+                                </then><else>: <expr><operator>(</operator><ternary><condition><expr><name>mOrientation</name> <operator>==</operator> <name>ORIENTATION_VERTICAL</name></expr> ?</condition><then> <expr><literal type="string">"vertical"</literal></expr>
+                                </then><else>: <expr><literal type="string">"unknown"</literal></expr></else></ternary><operator>)</operator></expr></else></ternary><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block></then></if>
+                    <expr_stmt><expr><call><name><name>mListener</name><operator>.</operator><name>orientationChanged</name></name><argument_list>(<argument><expr><name>mOrientation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></synchronized>
+                <break>break;</break>
+            }</block></switch>
+        }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>

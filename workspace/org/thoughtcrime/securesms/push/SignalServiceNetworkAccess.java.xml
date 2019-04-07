@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\push\SignalServiceNetworkAccess.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>push</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>TrustStore</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>internal</name><operator>.</operator><name>configuration</name><operator>.</operator><name>SignalCdnUrl</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>internal</name><operator>.</operator><name>configuration</name><operator>.</operator><name>SignalContactDiscoveryUrl</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>internal</name><operator>.</operator><name>configuration</name><operator>.</operator><name>SignalServiceConfiguration</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>internal</name><operator>.</operator><name>configuration</name><operator>.</operator><name>SignalServiceUrl</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>CipherSuite</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>ConnectionSpec</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>TlsVersion</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SignalServiceNetworkAccess</name> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SignalServiceNetworkAccess</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COUNTRY_CODE_EGYPT</name> <init>= <expr><literal type="string">"+20"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COUNTRY_CODE_UAE</name>   <init>= <expr><literal type="string">"+971"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COUNTRY_CODE_OMAN</name>  <init>= <expr><literal type="string">"+968"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COUNTRY_CODE_QATAR</name> <init>= <expr><literal type="string">"+974"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SERVICE_REFLECTOR_HOST</name> <init>= <expr><literal type="string">"textsecure-service-reflected.whispersystems.org"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>ConnectionSpec</name></type> <name>SOUQ_CONNECTION_SPEC</name> <init>= <expr><operator>new</operator> <call><name><name>ConnectionSpec</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name><name>ConnectionSpec</name><operator>.</operator><name>MODERN_TLS</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>tlsVersions</name><argument_list>(<argument><expr><name><name>TlsVersion</name><operator>.</operator><name>TLS_1_2</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>cipherSuites</name><argument_list>(<argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_DHE_RSA_WITH_AES_128_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_DHE_RSA_WITH_AES_256_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_RSA_WITH_AES_128_GCM_SHA256</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_RSA_WITH_AES_128_CBC_SHA</name></name></expr></argument>,
+                    <argument><expr><name><name>CipherSuite</name><operator>.</operator><name>TLS_RSA_WITH_AES_256_CBC_SHA</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>supportsTlsExtensions</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>SignalServiceConfiguration</name></argument>&gt;</argument_list></name></type> <name>censorshipConfiguration</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type>                                <name>censoredCountries</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SignalServiceConfiguration</name></type>              <name>uncensoredConfiguration</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>SignalServiceNetworkAccess</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>TrustStore</name></type>                 <name>trustStore</name>     <init>= <expr><operator>new</operator> <call><name>DomainFrontingTrustStore</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SignalServiceUrl</name></type>           <name>service</name>        <init>= <expr><operator>new</operator> <call><name>SignalServiceUrl</name><argument_list>(<argument><expr><literal type="string">"https://cms.souqcdn.com"</literal></expr></argument>, <argument><expr><name>SERVICE_REFLECTOR_HOST</name></expr></argument>, <argument><expr><name>trustStore</name></expr></argument>, <argument><expr><name>SOUQ_CONNECTION_SPEC</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SignalCdnUrl</name></type>               <name>serviceCdn</name>     <init>= <expr><operator>new</operator> <call><name>SignalCdnUrl</name><argument_list>(<argument><expr><literal type="string">"https://cms.souqcdn.com"</literal></expr></argument>, <argument><expr><name>SERVICE_REFLECTOR_HOST</name></expr></argument>, <argument><expr><name>trustStore</name></expr></argument>, <argument><expr><name>SOUQ_CONNECTION_SPEC</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SignalContactDiscoveryUrl</name></type>  <name>serviceContact</name> <init>= <expr><operator>new</operator> <call><name>SignalContactDiscoveryUrl</name><argument_list>(<argument><expr><literal type="string">"https://cms.souqcdn.com"</literal></expr></argument>, <argument><expr><name>SERVICE_REFLECTOR_HOST</name></expr></argument>, <argument><expr><name>trustStore</name></expr></argument>, <argument><expr><name>SOUQ_CONNECTION_SPEC</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SignalServiceConfiguration</name></type> <name>serviceConfig</name>  <init>= <expr><operator>new</operator> <call><name>SignalServiceConfiguration</name><argument_list>(<argument><expr><operator>new</operator> <name><name>SignalServiceUrl</name><index>[]</index></name> <block>{ <expr><name>service</name></expr> }</block></expr></argument>,
+                                                                                     <argument><expr><operator>new</operator> <name><name>SignalCdnUrl</name><index>[]</index></name> <block>{ <expr><name>serviceCdn</name></expr> }</block></expr></argument>,
+                                                                                     <argument><expr><operator>new</operator> <name><name>SignalContactDiscoveryUrl</name><index>[]</index></name> <block>{ <expr><name>serviceContact</name></expr> }</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>censorshipConfiguration</name></name> <operator>=</operator> <operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>SignalServiceConfiguration</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block>{
+      <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>COUNTRY_CODE_EGYPT</name></type></decl></parameter>, <parameter><decl><type><name>serviceConfig</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>COUNTRY_CODE_UAE</name></type></decl></parameter>, <parameter><decl><type><name>serviceConfig</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>COUNTRY_CODE_OMAN</name></type></decl></parameter>, <parameter><decl><type><name>serviceConfig</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>COUNTRY_CODE_QATAR</name></type></decl></parameter>, <parameter><decl><type><name>serviceConfig</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    }</block>}</block></class></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>uncensoredConfiguration</name></name> <operator>=</operator> <operator>new</operator> <call><name>SignalServiceConfiguration</name><argument_list>(<argument><expr><operator>new</operator> <name><name>SignalServiceUrl</name><index>[]</index></name> <block>{<expr><operator>new</operator> <call><name>SignalServiceUrl</name><argument_list>(<argument><expr><name><name>BuildConfig</name><operator>.</operator><name>SIGNAL_URL</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SignalServiceTrustStore</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>}</block></expr></argument>,
+                                                                  <argument><expr><operator>new</operator> <name><name>SignalCdnUrl</name><index>[]</index></name> <block>{<expr><operator>new</operator> <call><name>SignalCdnUrl</name><argument_list>(<argument><expr><name><name>BuildConfig</name><operator>.</operator><name>SIGNAL_CDN_URL</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SignalServiceTrustStore</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>}</block></expr></argument>,
+                                                                  <argument><expr><operator>new</operator> <name><name>SignalContactDiscoveryUrl</name><index>[]</index></name> <block>{<expr><operator>new</operator> <call><name>SignalContactDiscoveryUrl</name><argument_list>(<argument><expr><name><name>BuildConfig</name><operator>.</operator><name>SIGNAL_CONTACT_DISCOVERY_URL</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SignalServiceTrustStore</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>censoredCountries</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>censorshipConfiguration</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toArray</name><argument_list>(<argument><expr><operator>new</operator> <name><name>String</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>SignalServiceConfiguration</name></type> <name>getConfiguration</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type> <name>localNumber</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getLocalNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>getConfiguration</name><argument_list>(<argument><expr><name>localNumber</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>SignalServiceConfiguration</name></type> <name>getConfiguration</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>localNumber</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>localNumber</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><name><name>this</name><operator>.</operator><name>uncensoredConfiguration</name></name></expr>;</return></block></then></if>
+
+    <for>for <control>(<init><decl><type><name>String</name></type> <name>censoredRegion</name> <range>: <expr><name><name>this</name><operator>.</operator><name>censoredCountries</name></name></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>localNumber</name><operator>.</operator><name>startsWith</name></name><argument_list>(<argument><expr><name>censoredRegion</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>this</name><operator>.</operator><name>censorshipConfiguration</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>censoredRegion</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block></for>
+
+    <return>return <expr><name><name>this</name><operator>.</operator><name>uncensoredConfiguration</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isCensored</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getConfiguration</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call> <operator>!=</operator> <name><name>this</name><operator>.</operator><name>uncensoredConfiguration</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isCensored</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>number</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getConfiguration</name><argument_list>(<argument><expr><name>number</name></expr></argument>)</argument_list></call> <operator>!=</operator> <name><name>this</name><operator>.</operator><name>uncensoredConfiguration</name></name></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

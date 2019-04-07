@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\SessionDatabase.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>net</name><operator>.</operator><name>sqlcipher</name><operator>.</operator><name>database</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>helpers</name><operator>.</operator><name>SQLCipherOpenHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>state</name><operator>.</operator><name>SessionRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>SignalServiceAddress</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SessionDatabase</name> <super><extends>extends <name>Database</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>SessionDatabase</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TABLE_NAME</name> <init>= <expr><literal type="string">"sessions"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>      <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier>  <name>String</name></type> <name>ADDRESS</name> <init>= <expr><literal type="string">"address"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier>  <name>String</name></type> <name>DEVICE</name>  <init>= <expr><literal type="string">"device"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier>  <name>String</name></type> <name>RECORD</name>  <init>= <expr><literal type="string">"record"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CREATE_TABLE</name> <init>= <expr><literal type="string">"CREATE TABLE "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator>
+      <literal type="string">"("</literal> <operator>+</operator> <name>ID</name> <operator>+</operator> <literal type="string">" INTEGER PRIMARY KEY, "</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" TEXT NOT NULL, "</literal> <operator>+</operator>
+      <name>DEVICE</name> <operator>+</operator> <literal type="string">" INTEGER NOT NULL, "</literal> <operator>+</operator> <name>RECORD</name> <operator>+</operator> <literal type="string">" BLOB NOT NULL, "</literal> <operator>+</operator>
+      <literal type="string">"UNIQUE("</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">","</literal> <operator>+</operator> <name>DEVICE</name> <operator>+</operator> <literal type="string">") ON CONFLICT REPLACE);"</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><name>SessionDatabase</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>SQLCipherOpenHelper</name></type> <name>databaseHelper</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>databaseHelper</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>store</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>deviceId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SessionRecord</name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DEVICE</name></expr></argument>, <argument><expr><name>deviceId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>RECORD</name></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>insertWithOnConflict</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name><name>SQLiteDatabase</name><operator>.</operator><name>CONFLICT_REPLACE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SessionRecord</name></type> <name>load</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>deviceId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>RECORD</name></expr>}</block></expr></argument>,
+                                        <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>DEVICE</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                                        <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>, <expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>deviceId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>,
+                                        <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
+    <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <try>try <block>{
+          <return>return <expr><operator>new</operator> <call><name>SessionRecord</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getBlob</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>RECORD</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></then></if>
+    }</block></try>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SessionRow</name></argument>&gt;</argument_list></name></type> <name>getAllFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>   <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SessionRow</name></argument>&gt;</argument_list></name></type> <name>results</name>  <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>,
+                                        <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                                        <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>,
+                                        <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
+    <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SessionRow</name><argument_list>(<argument><expr><name>address</name></expr></argument>,
+                                     <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>DEVICE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                     <argument><expr><operator>new</operator> <call><name>SessionRecord</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getBlob</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>RECORD</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SessionRow</name></argument>&gt;</argument_list></name></type> <name>getAll</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>   <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SessionRow</name></argument>&gt;</argument_list></name></type> <name>results</name>  <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <try>try <block>{
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SessionRow</name><argument_list>(<argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                     <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>DEVICE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                     <argument><expr><operator>new</operator> <call><name>SessionRecord</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getBlob</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>RECORD</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>getSubDevices</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type>  <name>results</name>  <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>DEVICE</name></expr>}</block></expr></argument>,
+                                        <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                                        <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>,
+                                        <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
+    <block>{
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>device</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>DEVICE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>device</name> <operator>!=</operator> <name><name>SignalServiceAddress</name><operator>.</operator><name>DEFAULT_DEVICE_ID</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>device</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></while>
+    }</block></try>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>delete</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>deviceId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>DEVICE</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                    <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>, <expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>deviceId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>deleteAllFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>address</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>SessionRow</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Address</name></type>       <name>address</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type>           <name>deviceId</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SessionRecord</name></type> <name>record</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>SessionRow</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>deviceId</name></decl></parameter>, <parameter><decl><type><name>SessionRecord</name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name>  <operator>=</operator> <name>address</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>deviceId</name></name> <operator>=</operator> <name>deviceId</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>record</name></name>   <operator>=</operator> <name>record</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>Address</name></type> <name>getAddress</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>address</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getDeviceId</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>deviceId</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>SessionRecord</name></type> <name>getRecord</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name>record</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\adapter\AutoStartAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>adapter</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>BaseAdapter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>fragment</name><operator>.</operator><name>AutoStartFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>model</name><operator>.</operator><name>AutoStartInfo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>ShellUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name><operator>.</operator><name>T</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AutoStartAdapter</name> <block>{
+
+ <comment type="line">//  public List&lt;AutoStartInfo&gt; mlistAppInfo;</comment>
+ <comment type="line">//  LayoutInflater infater = null;</comment>
+ <comment type="line">//  private Context mContext;</comment>
+ <comment type="line">//  public static List&lt;Integer&gt; clearIds;</comment>
+ <comment type="line">//  private Handler mHandler;</comment>
+
+ <comment type="line">//  public AutoStartAdapter(Context context, List&lt;AutoStartInfo&gt; apps, Handler mHandler) {</comment>
+ <comment type="line">//      infater = LayoutInflater.from(context);</comment>
+ <comment type="line">//      mContext = context;</comment>
+ <comment type="line">//      clearIds = new ArrayList&lt;Integer&gt;();</comment>
+ <comment type="line">//      this.mlistAppInfo = apps;</comment>
+ <comment type="line">//      this.mHandler = mHandler;</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  @Override</comment>
+ <comment type="line">//  public int getCount() {</comment>
+ <comment type="line">//      // TODO Auto-generated method stub</comment>
+ <comment type="line">//      return mlistAppInfo.size();</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  @Override</comment>
+ <comment type="line">//  public Object getItem(int position) {</comment>
+ <comment type="line">//      // TODO Auto-generated method stub</comment>
+ <comment type="line">//      return mlistAppInfo.get(position);</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  @Override</comment>
+ <comment type="line">//  public long getItemId(int position) {</comment>
+ <comment type="line">//      // TODO Auto-generated method stub</comment>
+ <comment type="line">//      return position;</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  @Override</comment>
+ <comment type="line">//  public View getView(int position, View convertView, ViewGroup parent) {</comment>
+ <comment type="line">//      ViewHolder holder = null;</comment>
+ <comment type="line">//      if (convertView == null) {</comment>
+ <comment type="line">//          convertView = infater.inflate(R.layout.listview_auto_start,</comment>
+ <comment type="line">//                  null);</comment>
+ <comment type="line">//          holder = new ViewHolder();</comment>
+ <comment type="line">//          holder.appIcon = (ImageView) convertView</comment>
+ <comment type="line">//                  .findViewById(R.id.app_icon);</comment>
+ <comment type="line">//          holder.appName = (TextView) convertView</comment>
+ <comment type="line">//                  .findViewById(R.id.app_name);</comment>
+ <comment type="line">//          holder.size = (TextView) convertView</comment>
+ <comment type="line">//                  .findViewById(R.id.app_size);</comment>
+ <comment type="line">//          holder.disable_switch = (TextView) convertView</comment>
+ <comment type="line">//                  .findViewById(R.id.disable_switch);</comment>
+
+ <comment type="line">//          convertView.setTag(holder);</comment>
+ <comment type="line">//      } else {</comment>
+ <comment type="line">//          holder = (ViewHolder) convertView.getTag();</comment>
+ <comment type="line">//      }</comment>
+ <comment type="line">//      final AutoStartInfo item = (AutoStartInfo) getItem(position);</comment>
+ <comment type="line">//      if (item != null) {</comment>
+ <comment type="line">//          holder.appIcon.setImageDrawable(item.getIcon());</comment>
+ <comment type="line">//          holder.appName.setText(item.getLabel());</comment>
+ <comment type="line">//          if (item.isEnable()) {</comment>
+ <comment type="line">//              holder.disable_switch.setBackgroundResource(R.drawable.switch_on);</comment>
+ <comment type="line">//              holder.disable_switch.setText("ÐÐºÐ°Ð·Ð°Ð»Ð¾ÑÑ");</comment>
+ <comment type="line">//          } else {</comment>
+ <comment type="line">//              holder.disable_switch.setBackgroundResource(R.drawable.switch_off);</comment>
+ <comment type="line">//              holder.disable_switch.setText("Ð­ÑÐ¾ Ð±ÑÐ»Ð¾ Ð·Ð°Ð¿ÑÐµÑÐµÐ½Ð¾");</comment>
+ <comment type="line">//          }</comment>
+ <comment type="line">//          // holder.size.setText(Formatter.formatShortFileSize(mContext, item.getCacheSize()));</comment>
+
+ <comment type="line">//          holder.disable_switch.setOnClickListener(new View.OnClickListener() {</comment>
+ <comment type="line">//              @Override</comment>
+ <comment type="line">//              public void onClick(View v) {</comment>
+
+
+ <comment type="line">//                  if (ShellUtils.checkRootPermission()) {</comment>
+
+ <comment type="line">//                      if (item.isEnable()) {</comment>
+
+
+ <comment type="line">//                          diasableApp(item);</comment>
+ <comment type="line">//                      } else {</comment>
+
+ <comment type="line">//                          enableApp(item);</comment>
+ <comment type="line">//                      }</comment>
+
+ <comment type="line">//                  } else {</comment>
+
+ <comment type="line">//                      T.showLong(mContext, "Ð­ÑÐ° ÑÑÐ½ÐºÑÐ¸Ñ Ð´Ð¾Ð»Ð¶Ð½Ð° Ð¿Ð¾Ð»ÑÑÐ¸ÑÑ ÑÐ°Ð·ÑÐµÑÐµÐ½Ð¸Ðµ ÑÐ¸ÑÑÐµÐ¼Ð½Ð¾Ð³Ð¾ ÐºÐ¾ÑÐ½Ñ, ÑÐµÐ»ÐºÐ½ÑÑÑ, ÑÑÐ¾Ð±Ñ ÑÐ°Ð·ÑÐµÑÐ¸ÑÑ Ð´Ð¾ÑÑÑÐ¿ Ðº Ð¿ÑÐ¸Ð²Ð¸Ð»ÐµÐ³Ð¸Ð¸ root");</comment>
+
+ <comment type="line">//                  }</comment>
+
+ <comment type="line">//              }</comment>
+ <comment type="line">//          });</comment>
+ <comment type="line">//          holder.packageName = item.getPackageName();</comment>
+ <comment type="line">//      }</comment>
+
+
+ <comment type="line">//      return convertView;</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  private void diasableApp(AutoStartInfo item) {</comment>
+ <comment type="line">//      String packageReceiverList[] = item.getPackageReceiver().toString().split(";");</comment>
+
+ <comment type="line">//      List&lt;String&gt; mSring = new ArrayList&lt;&gt;();</comment>
+ <comment type="line">//      for (int j = 0; j &lt; packageReceiverList.length; j++) {</comment>
+ <comment type="line">//          String cmd = "pm disable " + packageReceiverList[j];</comment>
+ <comment type="line">//          //é¨åreceiveråå«$ç¬¦å·ï¼éè¦åè¿ä¸æ­¥å¤çï¼ç¨"$"æ¿æ¢æ$</comment>
+ <comment type="line">//          cmd = cmd.replace("$", "\"" + "$" + "\"");</comment>
+ <comment type="line">//          //æ§è¡å½ä»¤</comment>
+ <comment type="line">//          mSring.add(cmd);</comment>
+
+ <comment type="line">//      }</comment>
+ <comment type="line">//      ShellUtils.CommandResult mCommandResult = ShellUtils.execCommand(mSring, true, true);</comment>
+
+ <comment type="line">//      if (mCommandResult.result == 0) {</comment>
+ <comment type="line">//          T.showLong(mContext, item.getLabel() + "Ð­ÑÐ¾ Ð±ÑÐ»Ð¾ Ð·Ð°Ð¿ÑÐµÑÐµÐ½Ð¾");</comment>
+ <comment type="line">//          item.setEnable(false);</comment>
+ <comment type="line">//          notifyDataSetChanged();</comment>
+ <comment type="line">//          if (mHandler != null) {</comment>
+ <comment type="line">//              mHandler.sendEmptyMessage(AutoStartFragment.REFRESH_BT);</comment>
+ <comment type="line">//          }</comment>
+ <comment type="line">//      } else {</comment>
+ <comment type="line">//          T.showLong(mContext, item.getLabel() + "ÐÐ°Ð¿ÑÐµÑ Ð¾ÑÐºÐ°Ð·Ð°");</comment>
+ <comment type="line">//      }</comment>
+
+ <comment type="line">//      // T.showLong(mContext, mCommandResult.result + "" + mCommandResult.errorMsg + mCommandResult.successMsg);</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  private void enableApp(AutoStartInfo item) {</comment>
+ <comment type="line">//      String packageReceiverList[] = item.getPackageReceiver().toString().split(";");</comment>
+
+ <comment type="line">//      List&lt;String&gt; mSring = new ArrayList&lt;&gt;();</comment>
+ <comment type="line">//      for (int j = 0; j &lt; packageReceiverList.length; j++) {</comment>
+ <comment type="line">//          String cmd = "pm enable " + packageReceiverList[j];</comment>
+ <comment type="line">//          //é¨åreceiveråå«$ç¬¦å·ï¼éè¦åè¿ä¸æ­¥å¤çï¼ç¨"$"æ¿æ¢æ$</comment>
+ <comment type="line">//          cmd = cmd.replace("$", "\"" + "$" + "\"");</comment>
+ <comment type="line">//          //æ§è¡å½ä»¤</comment>
+ <comment type="line">//          mSring.add(cmd);</comment>
+
+ <comment type="line">//      }</comment>
+ <comment type="line">//      ShellUtils.CommandResult mCommandResult = ShellUtils.execCommand(mSring, true, true);</comment>
+
+ <comment type="line">//      if (mCommandResult.result == 0) {</comment>
+ <comment type="line">//          T.showLong(mContext, item.getLabel() + "ÐÐºÐ°Ð·Ð°Ð»Ð¾ÑÑ");</comment>
+ <comment type="line">//          item.setEnable(true);</comment>
+ <comment type="line">//          notifyDataSetChanged();</comment>
+ <comment type="line">//          if (mHandler != null) {</comment>
+ <comment type="line">//              mHandler.sendEmptyMessage(AutoStartFragment.REFRESH_BT);</comment>
+ <comment type="line">//          }</comment>
+ <comment type="line">//      } else {</comment>
+ <comment type="line">//          T.showLong(mContext, item.getLabel() + "ÐÐµ ÑÐ´Ð°Ð»Ð¾ÑÑ Ð¾ÑÐºÑÑÑÑ");</comment>
+ <comment type="line">//      }</comment>
+ <comment type="line">//      //   T.showLong(mContext, mCommandResult.result + "" + mCommandResult.errorMsg + mCommandResult.successMsg);</comment>
+ <comment type="line">//  }</comment>
+
+ <comment type="line">//  class ViewHolder {</comment>
+ <comment type="line">//      ImageView appIcon;</comment>
+ <comment type="line">//      TextView appName;</comment>
+ <comment type="line">//      TextView size;</comment>
+ <comment type="line">//      TextView disable_switch;</comment>
+
+ <comment type="line">//      String packageName;</comment>
+ <comment type="line">//  }</comment>
+
+}</block></class>
+</unit>

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\ApplicationContext.java"><comment type="block">/*
+ * Copyright (C) 2013 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>DefaultLifecycleObserver</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>LifecycleOwner</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ProcessLifecycleOwner</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>multidex</name><operator>.</operator><name>MultiDexApplication</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>security</name><operator>.</operator><name>ProviderInstaller</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>TypingStatusRepository</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>TypingStatusSender</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>PRNGFixes</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>helpers</name><operator>.</operator><name>SQLCipherOpenHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>AxolotlStorageModule</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>SignalCommunicationModule</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>DependencyInjector</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>CreateSignedPreKeyJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>FcmRefreshJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>MultiDeviceContactUpdateJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>PushNotificationReceiveJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name><operator>.</operator><name>RefreshUnidentifiedDeliveryAbilityJob</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>AndroidLogger</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>CustomSignalProtocolLogger</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>PersistentLogger</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>UncaughtExceptionLogger</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>NotificationChannels</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>push</name><operator>.</operator><name>SignalServiceNetworkAccess</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>DirectoryRefreshListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>ExpiringMessageManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>IncomingMessageObserver</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>KeyCachingService</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>LocalBackupListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>RotateSenderCertificateListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>RotateSignedPreKeyListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>UpdateApkRefreshListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>PeerConnectionFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>PeerConnectionFactory</name><operator>.</operator><name>InitializationOptions</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>voiceengine</name><operator>.</operator><name>WebRtcAudioManager</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>webrtc</name><operator>.</operator><name>voiceengine</name><operator>.</operator><name>WebRtcAudioUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>logging</name><operator>.</operator><name>SignalProtocolLoggerProvider</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkManager</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>ObjectGraph</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Will be called once when the TextSecure process is created.
+ *
+ * We're using this as an insertion point to patch up the Android PRNG disaster,
+ * to initialize the job manager, and to check for GCM registration freshness.
+ *
+ * @author Moxie Marlinspike
+ */</comment>
+<class><specifier>public</specifier> class <name>ApplicationContext</name> <super><extends>extends <name>MultiDexApplication</name></extends> <implements>implements <name>DependencyInjector</name>, <name>DefaultLifecycleObserver</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ApplicationContext</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ExpiringMessageManager</name></type>  <name>expiringMessageManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TypingStatusRepository</name></type>  <name>typingStatusRepository</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>TypingStatusSender</name></type>      <name>typingStatusSender</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>JobManager</name></type>              <name>jobManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>IncomingMessageObserver</name></type> <name>incomingMessageObserver</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ObjectGraph</name></type>             <name>objectGraph</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>PersistentLogger</name></type>        <name>persistentLogger</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>volatile</specifier> <name>boolean</name></type> <name>isAppVisible</name></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>ApplicationContext</name></type> <name>getInstance</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>ApplicationContext</name><operator>)</operator><call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"onCreate()"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeRandomNumberFix</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeLogging</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeCrashHandling</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeDependencyInjection</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeJobManager</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeMessageRetrieval</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeExpiringMessageManager</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeTypingStatusRepository</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeTypingStatusSender</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeGcmCheck</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeSignedPreKeyCheck</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializePeriodicTasks</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeCircumvention</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeWebRtc</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializePendingMessages</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initializeUnidentifiedDeliveryAbilityRefresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>NotificationChannels</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ProcessLifecycleOwner</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getLifecycle</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addObserver</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onStart</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LifecycleOwner</name></type> <name>owner</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>isAppVisible</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"App is now visible."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>executePendingContactSync</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>KeyCachingService</name><operator>.</operator><name>onAppForegrounded</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onStop</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LifecycleOwner</name></type> <name>owner</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>isAppVisible</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"App is no longer visible."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>KeyCachingService</name><operator>.</operator><name>onAppBackgrounded</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>injectDependencies</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>object</name> <operator>instanceof</operator> <name>InjectableType</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>objectGraph</name><operator>.</operator><name>inject</name></name><argument_list>(<argument><expr><name>object</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>JobManager</name></type> <name>getJobManager</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>jobManager</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>ExpiringMessageManager</name></type> <name>getExpiringMessageManager</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>expiringMessageManager</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>TypingStatusRepository</name></type> <name>getTypingStatusRepository</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>typingStatusRepository</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>TypingStatusSender</name></type> <name>getTypingStatusSender</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>typingStatusSender</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isAppVisible</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>isAppVisible</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>PersistentLogger</name></type> <name>getPersistentLogger</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>persistentLogger</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeRandomNumberFix</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>PRNGFixes</name><operator>.</operator><name>apply</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeLogging</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name>persistentLogger</name> <operator>=</operator> <operator>new</operator> <call><name>PersistentLogger</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name><operator>.</operator><name>initialize</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AndroidLogger</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>persistentLogger</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>SignalProtocolLoggerProvider</name><operator>.</operator><name>setProvider</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>CustomSignalProtocolLogger</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeCrashHandling</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Thread</name><operator>.</operator><name>UncaughtExceptionHandler</name></name></type> <name>originalHandler</name> <init>= <expr><call><name><name>Thread</name><operator>.</operator><name>getDefaultUncaughtExceptionHandler</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>Thread</name><operator>.</operator><name>setDefaultUncaughtExceptionHandler</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>UncaughtExceptionLogger</name><argument_list>(<argument><expr><name>originalHandler</name></expr></argument>, <argument><expr><name>persistentLogger</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeJobManager</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>WorkManager</name><operator>.</operator><name>initialize</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>Configuration</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+                                                  <operator>.</operator><call><name>setMinimumLoggingLevel</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name><operator>.</operator><name>INFO</name></name></expr></argument>)</argument_list></call>
+                                                  <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>jobManager</name></name> <operator>=</operator> <operator>new</operator> <call><name>JobManager</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name><name>WorkManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>initializeMessageRetrieval</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>incomingMessageObserver</name></name> <operator>=</operator> <operator>new</operator> <call><name>IncomingMessageObserver</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeDependencyInjection</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>objectGraph</name></name> <operator>=</operator> <call><name><name>ObjectGraph</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SignalCommunicationModule</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SignalServiceNetworkAccess</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                          <argument><expr><operator>new</operator> <call><name>AxolotlStorageModule</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeGcmCheck</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPushRegistered</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>long</name></type> <name>nextSetTime</name> <init>= <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getFcmTokenLastSetTime</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>+</operator> <call><name><name>TimeUnit</name><operator>.</operator><name>HOURS</name><operator>.</operator><name>toMillis</name></name><argument_list>(<argument><expr><literal type="number">6</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getFcmToken</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name>nextSetTime</name> <operator>&lt;=</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>FcmRefreshJob</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeSignedPreKeyCheck</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isSignedPreKeyRegistered</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>CreateSignedPreKeyJob</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeExpiringMessageManager</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>expiringMessageManager</name></name> <operator>=</operator> <operator>new</operator> <call><name>ExpiringMessageManager</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeTypingStatusRepository</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>typingStatusRepository</name></name> <operator>=</operator> <operator>new</operator> <call><name>TypingStatusRepository</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeTypingStatusSender</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>typingStatusSender</name></name> <operator>=</operator> <operator>new</operator> <call><name>TypingStatusSender</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializePeriodicTasks</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>RotateSignedPreKeyListener</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DirectoryRefreshListener</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>LocalBackupListener</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>RotateSenderCertificateListener</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>BuildConfig</name><operator>.</operator><name>PLAY_STORE_DISABLED</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>UpdateApkRefreshListener</name><operator>.</operator><name>schedule</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeWebRtc</name><parameter_list>()</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>HARDWARE_AEC_BLACKLIST</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashSet</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block>{
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Pixel"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Pixel XL"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Moto G5"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Moto G (5S) Plus"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Moto G4"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"TA-1053"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Mi A1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"E5823"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// Sony z5 compact</comment>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Redmi Note 5"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>}</block></class></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>OPEN_SL_ES_WHITELIST</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashSet</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block>{
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Pixel"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><literal type="string">"Pixel XL"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>}</block></class></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>HARDWARE_AEC_BLACKLIST</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>MODEL</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>WebRtcAudioUtils</name><operator>.</operator><name>setWebRtcBasedAcousticEchoCanceler</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>OPEN_SL_ES_WHITELIST</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>MODEL</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>WebRtcAudioManager</name><operator>.</operator><name>setBlacklistDeviceForOpenSLESUsage</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name><name>PeerConnectionFactory</name><operator>.</operator><name>initialize</name></name><argument_list>(<argument><expr><call><name><name>InitializationOptions</name><operator>.</operator><name>builder</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>createInitializationOptions</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>UnsatisfiedLinkError</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>initializeCircumvention</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>task</name> <init>= <expr><operator>new</operator> <class><super><name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>, <argument><name>Void</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>protected</specifier> <type><name>Void</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>Void</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>new</operator> <call><name>SignalServiceNetworkAccess</name><argument_list>(<argument><expr><name><name>ApplicationContext</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>isCensored</name><argument_list>(<argument><expr><name><name>ApplicationContext</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <try>try <block>{
+            <expr_stmt><expr><call><name><name>ProviderInstaller</name><operator>.</operator><name>installIfNeeded</name></name><argument_list>(<argument><expr><name><name>ApplicationContext</name><operator>.</operator><name>this</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></catch></try>
+        }</block></then></if>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></function>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>task</name><operator>.</operator><name>executeOnExecutor</name></name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>executePendingContactSync</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>needsFullContactSync</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>MultiDeviceContactUpdateJob</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializePendingMessages</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getNeedsMessagePull</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Scheduling a message fetch."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>PushNotificationReceiveJob</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setNeedsMessagePull</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeUnidentifiedDeliveryAbilityRefresh</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isMultiDevice</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isUnidentifiedDeliveryEnabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>jobManager</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RefreshUnidentifiedDeliveryAbilityJob</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\scribbles\viewmodel\TextLayer.java"><comment type="block" format="javadoc">/**
+ * Copyright (c) 2016 UPTech
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>scribbles</name><operator>.</operator><name>viewmodel</name></name>;</package>
+
+<class><specifier>public</specifier> class <name>TextLayer</name> <super><extends>extends <name>Layer</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>text</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Font</name></type> <name>font</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>TextLayer</name><parameter_list>()</parameter_list> <block>{
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>reset</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>reset</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>text</name></name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>font</name></name> <operator>=</operator> <operator>new</operator> <call><name>Font</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>float</name></type> <name>getMaxScale</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>Limits</name><operator>.</operator><name>MAX_SCALE</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>float</name></type> <name>getMinScale</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>Limits</name><operator>.</operator><name>MIN_SCALE</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>float</name></type> <name>initialScale</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>Limits</name><operator>.</operator><name>INITIAL_SCALE</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getText</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>text</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setText</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>text</name></name> <operator>=</operator> <name>text</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Font</name></type> <name>getFont</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>font</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setFont</name><parameter_list>(<parameter><decl><type><name>Font</name></type> <name>font</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>font</name></name> <operator>=</operator> <name>font</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>postScale</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>scaleDiff</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>scaleDiff</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then>       <block type="pseudo"><expr_stmt><expr><call><name><name>font</name><operator>.</operator><name>increaseSize</name></name><argument_list>(<argument><expr><name>scaleDiff</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+    <elseif>else <if>if <condition>(<expr><name>scaleDiff</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then>  <block type="pseudo"><expr_stmt><expr><call><name><name>font</name><operator>.</operator><name>decreaseSize</name></name><argument_list>(<argument><expr><call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><name>scaleDiff</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if></elseif></if>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>Limits</name> <block>{
+    <comment type="block" format="javadoc">/**
+     * limit text size to view bounds
+     * so that users don't put small font size and scale it 100+ times
+     */</comment>
+    <decl_stmt><decl><type><name>float</name></type> <name>MAX_SCALE</name> <init>= <expr><literal type="number">1.0F</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>float</name></type> <name>MIN_SCALE</name> <init>= <expr><literal type="number">0.2F</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>float</name></type> <name>MIN_BITMAP_HEIGHT</name> <init>= <expr><literal type="number">0.13F</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>float</name></type> <name>FONT_SIZE_STEP</name> <init>= <expr><literal type="number">0.008F</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>float</name></type> <name>INITIAL_FONT_SIZE</name> <init>= <expr><literal type="number">0.1F</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>INITIAL_FONT_COLOR</name> <init>= <expr><literal type="number">0xff000000</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>float</name></type> <name>INITIAL_SCALE</name> <init>= <expr><literal type="number">0.8F</literal></expr></init></decl>;</decl_stmt> <comment type="line">// set the same to avoid text scaling</comment>
+  }</block></interface>
+}</block></class></unit>

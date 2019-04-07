@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\ContactIdentityManagerICS.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name><operator>.</operator><name>Contacts</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>ContactsContract</name><operator>.</operator><name>PhoneLookup</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class>class <name>ContactIdentityManagerICS</name> <super><extends>extends <name>ContactIdentityManager</name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>ContactIdentityManagerICS</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Uri</name></type> <name>getSelfIdentityUri</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>PROJECTION</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{
+        <expr><name><name>PhoneLookup</name><operator>.</operator><name>DISPLAY_NAME</name></name></expr>,
+        <expr><name><name>PhoneLookup</name><operator>.</operator><name>LOOKUP_KEY</name></name></expr>,
+        <expr><name><name>PhoneLookup</name><operator>.</operator><name>_ID</name></name></expr>,
+    }</block></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getContentResolver</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>query</name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>CONTENT_URI</name></name></expr></argument>,
+                                                    <argument><expr><name>PROJECTION</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>Contacts</name><operator>.</operator><name>getLookupUri</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>isSelfIdentityAutoDetected</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>getSelfIdentityRawContactIds</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>PROJECTION</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{
+        <expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>_ID</name></name></expr>
+    }</block></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getContentResolver</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>query</name><argument_list>(<argument><expr><name><name>ContactsContract</name><operator>.</operator><name>Profile</name><operator>.</operator><name>CONTENT_RAW_CONTACTS_URI</name></name></expr></argument>,
+                                                  <argument><expr><name>PROJECTION</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>cursor</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then>
+        <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+      <while>while <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+
+      <return>return <expr><name>results</name></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+}</block></class>
+</unit>

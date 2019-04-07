@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\AttachmentDatabase.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>media</name><operator>.</operator><name>MediaMetadataRetriever</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>VisibleForTesting</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>Glide</name></name>;</import>
+
+<import>import <name><name>net</name><operator>.</operator><name>sqlcipher</name><operator>.</operator><name>database</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONArray</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>Attachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>AttachmentId</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>DatabaseAttachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>AttachmentSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ClassicDecryptingPartInputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ModernDecryptingPartInputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>ModernEncryptingPartOutputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>helpers</name><operator>.</operator><name>SQLCipherOpenHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MediaStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>MmsException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartAuthority</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapDecodingException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>BitmapUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>JsonUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name><operator>.</operator><name>ThumbnailData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>StorageUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>video</name><operator>.</operator><name>EncryptedMediaDataSource</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileNotFoundException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>OutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Callable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutorService</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AttachmentDatabase</name> <super><extends>extends <name>Database</name></extends></super> <block>{
+  
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AttachmentDatabase</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TABLE_NAME</name>             <init>= <expr><literal type="string">"part"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ROW_ID</name>                 <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ATTACHMENT_JSON_ALIAS</name>  <init>= <expr><literal type="string">"attachment_json"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MMS_ID</name>                 <init>= <expr><literal type="string">"mid"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CONTENT_TYPE</name>           <init>= <expr><literal type="string">"ct"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NAME</name>                   <init>= <expr><literal type="string">"name"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CONTENT_DISPOSITION</name>    <init>= <expr><literal type="string">"cd"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CONTENT_LOCATION</name>       <init>= <expr><literal type="string">"cl"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DATA</name>                   <init>= <expr><literal type="string">"_data"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TRANSFER_STATE</name>         <init>= <expr><literal type="string">"pending_push"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SIZE</name>                   <init>= <expr><literal type="string">"data_size"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>FILE_NAME</name>              <init>= <expr><literal type="string">"file_name"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>THUMBNAIL</name>              <init>= <expr><literal type="string">"thumbnail"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>THUMBNAIL_ASPECT_RATIO</name> <init>= <expr><literal type="string">"aspect_ratio"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNIQUE_ID</name>              <init>= <expr><literal type="string">"unique_id"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DIGEST</name>                 <init>= <expr><literal type="string">"digest"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>VOICE_NOTE</name>             <init>= <expr><literal type="string">"voice_note"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>QUOTE</name>                  <init>= <expr><literal type="string">"quote"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>FAST_PREFLIGHT_ID</name>      <init>= <expr><literal type="string">"fast_preflight_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DATA_RANDOM</name>            <init>= <expr><literal type="string">"data_random"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>THUMBNAIL_RANDOM</name>       <init>= <expr><literal type="string">"thumbnail_random"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>WIDTH</name>                  <init>= <expr><literal type="string">"width"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>HEIGHT</name>                 <init>= <expr><literal type="string">"height"</literal></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CAPTION</name>                <init>= <expr><literal type="string">"caption"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DIRECTORY</name>              <init>= <expr><literal type="string">"parts"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TRANSFER_PROGRESS_DONE</name>    <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TRANSFER_PROGRESS_STARTED</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TRANSFER_PROGRESS_PENDING</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>TRANSFER_PROGRESS_FAILED</name>  <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PART_ID_WHERE</name> <init>= <expr><name>ROW_ID</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>UNIQUE_ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>PROJECTION</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>ROW_ID</name></expr>,
+                                                           <expr><name>MMS_ID</name></expr>, <expr><name>CONTENT_TYPE</name></expr>, <expr><name>NAME</name></expr>, <expr><name>CONTENT_DISPOSITION</name></expr>,
+                                                           <expr><name>CONTENT_LOCATION</name></expr>, <expr><name>DATA</name></expr>, <expr><name>THUMBNAIL</name></expr>, <expr><name>TRANSFER_STATE</name></expr>,
+                                                           <expr><name>SIZE</name></expr>, <expr><name>FILE_NAME</name></expr>, <expr><name>THUMBNAIL</name></expr>, <expr><name>THUMBNAIL_ASPECT_RATIO</name></expr>,
+                                                           <expr><name>UNIQUE_ID</name></expr>, <expr><name>DIGEST</name></expr>, <expr><name>FAST_PREFLIGHT_ID</name></expr>, <expr><name>VOICE_NOTE</name></expr>,
+                                                           <expr><name>QUOTE</name></expr>, <expr><name>DATA_RANDOM</name></expr>, <expr><name>THUMBNAIL_RANDOM</name></expr>, <expr><name>WIDTH</name></expr>, <expr><name>HEIGHT</name></expr>,
+                                                           <expr><name>CAPTION</name></expr> }</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CREATE_TABLE</name> <init>= <expr><literal type="string">"CREATE TABLE "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>ROW_ID</name> <operator>+</operator> <literal type="string">" INTEGER PRIMARY KEY, "</literal> <operator>+</operator>
+    <name>MMS_ID</name> <operator>+</operator> <literal type="string">" INTEGER, "</literal> <operator>+</operator> <literal type="string">"seq"</literal> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal>                        <operator>+</operator>
+    <name>CONTENT_TYPE</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <name>NAME</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <literal type="string">"chset"</literal> <operator>+</operator> <literal type="string">" INTEGER, "</literal>             <operator>+</operator>
+    <name>CONTENT_DISPOSITION</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <literal type="string">"fn"</literal> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <literal type="string">"cid"</literal> <operator>+</operator> <literal type="string">" TEXT, "</literal>  <operator>+</operator>
+    <name>CONTENT_LOCATION</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <literal type="string">"ctt_s"</literal> <operator>+</operator> <literal type="string">" INTEGER, "</literal>                 <operator>+</operator>
+    <literal type="string">"ctt_t"</literal> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <literal type="string">"encrypted"</literal> <operator>+</operator> <literal type="string">" INTEGER, "</literal>                         <operator>+</operator>
+    <name>TRANSFER_STATE</name> <operator>+</operator> <literal type="string">" INTEGER, "</literal><operator>+</operator> <name>DATA</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <name>SIZE</name> <operator>+</operator> <literal type="string">" INTEGER, "</literal>   <operator>+</operator>
+    <name>FILE_NAME</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <name>THUMBNAIL</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <name>THUMBNAIL_ASPECT_RATIO</name> <operator>+</operator> <literal type="string">" REAL, "</literal> <operator>+</operator>
+    <name>UNIQUE_ID</name> <operator>+</operator> <literal type="string">" INTEGER NOT NULL, "</literal> <operator>+</operator> <name>DIGEST</name> <operator>+</operator> <literal type="string">" BLOB, "</literal> <operator>+</operator> <name>FAST_PREFLIGHT_ID</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator>
+    <name>VOICE_NOTE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>DATA_RANDOM</name> <operator>+</operator> <literal type="string">" BLOB, "</literal> <operator>+</operator> <name>THUMBNAIL_RANDOM</name> <operator>+</operator> <literal type="string">" BLOB, "</literal> <operator>+</operator>
+    <name>QUOTE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>WIDTH</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>HEIGHT</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator>
+    <name>CAPTION</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL);"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>CREATE_INDEXS</name> <init>= <expr><block>{
+    <expr><literal type="string">"CREATE INDEX IF NOT EXISTS part_mms_id_index ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>MMS_ID</name> <operator>+</operator> <literal type="string">");"</literal></expr>,
+    <expr><literal type="string">"CREATE INDEX IF NOT EXISTS pending_push_index ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>TRANSFER_STATE</name> <operator>+</operator> <literal type="string">");"</literal></expr>,
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ExecutorService</name></type> <name>thumbnailExecutor</name> <init>= <expr><call><name><name>Util</name><operator>.</operator><name>newSingleThreadedLifoExecutor</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AttachmentSecret</name></type> <name>attachmentSecret</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AttachmentDatabase</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>SQLCipherOpenHelper</name></type> <name>databaseHelper</name></decl></parameter>, <parameter><decl><type><name>AttachmentSecret</name></type> <name>attachmentSecret</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>databaseHelper</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachmentSecret</name></name> <operator>=</operator> <name>attachmentSecret</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>InputStream</name></type> <name>getAttachmentStream</name><parameter_list>(<parameter><decl><type><name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>offset</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>InputStream</name></type> <name>dataStream</name> <init>= <expr><call><name>getDataStream</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><name>DATA</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>dataStream</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"No stream for: "</literal> <operator>+</operator> <name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</throw></block></then>
+    <else>else                    <block type="pseudo"><return>return <expr><name>dataStream</name></expr>;</return></block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>InputStream</name></type> <name>getThumbnailStream</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"getThumbnailStream("</literal> <operator>+</operator> <name>attachmentId</name> <operator>+</operator> <literal type="string">")"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>InputStream</name></type> <name>dataStream</name> <init>= <expr><call><name>getDataStream</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><name>THUMBNAIL</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>dataStream</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name>dataStream</name></expr>;</return>
+    }</block></then></if>
+
+    <try>try <block>{
+      <decl_stmt><decl><type><name>InputStream</name></type> <name>generatedStream</name> <init>= <expr><call><name><name>thumbnailExecutor</name><operator>.</operator><name>submit</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ThumbnailFetchCallable</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>get</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>generatedStream</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>FileNotFoundException</name><argument_list>(<argument><expr><literal type="string">"No thumbnail stream available: "</literal> <operator>+</operator> <name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</throw></block></then>
+      <else>else                         <block type="pseudo"><return>return <expr><name>generatedStream</name></expr>;</return></block></else></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InterruptedException</name></type> <name>ie</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"interrupted"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>ExecutionException</name></type> <name>ee</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>ee</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>ee</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTransferProgressFailed</name><parameter_list>(<parameter><decl><type><name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>values</name>   <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>, <argument><expr><name>TRANSFER_PROGRESS_FAILED</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdForMessage</name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>DatabaseAttachment</name></type> <name>getAttachment</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>           <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>PROJECTION</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>list</name> <init>= <expr><call><name>getAttachment</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>list</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>list</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+          <return>return <expr><call><name><name>list</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></then></if>
+      }</block></then></if>
+
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>getAttachmentsForMessage</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>           <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>results</name>  <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>                   <name>cursor</name>   <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>PROJECTION</name></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>mmsId</name><operator>+</operator><literal type="string">""</literal></expr>}</block></expr></argument>,
+                              <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><call><name>getAttachment</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+
+      <return>return <expr><name>results</name></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>getPendingAttachments</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SQLiteDatabase</name></type>           <name>database</name>    <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>attachments</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>PROJECTION</name></expr></argument>, <argument><expr><name>TRANSFER_STATE</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>TRANSFER_PROGRESS_STARTED</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name><name>attachments</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><call><name>getAttachment</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+    <return>return <expr><name>attachments</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"ResultOfMethodCallIgnored"</literal></expr></argument>)</argument_list></annotation>
+  <type><name>void</name></type> <name>deleteAttachmentsForMessage</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>           <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>DATA</name></expr>, <expr><name>THUMBNAIL</name></expr>, <expr><name>CONTENT_TYPE</name></expr>}</block></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                              <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>mmsId</name><operator>+</operator><literal type="string">""</literal></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <expr_stmt><expr><call><name>deleteAttachmentOnDisk</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>MMS_ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>mmsId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyAttachmentListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>deleteAttachment</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>,
+                                        <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>DATA</name></expr>, <expr><name>THUMBNAIL</name></expr>, <expr><name>CONTENT_TYPE</name></expr>}</block></expr></argument>,
+                                        <argument><expr><name>PART_ID_WHERE</name></expr></argument>,
+                                        <argument><expr><call><name><name>id</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                        <argument><expr><literal type="null">null</literal></expr></argument>,
+                                        <argument><expr><literal type="null">null</literal></expr></argument>,
+                                        <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
+    <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Tried to delete an attachment, but it didn't exist."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return;</return>
+      }</block></then></if>
+      <decl_stmt><decl><type><name>String</name></type> <name>data</name>        <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>thumbnail</name>   <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type> <name>contentType</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>id</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>deleteAttachmentOnDisk</name><argument_list>(<argument><expr><name>data</name></expr></argument>, <argument><expr><name>thumbnail</name></expr></argument>, <argument><expr><name>contentType</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyAttachmentListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></try>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"ResultOfMethodCallIgnored"</literal></expr></argument>)</argument_list></annotation>
+  <type><name>void</name></type> <name>deleteAllAttachments</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>File</name></type>   <name>attachmentsDirectory</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getDir</name></name><argument_list>(<argument><expr><name>DIRECTORY</name></expr></argument>, <argument><expr><name><name>Context</name><operator>.</operator><name>MODE_PRIVATE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>File</name><index>[]</index></name></type> <name>attachments</name>          <init>= <expr><call><name><name>attachmentsDirectory</name><operator>.</operator><name>listFiles</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>File</name></type> <name>attachment</name> <range>: <expr><name>attachments</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>attachment</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <expr_stmt><expr><call><name>notifyAttachmentListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"ResultOfMethodCallIgnored"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>void</name></type> <name>deleteAttachmentOnDisk</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>data</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>thumbnail</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>contentType</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>delete</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>thumbnail</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><name>thumbnail</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>delete</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>MediaUtil</name><operator>.</operator><name>isImageType</name></name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call> <operator>||</operator> <name>thumbnail</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Glide</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>clearDiskCache</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>insertAttachmentsForPlaceholder</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>InputStream</name></type> <name>inputStream</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>DatabaseAttachment</name></type> <name>placeholder</name> <init>= <expr><call><name>getAttachment</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>     <name>database</name>    <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>      <name>values</name>      <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>DataInfo</name></type>           <name>dataInfo</name>    <init>= <expr><call><name>setAttachmentData</name><argument_list>(<argument><expr><name>inputStream</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>placeholder</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>placeholder</name><operator>.</operator><name>isQuote</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>placeholder</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>startsWith</name><argument_list>(<argument><expr><literal type="string">"image"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>THUMBNAIL</name></expr></argument>, <argument><expr><call><name><name>dataInfo</name><operator>.</operator><name>file</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>THUMBNAIL_RANDOM</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATA</name></expr></argument>, <argument><expr><call><name><name>dataInfo</name><operator>.</operator><name>file</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATA_RANDOM</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>, <argument><expr><name>TRANSFER_PROGRESS_DONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_LOCATION</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_DISPOSITION</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DIGEST</name></expr></argument>, <argument><expr><operator>(</operator><name><name>byte</name><index>[]</index></name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>NAME</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>FAST_PREFLIGHT_ID</name></expr></argument>, <argument><expr><operator>(</operator><name>String</name><operator>)</operator><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <comment type="line">//noinspection ResultOfMethodCallIgnored</comment>
+      <expr_stmt><expr><call><name><name>dataInfo</name><operator>.</operator><name>file</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdForMessage</name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>thumbnailExecutor</name><operator>.</operator><name>submit</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ThumbnailFetchCallable</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>updateAttachmentAfterUpload</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Attachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>values</name>   <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>, <argument><expr><name>TRANSFER_PROGRESS_DONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_LOCATION</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getLocation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DIGEST</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDigest</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_DISPOSITION</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>NAME</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getRelay</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>FAST_PREFLIGHT_ID</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getFastPreflightId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>id</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>, <argument><name>AttachmentId</name></argument>&gt;</argument_list></name></type> <name>insertAttachmentsForMessage</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>attachments</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>&gt;</argument_list></name></type> <name>quoteAttachment</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"insertParts("</literal> <operator>+</operator> <call><name><name>attachments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">")"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>Attachment</name></argument>, <argument><name>AttachmentId</name></argument>&gt;</argument_list></name></type> <name>insertedAttachments</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>Attachment</name></type> <name>attachment</name> <range>: <expr><name>attachments</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>AttachmentId</name></type> <name>attachmentId</name> <init>= <expr><call><name>insertAttachment</name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>isQuote</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>insertedAttachments</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>, <argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Inserted attachment at ID: "</literal> <operator>+</operator> <name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <for>for <control>(<init><decl><type><name>Attachment</name></type> <name>attachment</name> <range>: <expr><name>quoteAttachment</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>AttachmentId</name></type> <name>attachmentId</name> <init>= <expr><call><name>insertAttachment</name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>insertedAttachments</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>, <argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Inserted quoted attachment at ID: "</literal> <operator>+</operator> <name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>insertedAttachments</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Attachment</name></type> <name>updateAttachmentData</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Attachment</name></type> <name>attachment</name></decl></parameter>,
+                                                  <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MediaStream</name></type> <name>mediaStream</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>     <name>database</name>           <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>DatabaseAttachment</name></type> <name>databaseAttachment</name> <init>= <expr><operator>(</operator><name>DatabaseAttachment</name><operator>)</operator> <name>attachment</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>DataInfo</name></type>           <name>dataInfo</name>           <init>= <expr><call><name>getAttachmentDataFileInfo</name><argument_list>(<argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>DATA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>dataInfo</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>MmsException</name><argument_list>(<argument><expr><literal type="string">"No attachment data found!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <expr_stmt><expr><name>dataInfo</name> <operator>=</operator> <call><name>setAttachmentData</name><argument_list>(<argument><expr><name><name>dataInfo</name><operator>.</operator><name>file</name></name></expr></argument>, <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getStream</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_TYPE</name></expr></argument>, <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getMimeType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>WIDTH</name></expr></argument>, <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>HEIGHT</name></expr></argument>, <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATA_RANDOM</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toStrings</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><operator>new</operator> <call><name>DatabaseAttachment</name><argument_list>(<argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getMmsId</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>hasData</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>hasThumbnail</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getMimeType</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getTransferState</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><name><name>dataInfo</name><operator>.</operator><name>length</name></name></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getFileName</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getLocation</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getRelay</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getDigest</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getFastPreflightId</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>isVoiceNote</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>mediaStream</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>isQuote</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                  <argument><expr><call><name><name>databaseAttachment</name><operator>.</operator><name>getCaption</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>updateAttachmentFileName</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>,
+                                       <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>fileName</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>FILE_NAME</name></expr></argument>, <argument><expr><call><name><name>StorageUtil</name><operator>.</operator><name>getCleanFileName</name></name><argument_list>(<argument><expr><name>fileName</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>markAttachmentUploaded</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>Attachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>values</name>   <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>, <argument><expr><name>TRANSFER_PROGRESS_DONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><operator>(</operator><operator>(</operator><name>DatabaseAttachment</name><operator>)</operator><name>attachment</name><operator>)</operator><operator>.</operator><call><name>getAttachmentId</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toStrings</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdForMessage</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTransferState</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Attachment</name></type> <name>attachment</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>transferState</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><operator>(</operator><name>attachment</name> <operator>instanceof</operator> <name>DatabaseAttachment</name><operator>)</operator></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"Attempt to update attachment that doesn't belong to DB!"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>setTransferState</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><operator>(</operator><operator>(</operator><name>DatabaseAttachment</name><operator>)</operator> <name>attachment</name><operator>)</operator><operator>.</operator><call><name>getAttachmentId</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>transferState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTransferState</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>transferState</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>ContentValues</name></type>  <name>values</name>   <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>, <argument><expr><name>transferState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdForMessage</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"WeakerAccess"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>VisibleForTesting</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>InputStream</name></type> <name>getDataStream</name><parameter_list>(<parameter><decl><type><name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>dataType</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>offset</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>DataInfo</name></type> <name>dataInfo</name> <init>= <expr><call><name>getAttachmentDataFileInfo</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><name>dataType</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>dataInfo</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <try>try <block>{
+      <if>if <condition>(<expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name><name>dataInfo</name><operator>.</operator><name>random</name><operator>.</operator><name>length</name></name> <operator>==</operator> <literal type="number">32</literal></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>ModernDecryptingPartInputStream</name><operator>.</operator><name>createFor</name></name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>file</name></name></expr></argument>, <argument><expr><name>offset</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <decl_stmt><decl><type><name>InputStream</name></type> <name>stream</name>  <init>= <expr><call><name><name>ClassicDecryptingPartInputStream</name><operator>.</operator><name>createFor</name></name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>file</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>long</name></type>        <name>skipped</name> <init>= <expr><call><name><name>stream</name><operator>.</operator><name>skip</name></name><argument_list>(<argument><expr><name>offset</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>skipped</name> <operator>!=</operator> <name>offset</name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Skip failed: "</literal> <operator>+</operator> <name>skipped</name> <operator>+</operator> <literal type="string">" vs "</literal> <operator>+</operator> <name>offset</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <return>return <expr><name>stream</name></expr>;</return>
+      }</block></else></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>DataInfo</name></type> <name>getAttachmentDataFileInfo</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>dataType</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name>   <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>String</name></type> <name>randomColumn</name></decl>;</decl_stmt>
+
+    <switch>switch <condition>(<expr><name>dataType</name></expr>)</condition> <block>{
+      <case>case <expr><name>DATA</name></expr>:</case>      <expr_stmt><expr><name>randomColumn</name> <operator>=</operator> <name>DATA_RANDOM</name></expr>;</expr_stmt>      <break>break;</break>
+      <case>case <expr><name>THUMBNAIL</name></expr>:</case> <expr_stmt><expr><name>randomColumn</name> <operator>=</operator> <name>THUMBNAIL_RANDOM</name></expr>;</expr_stmt> <break>break;</break>
+      <default>default:</default><throw>throw   <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><literal type="string">"Unknown data type: "</literal> <operator>+</operator> <name>dataType</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></switch>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>dataType</name></expr>, <expr><name>SIZE</name></expr>, <expr><name>randomColumn</name></expr>}</block></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>,
+                              <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>isNull</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <return>return <expr><operator>new</operator> <call><name>DataInfo</name><argument_list>(<argument><expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                            <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>,
+                            <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getBlob</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></else></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DataInfo</name></type> <name>setAttachmentData</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>InputStream</name></type> <name>inputStream</name> <init>= <expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>uri</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name>setAttachmentData</name><argument_list>(<argument><expr><name>inputStream</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>MmsException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DataInfo</name></type> <name>setAttachmentData</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>InputStream</name></type> <name>in</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>File</name></type> <name>partsDirectory</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getDir</name></name><argument_list>(<argument><expr><name>DIRECTORY</name></expr></argument>, <argument><expr><name><name>Context</name><operator>.</operator><name>MODE_PRIVATE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>File</name></type> <name>dataFile</name>       <init>= <expr><call><name><name>File</name><operator>.</operator><name>createTempFile</name></name><argument_list>(<argument><expr><literal type="string">"part"</literal></expr></argument>, <argument><expr><literal type="string">".mms"</literal></expr></argument>, <argument><expr><name>partsDirectory</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name>setAttachmentData</name><argument_list>(<argument><expr><name>dataFile</name></expr></argument>, <argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>MmsException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DataInfo</name></type> <name>setAttachmentData</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>File</name></type> <name>destination</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>InputStream</name></type> <name>in</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name><name>byte</name><index>[]</index></name></argument>, <argument><name>OutputStream</name></argument>&gt;</argument_list></name></type> <name>out</name>    <init>= <expr><call><name><name>ModernEncryptingPartOutputStream</name><operator>.</operator><name>createFor</name></name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name>destination</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>                       <name>length</name> <init>= <expr><call><name><name>Util</name><operator>.</operator><name>copy</name></name><argument_list>(<argument><expr><name>in</name></expr></argument>, <argument><expr><name><name>out</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><operator>new</operator> <call><name>DataInfo</name><argument_list>(<argument><expr><name>destination</name></expr></argument>, <argument><expr><name>length</name></expr></argument>, <argument><expr><name><name>out</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>MmsException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>getAttachment</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <if>if <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndex</name></name><argument_list>(<argument><expr><name><name>AttachmentDatabase</name><operator>.</operator><name>ATTACHMENT_JSON_ALIAS</name></name></expr></argument>)</argument_list></call> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>isNull</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ATTACHMENT_JSON_ALIAS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <return>return <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>DatabaseAttachment</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>JSONArray</name></type>                <name>array</name>  <init>= <expr><operator>new</operator> <call><name>JSONArray</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ATTACHMENT_JSON_ALIAS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><call><name><name>array</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+          <decl_stmt><decl><type><name><name>JsonUtils</name><operator>.</operator><name>SaneJSONObject</name></name></type> <name>object</name> <init>= <expr><operator>new</operator> <call><name><name>JsonUtils</name><operator>.</operator><name>SaneJSONObject</name></name><argument_list>(<argument><expr><call><name><name>array</name><operator>.</operator><name>getJSONObject</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <if>if <condition>(<expr><operator>!</operator><call><name><name>object</name><operator>.</operator><name>isNull</name></name><argument_list>(<argument><expr><name>ROW_ID</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DatabaseAttachment</name><argument_list>(<argument><expr><operator>new</operator> <call><name>AttachmentId</name><argument_list>(<argument><expr><call><name><name>object</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>ROW_ID</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>object</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>UNIQUE_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>MMS_ID</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>DATA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>THUMBNAIL</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>CONTENT_TYPE</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>FILE_NAME</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>CONTENT_LOCATION</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>CONTENT_DISPOSITION</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>NAME</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><literal type="null">null</literal></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>FAST_PREFLIGHT_ID</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>VOICE_NOTE</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>WIDTH</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>HEIGHT</name></expr></argument>)</argument_list></call></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>QUOTE</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>,
+                                              <argument><expr><call><name><name>object</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>CAPTION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></then></if>
+        }</block></for>
+
+        <return>return <expr><name>result</name></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DatabaseAttachment</name><argument_list>(<argument><expr><operator>new</operator> <call><name>AttachmentId</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ROW_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                                 <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>UNIQUE_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>MMS_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>isNull</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>DATA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>isNull</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>THUMBNAIL</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>CONTENT_TYPE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>FILE_NAME</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>CONTENT_LOCATION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>CONTENT_DISPOSITION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>NAME</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getBlob</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>DIGEST</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>FAST_PREFLIGHT_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>VOICE_NOTE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>WIDTH</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>HEIGHT</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>QUOTE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>,
+                                                                <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>CAPTION</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>JSONException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+
+  <function><specifier>private</specifier> <type><name>AttachmentId</name></type> <name>insertAttachment</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>mmsId</name></decl></parameter>, <parameter><decl><type><name>Attachment</name></type> <name>attachment</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>quote</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Inserting attachment for mms id: "</literal> <operator>+</operator> <name>mmsId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>DataInfo</name></type>       <name>dataInfo</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>           <name>uniqueId</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>dataInfo</name> <operator>=</operator> <call><name>setAttachmentData</name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Wrote part to file: "</literal> <operator>+</operator> <call><name><name>dataInfo</name><operator>.</operator><name>file</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>MMS_ID</name></expr></argument>, <argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_TYPE</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TRANSFER_STATE</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getTransferState</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>UNIQUE_ID</name></expr></argument>, <argument><expr><name>uniqueId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_LOCATION</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getLocation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DIGEST</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDigest</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CONTENT_DISPOSITION</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>NAME</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getRelay</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>FILE_NAME</name></expr></argument>, <argument><expr><call><name><name>StorageUtil</name><operator>.</operator><name>getCleanFileName</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getFileName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>FAST_PREFLIGHT_ID</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getFastPreflightId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>VOICE_NOTE</name></expr></argument>, <argument><expr><ternary><condition><expr><call><name><name>attachment</name><operator>.</operator><name>isVoiceNote</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>WIDTH</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>HEIGHT</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>QUOTE</name></expr></argument>, <argument><expr><name>quote</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>CAPTION</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getCaption</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>dataInfo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATA</name></expr></argument>, <argument><expr><call><name><name>dataInfo</name><operator>.</operator><name>file</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SIZE</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATA_RANDOM</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>long</name></type>         <name>rowId</name>        <init>= <expr><call><name><name>database</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>AttachmentId</name></type> <name>attachmentId</name> <init>= <expr><operator>new</operator> <call><name>AttachmentId</name><argument_list>(<argument><expr><name>rowId</name></expr></argument>, <argument><expr><name>uniqueId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Uri</name></type>          <name>thumbnailUri</name> <init>= <expr><call><name><name>attachment</name><operator>.</operator><name>getThumbnailUri</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type>      <name>hasThumbnail</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>thumbnailUri</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <try>try <init>(<decl><type><name>InputStream</name></type> <name>attachmentStream</name> <init>= <expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>thumbnailUri</name></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+        <decl_stmt><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>dimens</name> <init>= <expr><call><name><name>BitmapUtil</name><operator>.</operator><name>getDimensions</name></name><argument_list>(<argument><expr><name>attachmentStream</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateAttachmentThumbnail</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>,
+                                  <argument><expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentStream</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>thumbnailUri</name></expr></argument>)</argument_list></call></expr></argument>,
+                                  <argument><expr><operator>(</operator><name>float</name><operator>)</operator> <name><name>dimens</name><operator>.</operator><name>first</name></name> <operator>/</operator> <operator>(</operator><name>float</name><operator>)</operator> <name><name>dimens</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>hasThumbnail</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+      }</block></try> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> | <type><name>BitmapDecodingException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Failed to save existing thumbnail."</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><operator>!</operator><name>hasThumbnail</name> <operator>&amp;&amp;</operator> <name>dataInfo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name><name>MediaUtil</name><operator>.</operator><name>hasVideoThumbnail</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name><name>MediaUtil</name><operator>.</operator><name>getVideoThumbnail</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>attachment</name><operator>.</operator><name>getDataUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>bitmap</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name>ThumbnailData</name></type> <name>thumbnailData</name> <init>= <expr><operator>new</operator> <call><name>ThumbnailData</name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <expr_stmt><expr><call><name>updateAttachmentThumbnail</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><call><name><name>thumbnailData</name><operator>.</operator><name>toDataStream</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>thumbnailData</name><operator>.</operator><name>getAspectRatio</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Retrieving video thumbnail failed, submitting thumbnail generation job..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>thumbnailExecutor</name><operator>.</operator><name>submit</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ThumbnailFetchCallable</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Submitting thumbnail generation job..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>thumbnailExecutor</name><operator>.</operator><name>submit</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ThumbnailFetchCallable</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></then></if>
+
+    <return>return <expr><name>attachmentId</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"WeakerAccess"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>VisibleForTesting</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>updateAttachmentThumbnail</name><parameter_list>(<parameter><decl><type><name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>, <parameter><decl><type><name>InputStream</name></type> <name>in</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>aspectRatio</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>MmsException</name></expr></argument></throws>
+  <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"updating part thumbnail for #"</literal> <operator>+</operator> <name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>DataInfo</name></type> <name>thumbnailFile</name> <init>= <expr><call><name>setAttachmentData</name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>database</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>values</name>   <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>THUMBNAIL</name></expr></argument>, <argument><expr><call><name><name>thumbnailFile</name><operator>.</operator><name>file</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>THUMBNAIL_ASPECT_RATIO</name></expr></argument>, <argument><expr><name>aspectRatio</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>THUMBNAIL_RANDOM</name></expr></argument>, <argument><expr><name><name>thumbnailFile</name><operator>.</operator><name>random</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>values</name></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><call><name><name>database</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>MMS_ID</name></expr>}</block></expr></argument>, <argument><expr><name>PART_ID_WHERE</name></expr></argument>, <argument><expr><call><name><name>attachmentId</name><operator>.</operator><name>toStrings</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getThreadIdForMessage</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>MMS_ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+
+  <class><annotation>@<name>VisibleForTesting</name></annotation>
+  class <name>ThumbnailFetchCallable</name> <super><implements>implements <name><name>Callable</name><argument_list type="generic">&lt;<argument><name>InputStream</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AttachmentId</name></type> <name>attachmentId</name></decl>;</decl_stmt>
+
+    <constructor><name>ThumbnailFetchCallable</name><parameter_list>(<parameter><decl><type><name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>attachmentId</name></name> <operator>=</operator> <name>attachmentId</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>InputStream</name></type> <name>call</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Executing thumbnail job..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>InputStream</name></type> <name>stream</name> <init>= <expr><call><name>getDataStream</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><name>THUMBNAIL</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>stream</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <return>return <expr><name>stream</name></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>DatabaseAttachment</name></type> <name>attachment</name> <init>= <expr><call><name>getAttachment</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>attachment</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>attachment</name><operator>.</operator><name>hasData</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>ThumbnailData</name></type> <name>data</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>MediaUtil</name><operator>.</operator><name>isVideoType</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>data</name> <operator>=</operator> <call><name>generateVideoThumbnail</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr><name>data</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name>updateAttachmentThumbnail</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>toDataStream</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>getAspectRatio</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><call><name>getDataStream</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><name>THUMBNAIL</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"NewApi"</literal></expr></argument>)</argument_list></annotation>
+    <specifier>private</specifier> <type><name>ThumbnailData</name></type> <name>generateVideoThumbnail</name><parameter_list>(<parameter><decl><type><name>AttachmentId</name></type> <name>attachmentId</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>M</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Video thumbnails not supported..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>DataInfo</name></type> <name>dataInfo</name> <init>= <expr><call><name>getAttachmentDataFileInfo</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>, <argument><expr><name>DATA</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>dataInfo</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"No data file found for video thumbnail..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name>EncryptedMediaDataSource</name></type> <name>dataSource</name> <init>= <expr><operator>new</operator> <call><name>EncryptedMediaDataSource</name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>file</name></name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>random</name></name></expr></argument>, <argument><expr><name><name>dataInfo</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>MediaMetadataRetriever</name></type>   <name>retriever</name>  <init>= <expr><operator>new</operator> <call><name>MediaMetadataRetriever</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>retriever</name><operator>.</operator><name>setDataSource</name></name><argument_list>(<argument><expr><name>dataSource</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name><name>retriever</name><operator>.</operator><name>getFrameAtTime</name></name><argument_list>(<argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Generated video thumbnail..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><operator>new</operator> <call><name>ThumbnailData</name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>DataInfo</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>File</name></type>   <name>file</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>long</name></type>   <name>length</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>random</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>DataInfo</name><parameter_list>(<parameter><decl><type><name>File</name></type> <name>file</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>length</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>random</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>file</name></name> <operator>=</operator> <name>file</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>length</name></name> <operator>=</operator> <name>length</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>random</name></name> <operator>=</operator> <name>random</name></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+}</block></class>
+</unit>

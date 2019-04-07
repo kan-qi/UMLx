@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\emoji\EmojiProvider.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>ColorFilter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PixelFormat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Rect</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION_CODES</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spannable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>SpannableStringBuilder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>parsing</name><operator>.</operator><name>EmojiDrawInfo</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>parsing</name><operator>.</operator><name>EmojiPageBitmap</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>parsing</name><operator>.</operator><name>EmojiParser</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>emoji</name><operator>.</operator><name>parsing</name><operator>.</operator><name>EmojiTree</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>FutureTaskListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+
+<class>class <name>EmojiProvider</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier>    <name>String</name></type>        <name>TAG</name>      <init>= <expr><call><name><name>EmojiProvider</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>volatile</specifier> <name>EmojiProvider</name></type> <name>instance</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier>    <name>Paint</name></type>         <name>paint</name>    <init>= <expr><operator>new</operator> <call><name>Paint</name><argument_list>(<argument><expr><name><name>Paint</name><operator>.</operator><name>FILTER_BITMAP_FLAG</name></name> <operator>|</operator> <name><name>Paint</name><operator>.</operator><name>ANTI_ALIAS_FLAG</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>EmojiTree</name></type> <name>emojiTree</name> <init>= <expr><operator>new</operator> <call><name>EmojiTree</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EMOJI_RAW_HEIGHT</name> <init>= <expr><literal type="number">64</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EMOJI_RAW_WIDTH</name>  <init>= <expr><literal type="number">64</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EMOJI_VERT_PAD</name>   <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EMOJI_PER_ROW</name>    <init>= <expr><literal type="number">32</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>decodeScale</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>verticalPad</name></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>EmojiProvider</name></type> <name>getInstance</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>instance</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <synchronized>synchronized <init>(<expr><name><name>EmojiProvider</name><operator>.</operator><name>class</name></name></expr>)</init> <block>{
+        <if>if <condition>(<expr><name>instance</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name>instance</name> <operator>=</operator> <operator>new</operator> <call><name>EmojiProvider</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></synchronized>
+    }</block></then></if>
+    <return>return <expr><name>instance</name></expr>;</return>
+  }</block></function>
+
+  <constructor><specifier>private</specifier> <name>EmojiProvider</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>decodeScale</name></name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><literal type="number">1f</literal></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimension</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>emoji_drawer_size</name></name></expr></argument>)</argument_list></call> <operator>/</operator> <name>EMOJI_RAW_HEIGHT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>verticalPad</name></name> <operator>=</operator> <name>EMOJI_VERT_PAD</name> <operator>*</operator> <name><name>this</name><operator>.</operator><name>decodeScale</name></name></expr>;</expr_stmt>
+
+    <for>for <control>(<init><decl><type><name>EmojiPageModel</name></type> <name>page</name> <range>: <expr><name><name>EmojiPages</name><operator>.</operator><name>DATA_PAGES</name></name></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>page</name><operator>.</operator><name>hasSpriteMap</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>EmojiPageBitmap</name></type> <name>pageBitmap</name> <init>= <expr><operator>new</operator> <call><name>EmojiPageBitmap</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>page</name></expr></argument>, <argument><expr><name>decodeScale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>emojis</name> <init>= <expr><call><name><name>page</name><operator>.</operator><name>getEmoji</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>emojis</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+          <expr_stmt><expr><call><name><name>emojiTree</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>emojis</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name>EmojiDrawInfo</name><argument_list>(<argument><expr><name>pageBitmap</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+      }</block></then></if>
+    }</block></for>
+
+    <for>for <control>(<init><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>,<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>obsolete</name> <range>: <expr><name><name>EmojiPages</name><operator>.</operator><name>OBSOLETE</name></name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>emojiTree</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>obsolete</name><operator>.</operator><name>first</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>emojiTree</name><operator>.</operator><name>getEmoji</name></name><argument_list>(<argument><expr><call><name><name>obsolete</name><operator>.</operator><name>second</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>obsolete</name><operator>.</operator><name>second</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></constructor>
+
+  <function><annotation>@<name>Nullable</name></annotation> <type><name><name>EmojiParser</name><operator>.</operator><name>CandidateList</name></name></type> <name>getCandidates</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>CharSequence</name></type> <name>text</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>text</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+    <return>return <expr><operator>new</operator> <call><name>EmojiParser</name><argument_list>(<argument><expr><name>emojiTree</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>findCandidates</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation> <type><name>Spannable</name></type> <name>emojify</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>CharSequence</name></type> <name>text</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>TextView</name></type> <name>tv</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>emojify</name><argument_list>(<argument><expr><call><name>getCandidates</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>text</name></expr></argument>, <argument><expr><name>tv</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation> <type><name>Spannable</name></type> <name>emojify</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>EmojiParser</name><operator>.</operator><name>CandidateList</name></name></type> <name>matches</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>CharSequence</name></type> <name>text</name></decl></parameter>,
+                              <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>TextView</name></type> <name>tv</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>matches</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name>text</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+    <decl_stmt><decl><type><name>SpannableStringBuilder</name></type>      <name>builder</name> <init>= <expr><operator>new</operator> <call><name>SpannableStringBuilder</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name><name>EmojiParser</name><operator>.</operator><name>Candidate</name></name></type> <name>candidate</name> <range>: <expr><name>matches</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>Drawable</name></type> <name>drawable</name> <init>= <expr><call><name>getEmojiDrawable</name><argument_list>(<argument><expr><call><name><name>candidate</name><operator>.</operator><name>getDrawInfo</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>drawable</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setSpan</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>EmojiSpan</name><argument_list>(<argument><expr><name>drawable</name></expr></argument>, <argument><expr><name>tv</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>candidate</name><operator>.</operator><name>getStartIndex</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>candidate</name><operator>.</operator><name>getEndIndex</name></name><argument_list>()</argument_list></call></expr></argument>,
+                        <argument><expr><name><name>Spannable</name><operator>.</operator><name>SPAN_EXCLUSIVE_EXCLUSIVE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+
+    <return>return <expr><name>builder</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation> <type><name>Drawable</name></type> <name>getEmojiDrawable</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>emoji</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>EmojiDrawInfo</name></type> <name>drawInfo</name> <init>= <expr><call><name><name>emojiTree</name><operator>.</operator><name>getEmoji</name></name><argument_list>(<argument><expr><name>emoji</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>emoji</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>getEmojiDrawable</name><argument_list>(<argument><expr><name>drawInfo</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Drawable</name></type> <name>getEmojiDrawable</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>EmojiDrawInfo</name></type> <name>drawInfo</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>drawInfo</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>  <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>EmojiDrawable</name></type> <name>drawable</name> <init>= <expr><operator>new</operator> <call><name>EmojiDrawable</name><argument_list>(<argument><expr><name>drawInfo</name></expr></argument>, <argument><expr><name>decodeScale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>drawInfo</name><operator>.</operator><name>getPage</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>get</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>FutureTaskListener</name><argument_list type="generic">&lt;<argument><name>Bitmap</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>onSuccess</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Bitmap</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>drawable</name><operator>.</operator><name>setBitmap</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>ExecutionException</name></type> <name>error</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>error</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>drawable</name></expr>;</return>
+  }</block></function>
+
+  <class>class <name>EmojiDrawable</name> <super><extends>extends <name>Drawable</name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>EmojiDrawInfo</name></type> <name>info</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier>       <type><name>Bitmap</name></type>        <name>bmp</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier>       <type><name>float</name></type>         <name>intrinsicWidth</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier>       <type><name>float</name></type>         <name>intrinsicHeight</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getIntrinsicWidth</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>int</name><operator>)</operator><name>intrinsicWidth</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getIntrinsicHeight</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>(</operator><name>int</name><operator>)</operator><name>intrinsicHeight</name></expr>;</return>
+    }</block></function>
+
+    <constructor><name>EmojiDrawable</name><parameter_list>(<parameter><decl><type><name>EmojiDrawInfo</name></type> <name>info</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>decodeScale</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>info</name></name>            <operator>=</operator> <name>info</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>intrinsicWidth</name></name>  <operator>=</operator> <name>EMOJI_RAW_WIDTH</name>  <operator>*</operator> <name>decodeScale</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>intrinsicHeight</name></name> <operator>=</operator> <name>EMOJI_RAW_HEIGHT</name> <operator>*</operator> <name>decodeScale</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>draw</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Canvas</name></type> <name>canvas</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>bmp</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <return>return;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>row</name> <init>= <expr><call><name><name>info</name><operator>.</operator><name>getIndex</name></name><argument_list>()</argument_list></call> <operator>/</operator> <name>EMOJI_PER_ROW</name></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>row_index</name> <init>= <expr><call><name><name>info</name><operator>.</operator><name>getIndex</name></name><argument_list>()</argument_list></call> <operator>%</operator> <name>EMOJI_PER_ROW</name></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawBitmap</name></name><argument_list>(<argument><expr><name>bmp</name></expr></argument>,
+                        <argument><expr><operator>new</operator> <call><name>Rect</name><argument_list>(<argument><expr><call>(<name>int</name>)<argument_list>(<argument><expr><name>row_index</name> <operator>*</operator> <name>intrinsicWidth</name></expr></argument>)</argument_list></call></expr></argument>,
+                                 <argument><expr><call>(<name>int</name>)<argument_list>(<argument><expr><name>row</name> <operator>*</operator> <name>intrinsicHeight</name> <operator>+</operator> <name>row</name> <operator>*</operator> <name>verticalPad</name></expr></argument>)</argument_list></call><operator>+</operator><literal type="number">1</literal></expr></argument>,
+                                 <argument><expr><call>(<name>int</name>)<argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>row_index</name> <operator>+</operator> <literal type="number">1</literal><operator>)</operator> <operator>*</operator> <name>intrinsicWidth</name><operator>)</operator><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>,
+                                 <argument><expr><call>(<name>int</name>)<argument_list>(<argument><expr><operator>(</operator><name>row</name> <operator>+</operator> <literal type="number">1</literal><operator>)</operator> <operator>*</operator> <name>intrinsicHeight</name> <operator>+</operator> <name>row</name> <operator>*</operator> <name>verticalPad</name></expr></argument>)</argument_list></call><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>,
+                        <argument><expr><call><name>getBounds</name><argument_list>()</argument_list></call></expr></argument>,
+                        <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB_MR1</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setBitmap</name><parameter_list>(<parameter><decl><type><name>Bitmap</name></type> <name>bitmap</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>assertMainThread</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&lt;</operator> <name><name>VERSION_CODES</name><operator>.</operator><name>HONEYCOMB_MR1</name></name> <operator>||</operator> <name>bmp</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>bmp</name><operator>.</operator><name>sameAs</name></name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>bmp</name> <operator>=</operator> <name>bitmap</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>invalidateSelf</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getOpacity</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>PixelFormat</name><operator>.</operator><name>TRANSLUCENT</name></name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setAlpha</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>alpha</name></decl></parameter>)</parameter_list> <block>{ }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setColorFilter</name><parameter_list>(<parameter><decl><type><name>ColorFilter</name></type> <name>cf</name></decl></parameter>)</parameter_list> <block>{ }</block></function>
+  }</block></class>
+
+}</block></class>
+</unit>

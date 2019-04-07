@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\documents\IdentityKeyMismatch.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>documents</name></name>;</package>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonIgnore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonProperty</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>core</name><operator>.</operator><name>JsonGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>core</name><operator>.</operator><name>JsonParser</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>databind</name><operator>.</operator><name>DeserializationContext</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>databind</name><operator>.</operator><name>JsonDeserializer</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>databind</name><operator>.</operator><name>JsonSerializer</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>databind</name><operator>.</operator><name>SerializerProvider</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>databind</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonDeserialize</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>fasterxml</name><operator>.</operator><name>jackson</name><operator>.</operator><name>databind</name><operator>.</operator><name>annotation</name><operator>.</operator><name>JsonSerialize</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>IdentityKey</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>InvalidKeyException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IdentityKeyMismatch</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>IdentityKeyMismatch</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><name>value</name> <operator>=</operator> <literal type="string">"a"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>String</name></type> <name>address</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>JsonProperty</name><argument_list>(<argument><expr><name>value</name> <operator>=</operator> <literal type="string">"k"</literal></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>JsonSerialize</name><argument_list>(<argument><expr><name>using</name> <operator>=</operator> <name><name>IdentityKeySerializer</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>JsonDeserialize</name><argument_list>(<argument><expr><name>using</name> <operator>=</operator> <name><name>IdentityKeyDeserializer</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <type><name>IdentityKey</name></type> <name>identityKey</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>IdentityKeyMismatch</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IdentityKeyMismatch</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>IdentityKey</name></type> <name>identityKey</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>address</name></name>     <operator>=</operator> <call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>identityKey</name></name> <operator>=</operator> <name>identityKey</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>JsonIgnore</name></annotation>
+  <specifier>public</specifier> <type><name>Address</name></type> <name>getAddress</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><name>address</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>IdentityKey</name></type> <name>getIdentityKey</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>identityKey</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>equals</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>other</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>other</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><operator>(</operator><name>other</name> <operator>instanceof</operator> <name>IdentityKeyMismatch</name><operator>)</operator></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>IdentityKeyMismatch</name></type> <name>that</name> <init>= <expr><operator>(</operator><name>IdentityKeyMismatch</name><operator>)</operator><name>other</name></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>that</name><operator>.</operator><name>address</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>address</name></name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>that</name><operator>.</operator><name>identityKey</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>identityKey</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>hashCode</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>address</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call> <operator>^</operator> <call><name><name>identityKey</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>IdentityKeySerializer</name> <super><extends>extends <name><name>JsonSerializer</name><argument_list type="generic">&lt;<argument><name>IdentityKey</name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><name>IdentityKey</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><name>JsonGenerator</name></type> <name>jsonGenerator</name></decl></parameter>, <parameter><decl><type><name>SerializerProvider</name></type> <name>serializers</name></decl></parameter>)</parameter_list>
+        <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+    <block>{
+      <expr_stmt><expr><call><name><name>jsonGenerator</name><operator>.</operator><name>writeString</name></name><argument_list>(<argument><expr><call><name><name>Base64</name><operator>.</operator><name>encodeBytes</name></name><argument_list>(<argument><expr><call><name><name>value</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>IdentityKeyDeserializer</name> <super><extends>extends <name><name>JsonDeserializer</name><argument_list type="generic">&lt;<argument><name>IdentityKey</name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>IdentityKey</name></type> <name>deserialize</name><parameter_list>(<parameter><decl><type><name>JsonParser</name></type> <name>jsonParser</name></decl></parameter>, <parameter><decl><type><name>DeserializationContext</name></type> <name>ctxt</name></decl></parameter>)</parameter_list>
+        <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+    <block>{
+      <try>try <block>{
+        <return>return <expr><operator>new</operator> <call><name>IdentityKey</name><argument_list>(<argument><expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><call><name><name>jsonParser</name><operator>.</operator><name>getValueAsString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidKeyException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></catch></try>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

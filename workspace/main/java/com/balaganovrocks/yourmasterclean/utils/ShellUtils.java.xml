@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\utils\ShellUtils.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedReader</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>DataOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStreamReader</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * ShellUtils
+ * &lt;ul&gt;
+ * &lt;strong&gt;Check root&lt;/strong&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#checkRootPermission()}&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;ul&gt;
+ * &lt;strong&gt;Execte command&lt;/strong&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String, boolean)}&lt;/li&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String, boolean, boolean)}&lt;/li&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(java.util.List, boolean)}&lt;/li&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(java.util.List, boolean, boolean)}&lt;/li&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean)}&lt;/li&gt;
+ * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean, boolean)}&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * @author &lt;a href="http://www.trinea.cn" target="_blank"&gt;Trinea&lt;/a&gt; 2013-5-16
+ */</comment>
+<class><specifier>public</specifier> class <name>ShellUtils</name> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COMMAND_SU</name>       <init>= <expr><literal type="string">"su"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COMMAND_ZLSU</name>       <init>= <expr><literal type="string">"zlsu"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COMMAND_SH</name>       <init>= <expr><literal type="string">"sh"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COMMAND_EXIT</name>     <init>= <expr><literal type="string">"exit\n"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COMMAND_LINE_END</name> <init>= <expr><literal type="string">"\n"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * check whether has root permission
+     * 
+     * @return
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>checkRootPermission</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><call><name>execCommand</name><argument_list>(<argument><expr><literal type="string">"echo root"</literal></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call><operator>.</operator><name>result</name> <operator>==</operator> <literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * execute shell command, default return result msg
+     * 
+     * @param command command
+     * @param isRoot whether need to run with root
+     * @return
+     * @see com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean, boolean)
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CommandResult</name></type> <name>execCommand</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>command</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isRoot</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name>execCommand</name><argument_list>(<argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>command</name></expr>}</block></expr></argument>, <argument><expr><name>isRoot</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * execute shell commands, default return result msg
+     * 
+     * @param commands command list
+     * @param isRoot whether need to run with root
+     * @return
+     * @see com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean, boolean)
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CommandResult</name></type> <name>execCommand</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>commands</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isRoot</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name>execCommand</name><argument_list>(<argument><expr><ternary><condition><expr><name>commands</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>commands</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{}</block></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>, <argument><expr><name>isRoot</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * execute shell commands, default return result msg
+     * 
+     * @param commands command array
+     * @param isRoot whether need to run with root
+     * @return
+     * @see com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean, boolean)
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CommandResult</name></type> <name>execCommand</name><parameter_list>(<parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>commands</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isRoot</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name>execCommand</name><argument_list>(<argument><expr><name>commands</name></expr></argument>, <argument><expr><name>isRoot</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * execute shell command
+     * 
+     * @param command command
+     * @param isRoot whether need to run with root
+     * @param isNeedResultMsg whether need result msg
+     * @return
+     * @see com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean, boolean)
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CommandResult</name></type> <name>execCommand</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>command</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isRoot</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isNeedResultMsg</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name>execCommand</name><argument_list>(<argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>command</name></expr>}</block></expr></argument>, <argument><expr><name>isRoot</name></expr></argument>, <argument><expr><name>isNeedResultMsg</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * execute shell commands
+     * 
+     * @param commands command list
+     * @param isRoot whether need to run with root
+     * @param isNeedResultMsg whether need result msg
+     * @return
+     * @see com.balaganovrocks.yourmasterclean.utils.ShellUtils#execCommand(String[], boolean, boolean)
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CommandResult</name></type> <name>execCommand</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>commands</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isRoot</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isNeedResultMsg</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><call><name>execCommand</name><argument_list>(<argument><expr><ternary><condition><expr><name>commands</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>commands</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{}</block></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>, <argument><expr><name>isRoot</name></expr></argument>, <argument><expr><name>isNeedResultMsg</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * execute shell commands
+     * 
+     * @param commands command array
+     * @param isRoot whether need to run with root
+     * @param isNeedResultMsg whether need result msg
+     * @return &lt;ul&gt;
+     *         &lt;li&gt;if isNeedResultMsg is false, {@link com.balaganovrocks.yourmasterclean.utils.ShellUtils.CommandResult#successMsg} is null and
+     *         {@link com.balaganovrocks.yourmasterclean.utils.ShellUtils.CommandResult#errorMsg} is null.&lt;/li&gt;
+     *         &lt;li&gt;if {@link com.balaganovrocks.yourmasterclean.utils.ShellUtils.CommandResult#result} is -1, there maybe some excepiton.&lt;/li&gt;
+     *         &lt;/ul&gt;
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CommandResult</name></type> <name>execCommand</name><parameter_list>(<parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>commands</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isRoot</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isNeedResultMsg</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>result</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>commands</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <name><name>commands</name><operator>.</operator><name>length</name></name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <return>return <expr><operator>new</operator> <call><name>CommandResult</name><argument_list>(<argument><expr><name>result</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>Process</name></type> <name>process</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>BufferedReader</name></type> <name>successResult</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>BufferedReader</name></type> <name>errorResult</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>StringBuilder</name></type> <name>successMsg</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>StringBuilder</name></type> <name>errorMsg</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>DataOutputStream</name></type> <name>os</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <try>try <block>{
+            <expr_stmt><expr><name>process</name> <operator>=</operator> <call><name><name>Runtime</name><operator>.</operator><name>getRuntime</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><ternary><condition><expr><name>isRoot</name></expr> ?</condition><then> <expr><name>COMMAND_SU</name></expr> </then><else>: <expr><name>COMMAND_SH</name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>os</name> <operator>=</operator> <operator>new</operator> <call><name>DataOutputStream</name><argument_list>(<argument><expr><call><name><name>process</name><operator>.</operator><name>getOutputStream</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <for>for <control>(<init><decl><type><name>String</name></type> <name>command</name> <range>: <expr><name>commands</name></expr></range></decl></init>)</control> <block>{
+                <if>if <condition>(<expr><name>command</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <continue>continue;</continue>
+                }</block></then></if>
+
+                <comment type="line">// donnot use os.writeBytes(commmand), avoid chinese charset error</comment>
+                <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><call><name><name>command</name><operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><name>COMMAND_LINE_END</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>flush</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>writeBytes</name></name><argument_list>(<argument><expr><name>COMMAND_EXIT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>flush</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><name>result</name> <operator>=</operator> <call><name><name>process</name><operator>.</operator><name>waitFor</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <comment type="line">// get command result</comment>
+            <if>if <condition>(<expr><name>isNeedResultMsg</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>successMsg</name> <operator>=</operator> <operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>errorMsg</name> <operator>=</operator> <operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>successResult</name> <operator>=</operator> <operator>new</operator> <call><name>BufferedReader</name><argument_list>(<argument><expr><operator>new</operator> <call><name>InputStreamReader</name><argument_list>(<argument><expr><call><name><name>process</name><operator>.</operator><name>getInputStream</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>errorResult</name> <operator>=</operator> <operator>new</operator> <call><name>BufferedReader</name><argument_list>(<argument><expr><operator>new</operator> <call><name>InputStreamReader</name><argument_list>(<argument><expr><call><name><name>process</name><operator>.</operator><name>getErrorStream</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <decl_stmt><decl><type><name>String</name></type> <name>s</name></decl>;</decl_stmt>
+                <while>while <condition>(<expr><operator>(</operator><name>s</name> <operator>=</operator> <call><name><name>successResult</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+                    <expr_stmt><expr><call><name><name>successMsg</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></while>
+                <while>while <condition>(<expr><operator>(</operator><name>s</name> <operator>=</operator> <call><name><name>errorResult</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+                    <expr_stmt><expr><call><name><name>errorMsg</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></while>
+            }</block></then></if>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></catch> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></catch> <finally>finally <block>{
+            <try>try <block>{
+                <if>if <condition>(<expr><name>os</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>os</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block></then></if>
+                <if>if <condition>(<expr><name>successResult</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>successResult</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block></then></if>
+                <if>if <condition>(<expr><name>errorResult</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>errorResult</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block></then></if>
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></catch></try>
+
+            <if>if <condition>(<expr><name>process</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>process</name><operator>.</operator><name>destroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></finally></try>
+        <return>return <expr><operator>new</operator> <call><name>CommandResult</name><argument_list>(<argument><expr><name>result</name></expr></argument>, <argument><expr><ternary><condition><expr><name>successMsg</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>successMsg</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>, <argument><expr><ternary><condition><expr><name>errorMsg</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr>
+                </then><else>: <expr><call><name><name>errorMsg</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * result of command
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils.CommandResult#result} means result of command, 0 means normal, else means error, same to excute in
+     * linux shell&lt;/li&gt;
+     * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils.CommandResult#successMsg} means success message of command result&lt;/li&gt;
+     * &lt;li&gt;{@link com.balaganovrocks.yourmasterclean.utils.ShellUtils.CommandResult#errorMsg} means error message of command result&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * @author &lt;a href="http://www.trinea.cn" target="_blank"&gt;Trinea&lt;/a&gt; 2013-5-16
+     */</comment>
+    <class><specifier>public</specifier> <specifier>static</specifier> class <name>CommandResult</name> <block>{
+
+        <comment type="block" format="javadoc">/** result of command **/</comment>
+        <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type>    <name>result</name></decl>;</decl_stmt>
+        <comment type="block" format="javadoc">/** success message of command result **/</comment>
+        <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>successMsg</name></decl>;</decl_stmt>
+        <comment type="block" format="javadoc">/** error message of command result **/</comment>
+        <decl_stmt><decl><specifier>public</specifier> <type><name>String</name></type> <name>errorMsg</name></decl>;</decl_stmt>
+
+        <constructor><specifier>public</specifier> <name>CommandResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>result</name></name> <operator>=</operator> <name>result</name></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <constructor><specifier>public</specifier> <name>CommandResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>result</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>successMsg</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>errorMsg</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>result</name></name> <operator>=</operator> <name>result</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>successMsg</name></name> <operator>=</operator> <name>successMsg</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>errorMsg</name></name> <operator>=</operator> <name>errorMsg</name></expr>;</expr_stmt>
+        }</block></constructor>
+    }</block></class>
+}</block></class>
+</unit>

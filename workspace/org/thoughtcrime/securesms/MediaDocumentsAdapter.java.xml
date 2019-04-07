@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\MediaDocumentsAdapter.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ActivityNotFoundException</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toast</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>MediaDocumentsAdapter</name><operator>.</operator><name>HeaderViewHolder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>MediaDocumentsAdapter</name><operator>.</operator><name>ViewHolder</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name><operator>.</operator><name>DocumentView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>CursorRecyclerViewAdapter</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MediaDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>DocumentSlide</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>PartAuthority</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>Slide</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DateUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>MediaUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>StickyHeaderDecoration</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Calendar</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>codewaves</name><operator>.</operator><name>stickyheadergrid</name><operator>.</operator><name>StickyHeaderGridLayoutManager</name><operator>.</operator><name>TAG</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MediaDocumentsAdapter</name> <super><extends>extends <name><name>CursorRecyclerViewAdapter</name><argument_list type="generic">&lt;<argument><name>ViewHolder</name></argument>&gt;</argument_list></name></extends> <implements>implements <name><name>StickyHeaderDecoration</name><operator>.</operator><name><name>StickyHeaderAdapter</name><argument_list type="generic">&lt;<argument><name>HeaderViewHolder</name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Calendar</name></type>     <name>calendar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Locale</name></type>       <name>locale</name></decl>;</decl_stmt>
+
+  <constructor><name>MediaDocumentsAdapter</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>, <parameter><decl><type><name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>calendar</name></name>     <operator>=</operator> <call><name><name>Calendar</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>locale</name></name>       <operator>=</operator> <name>locale</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>ViewHolder</name></type> <name>onCreateItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>ViewHolder</name><argument_list>(<argument><expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>media_overview_document_item</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindItemViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name> <init>= <expr><call><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Slide</name></type>                     <name>slide</name>       <init>= <expr><call><name><name>MediaUtil</name><operator>.</operator><name>getSlideForAttachment</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getAttachment</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>slide</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>slide</name><operator>.</operator><name>hasDocument</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>documentView</name><operator>.</operator><name>setDocument</name></name><argument_list>(<argument><expr><operator>(</operator><name>DocumentSlide</name><operator>)</operator><name>slide</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>date</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>DateUtils</name><operator>.</operator><name>getRelativeDate</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>documentView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>date</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>documentView</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>view</name></decl></parameter></parameter_list> -&gt; <block>{
+        <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_VIEW</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>addFlags</name></name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_GRANT_READ_URI_PERMISSION</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setDataAndType</name></name><argument_list>(<argument><expr><call><name><name>PartAuthority</name><operator>.</operator><name>getAttachmentPublicUri</name></name><argument_list>(<argument><expr><call><name><name>slide</name><operator>.</operator><name>getUri</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>slide</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <try>try <block>{
+          <expr_stmt><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ActivityNotFoundException</name></type> <name>anfe</name></decl></parameter>)</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"No activity existed to view the media."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>Toast</name><operator>.</operator><name>makeText</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>ConversationItem_unable_to_open_media</name></name></expr></argument>, <argument><expr><name><name>Toast</name><operator>.</operator><name>LENGTH_LONG</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></catch></try>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>documentView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>date</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getHeaderId</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>isActiveCursor</name><argument_list>()</argument_list></call></expr>)</condition><then>          <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><call><name>isHeaderPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><call><name>isFooterPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>position</name> <operator>&gt;=</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+    <if>if <condition>(<expr><name>position</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then>               <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>Cursor</name></type>                    <name>cursor</name>      <init>= <expr><call><name>getCursorAtPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name> <init>= <expr><call><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>calendar</name><operator>.</operator><name>setTime</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><call><name><name>Util</name><operator>.</operator><name>hashCode</name></name><argument_list>(<argument><expr><call><name><name>calendar</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>YEAR</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>calendar</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><name>Calendar</name><operator>.</operator><name>DAY_OF_YEAR</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>HeaderViewHolder</name></type> <name>onCreateHeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>HeaderViewHolder</name><argument_list>(<argument><expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>media_overview_document_item_header</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindHeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>HeaderViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Cursor</name></type>                    <name>cursor</name>      <init>= <expr><call><name>getCursorAtPositionOrThrow</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name></name></type> <name>mediaRecord</name> <init>= <expr><call><name><name>MediaDatabase</name><operator>.</operator><name>MediaRecord</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>textView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>DateUtils</name><operator>.</operator><name>getRelativeDate</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>locale</name></expr></argument>, <argument><expr><call><name><name>mediaRecord</name><operator>.</operator><name>getDate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>ViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>DocumentView</name></type> <name>documentView</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TextView</name></type> <name>date</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>documentView</name></name> <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>document_view</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>date</name></name>         <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>date</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+  <class><specifier>static</specifier> class <name>HeaderViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>TextView</name></type> <name>textView</name></decl>;</decl_stmt>
+
+    <constructor><name>HeaderViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>itemView</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>textView</name></name> <operator>=</operator> <call><name><name>itemView</name><operator>.</operator><name>findViewById</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+}</block></class>
+</unit>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\components\AudioView.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>components</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>TargetApi</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>ColorStateList</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>AnimatedVectorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>SeekBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>pnikosis</name><operator>.</operator><name>materialishprogress</name><operator>.</operator><name>ProgressWheel</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>EventBus</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>Subscribe</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>greenrobot</name><operator>.</operator><name>eventbus</name><operator>.</operator><name>ThreadMode</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>audio</name><operator>.</operator><name>AudioSlidePlayer</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>AttachmentDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>events</name><operator>.</operator><name>PartProgressEvent</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>AudioSlide</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>SlideClickListener</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>AudioView</name> <super><extends>extends <name>FrameLayout</name></extends> <implements>implements <name><name>AudioSlidePlayer</name><operator>.</operator><name>Listener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AudioView</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AnimatingToggle</name></type> <name>controlToggle</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type>       <name>container</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>       <name>playButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>       <name>pauseButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ImageView</name></type>       <name>downloadButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ProgressWheel</name></type>   <name>downloadProgress</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SeekBar</name></type>         <name>seekBar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>TextView</name></type>        <name>timestamp</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>SlideClickListener</name></type> <name>downloadListener</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>AudioSlidePlayer</name></type>   <name>audioSlidePlayer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>backwardsCounter</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AudioView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>AudioView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>AudioView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>inflate</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>audio_view</name></name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>container</name></name>        <operator>=</operator> <operator>(</operator><name>ViewGroup</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>audio_widget_container</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>controlToggle</name></name>    <operator>=</operator> <operator>(</operator><name>AnimatingToggle</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>control_toggle</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>playButton</name></name>       <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>play</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pauseButton</name></name>      <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>pause</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadButton</name></name>   <operator>=</operator> <operator>(</operator><name>ImageView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>download</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadProgress</name></name> <operator>=</operator> <operator>(</operator><name>ProgressWheel</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>download_progress</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>seekBar</name></name>          <operator>=</operator> <operator>(</operator><name>SeekBar</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>seek</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>timestamp</name></name>        <operator>=</operator> <operator>(</operator><name>TextView</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>timestamp</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PlayClickedListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PauseClickedListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setOnSeekBarChangeListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SeekBarModifiedListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>play_icon</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>pause_icon</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setBackground</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_circle_fill_white_48dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setBackground</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ic_circle_fill_white_48dp</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>attrs</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getTheme</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>obtainStyledAttributes</name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>AudioView</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>setTint</name><argument_list>(<argument><expr><call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>AudioView_foregroundTintColor</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></argument>)</argument_list></call></expr></argument>,
+              <argument><expr><call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>AudioView_backgroundTintColor</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>WHITE</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>container</name><operator>.</operator><name>setBackgroundColor</name></name><argument_list>(<argument><expr><call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>AudioView_widgetBackground</name></name></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>TRANSPARENT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>typedArray</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onAttachedToWindow</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAttachedToWindow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isRegistered</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>register</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onDetachedFromWindow</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDetachedFromWindow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>EventBus</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>unregister</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setAudio</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AudioSlide</name></type> <name>audio</name></decl></parameter>,
+                       <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>showControls</name></decl></parameter>)</parameter_list>
+  <block>{
+
+    <if>if <condition>(<expr><name>showControls</name> <operator>&amp;&amp;</operator> <call><name><name>audio</name><operator>.</operator><name>isPendingDownload</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>downloadButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>seekBar</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>downloadButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DownloadClickedListener</name><argument_list>(<argument><expr><name>audio</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><call><name><name>downloadProgress</name><operator>.</operator><name>isSpinning</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>stopSpinning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>showControls</name> <operator>&amp;&amp;</operator> <call><name><name>audio</name><operator>.</operator><name>getTransferState</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>AttachmentDatabase</name><operator>.</operator><name>TRANSFER_PROGRESS_STARTED</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>downloadProgress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>seekBar</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>spin</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>playButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>seekBar</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><call><name><name>downloadProgress</name><operator>.</operator><name>isSpinning</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>stopSpinning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></else></if>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>audioSlidePlayer</name></name> <operator>=</operator> <call><name><name>AudioSlidePlayer</name><operator>.</operator><name>createFor</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>audio</name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>cleanup</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>audioSlidePlayer</name></name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>pauseButton</name><operator>.</operator><name>getVisibility</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>audioSlidePlayer</name><operator>.</operator><name>stop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDownloadClickListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>SlideClickListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>downloadListener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onStart</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>getVisibility</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>togglePlayToPause</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onStop</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>getVisibility</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>togglePauseToPlay</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>seekBar</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="number">5</literal> <operator>&gt;=</operator> <call><name><name>seekBar</name><operator>.</operator><name>getMax</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>backwardsCounter</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>onProgress</name><argument_list>(<argument><expr><literal type="number">0.0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setFocusable</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>focusable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setFocusableInTouchMode</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setFocusable</name></name><argument_list>(<argument><expr><name>focusable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setClickable</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>clickable</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setOnTouchListener</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>clickable</name></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><operator>new</operator> <call><name>TouchIgnoringListener</name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setClickable</name></name><argument_list>(<argument><expr><name>clickable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setEnabled</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>enabled</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>enabled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onProgress</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>progress</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>millis</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>seekProgress</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator><call><name><name>Math</name><operator>.</operator><name>floor</name></name><argument_list>(<argument><expr><name>progress</name> <operator>*</operator> <call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getMax</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>seekProgress</name> <operator>&gt;</operator> <call><name><name>seekBar</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>||</operator> <name>backwardsCounter</name> <operator>&gt;</operator> <literal type="number">3</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>backwardsCounter</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><name>seekProgress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>timestamp</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"%02d:%02d"</literal></expr></argument>,
+                                           <argument><expr><call><name><name>TimeUnit</name><operator>.</operator><name>MILLISECONDS</name><operator>.</operator><name>toMinutes</name></name><argument_list>(<argument><expr><name>millis</name></expr></argument>)</argument_list></call></expr></argument>,
+                                           <argument><expr><call><name><name>TimeUnit</name><operator>.</operator><name>MILLISECONDS</name><operator>.</operator><name>toSeconds</name></name><argument_list>(<argument><expr><name>millis</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name>backwardsCounter</name><operator>++</operator></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTint</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>foregroundTint</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>backgroundTint</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setBackgroundTintList</name></name><argument_list>(<argument><expr><call><name><name>ColorStateList</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setImageTintList</name></name><argument_list>(<argument><expr><call><name><name>ColorStateList</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>backgroundTint</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setBackgroundTintList</name></name><argument_list>(<argument><expr><call><name><name>ColorStateList</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setImageTintList</name></name><argument_list>(<argument><expr><call><name><name>ColorStateList</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>backgroundTint</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>playButton</name><operator>.</operator><name>setColorFilter</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pauseButton</name><operator>.</operator><name>setColorFilter</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadButton</name><operator>.</operator><name>setColorFilter</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>downloadProgress</name><operator>.</operator><name>setBarColor</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>timestamp</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getProgressDrawable</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>JELLY_BEAN</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getThumb</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setColorFilter</name><argument_list>(<argument><expr><name>foregroundTint</name></expr></argument>, <argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>double</name></type> <name>getProgress</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal> <operator>||</operator> <call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getMax</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><operator>(</operator><name>double</name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getProgress</name></name><argument_list>()</argument_list></call> <operator>/</operator> <operator>(</operator><name>double</name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>seekBar</name><operator>.</operator><name>getMax</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>togglePlayToPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>pauseButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>AnimatedVectorDrawable</name></type> <name>playToPauseDrawable</name> <init>= <expr><operator>(</operator><name>AnimatedVectorDrawable</name><operator>)</operator><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>play_to_pause_animation</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>pauseButton</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><name>playToPauseDrawable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>playToPauseDrawable</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>togglePauseToPlay</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>controlToggle</name><operator>.</operator><name>displayQuick</name></name><argument_list>(<argument><expr><name>playButton</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>SDK_INT</name></name> <operator>&gt;=</operator> <name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>AnimatedVectorDrawable</name></type> <name>pauseToPlayDrawable</name> <init>= <expr><operator>(</operator><name>AnimatedVectorDrawable</name><operator>)</operator><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>pause_to_play_animation</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>playButton</name><operator>.</operator><name>setImageDrawable</name></name><argument_list>(<argument><expr><name>pauseToPlayDrawable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>pauseToPlayDrawable</name><operator>.</operator><name>start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>PlayClickedListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"playbutton onClick"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>audioSlidePlayer</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>togglePlayToPause</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>audioSlidePlayer</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><call><name>getProgress</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>PauseClickedListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>TargetApi</name><argument_list>(<argument><expr><name><name>Build</name><operator>.</operator><name>VERSION_CODES</name><operator>.</operator><name>LOLLIPOP</name></name></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"pausebutton onClick"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><name>audioSlidePlayer</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>togglePauseToPlay</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>audioSlidePlayer</name><operator>.</operator><name>stop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>DownloadClickedListener</name> <super><implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AudioSlide</name></type> <name>slide</name></decl>;</decl_stmt>
+
+    <constructor><specifier>private</specifier> <name>DownloadClickedListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AudioSlide</name></type> <name>slide</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>slide</name></name> <operator>=</operator> <name>slide</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>downloadListener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>downloadListener</name><operator>.</operator><name>onClick</name></name><argument_list>(<argument><expr><name>v</name></expr></argument>, <argument><expr><name>slide</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>SeekBarModifiedListener</name> <super><implements>implements <name><name>SeekBar</name><operator>.</operator><name>OnSeekBarChangeListener</name></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onProgressChanged</name><parameter_list>(<parameter><decl><type><name>SeekBar</name></type> <name>seekBar</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>progress</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>fromUser</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>onStartTrackingTouch</name><parameter_list>(<parameter><decl><type><name>SeekBar</name></type> <name>seekBar</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>audioSlidePlayer</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>pauseButton</name><operator>.</operator><name>getVisibility</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>audioSlidePlayer</name><operator>.</operator><name>stop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>onStopTrackingTouch</name><parameter_list>(<parameter><decl><type><name>SeekBar</name></type> <name>seekBar</name></decl></parameter>)</parameter_list> <block>{
+      <try>try <block>{
+        <if>if <condition>(<expr><name>audioSlidePlayer</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>pauseButton</name><operator>.</operator><name>getVisibility</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>audioSlidePlayer</name><operator>.</operator><name>play</name></name><argument_list>(<argument><expr><call><name>getProgress</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>TouchIgnoringListener</name> <super><implements>implements <name>OnTouchListener</name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onTouch</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>, <parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><annotation>@<name>Subscribe</name><argument_list>(<argument><expr><name>sticky</name> <operator>=</operator> <literal type="boolean">true</literal></expr></argument>, <argument><expr><name>threadMode</name> <operator>=</operator> <name><name>ThreadMode</name><operator>.</operator><name>ASYNC</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onEventAsync</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>PartProgressEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>audioSlidePlayer</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>event</name><operator>.</operator><name>attachment</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>audioSlidePlayer</name><operator>.</operator><name>getAudioSlide</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>asAttachment</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>runOnMain</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+          <expr_stmt><expr><call><name><name>downloadProgress</name><operator>.</operator><name>setInstantProgress</name></name><argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name><name>event</name><operator>.</operator><name>progress</name></name><operator>)</operator> <operator>/</operator> <name><name>event</name><operator>.</operator><name>total</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+      }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+}</block></class>
+</unit>

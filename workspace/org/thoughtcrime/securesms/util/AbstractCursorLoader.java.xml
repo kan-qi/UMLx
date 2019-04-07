@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\AbstractCursorLoader.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>AsyncTaskLoader</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A Loader similar to CursorLoader that doesn't require queries to go through the ContentResolver
+ * to get the benefits of reloading when content has changed.
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>AbstractCursorLoader</name> <super><extends>extends <name><name>AsyncTaskLoader</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unused"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AbstractCursorLoader</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>protected</specifier> <type><specifier>final</specifier> <name>Context</name></type>                  <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier>   <type><specifier>final</specifier> <name>ForceLoadContentObserver</name></type> <name>observer</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier>       <type><name>Cursor</name></type>                   <name>cursor</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>AbstractCursorLoader</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>  <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>observer</name></name> <operator>=</operator> <operator>new</operator> <call><name>ForceLoadContentObserver</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Cursor</name></type> <name>getCursor</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>deliverResult</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>newCursor</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>isReset</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name>newCursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>newCursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <return>return;</return>
+    }</block></then></if>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>oldCursor</name> <init>= <expr><name><name>this</name><operator>.</operator><name>cursor</name></name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cursor</name></name> <operator>=</operator> <name>newCursor</name></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>isStarted</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>deliverResult</name></name><argument_list>(<argument><expr><name>newCursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <if>if <condition>(<expr><name>oldCursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>oldCursor</name> <operator>!=</operator> <name>cursor</name> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>oldCursor</name><operator>.</operator><name>isClosed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>oldCursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onStartLoading</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>deliverResult</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <if>if <condition>(<expr><call><name>takeContentChanged</name><argument_list>()</argument_list></call> <operator>||</operator> <name>cursor</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>forceLoad</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onStopLoading</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>cancelLoad</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>isClosed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Cursor</name></type> <name>loadInBackground</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>newCursor</name> <init>= <expr><call><name>getCursor</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>newCursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>newCursor</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>newCursor</name><operator>.</operator><name>registerContentObserver</name></name><argument_list>(<argument><expr><name>observer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <return>return <expr><name>newCursor</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onReset</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onReset</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>onStopLoading</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>isClosed</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <expr_stmt><expr><name>cursor</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+  }</block></function>
+
+}</block></class>
+</unit>

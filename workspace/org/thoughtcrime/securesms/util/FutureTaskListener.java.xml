@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\FutureTaskListener.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2014 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name><name>FutureTaskListener</name><parameter_list>&lt;<parameter><name>V</name></parameter>&gt;</parameter_list></name> <block>{
+  <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onSuccess</name><parameter_list>(<parameter><decl><type><name>V</name></type> <name>result</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onFailure</name><parameter_list>(<parameter><decl><type><name>ExecutionException</name></type> <name>exception</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

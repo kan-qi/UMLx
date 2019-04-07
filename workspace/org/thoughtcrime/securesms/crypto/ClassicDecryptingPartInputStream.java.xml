@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\crypto\ClassicDecryptingPartInputStream.java"><comment type="block" format="javadoc">/** 
+ * Copyright (C) 2011 Whisper Systems
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>LimitedInputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>InvalidAlgorithmParameterException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>InvalidKeyException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>MessageDigest</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>security</name><operator>.</operator><name>NoSuchAlgorithmException</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>Cipher</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>CipherInputStream</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>Mac</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>NoSuchPaddingException</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>spec</name><operator>.</operator><name>IvParameterSpec</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>crypto</name><operator>.</operator><name>spec</name><operator>.</operator><name>SecretKeySpec</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ClassicDecryptingPartInputStream</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ClassicDecryptingPartInputStream</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>IV_LENGTH</name>  <init>= <expr><literal type="number">16</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MAC_LENGTH</name> <init>= <expr><literal type="number">20</literal></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>InputStream</name></type> <name>createFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>AttachmentSecret</name></type> <name>attachmentSecret</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>File</name></type> <name>file</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+  <block>{
+    <try>try <block>{
+      <if>if <condition>(<expr><call><name><name>file</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <name>IV_LENGTH</name> <operator>+</operator> <name>MAC_LENGTH</name></expr>)</condition><then> <block>{
+        <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"File too short"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+      }</block></then></if>
+
+      <expr_stmt><expr><call><name>verifyMac</name><argument_list>(<argument><expr><name>attachmentSecret</name></expr></argument>, <argument><expr><name>file</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>FileInputStream</name></type> <name>fileStream</name> <init>= <expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>          <name>ivBytes</name>    <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name>IV_LENGTH</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>readFully</name><argument_list>(<argument><expr><name>fileStream</name></expr></argument>, <argument><expr><name>ivBytes</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>Cipher</name></type>          <name>cipher</name> <init>= <expr><call><name><name>Cipher</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"AES/CBC/PKCS5Padding"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>IvParameterSpec</name></type> <name>iv</name>     <init>= <expr><operator>new</operator> <call><name>IvParameterSpec</name><argument_list>(<argument><expr><name>ivBytes</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>cipher</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name><name>Cipher</name><operator>.</operator><name>DECRYPT_MODE</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>SecretKeySpec</name><argument_list>(<argument><expr><call><name><name>attachmentSecret</name><operator>.</operator><name>getClassicCipherKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"AES"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>iv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><operator>new</operator> <call><name>CipherInputStreamWrapper</name><argument_list>(<argument><expr><operator>new</operator> <call><name>LimitedInputStream</name><argument_list>(<argument><expr><name>fileStream</name></expr></argument>, <argument><expr><call><name><name>file</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>MAC_LENGTH</name> <operator>-</operator> <name>IV_LENGTH</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>cipher</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> | <type><name>NoSuchPaddingException</name></type> | <type><name>InvalidKeyException</name></type> | <type><name>InvalidAlgorithmParameterException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>verifyMac</name><parameter_list>(<parameter><decl><type><name>AttachmentSecret</name></type> <name>attachmentSecret</name></decl></parameter>, <parameter><decl><type><name>File</name></type> <name>file</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>Mac</name></type>             <name>mac</name>        <init>= <expr><call><name>initializeMac</name><argument_list>(<argument><expr><operator>new</operator> <call><name>SecretKeySpec</name><argument_list>(<argument><expr><call><name><name>attachmentSecret</name><operator>.</operator><name>getClassicMacKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"HmacSHA1"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>FileInputStream</name></type> <name>macStream</name>  <init>= <expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>InputStream</name></type>     <name>dataStream</name> <init>= <expr><operator>new</operator> <call><name>LimitedInputStream</name><argument_list>(<argument><expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>file</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>MAC_LENGTH</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type>          <name>theirMac</name>   <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><name>MAC_LENGTH</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>macStream</name><operator>.</operator><name>skip</name></name><argument_list>(<argument><expr><call><name><name>file</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>MAC_LENGTH</name></expr></argument>)</argument_list></call> <operator>!=</operator> <call><name><name>file</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>MAC_LENGTH</name></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Unable to seek"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name>readFully</name><argument_list>(<argument><expr><name>macStream</name></expr></argument>, <argument><expr><name>theirMac</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buffer</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">4096</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>    <name>read</name></decl>;</decl_stmt>
+
+    <while>while <condition>(<expr><operator>(</operator><name>read</name> <operator>=</operator> <call><name><name>dataStream</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call><operator>)</operator> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition> <block>{
+      <expr_stmt><expr><call><name><name>mac</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>read</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></while>
+
+    <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>ourMac</name> <init>= <expr><call><name><name>mac</name><operator>.</operator><name>doFinal</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>MessageDigest</name><operator>.</operator><name>isEqual</name></name><argument_list>(<argument><expr><name>ourMac</name></expr></argument>, <argument><expr><name>theirMac</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Bad MAC"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>macStream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dataStream</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>Mac</name></type> <name>initializeMac</name><parameter_list>(<parameter><decl><type><name>SecretKeySpec</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>Mac</name></type> <name>hmac</name> <init>= <expr><call><name><name>Mac</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><literal type="string">"HmacSHA1"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>hmac</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <return>return <expr><name>hmac</name></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchAlgorithmException</name></type> | <type><name>InvalidKeyException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>readFully</name><parameter_list>(<parameter><decl><type><name>InputStream</name></type> <name>in</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>buffer</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>offset</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init>;</init><condition>;</condition><incr/>)</control> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><call><name><name>in</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>offset</name></expr></argument>, <argument><expr><name><name>buffer</name><operator>.</operator><name>length</name></name><operator>-</operator><name>offset</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>read</name> <operator>+</operator> <name>offset</name> <operator>&lt;</operator> <name><name>buffer</name><operator>.</operator><name>length</name></name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>offset</name> <operator>+=</operator> <name>read</name></expr>;</expr_stmt></block></then>
+      <else>else                               <block type="pseudo"><return>return;</return></block></else></if>
+    }</block></for>
+  }</block></function>
+
+  <comment type="line">// Note (4/3/17) -- Older versions of Android have a busted OpenSSL provider that</comment>
+  <comment type="line">// throws a RuntimeException on a BadPaddingException, so we have to catch</comment>
+  <comment type="line">// that here in case someone calls close() before reaching the end of the</comment>
+  <comment type="line">// stream (since close() implicitly calls doFinal())</comment>
+  <comment type="line">//</comment>
+  <comment type="line">// See Signal-Android Issue #6477</comment>
+  <comment type="line">// Android: https://android-review.googlesource.com/#/c/65321/</comment>
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>CipherInputStreamWrapper</name> <super><extends>extends <name>CipherInputStream</name></extends></super> <block>{
+
+    <constructor><name>CipherInputStreamWrapper</name><parameter_list>(<parameter><decl><type><name>InputStream</name></type> <name>is</name></decl></parameter>, <parameter><decl><type><name>Cipher</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>is</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>long</name></type> <name>skip</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>skipAmount</name></decl></parameter>)</parameter_list>
+        <throws>throws <argument><expr><name>IOException</name></expr></argument></throws>
+    <block>{
+      <decl_stmt><decl><type><name>long</name></type> <name>remaining</name> <init>= <expr><name>skipAmount</name></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>skipAmount</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="number">0</literal></expr>;</return>
+      }</block></then></if>
+
+      <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>skipBuffer</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">4092</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+      <while>while <condition>(<expr><name>remaining</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>read</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>skipBuffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>Util</name><operator>.</operator><name>toIntExact</name></name><argument_list>(<argument><expr><call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><name><name>skipBuffer</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name>remaining</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>read</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+          <break>break;</break>
+        }</block></then></if>
+
+        <expr_stmt><expr><name>remaining</name> <operator>-=</operator> <name>read</name></expr>;</expr_stmt>
+      }</block></while>
+
+      <return>return <expr><name>skipAmount</name> <operator>-</operator> <name>remaining</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

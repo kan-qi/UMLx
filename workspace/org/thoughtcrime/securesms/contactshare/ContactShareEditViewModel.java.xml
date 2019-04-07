@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contactshare\ContactShareEditViewModel.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>LiveData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>MutableLiveData</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ViewModel</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>ViewModelProvider</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name><operator>.</operator><name>Contact</name><operator>.</operator><name>Name</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>SingleLiveEvent</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<class>class <name>ContactShareEditViewModel</name> <super><extends>extends <name>ViewModel</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>MutableLiveData</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>contacts</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>SingleLiveEvent</name><argument_list type="generic">&lt;<argument><name>Event</name></argument>&gt;</argument_list></name></type>         <name>events</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ContactRepository</name></type>              <name>repo</name></decl>;</decl_stmt>
+
+  <constructor><name>ContactShareEditViewModel</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Uri</name></argument>&gt;</argument_list></name></type>         <name>contactUris</name></decl></parameter>,
+                            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ContactRepository</name></type> <name>contactRepository</name></decl></parameter>)</parameter_list>
+  <block>{
+    <expr_stmt><expr><name>contacts</name> <operator>=</operator> <operator>new</operator> <call><name><name>MutableLiveData</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>events</name>              <operator>=</operator> <operator>new</operator> <call><name><name>SingleLiveEvent</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>repo</name>                <operator>=</operator> <name>contactRepository</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>repo</name><operator>.</operator><name>getContacts</name></name><argument_list>(<argument><expr><name>contactUris</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>retrieved</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><call><name><name>retrieved</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>events</name><operator>.</operator><name>postValue</name></name><argument_list>(<argument><expr><name><name>Event</name><operator>.</operator><name>BAD_CONTACT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>contacts</name><operator>.</operator><name>postValue</name></name><argument_list>(<argument><expr><name>retrieved</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>NonNull</name></annotation> <type><name><name>LiveData</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>getContacts</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>contacts</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>getFinalizedContacts</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>currentContacts</name> <init>= <expr><call><name>getCurrentContacts</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>trimmedContacts</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>currentContacts</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>Contact</name></type> <name>contact</name> <range>: <expr><name>currentContacts</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>Contact</name></type> <name>trimmed</name> <init>= <expr><operator>new</operator> <call><name>Contact</name><argument_list>(<argument><expr><call><name><name>contact</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>contact</name><operator>.</operator><name>getOrganization</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name>trimSelectables</name><argument_list>(<argument><expr><call><name><name>contact</name><operator>.</operator><name>getPhoneNumbers</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name>trimSelectables</name><argument_list>(<argument><expr><call><name><name>contact</name><operator>.</operator><name>getEmails</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name>trimSelectables</name><argument_list>(<argument><expr><call><name><name>contact</name><operator>.</operator><name>getPostalAddresses</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><ternary><condition><expr><call><name><name>contact</name><operator>.</operator><name>getAvatar</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>contact</name><operator>.</operator><name>getAvatar</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isSelected</name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name><name>contact</name><operator>.</operator><name>getAvatar</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>trimmedContacts</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>trimmed</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>trimmedContacts</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation> <type><name><name>LiveData</name><argument_list type="generic">&lt;<argument><name>Event</name></argument>&gt;</argument_list></name></type> <name>getEvents</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>events</name></expr>;</return>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>updateContactName</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>contactPosition</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Name</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>name</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>events</name><operator>.</operator><name>postValue</name></name><argument_list>(<argument><expr><name><name>Event</name><operator>.</operator><name>BAD_CONTACT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>currentContacts</name> <init>= <expr><call><name>getCurrentContacts</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Contact</name></type>       <name>original</name>        <init>= <expr><call><name><name>currentContacts</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>contactPosition</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>currentContacts</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>Contact</name><argument_list>(<argument><expr><name>name</name></expr></argument>,
+                                    <argument><expr><call><name><name>original</name><operator>.</operator><name>getOrganization</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>original</name><operator>.</operator><name>getPhoneNumbers</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>original</name><operator>.</operator><name>getEmails</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>original</name><operator>.</operator><name>getPostalAddresses</name></name><argument_list>()</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>original</name><operator>.</operator><name>getAvatar</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>contacts</name><operator>.</operator><name>postValue</name></name><argument_list>(<argument><expr><name>currentContacts</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <parameter_list type="generic">&lt;<parameter><name>E</name> <extends>extends <name>Selectable</name></extends></parameter>&gt;</parameter_list> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></type> <name>trimSelectables</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></type> <name>selectables</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>selectables</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>Selectable</name><operator>::</operator><name>isSelected</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>getCurrentContacts</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Contact</name></argument>&gt;</argument_list></name></type> <name>currentContacts</name> <init>= <expr><call><name><name>contacts</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><ternary><condition><expr><name>currentContacts</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name>currentContacts</name></expr> </then><else>: <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <enum>enum <name>Event</name> <block>{
+    <decl><name>BAD_CONTACT</name></decl>
+  }</block></enum>
+
+  <class><specifier>static</specifier> class <name>Factory</name> <super><extends>extends <name><name>ViewModelProvider</name><operator>.</operator><name>NewInstanceFactory</name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Uri</name></argument>&gt;</argument_list></name></type>         <name>contactUris</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ContactRepository</name></type> <name>contactRepository</name></decl>;</decl_stmt>
+
+    <constructor><name>Factory</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Uri</name></argument>&gt;</argument_list></name></type> <name>contactUris</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>ContactRepository</name></type> <name>contactRepository</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contactUris</name></name>       <operator>=</operator> <name>contactUris</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>contactRepository</name></name> <operator>=</operator> <name>contactRepository</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name><name>NonNull</name> <argument_list type="generic">&lt;<argument><name>T</name> <extends>extends <name>ViewModel</name></extends></argument>&gt;</argument_list></name></annotation> <type><name>T</name></type> <name>create</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Class</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>modelClass</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>modelClass</name><operator>.</operator><name>cast</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ContactShareEditViewModel</name><argument_list>(<argument><expr><name>contactUris</name></expr></argument>, <argument><expr><name>contactRepository</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

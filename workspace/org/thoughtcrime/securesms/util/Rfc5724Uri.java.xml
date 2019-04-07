@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\Rfc5724Uri.java"><comment type="block">/*
+ * Copyright (C) 2015 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URISyntaxException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URLDecoder</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>Rfc5724Uri</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>              <name>uri</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>              <name>schema</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type>              <name>path</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>queryParams</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>Rfc5724Uri</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>uri</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>URISyntaxException</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>uri</name></name>         <operator>=</operator> <name>uri</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>schema</name></name>      <operator>=</operator> <call><name>parseSchema</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>path</name></name>        <operator>=</operator> <call><name>parsePath</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>queryParams</name></name> <operator>=</operator> <call><name>parseQueryParams</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>parseSchema</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>URISyntaxException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>parts</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">":"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>parts</name><operator>.</operator><name>length</name></name> <operator>&lt;</operator> <literal type="number">1</literal> <operator>||</operator> <name><name>parts</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>URISyntaxException</name><argument_list>(<argument><expr><name>uri</name></expr></argument>, <argument><expr><literal type="string">"invalid schema"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then>
+    <else>else                                        <block type="pseudo"><return>return <expr><name><name>parts</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</return></block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>parsePath</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>URISyntaxException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>parts</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">"\\?"</literal></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index><operator>.</operator><call><name>split</name><argument_list>(<argument><expr><literal type="string">":"</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>parts</name><operator>.</operator><name>length</name></name> <operator>&lt;</operator> <literal type="number">2</literal> <operator>||</operator> <name><name>parts</name><index>[<expr><literal type="number">1</literal></expr>]</index></name><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><throw>throw <expr><operator>new</operator> <call><name>URISyntaxException</name><argument_list>(<argument><expr><name>uri</name></expr></argument>, <argument><expr><literal type="string">"invalid path"</literal></expr></argument>)</argument_list></call></expr>;</throw></block></then>
+    <else>else                                        <block type="pseudo"><return>return <expr><name><name>parts</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr>;</return></block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>parseQueryParams</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>URISyntaxException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>queryParams</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>uri</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">"\\?"</literal></expr></argument>)</argument_list></call><operator>.</operator><name>length</name> <operator>&lt;</operator> <literal type="number">2</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name>queryParams</name></expr>;</return>
+    }</block></then></if>
+
+    <for>for <control>(<init><decl><type><name>String</name></type> <name>keyValue</name> <range>: <expr><call><name><name>uri</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">"\\?"</literal></expr></argument>)</argument_list></call><index>[<expr><literal type="number">1</literal></expr>]</index><operator>.</operator><call><name>split</name><argument_list>(<argument><expr><literal type="string">"&amp;"</literal></expr></argument>)</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>parts</name> <init>= <expr><call><name><name>keyValue</name><operator>.</operator><name>split</name></name><argument_list>(<argument><expr><literal type="string">"="</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name><name>parts</name><operator>.</operator><name>length</name></name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>queryParams</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name><name>parts</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+      <else>else                  <block type="pseudo"><expr_stmt><expr><call><name><name>queryParams</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name><name>parts</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><call><name><name>URLDecoder</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><name><name>parts</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+    }</block></for>
+
+    <return>return <expr><name>queryParams</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getSchema</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>schema</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>getPath</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>path</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getQueryParams</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>queryParams</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

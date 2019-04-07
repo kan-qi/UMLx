@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\loaders\CountryListLoader.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name></name>;</package>
+
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Comparator</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>AsyncTaskLoader</name></name>;</import>
+
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>i18n</name><operator>.</operator><name>phonenumbers</name><operator>.</operator><name>PhoneNumberUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>util</name><operator>.</operator><name>PhoneNumberFormatter</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CountryListLoader</name> <super><extends>extends <name><name>AsyncTaskLoader</name><argument_list type="generic">&lt;<argument><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>CountryListLoader</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>loadInBackground</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>regions</name>                    <init>= <expr><call><name><name>PhoneNumberUtil</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSupportedRegions</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>results</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>regions</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>String</name></type> <name>region</name> <range>: <expr><name>regions</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>data</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>data</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"country_name"</literal></expr></argument>, <argument><expr><call><name><name>PhoneNumberFormatter</name><operator>.</operator><name>getRegionDisplayName</name></name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>data</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"country_code"</literal></expr></argument>, <argument><expr><literal type="string">"+"</literal> <operator>+</operator><call><name><name>PhoneNumberUtil</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getCountryCodeForRegion</name><argument_list>(<argument><expr><name>region</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>results</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <expr_stmt><expr><call><name><name>Collections</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name>results</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>RegionComparator</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>results</name></expr>;</return>
+  }</block></function>
+
+  <class><specifier>private</specifier> <specifier>static</specifier> class <name>RegionComparator</name> <super><implements>implements <name><name>Comparator</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></implements></super> <block>{
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>compare</name><parameter_list>(<parameter><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>lhs</name></decl></parameter>, <parameter><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>lhs</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"country_name"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>compareTo</name><argument_list>(<argument><expr><call><name><name>rhs</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"country_name"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

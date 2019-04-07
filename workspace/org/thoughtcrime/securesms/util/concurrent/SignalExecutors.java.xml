@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\concurrent\SignalExecutors.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutorService</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>Executors</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>LinkedBlockingQueue</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ThreadFactory</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ThreadPoolExecutor</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>atomic</name><operator>.</operator><name>AtomicInteger</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SignalExecutors</name> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>ExecutorService</name></type> <name>IO</name> <init>= <expr><call><name><name>Executors</name><operator>.</operator><name>newCachedThreadPool</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>ThreadFactory</name></super><argument_list>()</argument_list> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AtomicInteger</name></type> <name>counter</name> <init>= <expr><operator>new</operator> <call><name>AtomicInteger</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Thread</name></type> <name>newThread</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Runnable</name></type> <name>r</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name>Thread</name><argument_list>(<argument><expr><name>r</name></expr></argument>, <argument><expr><literal type="string">"signal-io-"</literal> <operator>+</operator> <call><name><name>counter</name><operator>.</operator><name>getAndIncrement</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>ExecutorService</name></type> <name>newCachedSingleThreadExecutor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ThreadPoolExecutor</name></type> <name>executor</name> <init>= <expr><operator>new</operator> <call><name>ThreadPoolExecutor</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">15</literal></expr></argument>, <argument><expr><name><name>TimeUnit</name><operator>.</operator><name>SECONDS</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>LinkedBlockingQueue</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>r</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name>Thread</name><argument_list>(<argument><expr><name>r</name></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>executor</name><operator>.</operator><name>allowCoreThreadTimeOut</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>executor</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

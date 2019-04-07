@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\sms\OutgoingEndSessionMessage.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name></name>;</package>
+
+<class><specifier>public</specifier> class <name>OutgoingEndSessionMessage</name> <super><extends>extends <name>OutgoingTextMessage</name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>OutgoingEndSessionMessage</name><parameter_list>(<parameter><decl><type><name>OutgoingTextMessage</name></type> <name>base</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>base</name></expr></argument>, <argument><expr><call><name><name>base</name><operator>.</operator><name>getMessageBody</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>OutgoingEndSessionMessage</name><parameter_list>(<parameter><decl><type><name>OutgoingTextMessage</name></type> <name>message</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>message</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>isEndSession</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>OutgoingTextMessage</name></type> <name>withBody</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>OutgoingEndSessionMessage</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

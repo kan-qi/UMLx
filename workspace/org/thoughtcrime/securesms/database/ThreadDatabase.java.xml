@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\database\ThreadDatabase.java"><comment type="block">/*
+ * Copyright (C) 2011 Whisper Systems
+ * Copyright (C) 2013-2017 Open Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>MergeCursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>annimon</name><operator>.</operator><name>stream</name><operator>.</operator><name>Stream</name></name>;</import>
+
+<import>import <name><name>net</name><operator>.</operator><name>sqlcipher</name><operator>.</operator><name>database</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name><operator>.</operator><name>Contact</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name><operator>.</operator><name>ContactUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupDatabase</name><operator>.</operator><name>GroupRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>MessagingDatabase</name><operator>.</operator><name>MarkedMessageInfo</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>RecipientDatabase</name><operator>.</operator><name>RecipientSettings</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>helpers</name><operator>.</operator><name>SQLCipherOpenHelper</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MediaMmsMessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MmsMessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>ThreadRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>Slide</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>SlideDeck</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DelimiterUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Closeable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>ThreadDatabase</name> <super><extends>extends <name>Database</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>ThreadDatabase</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TABLE_NAME</name>             <init>= <expr><literal type="string">"thread"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ID</name>                     <init>= <expr><literal type="string">"_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DATE</name>                   <init>= <expr><literal type="string">"date"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MESSAGE_COUNT</name>          <init>= <expr><literal type="string">"message_count"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ADDRESS</name>                <init>= <expr><literal type="string">"recipient_ids"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SNIPPET</name>                <init>= <expr><literal type="string">"snippet"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SNIPPET_CHARSET</name>        <init>= <expr><literal type="string">"snippet_cs"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>READ</name>                   <init>= <expr><literal type="string">"read"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNREAD_COUNT</name>           <init>= <expr><literal type="string">"unread_count"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TYPE</name>                   <init>= <expr><literal type="string">"type"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ERROR</name>                  <init>= <expr><literal type="string">"error"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SNIPPET_TYPE</name>           <init>= <expr><literal type="string">"snippet_type"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SNIPPET_URI</name>            <init>= <expr><literal type="string">"snippet_uri"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ARCHIVED</name>               <init>= <expr><literal type="string">"archived"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>STATUS</name>                 <init>= <expr><literal type="string">"status"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>DELIVERY_RECEIPT_COUNT</name> <init>= <expr><literal type="string">"delivery_receipt_count"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>READ_RECEIPT_COUNT</name>     <init>= <expr><literal type="string">"read_receipt_count"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXPIRES_IN</name>             <init>= <expr><literal type="string">"expires_in"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier>  <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>LAST_SEEN</name>              <init>= <expr><literal type="string">"last_seen"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>HAS_SENT</name>               <init>= <expr><literal type="string">"has_sent"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CREATE_TABLE</name> <init>= <expr><literal type="string">"CREATE TABLE "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal>                    <operator>+</operator>
+    <name>ID</name> <operator>+</operator> <literal type="string">" INTEGER PRIMARY KEY, "</literal> <operator>+</operator> <name>DATE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal>                                  <operator>+</operator>
+    <name>MESSAGE_COUNT</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" TEXT, "</literal> <operator>+</operator> <name>SNIPPET</name> <operator>+</operator> <literal type="string">" TEXT, "</literal>             <operator>+</operator>
+    <name>SNIPPET_CHARSET</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>READ</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 1, "</literal>                       <operator>+</operator>
+    <name>TYPE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>ERROR</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal>                                 <operator>+</operator>
+    <name>SNIPPET_TYPE</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>SNIPPET_URI</name> <operator>+</operator> <literal type="string">" TEXT DEFAULT NULL, "</literal>                   <operator>+</operator>
+    <name>ARCHIVED</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>STATUS</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal>                            <operator>+</operator>
+    <name>DELIVERY_RECEIPT_COUNT</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>EXPIRES_IN</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal>          <operator>+</operator>
+    <name>LAST_SEEN</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>HAS_SENT</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal>                         <operator>+</operator>
+    <name>READ_RECEIPT_COUNT</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0, "</literal> <operator>+</operator> <name>UNREAD_COUNT</name> <operator>+</operator> <literal type="string">" INTEGER DEFAULT 0);"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>CREATE_INDEXS</name> <init>= <expr><block>{
+    <expr><literal type="string">"CREATE INDEX IF NOT EXISTS thread_recipient_ids_index ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">");"</literal></expr>,
+    <expr><literal type="string">"CREATE INDEX IF NOT EXISTS archived_count_index ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" ("</literal> <operator>+</operator> <name>ARCHIVED</name> <operator>+</operator> <literal type="string">", "</literal> <operator>+</operator> <name>MESSAGE_COUNT</name> <operator>+</operator> <literal type="string">");"</literal></expr>,
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>THREAD_PROJECTION</name> <init>= <expr><block>{
+      <expr><name>ID</name></expr>, <expr><name>DATE</name></expr>, <expr><name>MESSAGE_COUNT</name></expr>, <expr><name>ADDRESS</name></expr>, <expr><name>SNIPPET</name></expr>, <expr><name>SNIPPET_CHARSET</name></expr>, <expr><name>READ</name></expr>, <expr><name>UNREAD_COUNT</name></expr>, <expr><name>TYPE</name></expr>, <expr><name>ERROR</name></expr>, <expr><name>SNIPPET_TYPE</name></expr>,
+      <expr><name>SNIPPET_URI</name></expr>, <expr><name>ARCHIVED</name></expr>, <expr><name>STATUS</name></expr>, <expr><name>DELIVERY_RECEIPT_COUNT</name></expr>, <expr><name>EXPIRES_IN</name></expr>, <expr><name>LAST_SEEN</name></expr>, <expr><name>READ_RECEIPT_COUNT</name></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>TYPED_THREAD_PROJECTION</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>THREAD_PROJECTION</name></expr></argument>)</argument_list></call>
+                                                                    <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>columnName</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>columnName</name></expr></block></lambda></expr></argument>)</argument_list></call>
+                                                                    <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>COMBINED_THREAD_RECIPIENT_GROUP_PROJECTION</name> <init>= <expr><call><name><name>Stream</name><operator>.</operator><name>concat</name></name><argument_list>(<argument><expr><call><name><name>Stream</name><operator>.</operator><name>concat</name></name><argument_list>(<argument><expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name>TYPED_THREAD_PROJECTION</name></expr></argument>)</argument_list></call></expr></argument>,
+                                                                                                             <argument><expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name><name>RecipientDatabase</name><operator>.</operator><name>TYPED_RECIPIENT_PROJECTION</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                                                                               <argument><expr><call><name><name>Stream</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><name><name>GroupDatabase</name><operator>.</operator><name>TYPED_GROUP_PROJECTION</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                                                                                       <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ThreadDatabase</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>SQLCipherOpenHelper</name></type> <name>databaseHelper</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>databaseHelper</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>long</name></type> <name>createThreadForRecipient</name><parameter_list>(<parameter><decl><type><name>Address</name></type> <name>address</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>group</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>distributionType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>date</name>                   <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATE</name></expr></argument>, <argument><expr><name>date</name> <operator>-</operator> <name>date</name> <operator>%</operator> <literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>, <argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>group</name></expr>)</condition><then>
+      <block type="pseudo"><expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TYPE</name></expr></argument>, <argument><expr><name>distributionType</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>MESSAGE_COUNT</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>db</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>updateThread</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>count</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>body</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>attachment</name></decl></parameter>,
+                            <parameter><decl><type><name>long</name></type> <name>date</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>status</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>deliveryReceiptCount</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unarchive</name></decl></parameter>,
+                            <parameter><decl><type><name>long</name></type> <name>expiresIn</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>readReceiptCount</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">7</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATE</name></expr></argument>, <argument><expr><name>date</name> <operator>-</operator> <name>date</name> <operator>%</operator> <literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>MESSAGE_COUNT</name></expr></argument>, <argument><expr><name>count</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SNIPPET</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SNIPPET_URI</name></expr></argument>, <argument><expr><ternary><condition><expr><name>attachment</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>attachment</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SNIPPET_TYPE</name></expr></argument>, <argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>STATUS</name></expr></argument>, <argument><expr><name>status</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DELIVERY_RECEIPT_COUNT</name></expr></argument>, <argument><expr><name>deliveryReceiptCount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>READ_RECEIPT_COUNT</name></expr></argument>, <argument><expr><name>readReceiptCount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>EXPIRES_IN</name></expr></argument>, <argument><expr><name>expiresIn</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>unarchive</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ARCHIVED</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>updateSnippet</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>snippet</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>attachment</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>date</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unarchive</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>DATE</name></expr></argument>, <argument><expr><name>date</name> <operator>-</operator> <name>date</name> <operator>%</operator> <literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SNIPPET</name></expr></argument>, <argument><expr><name>snippet</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SNIPPET_TYPE</name></expr></argument>, <argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>SNIPPET_URI</name></expr></argument>, <argument><expr><ternary><condition><expr><name>attachment</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>attachment</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>unarchive</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ARCHIVED</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>deleteThread</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>deleteThreads</name><parameter_list>(<parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>threadIds</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>where</name>      <init>= <expr><literal type="string">""</literal></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name>long</name></type> <name>threadId</name> <range>: <expr><name>threadIds</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><name>where</name> <operator>+=</operator> <name>ID</name> <operator>+</operator> <literal type="string">" = '"</literal> <operator>+</operator> <name>threadId</name> <operator>+</operator> <literal type="string">"' OR "</literal></expr>;</expr_stmt>
+    }</block></for>
+
+    <expr_stmt><expr><name>where</name> <operator>=</operator> <call><name><name>where</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>where</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>where</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>deleteAllThreads</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>trimAllThreads</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>, <parameter><decl><type><name>ProgressListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>   <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>threadCount</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>complete</name>    <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>getConversationList</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><name>threadCount</name> <operator>=</operator> <call><name><name>cursor</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+      <while>while <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <decl_stmt><decl><type><name>long</name></type> <name>threadId</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>trimThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onProgress</name></name><argument_list>(<argument><expr><operator>++</operator><name>complete</name></expr></argument>, <argument><expr><name>threadCount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></while>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>trimThread</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><literal type="string">"ThreadDatabase"</literal></expr></argument>, <argument><expr><literal type="string">"Trimming thread: "</literal> <operator>+</operator> <name>threadId</name> <operator>+</operator> <literal type="string">" to: "</literal> <operator>+</operator> <name>length</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getConversation</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>length</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <name>length</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><literal type="string">"ThreadDatabase"</literal></expr></argument>, <argument><expr><literal type="string">"Cursor count is greater than length!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>moveToPosition</name></name><argument_list>(<argument><expr><name>length</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>long</name></type> <name>lastTweetDate</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>MmsSmsColumns</name><operator>.</operator><name>NORMALIZED_DATE_RECEIVED</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><literal type="string">"ThreadDatabase"</literal></expr></argument>, <argument><expr><literal type="string">"Cut off tweet date: "</literal> <operator>+</operator> <name>lastTweetDate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteMessagesInThreadBeforeDate</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>, <argument><expr><name>lastTweetDate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteMessagesInThreadBeforeDate</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>, <argument><expr><name>lastTweetDate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>update</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></type> <name>setAllThreadsRead</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>           <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>READ</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>UNREAD_COUNT</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></type> <name>smsRecords</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setAllMessagesRead</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></type> <name>mmsRecords</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setAllMessagesRead</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><operator>new</operator> <class><super><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block>{
+      <constructor_decl><name>addAll</name><parameter_list>(<parameter><decl><type><name>smsRecords</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      <constructor_decl><name>addAll</name><parameter_list>(<parameter><decl><type><name>mmsRecords</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    }</block>}</block></class></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></type> <name>setRead</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>lastSeen</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>READ</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>UNREAD_COUNT</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>lastSeen</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>LAST_SEEN</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name><operator>+</operator><literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></type> <name>smsRecords</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setMessagesRead</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></type> <name>mmsRecords</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>setMessagesRead</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><operator>new</operator> <class><super><name><name>LinkedList</name><argument_list type="generic">&lt;<argument><name>MarkedMessageInfo</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block>{
+      <constructor_decl><name>addAll</name><parameter_list>(<parameter><decl><type><name>smsRecords</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      <constructor_decl><name>addAll</name><parameter_list>(<parameter><decl><type><name>mmsRecords</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    }</block>}</block></class></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>incrementUnread</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>amount</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"UPDATE "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">" SET "</literal> <operator>+</operator> <name>READ</name> <operator>+</operator> <literal type="string">" = 0, "</literal> <operator>+</operator>
+                   <name>UNREAD_COUNT</name> <operator>+</operator> <literal type="string">" = "</literal> <operator>+</operator> <name>UNREAD_COUNT</name> <operator>+</operator> <literal type="string">" + ? WHERE "</literal> <operator>+</operator> <name>ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+               <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>amount</name></expr></argument>)</argument_list></call></expr>,
+                             <expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDistributionType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>distributionType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>TYPE</name></expr></argument>, <argument><expr><name>distributionType</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getDistributionType</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>     <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>TYPE</name></expr>}</block></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>TYPE</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+
+      <return>return <expr><name><name>DistributionTypes</name><operator>.</operator><name>DEFAULT</name></name></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Cursor</name></type> <name>getFilteredConversationList</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>filter</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>filter</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>filter</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then>
+      <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type>      <name>db</name>                   <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>partitionedAddresses</name> <init>= <expr><call><name><name>Util</name><operator>.</operator><name>partition</name></name><argument_list>(<argument><expr><name>filter</name></expr></argument>, <argument><expr><literal type="number">900</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Cursor</name></argument>&gt;</argument_list></name></type>        <name>cursors</name>              <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Address</name></argument>&gt;</argument_list></name></type> <name>addresses</name> <range>: <expr><name>partitionedAddresses</name></expr></range></decl></init>)</control> <block>{
+      <decl_stmt><decl><type><name>String</name></type>   <name>selection</name>      <init>= <expr><name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>selectionArgs</name>  <init>= <expr><operator>new</operator> <name><name>String</name><index>[<expr><call><name><name>addresses</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl>;</init><condition><expr><name>i</name><operator>&lt;</operator><call><name><name>addresses</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call><operator>-</operator><literal type="number">1</literal></expr>;</condition><incr><expr><name>i</name><operator>++</operator></expr></incr>)</control>
+        <block type="pseudo"><expr_stmt><expr><name>selection</name> <operator>+=</operator> <operator>(</operator><literal type="string">" OR "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal><operator>)</operator></expr>;</expr_stmt></block></for>
+
+      <decl_stmt><decl><type><name>int</name></type> <name>i</name><init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+      <for>for <control>(<init><decl><type><name>Address</name></type> <name>address</name> <range>: <expr><name>addresses</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><name><name>selectionArgs</name><index>[<expr><name>i</name><operator>++</operator></expr>]</index></name> <operator>=</operator> <call><name><name>DelimiterUtil</name><operator>.</operator><name>escape</name></name><argument_list>(<argument><expr><call><name><name>address</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <decl_stmt><decl><type><name>String</name></type> <name>query</name> <init>= <expr><call><name>createQuery</name><argument_list>(<argument><expr><name>selection</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>cursors</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>db</name><operator>.</operator><name>rawQuery</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><name>selectionArgs</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name> <init>= <expr><ternary><condition><expr><call><name><name>cursors</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">1</literal></expr> ?</condition><then> <expr><operator>new</operator> <call><name>MergeCursor</name><argument_list>(<argument><expr><call><name><name>cursors</name><operator>.</operator><name>toArray</name></name><argument_list>(<argument><expr><operator>new</operator> <name><name>Cursor</name><index>[<expr><call><name><name>cursors</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>cursors</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>setNotifyConverationListListeners</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>cursor</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Cursor</name></type> <name>getRecentConversationList</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>limit</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>    <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>         <name>query</name> <init>= <expr><call><name>createQuery</name><argument_list>(<argument><expr><name>MESSAGE_COUNT</name> <operator>+</operator> <literal type="string">" != 0"</literal></expr></argument>, <argument><expr><name>limit</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>db</name><operator>.</operator><name>rawQuery</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Cursor</name></type> <name>getConversationList</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>getConversationList</name><argument_list>(<argument><expr><literal type="string">"0"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Cursor</name></type> <name>getArchivedConversationList</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>getConversationList</name><argument_list>(<argument><expr><literal type="string">"1"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Cursor</name></type> <name>getConversationList</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>archived</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>     <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>         <name>query</name>  <init>= <expr><call><name>createQuery</name><argument_list>(<argument><expr><name>ARCHIVED</name> <operator>+</operator> <literal type="string">" = ? AND "</literal> <operator>+</operator> <name>MESSAGE_COUNT</name> <operator>+</operator> <literal type="string">" != 0"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>rawQuery</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>archived</name></expr>}</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>setNotifyConverationListListeners</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>cursor</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>Cursor</name></type> <name>getDirectShareList</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>    <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>         <name>query</name> <init>= <expr><call><name>createQuery</name><argument_list>(<argument><expr><name>MESSAGE_COUNT</name> <operator>+</operator> <literal type="string">" != 0"</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>db</name><operator>.</operator><name>rawQuery</name></name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>getArchivedConversationListCount</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>     <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><literal type="string">"COUNT(*)"</literal></expr>}</block></expr></argument>, <argument><expr><name>ARCHIVED</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>,
+                        <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><literal type="string">"1"</literal></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>archiveConversation</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>            <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ARCHIVED</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>unarchiveConversation</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>            <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type>  <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>ARCHIVED</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name> <operator>+</operator> <literal type="string">""</literal></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setLastSeen</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>LAST_SEEN</name></expr></argument>, <argument><expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>update</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>getLastSeenAndHasSent</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>     <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name> <init>= <expr><call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>LAST_SEEN</name></expr>, <expr><name>HAS_SENT</name></expr>}</block></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+
+      <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1L</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>deleteConversation</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getDraftDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>clearDrafts</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>deleteThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>deleteConversations</name><parameter_list>(<parameter><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>Long</name></argument>&gt;</argument_list></name></type> <name>selectedConversations</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteThreads</name><argument_list>(<argument><expr><name>selectedConversations</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteThreads</name><argument_list>(<argument><expr><name>selectedConversations</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getDraftDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>clearDrafts</name><argument_list>(<argument><expr><name>selectedConversations</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>deleteThreads</name><argument_list>(<argument><expr><name>selectedConversations</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><name>selectedConversations</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>deleteAllConversations</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteAllThreads</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteAllThreads</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getDraftDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>clearAllDrafts</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>deleteAllThreads</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getThreadIdIfExistsFor</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>      <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>where</name>           <init>= <expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>recipientsArg</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr>}</block></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>          <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>ID</name></expr>}</block></expr></argument>, <argument><expr><name>where</name></expr></argument>, <argument><expr><name>recipientsArg</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then>
+        <block type="pseudo"><return>return <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return></block></then>
+      <else>else
+        <block type="pseudo"><return>return <expr><operator>-</operator><literal type="number">1L</literal></expr>;</return></block></else></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getThreadIdFor</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getThreadIdFor</name><argument_list>(<argument><expr><name>recipient</name></expr></argument>, <argument><expr><name><name>DistributionTypes</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>long</name></type> <name>getThreadIdFor</name><parameter_list>(<parameter><decl><type><name>Recipient</name></type> <name>recipient</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>distributionType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name>            <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>         <name>where</name>         <init>= <expr><name>ADDRESS</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type>       <name>recipientsArg</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr>}</block></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type>         <name>cursor</name>        <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name><block>{<expr><name>ID</name></expr>}</block></expr></argument>, <argument><expr><name>where</name></expr></argument>, <argument><expr><name>recipientsArg</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ID</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name>createThreadForRecipient</name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getAddress</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>recipient</name><operator>.</operator><name>isGroupRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>distributionType</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Recipient</name></type> <name>getRecipientForThreadId</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>SQLiteDatabase</name></type> <name>db</name> <init>= <expr><call><name><name>databaseHelper</name><operator>.</operator><name>getReadableDatabase</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Cursor</name></type> <name>cursor</name>     <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>cursor</name> <operator>=</operator> <call><name><name>db</name><operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>ID</name> <operator>+</operator> <literal type="string">" = ?"</literal></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><name>threadId</name><operator>+</operator><literal type="string">""</literal></expr>}</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>cursor</name><operator>.</operator><name>moveToFirst</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>Address</name></type> <name>address</name> <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name>ADDRESS</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setHasSent</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>hasSent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>HAS_SENT</name></expr></argument>, <argument><expr><ternary><condition><expr><name>hasSent</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>update</name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>, <argument><expr><name>ID_WHERE</name></expr></argument>,
+                                                <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>notifyConversationListeners</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><type><name>void</name></type> <name>updateReadState</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>unreadCount</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getUnreadCount</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>ContentValues</name></type> <name>contentValues</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>READ</name></expr></argument>, <argument><expr><name>unreadCount</name> <operator>==</operator> <literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>contentValues</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>UNREAD_COUNT</name></expr></argument>, <argument><expr><name>unreadCount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>databaseHelper</name><operator>.</operator><name>getWritableDatabase</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>update</name><argument_list>(<argument><expr><name>TABLE_NAME</name></expr></argument>, <argument><expr><name>contentValues</name></expr></argument>,<argument><expr><name>ID_WHERE</name></expr></argument>,
+                                                <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{<expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>update</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>threadId</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>unarchive</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>MmsSmsDatabase</name></type> <name>mmsSmsDatabase</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type> <name>count</name>                    <init>= <expr><call><name><name>mmsSmsDatabase</name><operator>.</operator><name>getConversationCount</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>count</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>deleteThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>MmsSmsDatabase</name><operator>.</operator><name>Reader</name></name></type> <name>reader</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><name>reader</name> <operator>=</operator> <call><name><name>mmsSmsDatabase</name><operator>.</operator><name>readerFor</name></name><argument_list>(<argument><expr><call><name><name>mmsSmsDatabase</name><operator>.</operator><name>getConversationSnippet</name></name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <decl_stmt><decl><type><name>MessageRecord</name></type> <name>record</name></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>reader</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>(</operator><name>record</name> <operator>=</operator> <call><name><name>reader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>updateThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>, <argument><expr><name>count</name></expr></argument>, <argument><expr><call><name>getFormattedBodyFor</name><argument_list>(<argument><expr><name>record</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getAttachmentUriFor</name><argument_list>(<argument><expr><name>record</name></expr></argument>)</argument_list></call></expr></argument>,
+                     <argument><expr><call><name><name>record</name><operator>.</operator><name>getTimestamp</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getDeliveryStatus</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getDeliveryReceiptCount</name></name><argument_list>()</argument_list></call></expr></argument>,
+                     <argument><expr><call><name><name>record</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>unarchive</name></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getExpiresIn</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getReadReceiptCount</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name>deleteThread</name><argument_list>(<argument><expr><name>threadId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>notifyConversationListListeners</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></else></if>
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>reader</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>reader</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>getFormattedBodyFor</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>messageRecord</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><operator>(</operator><name>MmsMessageRecord</name><operator>)</operator> <name>messageRecord</name><operator>)</operator><operator>.</operator><call><name>getSharedContacts</name><argument_list>()</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>Contact</name></type> <name>contact</name> <init>= <expr><operator>(</operator><operator>(</operator><name>MmsMessageRecord</name><operator>)</operator> <name>messageRecord</name><operator>)</operator><operator>.</operator><call><name>getSharedContacts</name><argument_list>()</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>ContactUtil</name><operator>.</operator><name>getStringSummary</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>contact</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>messageRecord</name><operator>.</operator><name>getBody</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>getAttachmentUriFor</name><parameter_list>(<parameter><decl><type><name>MessageRecord</name></type> <name>record</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>record</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>record</name><operator>.</operator><name>isMmsNotification</name></name><argument_list>()</argument_list></call> <operator>||</operator> <call><name><name>record</name><operator>.</operator><name>isGroupAction</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+    <decl_stmt><decl><type><name>SlideDeck</name></type> <name>slideDeck</name> <init>= <expr><operator>(</operator><operator>(</operator><name>MediaMmsMessageRecord</name><operator>)</operator><name>record</name><operator>)</operator><operator>.</operator><call><name>getSlideDeck</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Slide</name></type>     <name>thumbnail</name> <init>= <expr><call><name><name>slideDeck</name><operator>.</operator><name>getThumbnailSlide</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><ternary><condition><expr><name>thumbnail</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>thumbnail</name><operator>.</operator><name>getThumbnailUri</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>createQuery</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>where</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>limit</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>String</name></type> <name>projection</name> <init>= <expr><call><name><name>Util</name><operator>.</operator><name>join</name></name><argument_list>(<argument><expr><name>COMBINED_THREAD_RECIPIENT_GROUP_PROJECTION</name></expr></argument>, <argument><expr><literal type="string">","</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>query</name> <init>=
+    <expr><literal type="string">"SELECT "</literal> <operator>+</operator> <name>projection</name> <operator>+</operator> <literal type="string">" FROM "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator>
+           <literal type="string">" LEFT OUTER JOIN "</literal> <operator>+</operator> <name><name>RecipientDatabase</name><operator>.</operator><name>TABLE_NAME</name></name> <operator>+</operator>
+           <literal type="string">" ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" = "</literal> <operator>+</operator> <name><name>RecipientDatabase</name><operator>.</operator><name>TABLE_NAME</name></name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name><name>RecipientDatabase</name><operator>.</operator><name>ADDRESS</name></name> <operator>+</operator>
+           <literal type="string">" LEFT OUTER JOIN "</literal> <operator>+</operator> <name><name>GroupDatabase</name><operator>.</operator><name>TABLE_NAME</name></name> <operator>+</operator>
+           <literal type="string">" ON "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>ADDRESS</name> <operator>+</operator> <literal type="string">" = "</literal> <operator>+</operator> <name><name>GroupDatabase</name><operator>.</operator><name>TABLE_NAME</name></name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name><name>GroupDatabase</name><operator>.</operator><name>GROUP_ID</name></name> <operator>+</operator>
+           <literal type="string">" WHERE "</literal> <operator>+</operator> <name>where</name> <operator>+</operator>
+           <literal type="string">" ORDER BY "</literal> <operator>+</operator> <name>TABLE_NAME</name> <operator>+</operator> <literal type="string">"."</literal> <operator>+</operator> <name>DATE</name> <operator>+</operator> <literal type="string">" DESC"</literal></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>limit</name> <operator>&gt;</operator>  <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>query</name> <operator>+=</operator> <literal type="string">" LIMIT "</literal> <operator>+</operator> <name>limit</name></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><name>query</name></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>ProgressListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onProgress</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>complete</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>total</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <function><specifier>public</specifier> <type><name>Reader</name></type> <name>readerFor</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>Reader</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>DistributionTypes</name> <block>{
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DEFAULT</name>      <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>BROADCAST</name>    <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>CONVERSATION</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>ARCHIVE</name>      <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>INBOX_ZERO</name>   <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+  }</block></class>
+
+  <class><specifier>public</specifier> class <name>Reader</name> <super><implements>implements <name>Closeable</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Cursor</name></type> <name>cursor</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>Reader</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cursor</name></name> <operator>=</operator> <name>cursor</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>ThreadRecord</name></type> <name>getNext</name><parameter_list>()</parameter_list> <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>!</operator><call><name><name>cursor</name><operator>.</operator><name>moveToNext</name></name><argument_list>()</argument_list></call></expr>)</condition><then>
+        <block type="pseudo"><return>return <expr><literal type="null">null</literal></expr>;</return></block></then></if>
+
+      <return>return <expr><call><name>getCurrent</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>ThreadRecord</name></type> <name>getCurrent</name><parameter_list>()</parameter_list> <block>{
+      <decl_stmt><decl><type><name>long</name></type>    <name>threadId</name>         <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>ID</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>     <name>distributionType</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>TYPE</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Address</name></type> <name>address</name>          <init>= <expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>ADDRESS</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>RecipientSettings</name></argument>&gt;</argument_list></name></type> <name>settings</name></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>GroupRecord</name></argument>&gt;</argument_list></name></type>       <name>groupRecord</name></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>distributionType</name> <operator>!=</operator> <name><name>DistributionTypes</name><operator>.</operator><name>ARCHIVE</name></name> <operator>&amp;&amp;</operator> <name>distributionType</name> <operator>!=</operator> <name><name>DistributionTypes</name><operator>.</operator><name>INBOX_ZERO</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>settings</name>    <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getRecipientDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getRecipientSettings</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>groupRecord</name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroup</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><name>settings</name>    <operator>=</operator> <call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>groupRecord</name> <operator>=</operator> <call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+      <decl_stmt><decl><type><name>Recipient</name></type>          <name>recipient</name>            <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>address</name></expr></argument>, <argument><expr><name>settings</name></expr></argument>, <argument><expr><name>groupRecord</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>String</name></type>             <name>body</name>                 <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>SNIPPET</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>               <name>date</name>                 <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>DATE</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>               <name>count</name>                <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>MESSAGE_COUNT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>                <name>unreadCount</name>          <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>UNREAD_COUNT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>               <name>type</name>                 <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>SNIPPET_TYPE</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>boolean</name></type>            <name>archived</name>             <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndex</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>ARCHIVED</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>!=</operator> <literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>                <name>status</name>               <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>STATUS</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>                <name>deliveryReceiptCount</name> <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>DELIVERY_RECEIPT_COUNT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type>                <name>readReceiptCount</name>     <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>READ_RECEIPT_COUNT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>               <name>expiresIn</name>            <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>EXPIRES_IN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>long</name></type>               <name>lastSeen</name>             <init>= <expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>LAST_SEEN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>Uri</name></type>                <name>snippetUri</name>           <init>= <expr><call><name>getSnippetUri</name><argument_list>(<argument><expr><name>cursor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isReadReceiptsEnabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>readReceiptCount</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><operator>new</operator> <call><name>ThreadRecord</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>body</name></expr></argument>, <argument><expr><name>snippetUri</name></expr></argument>, <argument><expr><name>recipient</name></expr></argument>, <argument><expr><name>date</name></expr></argument>, <argument><expr><name>count</name></expr></argument>,
+                              <argument><expr><name>unreadCount</name></expr></argument>, <argument><expr><name>threadId</name></expr></argument>, <argument><expr><name>deliveryReceiptCount</name></expr></argument>, <argument><expr><name>status</name></expr></argument>, <argument><expr><name>type</name></expr></argument>,
+                              <argument><expr><name>distributionType</name></expr></argument>, <argument><expr><name>archived</name></expr></argument>, <argument><expr><name>expiresIn</name></expr></argument>, <argument><expr><name>lastSeen</name></expr></argument>, <argument><expr><name>readReceiptCount</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>getSnippetUri</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>cursor</name><operator>.</operator><name>isNull</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>SNIPPET_URI</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></then></if>
+
+      <try>try <block>{
+        <return>return <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getColumnIndexOrThrow</name></name><argument_list>(<argument><expr><name><name>ThreadDatabase</name><operator>.</operator><name>SNIPPET_URI</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalArgumentException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+      <if>if <condition>(<expr><name>cursor</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>cursor</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

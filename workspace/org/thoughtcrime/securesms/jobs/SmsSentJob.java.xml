@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\SmsSentJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>telephony</name><operator>.</operator><name>SmsManager</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>NoSuchMessageException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>SmsDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>SmsMessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>notifications</name><operator>.</operator><name>MessageNotifier</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>service</name><operator>.</operator><name>SmsDeliveryListener</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>SmsSentJob</name> <super><extends>extends <name>ContextJob</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type>   <name>serialVersionUID</name> <init>= <expr><operator>-</operator><literal type="number">2624694558755317560L</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name>              <init>= <expr><call><name><name>SmsSentJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_MESSAGE_ID</name>  <init>= <expr><literal type="string">"message_id"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_ACTION</name>      <init>= <expr><literal type="string">"action"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_RESULT</name>      <init>= <expr><literal type="string">"result"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>KEY_RUN_ATTEMPT</name> <init>= <expr><literal type="string">"run_attempt"</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>long</name></type>   <name>messageId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>action</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>    <name>result</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type>    <name>runAttempt</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>SmsSentJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>SmsSentJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>action</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>result</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>runAttempt</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageId</name></name>  <operator>=</operator> <name>messageId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>action</name></name>     <operator>=</operator> <name>action</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>result</name></name>     <operator>=</operator> <name>result</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>runAttempt</name></name> <operator>=</operator> <name>runAttempt</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>messageId</name>  <operator>=</operator> <call><name><name>data</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><name>KEY_MESSAGE_ID</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>action</name>     <operator>=</operator> <call><name><name>data</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>KEY_ACTION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>result</name>     <operator>=</operator> <call><name><name>data</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>KEY_RESULT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>runAttempt</name> <operator>=</operator> <call><name><name>data</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name>KEY_RUN_ATTEMPT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>putLong</name></name><argument_list>(<argument><expr><name>KEY_MESSAGE_ID</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>)</argument_list></call>
+                      <operator>.</operator><call><name>putString</name><argument_list>(<argument><expr><name>KEY_ACTION</name></expr></argument>, <argument><expr><name>action</name></expr></argument>)</argument_list></call>
+                      <operator>.</operator><call><name>putInt</name><argument_list>(<argument><expr><name>KEY_RESULT</name></expr></argument>, <argument><expr><name>result</name></expr></argument>)</argument_list></call>
+                      <operator>.</operator><call><name>putInt</name><argument_list>(<argument><expr><name>KEY_RUN_ATTEMPT</name></expr></argument>, <argument><expr><name>runAttempt</name></expr></argument>)</argument_list></call>
+                      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Got SMS callback: "</literal> <operator>+</operator> <name>action</name> <operator>+</operator> <literal type="string">" , "</literal> <operator>+</operator> <name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><name>action</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>SmsDeliveryListener</name><operator>.</operator><name>SENT_SMS_ACTION</name></name></expr>:</case>
+        <expr_stmt><expr><call><name>handleSentResult</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>SmsDeliveryListener</name><operator>.</operator><name>DELIVERED_SMS_ACTION</name></name></expr>:</case>
+        <expr_stmt><expr><call><name>handleDeliveredResult</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+    }</block></switch>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>throwable</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{
+
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleDeliveredResult</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>markStatus</name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleSentResult</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>result</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><name>SmsDatabase</name></type>      <name>database</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getSmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>SmsMessageRecord</name></type> <name>record</name>   <init>= <expr><call><name><name>database</name><operator>.</operator><name>getMessage</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <switch>switch <condition>(<expr><name>result</name></expr>)</condition> <block>{
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name></expr>:</case>
+          <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>markAsSent</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name><name>SmsManager</name><operator>.</operator><name>RESULT_ERROR_NO_SERVICE</name></name></expr>:</case>
+        <case>case <expr><name><name>SmsManager</name><operator>.</operator><name>RESULT_ERROR_RADIO_OFF</name></name></expr>:</case>
+          <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Service connectivity problem, requeuing..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>ApplicationContext</name><operator>.</operator><name>getInstance</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+              <operator>.</operator><call><name>getJobManager</name><argument_list>()</argument_list></call>
+              <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><operator>new</operator> <call><name>SmsSendJob</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>messageId</name></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getIndividualRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>runAttempt</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <default>default:</default>
+          <expr_stmt><expr><call><name><name>database</name><operator>.</operator><name>markAsSentFailed</name></name><argument_list>(<argument><expr><name>messageId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>MessageNotifier</name><operator>.</operator><name>notifyMessageDeliveryFailed</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>getThreadId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></switch>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>NoSuchMessageException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+}</block></class>
+</unit>

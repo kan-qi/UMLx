@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\AttachmentUtil.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>ConnectivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>NetworkInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>WorkerThread</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>AttachmentId</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>attachments</name><operator>.</operator><name>DatabaseAttachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>AttachmentUtil</name> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>AttachmentUtil</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isAutoDownloadPermitted</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>DatabaseAttachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>attachment</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"attachment was null, returning vacuous true"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name>isFromUnknownContact</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attachment</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>allowedTypes</name> <init>= <expr><call><name>getAllowedAutoDownloadTypes</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type>      <name>contentType</name>  <init>= <expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>attachment</name><operator>.</operator><name>isVoiceNote</name></name><argument_list>()</argument_list></call> <operator>||</operator> <operator>(</operator><call><name><name>MediaUtil</name><operator>.</operator><name>isAudio</name></name><argument_list>(<argument><expr><name>attachment</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getFileName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>)</operator> <operator>||</operator> <call><name><name>MediaUtil</name><operator>.</operator><name>isLongTextType</name></name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getContentType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>isNonDocumentType</name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>allowedTypes</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>MediaUtil</name><operator>.</operator><name>getDiscreteMimeType</name></name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><call><name><name>allowedTypes</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><literal type="string">"documents"</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Deletes the specified attachment. If its the only attachment for its linked message, the entire
+   * message is deleted.
+   */</comment>
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>deleteAttachment</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+                                      <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>DatabaseAttachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name>AttachmentId</name></type> <name>attachmentId</name>    <init>= <expr><call><name><name>attachment</name><operator>.</operator><name>getAttachmentId</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>long</name></type>         <name>mmsId</name>           <init>= <expr><call><name><name>attachment</name><operator>.</operator><name>getMmsId</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type>          <name>attachmentCount</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>getAttachmentsForMessage</name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>size</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>attachmentCount</name> <operator>&lt;=</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>delete</name><argument_list>(<argument><expr><name>mmsId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getAttachmentDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>deleteAttachment</name><argument_list>(<argument><expr><name>attachmentId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isNonDocumentType</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>contentType</name></decl></parameter>)</parameter_list> <block>{
+    <return>return
+        <expr><call><name><name>MediaUtil</name><operator>.</operator><name>isImageType</name></name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call> <operator>||</operator>
+        <call><name><name>MediaUtil</name><operator>.</operator><name>isVideoType</name></name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call> <operator>||</operator>
+        <call><name><name>MediaUtil</name><operator>.</operator><name>isAudioType</name></name><argument_list>(<argument><expr><name>contentType</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getAllowedAutoDownloadTypes</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if      <condition>(<expr><call><name>isConnectedWifi</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then>    <block type="pseudo"><return>return <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getWifiMediaDownloadAllowed</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return></block></then>
+    <elseif>else <if>if <condition>(<expr><call><name>isConnectedRoaming</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getRoamingMediaDownloadAllowed</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+    <elseif>else <if>if <condition>(<expr><call><name>isConnectedMobile</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then>  <block type="pseudo"><return>return <expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>getMobileMediaDownloadAllowed</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return></block></then></if></elseif>
+    <else>else                                  <block type="pseudo"><return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptySet</name></name><argument_list>()</argument_list></call></expr>;</return></block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>NetworkInfo</name></type> <name>getNetworkInfo</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>ServiceUtil</name><operator>.</operator><name>getConnectivityManager</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getActiveNetworkInfo</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isConnectedWifi</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>NetworkInfo</name></type> <name>info</name> <init>= <expr><call><name>getNetworkInfo</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>info</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>isConnected</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ConnectivityManager</name><operator>.</operator><name>TYPE_WIFI</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isConnectedMobile</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>NetworkInfo</name></type> <name>info</name> <init>= <expr><call><name>getNetworkInfo</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>info</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>isConnected</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ConnectivityManager</name><operator>.</operator><name>TYPE_MOBILE</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isConnectedRoaming</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>NetworkInfo</name></type> <name>info</name> <init>= <expr><call><name>getNetworkInfo</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>info</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>isConnected</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>isRoaming</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>info</name><operator>.</operator><name>getType</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>ConnectivityManager</name><operator>.</operator><name>TYPE_MOBILE</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>WorkerThread</name></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isFromUnknownContact</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>DatabaseAttachment</name></type> <name>attachment</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <init>(<decl><type><name>Cursor</name></type> <name>messageCursor</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getMessage</name><argument_list>(<argument><expr><call><name><name>attachment</name><operator>.</operator><name>getMmsId</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>)</init> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>MessageRecord</name></type> <name>message</name> <init>= <expr><call><name><name>DatabaseFactory</name><operator>.</operator><name>getMmsDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>readerFor</name><argument_list>(<argument><expr><name>messageCursor</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getNext</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><name>message</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <operator>(</operator><operator>!</operator><call><name><name>message</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isSystemContact</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>message</name><operator>.</operator><name>isOutgoing</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>Util</name><operator>.</operator><name>isOwnNumber</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>message</name><operator>.</operator><name>getRecipient</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAddress</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>)</operator></expr>)</condition><then> <block>{
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></then></if>
+    }</block></try>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

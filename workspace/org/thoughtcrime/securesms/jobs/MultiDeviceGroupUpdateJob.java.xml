@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\jobs\MultiDeviceGroupUpdateJob.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>UnidentifiedAccessUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>DatabaseFactory</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>GroupDatabase</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>dependencies</name><operator>.</operator><name>InjectableType</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>SafeData</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>GroupUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>jobmanager</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>SignalServiceMessageSender</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>crypto</name><operator>.</operator><name>UntrustedIdentityException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>messages</name><operator>.</operator><name>SignalServiceAttachment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>messages</name><operator>.</operator><name>SignalServiceAttachmentStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>messages</name><operator>.</operator><name>multidevice</name><operator>.</operator><name>DeviceGroup</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>messages</name><operator>.</operator><name>multidevice</name><operator>.</operator><name>DeviceGroupsOutputStream</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>messages</name><operator>.</operator><name>multidevice</name><operator>.</operator><name>SignalServiceSyncMessage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>signalservice</name><operator>.</operator><name>api</name><operator>.</operator><name>push</name><operator>.</operator><name>exceptions</name><operator>.</operator><name>PushNetworkException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileInputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>LinkedList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>Data</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>work</name><operator>.</operator><name>WorkerParameters</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MultiDeviceGroupUpdateJob</name> <super><extends>extends <name>ContextJob</name></extends> <implements>implements <name>InjectableType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>serialVersionUID</name> <init>= <expr><literal type="number">1L</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>MultiDeviceGroupUpdateJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>transient</specifier> <type><name>SignalServiceMessageSender</name></type> <name>messageSender</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>MultiDeviceGroupUpdateJob</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>WorkerParameters</name></type> <name>workerParameters</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>workerParameters</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>MultiDeviceGroupUpdateJob</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>JobParameters</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withNetworkRequirement</name><argument_list>()</argument_list></call>
+                                <operator>.</operator><call><name>withGroupId</name><argument_list>(<argument><expr><call><name><name>MultiDeviceGroupUpdateJob</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>SafeData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Data</name></type> <name>serialize</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Data</name><operator>.</operator><name>Builder</name></name></type> <name>dataBuilder</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dataBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onRun</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isMultiDevice</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>i</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Not multi device, aborting..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>File</name></type>                 <name>contactDataFile</name> <init>= <expr><call><name>createTempFile</name><argument_list>(<argument><expr><literal type="string">"multidevice-contact-update"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>GroupDatabase</name><operator>.</operator><name>Reader</name></name></type> <name>reader</name>          <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name><name>GroupDatabase</name><operator>.</operator><name>GroupRecord</name></name></type> <name>record</name></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <decl_stmt><decl><type><name>DeviceGroupsOutputStream</name></type> <name>out</name> <init>= <expr><operator>new</operator> <call><name>DeviceGroupsOutputStream</name><argument_list>(<argument><expr><operator>new</operator> <call><name>FileOutputStream</name><argument_list>(<argument><expr><name>contactDataFile</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name>reader</name> <operator>=</operator> <call><name><name>DatabaseFactory</name><operator>.</operator><name>getGroupDatabase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getGroups</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <while>while <condition>(<expr><operator>(</operator><name>record</name> <operator>=</operator> <call><name><name>reader</name><operator>.</operator><name>getNext</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>record</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>members</name> <init>= <expr><operator>new</operator> <call><name><name>LinkedList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <for>for <control>(<init><decl><type><name>Address</name></type> <name>member</name> <range>: <expr><call><name><name>record</name><operator>.</operator><name>getMembers</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+            <expr_stmt><expr><call><name><name>members</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>member</name><operator>.</operator><name>serialize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          }</block></for>
+
+          <decl_stmt><decl><type><name>Recipient</name></type>         <name>recipient</name>       <init>= <expr><call><name><name>Recipient</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><call><name><name>Address</name><operator>.</operator><name>fromSerialized</name></name><argument_list>(<argument><expr><call><name><name>GroupUtil</name><operator>.</operator><name>getEncodedId</name></name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>record</name><operator>.</operator><name>isMms</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <decl_stmt><decl><type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>expirationTimer</name> <init>= <expr><ternary><condition><expr><call><name><name>recipient</name><operator>.</operator><name>getExpireMessages</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getExpireMessages</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+          <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DeviceGroup</name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getId</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Optional</name><operator>.</operator><name>fromNullable</name></name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getTitle</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><name>members</name></expr></argument>, <argument><expr><call><name>getAvatar</name><argument_list>(<argument><expr><call><name><name>record</name><operator>.</operator><name>getAvatar</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>record</name><operator>.</operator><name>isActive</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>expirationTimer</name></expr></argument>,
+                                    <argument><expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>recipient</name><operator>.</operator><name>getColor</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>serialize</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>recipient</name><operator>.</operator><name>isBlocked</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></while>
+
+      <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name><name>contactDataFile</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>contactDataFile</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>sendUpdate</name><argument_list>(<argument><expr><name>messageSender</name></expr></argument>, <argument><expr><name>contactDataFile</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"No groups present for sync message..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+
+    }</block> <finally>finally <block>{
+      <if>if <condition>(<expr><name>contactDataFile</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>contactDataFile</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+      <if>if <condition>(<expr><name>reader</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>          <block type="pseudo"><expr_stmt><expr><call><name><name>reader</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></finally></try>
+
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onShouldRetry</name><parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>exception</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>exception</name> <operator>instanceof</operator> <name>PushNetworkException</name></expr>)</condition><then> <block type="pseudo"><return>return <expr><literal type="boolean">true</literal></expr>;</return></block></then></if>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCanceled</name><parameter_list>()</parameter_list> <block>{
+
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>sendUpdate</name><parameter_list>(<parameter><decl><type><name>SignalServiceMessageSender</name></type> <name>messageSender</name></decl></parameter>, <parameter><decl><type><name>File</name></type> <name>contactsFile</name></decl></parameter>)</parameter_list>
+      <throws>throws <argument><expr><name>IOException</name></expr></argument>, <argument><expr><name>UntrustedIdentityException</name></expr></argument></throws>
+  <block>{
+    <decl_stmt><decl><type><name>FileInputStream</name></type>               <name>contactsFileStream</name> <init>= <expr><operator>new</operator> <call><name>FileInputStream</name><argument_list>(<argument><expr><name>contactsFile</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>SignalServiceAttachmentStream</name></type> <name>attachmentStream</name>   <init>= <expr><call><name><name>SignalServiceAttachment</name><operator>.</operator><name>newStreamBuilder</name></name><argument_list>()</argument_list></call>
+                                                                              <operator>.</operator><call><name>withStream</name><argument_list>(<argument><expr><name>contactsFileStream</name></expr></argument>)</argument_list></call>
+                                                                              <operator>.</operator><call><name>withContentType</name><argument_list>(<argument><expr><literal type="string">"application/octet-stream"</literal></expr></argument>)</argument_list></call>
+                                                                              <operator>.</operator><call><name>withLength</name><argument_list>(<argument><expr><call><name><name>contactsFile</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                                                              <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>messageSender</name><operator>.</operator><name>sendMessage</name></name><argument_list>(<argument><expr><call><name><name>SignalServiceSyncMessage</name><operator>.</operator><name>forGroups</name></name><argument_list>(<argument><expr><name>attachmentStream</name></expr></argument>)</argument_list></call></expr></argument>,
+                              <argument><expr><call><name><name>UnidentifiedAccessUtil</name><operator>.</operator><name>getAccessForSync</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+
+  <function><specifier>private</specifier> <type><name><name>Optional</name><argument_list type="generic">&lt;<argument><name>SignalServiceAttachmentStream</name></argument>&gt;</argument_list></name></type> <name>getAvatar</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name><name>byte</name><index>[]</index></name></type> <name>avatar</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>avatar</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><return>return <expr><call><name><name>Optional</name><operator>.</operator><name>absent</name></name><argument_list>()</argument_list></call></expr>;</return></block></then></if>
+
+    <return>return <expr><call><name><name>Optional</name><operator>.</operator><name>of</name></name><argument_list>(<argument><expr><call><name><name>SignalServiceAttachment</name><operator>.</operator><name>newStreamBuilder</name></name><argument_list>()</argument_list></call>
+                                              <operator>.</operator><call><name>withStream</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ByteArrayInputStream</name><argument_list>(<argument><expr><name>avatar</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                                              <operator>.</operator><call><name>withContentType</name><argument_list>(<argument><expr><literal type="string">"image/*"</literal></expr></argument>)</argument_list></call>
+                                              <operator>.</operator><call><name>withLength</name><argument_list>(<argument><expr><name><name>avatar</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call>
+                                              <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>File</name></type> <name>createTempFile</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>prefix</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><name>File</name></type> <name>file</name> <init>= <expr><call><name><name>File</name><operator>.</operator><name>createTempFile</name></name><argument_list>(<argument><expr><name>prefix</name></expr></argument>, <argument><expr><literal type="string">"tmp"</literal></expr></argument>, <argument><expr><call><name><name>context</name><operator>.</operator><name>getCacheDir</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>deleteOnExit</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>file</name></expr>;</return>
+  }</block></function>
+
+
+}</block></class>
+</unit>

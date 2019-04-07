@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\swipeback\SwipeBackLayout.java"><package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>swipeback</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Rect</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>FrameLayout</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+
+
+<class><specifier>public</specifier> class <name>SwipeBackLayout</name> <super><extends>extends <name>FrameLayout</name></extends></super> <block>{
+    <comment type="block" format="javadoc">/**
+     * Minimum velocity that will be detected as a fling
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MIN_FLING_VELOCITY</name> <init>= <expr><literal type="number">400</literal></expr></init></decl>;</decl_stmt> <comment type="line">// dips per second</comment>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DEFAULT_SCRIM_COLOR</name> <init>= <expr><literal type="number">0x99000000</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>FULL_ALPHA</name> <init>= <expr><literal type="number">255</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Edge flag indicating that the left edge should be affected.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EDGE_LEFT</name> <init>= <expr><name><name>ViewDragHelper</name><operator>.</operator><name>EDGE_LEFT</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Edge flag indicating that the right edge should be affected.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EDGE_RIGHT</name> <init>= <expr><name><name>ViewDragHelper</name><operator>.</operator><name>EDGE_RIGHT</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Edge flag indicating that the bottom edge should be affected.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EDGE_BOTTOM</name> <init>= <expr><name><name>ViewDragHelper</name><operator>.</operator><name>EDGE_BOTTOM</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Edge flag set indicating all edges should be affected.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>EDGE_ALL</name> <init>= <expr><name>EDGE_LEFT</name> <operator>|</operator> <name>EDGE_RIGHT</name> <operator>|</operator> <name>EDGE_BOTTOM</name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * A view is not currently being dragged or animating as a result of a
+     * fling/snap.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATE_IDLE</name> <init>= <expr><name><name>ViewDragHelper</name><operator>.</operator><name>STATE_IDLE</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * A view is currently being dragged. The position is currently changing as
+     * a result of user input or simulated user input.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATE_DRAGGING</name> <init>= <expr><name><name>ViewDragHelper</name><operator>.</operator><name>STATE_DRAGGING</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * A view is currently settling into place as a result of a fling or
+     * predefined non-interactive motion.
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>STATE_SETTLING</name> <init>= <expr><name><name>ViewDragHelper</name><operator>.</operator><name>STATE_SETTLING</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Default threshold of scroll
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>float</name></type> <name>DEFAULT_SCROLL_THRESHOLD</name> <init>= <expr><literal type="number">0.3f</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>OVERSCROLL_DISTANCE</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name><name>int</name><index>[]</index></name></type> <name>EDGE_FLAGS</name> <init>= <expr><block>{
+            <expr><name>EDGE_LEFT</name></expr>, <expr><name>EDGE_RIGHT</name></expr>, <expr><name>EDGE_BOTTOM</name></expr>, <expr><name>EDGE_ALL</name></expr>
+    }</block></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mEdgeFlag</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Threshold of scroll, we will close the activity, when scrollPercent over
+     * this value;
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>mScrollThreshold</name> <init>= <expr><name>DEFAULT_SCROLL_THRESHOLD</name></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Activity</name></type> <name>mActivity</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>mEnable</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>mContentView</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ViewDragHelper</name></type> <name>mDragHelper</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>mScrollPercent</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mContentLeft</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mContentTop</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * The set of listeners to be sent events through.
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>SwipeListener</name></argument>&gt;</argument_list></name></type> <name>mListeners</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Drawable</name></type> <name>mShadowLeft</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Drawable</name></type> <name>mShadowRight</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Drawable</name></type> <name>mShadowBottom</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>mScrimOpacity</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mScrimColor</name> <init>= <expr><name>DEFAULT_SCRIM_COLOR</name></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>mInLayout</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Rect</name></type> <name>mTmpRect</name> <init>= <expr><operator>new</operator> <call><name>Rect</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Edge being dragged
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>mTrackingEdge</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>SwipeBackLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>SwipeBackLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>SwipeBackLayoutStyle</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>SwipeBackLayout</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyle</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mDragHelper</name> <operator>=</operator> <call><name><name>ViewDragHelper</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>ViewDragCallback</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>TypedArray</name></type> <name>a</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SwipeBackLayout</name></name></expr></argument>, <argument><expr><name>defStyle</name></expr></argument>,
+                <argument><expr><name><name>R</name><operator>.</operator><name>style</name><operator>.</operator><name>SwipeBackLayout</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>edgeSize</name> <init>= <expr><call><name><name>a</name><operator>.</operator><name>getDimensionPixelSize</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SwipeBackLayout_edge_size</name></name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>edgeSize</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then>
+            <block type="pseudo"><expr_stmt><expr><call><name>setEdgeSize</name><argument_list>(<argument><expr><name>edgeSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <decl_stmt><decl><type><name>int</name></type> <name>mode</name> <init>= <expr><name><name>EDGE_FLAGS</name><index>[<expr><call><name><name>a</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SwipeBackLayout_edge_flag</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>setEdgeTrackingEnabled</name><argument_list>(<argument><expr><name>mode</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>shadowLeft</name> <init>= <expr><call><name><name>a</name><operator>.</operator><name>getResourceId</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SwipeBackLayout_shadow_left</name></name></expr></argument>,
+                <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>shadow_left</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>shadowRight</name> <init>= <expr><call><name><name>a</name><operator>.</operator><name>getResourceId</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SwipeBackLayout_shadow_right</name></name></expr></argument>,
+                <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>shadow_right</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>shadowBottom</name> <init>= <expr><call><name><name>a</name><operator>.</operator><name>getResourceId</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>SwipeBackLayout_shadow_bottom</name></name></expr></argument>,
+                <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>shadow_bottom</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>setShadow</name><argument_list>(<argument><expr><name>shadowLeft</name></expr></argument>, <argument><expr><name>EDGE_LEFT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setShadow</name><argument_list>(<argument><expr><name>shadowRight</name></expr></argument>, <argument><expr><name>EDGE_RIGHT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setShadow</name><argument_list>(<argument><expr><name>shadowBottom</name></expr></argument>, <argument><expr><name>EDGE_BOTTOM</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>a</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>density</name> <init>= <expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDisplayMetrics</name><argument_list>()</argument_list></call><operator>.</operator><name>density</name></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>minVel</name> <init>= <expr><name>MIN_FLING_VELOCITY</name> <operator>*</operator> <name>density</name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>setMinVelocity</name></name><argument_list>(<argument><expr><name>minVel</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>setMaxVelocity</name></name><argument_list>(<argument><expr><name>minVel</name> <operator>*</operator> <literal type="number">2f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * Sets the sensitivity of the NavigationLayout.
+     *
+     * @param context     The application context.
+     * @param sensitivity value between 0 and 1, the final value for touchSlop =
+     *                    ViewConfiguration.getScaledTouchSlop * (1 / s);
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setSensitivity</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>sensitivity</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>setSensitivity</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>sensitivity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set up contentView which will be moved by user gesture
+     *
+     * @param view
+     */</comment>
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>setContentView</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mContentView</name> <operator>=</operator> <name>view</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setEnableGesture</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>enable</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mEnable</name> <operator>=</operator> <name>enable</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Enable edge tracking for the selected edges of the parent view. The
+     * callback's
+
+     * methods will only be invoked for edges for which edge tracking has been
+     * enabled.
+     *
+     * @param edgeFlags Combination of edge flags describing the edges to watch
+     * @see #EDGE_LEFT
+     * @see #EDGE_RIGHT
+     * @see #EDGE_BOTTOM
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setEdgeTrackingEnabled</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>edgeFlags</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mEdgeFlag</name> <operator>=</operator> <name>edgeFlags</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>setEdgeTrackingEnabled</name></name><argument_list>(<argument><expr><name>mEdgeFlag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set a color to use for the scrim that obscures primary content while a
+     * drawer is open.
+     *
+     * @param color Color to use in 0xAARRGGBB format.
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setScrimColor</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>color</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mScrimColor</name> <operator>=</operator> <name>color</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set the size of an edge. This is the range in pixels along the edges of
+     * this view that will actively detect edge touches or drags if edge
+     * tracking is enabled.
+     *
+     * @param size The size of an edge in pixels
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setEdgeSize</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>setEdgeSize</name></name><argument_list>(<argument><expr><name>size</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Register a callback to be invoked when a swipe event is sent to this
+     * view.
+     *
+     * @param listener the swipe listener to attach to this view
+     * @deprecated use {@link #addSwipeListener} instead
+     */</comment>
+    <function><annotation>@<name>Deprecated</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setSwipeListener</name><parameter_list>(<parameter><decl><type><name>SwipeListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>addSwipeListener</name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Add a callback to be invoked when a swipe event is sent to this view.
+     *
+     * @param listener the swipe listener to attach to this view
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>addSwipeListener</name><parameter_list>(<parameter><decl><type><name>SwipeListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>mListeners</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>mListeners</name> <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>SwipeListener</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>mListeners</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Removes a listener from the set of listeners
+     *
+     * @param listener
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>removeSwipeListener</name><parameter_list>(<parameter><decl><type><name>SwipeListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>mListeners</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <return>return;</return>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>mListeners</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>listener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <interface><specifier>public</specifier> <specifier>static</specifier> interface <name>SwipeListener</name> <block>{
+        <comment type="block" format="javadoc">/**
+         * Invoke when state change
+         *
+         * @param state         flag to describe scroll state
+         * @param scrollPercent scroll percent of this view
+         * @see #STATE_IDLE
+         * @see #STATE_DRAGGING
+         * @see #STATE_SETTLING
+         */</comment>
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onScrollStateChange</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>state</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>scrollPercent</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <comment type="block" format="javadoc">/**
+         * Invoke when edge touched
+         *
+         * @param edgeFlag edge flag describing the edge being touched
+         * @see #EDGE_LEFT
+         * @see #EDGE_RIGHT
+         * @see #EDGE_BOTTOM
+         */</comment>
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onEdgeTouch</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>edgeFlag</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <comment type="block" format="javadoc">/**
+         * Invoke when scroll percent over the threshold for the first time
+         */</comment>
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onScrollOverThreshold</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></interface>
+
+    <comment type="block" format="javadoc">/**
+     * Set scroll threshold, we will close the activity, when scrollPercent over
+     * this value
+     *
+     * @param threshold
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setScrollThresHold</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>threshold</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>threshold</name> <operator>&gt;=</operator> <literal type="number">1.0f</literal> <operator>||</operator> <name>threshold</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <throw>throw <expr><operator>new</operator> <call><name>IllegalArgumentException</name><argument_list>(<argument><expr><literal type="string">"Threshold value should be between 0 and 1.0"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+        }</block></then></if>
+        <expr_stmt><expr><name>mScrollThreshold</name> <operator>=</operator> <name>threshold</name></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set a drawable used for edge shadow.
+     *
+     * @param shadow    Drawable to use
+
+     * @see #EDGE_LEFT
+     * @see #EDGE_RIGHT
+     * @see #EDGE_BOTTOM
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setShadow</name><parameter_list>(<parameter><decl><type><name>Drawable</name></type> <name>shadow</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>edgeFlag</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>(</operator><name>edgeFlag</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>mShadowLeft</name> <operator>=</operator> <name>shadow</name></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>edgeFlag</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>mShadowRight</name> <operator>=</operator> <name>shadow</name></expr>;</expr_stmt>
+        }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>edgeFlag</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>mShadowBottom</name> <operator>=</operator> <name>shadow</name></expr>;</expr_stmt>
+        }</block></then></if></elseif></if>
+        <expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set a drawable used for edge shadow.
+     *
+     * @param resId     Resource of drawable to use
+
+     * @see #EDGE_LEFT
+     * @see #EDGE_RIGHT
+     * @see #EDGE_BOTTOM
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>setShadow</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>resId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>edgeFlag</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>setShadow</name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(<argument><expr><name>resId</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>edgeFlag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Scroll out contentView and finish the activity
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>scrollToFinishActivity</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>childWidth</name> <init>= <expr><call><name><name>mContentView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>childHeight</name> <init>= <expr><call><name><name>mContentView</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>left</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>top</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><operator>(</operator><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>left</name> <operator>=</operator> <name>childWidth</name> <operator>+</operator> <call><name><name>mShadowLeft</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call> <operator>+</operator> <name>OVERSCROLL_DISTANCE</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>mTrackingEdge</name> <operator>=</operator> <name>EDGE_LEFT</name></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>left</name> <operator>=</operator> <operator>-</operator><name>childWidth</name> <operator>-</operator> <call><name><name>mShadowRight</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>OVERSCROLL_DISTANCE</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>mTrackingEdge</name> <operator>=</operator> <name>EDGE_RIGHT</name></expr>;</expr_stmt>
+        }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>top</name> <operator>=</operator> <operator>-</operator><name>childHeight</name> <operator>-</operator> <call><name><name>mShadowBottom</name><operator>.</operator><name>getIntrinsicHeight</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>OVERSCROLL_DISTANCE</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>mTrackingEdge</name> <operator>=</operator> <name>EDGE_BOTTOM</name></expr>;</expr_stmt>
+        }</block></then></if></elseif></if>
+
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>smoothSlideViewTo</name></name><argument_list>(<argument><expr><name>mContentView</name></expr></argument>, <argument><expr><name>left</name></expr></argument>, <argument><expr><name>top</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onInterceptTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><name>mEnable</name></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></then></if>
+        <try>try <block>{
+            <return>return <expr><call><name><name>mDragHelper</name><operator>.</operator><name>shouldInterceptTouchEvent</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>ArrayIndexOutOfBoundsException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <comment type="line">// FIXME: handle exception</comment>
+            <comment type="line">// issues #9</comment>
+            <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></catch></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><name>mEnable</name></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>processTouchEvent</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onLayout</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>changed</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>left</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>top</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>right</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>bottom</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mInLayout</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>mContentView</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then>
+            <block type="pseudo"><expr_stmt><expr><call><name><name>mContentView</name><operator>.</operator><name>layout</name></name><argument_list>(<argument><expr><name>mContentLeft</name></expr></argument>, <argument><expr><name>mContentTop</name></expr></argument>,
+                    <argument><expr><name>mContentLeft</name> <operator>+</operator> <call><name><name>mContentView</name><operator>.</operator><name>getMeasuredWidth</name></name><argument_list>()</argument_list></call></expr></argument>,
+                    <argument><expr><name>mContentTop</name> <operator>+</operator> <call><name><name>mContentView</name><operator>.</operator><name>getMeasuredHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+        <expr_stmt><expr><name>mInLayout</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>requestLayout</name><parameter_list>()</parameter_list> <block>{
+        <if>if <condition>(<expr><operator>!</operator><name>mInLayout</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>requestLayout</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>boolean</name></type> <name>drawChild</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>drawingTime</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>drawContent</name> <init>= <expr><name>child</name> <operator>==</operator> <name>mContentView</name></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>boolean</name></type> <name>ret</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>drawChild</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>, <argument><expr><name>child</name></expr></argument>, <argument><expr><name>drawingTime</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>mScrimOpacity</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>drawContent</name>
+                <operator>&amp;&amp;</operator> <call><name><name>mDragHelper</name><operator>.</operator><name>getViewDragState</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <name><name>ViewDragHelper</name><operator>.</operator><name>STATE_IDLE</name></name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>drawShadow</name><argument_list>(<argument><expr><name>canvas</name></expr></argument>, <argument><expr><name>child</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>drawScrim</name><argument_list>(<argument><expr><name>canvas</name></expr></argument>, <argument><expr><name>child</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <return>return <expr><name>ret</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>drawScrim</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>baseAlpha</name> <init>= <expr><operator>(</operator><name>mScrimColor</name> <operator>&amp;</operator> <literal type="number">0xff000000</literal><operator>)</operator> <operator>&gt;&gt;&gt;</operator> <literal type="number">24</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>alpha</name> <init>= <expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>baseAlpha</name> <operator>*</operator> <name>mScrimOpacity</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>color</name> <init>= <expr><name>alpha</name> <operator>&lt;&lt;</operator> <literal type="number">24</literal> <operator>|</operator> <operator>(</operator><name>mScrimColor</name> <operator>&amp;</operator> <literal type="number">0xffffff</literal><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>clipRect</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>child</name><operator>.</operator><name>getLeft</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>clipRect</name></name><argument_list>(<argument><expr><call><name><name>child</name><operator>.</operator><name>getRight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name>getRight</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>clipRect</name></name><argument_list>(<argument><expr><call><name><name>child</name><operator>.</operator><name>getLeft</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>child</name><operator>.</operator><name>getBottom</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getRight</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif></if>
+        <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawColor</name></name><argument_list>(<argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>drawShadow</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>childRect</name> <init>= <expr><name>mTmpRect</name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>getHitRect</name></name><argument_list>(<argument><expr><name>childRect</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><operator>(</operator><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>mShadowLeft</name><operator>.</operator><name>setBounds</name></name><argument_list>(<argument><expr><name><name>childRect</name><operator>.</operator><name>left</name></name> <operator>-</operator> <call><name><name>mShadowLeft</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>childRect</name><operator>.</operator><name>top</name></name></expr></argument>,
+                    <argument><expr><name><name>childRect</name><operator>.</operator><name>left</name></name></expr></argument>, <argument><expr><name><name>childRect</name><operator>.</operator><name>bottom</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mShadowLeft</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>mScrimOpacity</name> <operator>*</operator> <name>FULL_ALPHA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mShadowLeft</name><operator>.</operator><name>draw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><operator>(</operator><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>mShadowRight</name><operator>.</operator><name>setBounds</name></name><argument_list>(<argument><expr><name><name>childRect</name><operator>.</operator><name>right</name></name></expr></argument>, <argument><expr><name><name>childRect</name><operator>.</operator><name>top</name></name></expr></argument>,
+                    <argument><expr><name><name>childRect</name><operator>.</operator><name>right</name></name> <operator>+</operator> <call><name><name>mShadowRight</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>childRect</name><operator>.</operator><name>bottom</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mShadowRight</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>mScrimOpacity</name> <operator>*</operator> <name>FULL_ALPHA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mShadowRight</name><operator>.</operator><name>draw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><operator>(</operator><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>mShadowBottom</name><operator>.</operator><name>setBounds</name></name><argument_list>(<argument><expr><name><name>childRect</name><operator>.</operator><name>left</name></name></expr></argument>, <argument><expr><name><name>childRect</name><operator>.</operator><name>bottom</name></name></expr></argument>, <argument><expr><name><name>childRect</name><operator>.</operator><name>right</name></name></expr></argument>,
+                    <argument><expr><name><name>childRect</name><operator>.</operator><name>bottom</name></name> <operator>+</operator> <call><name><name>mShadowBottom</name><operator>.</operator><name>getIntrinsicHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mShadowBottom</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>mScrimOpacity</name> <operator>*</operator> <name>FULL_ALPHA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>mShadowBottom</name><operator>.</operator><name>draw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>attachToActivity</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><name>mActivity</name> <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>TypedArray</name></type> <name>a</name> <init>= <expr><call><name><name>activity</name><operator>.</operator><name>getTheme</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>obtainStyledAttributes</name><argument_list>(<argument><expr><operator>new</operator> <name><name>int</name><index>[]</index></name><block>{
+                <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>attr</name><operator>.</operator><name>windowBackground</name></name></expr>
+        }</block></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>background</name> <init>= <expr><call><name><name>a</name><operator>.</operator><name>getResourceId</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>a</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>ViewGroup</name></type> <name>decor</name> <init>= <expr><operator>(</operator><name>ViewGroup</name><operator>)</operator> <call><name><name>activity</name><operator>.</operator><name>getWindow</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDecorView</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>ViewGroup</name></type> <name>decorChild</name> <init>= <expr><operator>(</operator><name>ViewGroup</name><operator>)</operator> <call><name><name>decor</name><operator>.</operator><name>getChildAt</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>decorChild</name><operator>.</operator><name>setBackgroundResource</name></name><argument_list>(<argument><expr><name>background</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>decor</name><operator>.</operator><name>removeView</name></name><argument_list>(<argument><expr><name>decorChild</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>addView</name><argument_list>(<argument><expr><name>decorChild</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name>decorChild</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>decor</name><operator>.</operator><name>addView</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>computeScroll</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>mScrimOpacity</name> <operator>=</operator> <literal type="number">1</literal> <operator>-</operator> <name>mScrollPercent</name></expr>;</expr_stmt>
+        <if>if <condition>(<expr><call><name><name>mDragHelper</name><operator>.</operator><name>continueSettling</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>ViewCompat</name><operator>.</operator><name>postInvalidateOnAnimation</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+    }</block></function>
+
+    <class><specifier>private</specifier> class <name>ViewDragCallback</name> <super><extends>extends <name><name>ViewDragHelper</name><operator>.</operator><name>Callback</name></name></extends></super> <block>{
+        <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>mIsScrollOverValid</name></decl>;</decl_stmt>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>boolean</name></type> <name>tryCaptureView</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>boolean</name></type> <name>ret</name> <init>= <expr><call><name><name>mDragHelper</name><operator>.</operator><name>isEdgeTouched</name></name><argument_list>(<argument><expr><name>mEdgeFlag</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>ret</name></expr>)</condition><then> <block>{
+                <if>if <condition>(<expr><call><name><name>mDragHelper</name><operator>.</operator><name>isEdgeTouched</name></name><argument_list>(<argument><expr><name>EDGE_LEFT</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><name>mTrackingEdge</name> <operator>=</operator> <name>EDGE_LEFT</name></expr>;</expr_stmt>
+                }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>mDragHelper</name><operator>.</operator><name>isEdgeTouched</name></name><argument_list>(<argument><expr><name>EDGE_RIGHT</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><name>mTrackingEdge</name> <operator>=</operator> <name>EDGE_RIGHT</name></expr>;</expr_stmt>
+                }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>mDragHelper</name><operator>.</operator><name>isEdgeTouched</name></name><argument_list>(<argument><expr><name>EDGE_BOTTOM</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><name>mTrackingEdge</name> <operator>=</operator> <name>EDGE_BOTTOM</name></expr>;</expr_stmt>
+                }</block></then></if></elseif></if>
+                <if>if <condition>(<expr><name>mListeners</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>mListeners</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                    <for>for <control>(<init><decl><type><name>SwipeListener</name></type> <name>listener</name> <range>: <expr><name>mListeners</name></expr></range></decl></init>)</control> <block>{
+                        <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onEdgeTouch</name></name><argument_list>(<argument><expr><name>mTrackingEdge</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block></for>
+                }</block></then></if>
+                <expr_stmt><expr><name>mIsScrollOverValid</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+            }</block></then></if>
+            <return>return <expr><name>ret</name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>int</name></type> <name>getViewHorizontalDragRange</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+            <return>return <expr><name>mEdgeFlag</name> <operator>&amp;</operator> <operator>(</operator><name>EDGE_LEFT</name> <operator>|</operator> <name>EDGE_RIGHT</name><operator>)</operator></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>int</name></type> <name>getViewVerticalDragRange</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>)</parameter_list> <block>{
+            <return>return <expr><name>mEdgeFlag</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onViewPositionChanged</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>changedView</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>left</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>top</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dx</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dy</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewPositionChanged</name></name><argument_list>(<argument><expr><name>changedView</name></expr></argument>, <argument><expr><name>left</name></expr></argument>, <argument><expr><name>top</name></expr></argument>, <argument><expr><name>dx</name></expr></argument>, <argument><expr><name>dy</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mScrollPercent</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator> <name>left</name>
+                        <operator>/</operator> <operator>(</operator><call><name><name>mContentView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>mShadowLeft</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mScrollPercent</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator> <name>left</name>
+                        <operator>/</operator> <operator>(</operator><call><name><name>mContentView</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>mShadowRight</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mScrollPercent</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator> <name>top</name>
+                        <operator>/</operator> <operator>(</operator><call><name><name>mContentView</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call> <operator>+</operator> <call><name><name>mShadowBottom</name><operator>.</operator><name>getIntrinsicHeight</name></name><argument_list>()</argument_list></call><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if></elseif></if>
+            <expr_stmt><expr><name>mContentLeft</name> <operator>=</operator> <name>left</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>mContentTop</name> <operator>=</operator> <name>top</name></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <if>if <condition>(<expr><name>mScrollPercent</name> <operator>&lt;</operator> <name>mScrollThreshold</name> <operator>&amp;&amp;</operator> <operator>!</operator><name>mIsScrollOverValid</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mIsScrollOverValid</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+            }</block></then></if>
+            <if>if <condition>(<expr><name>mListeners</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>mListeners</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call>
+                    <operator>&amp;&amp;</operator> <call><name><name>mDragHelper</name><operator>.</operator><name>getViewDragState</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>STATE_DRAGGING</name>
+                    <operator>&amp;&amp;</operator> <name>mScrollPercent</name> <operator>&gt;=</operator> <name>mScrollThreshold</name> <operator>&amp;&amp;</operator> <name>mIsScrollOverValid</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mIsScrollOverValid</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+                <for>for <control>(<init><decl><type><name>SwipeListener</name></type> <name>listener</name> <range>: <expr><name>mListeners</name></expr></range></decl></init>)</control> <block>{
+                    <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onScrollOverThreshold</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block></for>
+            }</block></then></if>
+
+            <if>if <condition>(<expr><name>mScrollPercent</name> <operator>&gt;=</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+                <if>if <condition>(<expr><operator>!</operator><call><name><name>mActivity</name><operator>.</operator><name>isFinishing</name></name><argument_list>()</argument_list></call></expr>)</condition><then>
+                    <block type="pseudo"><expr_stmt><expr><call><name><name>mActivity</name><operator>.</operator><name>finish</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+            }</block></then></if>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onViewReleased</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>releasedChild</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>xvel</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>yvel</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>childWidth</name> <init>= <expr><call><name><name>releasedChild</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>childHeight</name> <init>= <expr><call><name><name>releasedChild</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <decl_stmt><decl><type><name>int</name></type> <name>left</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>top</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>left</name> <operator>=</operator> <ternary><condition><expr><name>xvel</name> <operator>&gt;</operator> <literal type="number">0</literal> <operator>||</operator> <name>xvel</name> <operator>==</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>mScrollPercent</name> <operator>&gt;</operator> <name>mScrollThreshold</name></expr> ?</condition><then> <expr><name>childWidth</name>
+                        <operator>+</operator> <call><name><name>mShadowLeft</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call> <operator>+</operator> <name>OVERSCROLL_DISTANCE</name></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr>;</expr_stmt>
+            }</block></then> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>left</name> <operator>=</operator> <ternary><condition><expr><name><name>xvel</name> <argument_list type="generic">&lt; <argument><literal type="number">0</literal> <operator>||</operator> <name>xvel</name> <operator>==</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>mScrollPercent</name></argument> &gt;</argument_list></name> <name>mScrollThreshold</name></expr> ?</condition><then> <expr><operator>-</operator><operator>(</operator><name>childWidth</name>
+                        <operator>+</operator> <call><name><name>mShadowLeft</name><operator>.</operator><name>getIntrinsicWidth</name></name><argument_list>()</argument_list></call> <operator>+</operator> <name>OVERSCROLL_DISTANCE</name><operator>)</operator></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr>;</expr_stmt>
+            }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>top</name> <operator>=</operator> <ternary><condition><expr><name><name>yvel</name> <argument_list type="generic">&lt; <argument><literal type="number">0</literal> <operator>||</operator> <name>yvel</name> <operator>==</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <name>mScrollPercent</name></argument> &gt;</argument_list></name> <name>mScrollThreshold</name></expr> ?</condition><then> <expr><operator>-</operator><operator>(</operator><name>childHeight</name>
+                        <operator>+</operator> <call><name><name>mShadowBottom</name><operator>.</operator><name>getIntrinsicHeight</name></name><argument_list>()</argument_list></call> <operator>+</operator> <name>OVERSCROLL_DISTANCE</name><operator>)</operator></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr>;</expr_stmt>
+            }</block></then></if></elseif></if>
+
+            <expr_stmt><expr><call><name><name>mDragHelper</name><operator>.</operator><name>settleCapturedViewAt</name></name><argument_list>(<argument><expr><name>left</name></expr></argument>, <argument><expr><name>top</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>int</name></type> <name>clampViewPositionHorizontal</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>left</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dx</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>ret</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_LEFT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>ret</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><call><name><name>child</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><name>left</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <elseif>else <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_RIGHT</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>ret</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><name>left</name></expr></argument>, <argument><expr><operator>-</operator><call><name><name>child</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if></elseif></if>
+            <return>return <expr><name>ret</name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>int</name></type> <name>clampViewPositionVertical</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>top</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dy</name></decl></parameter>)</parameter_list> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>ret</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><operator>(</operator><name>mTrackingEdge</name> <operator>&amp;</operator> <name>EDGE_BOTTOM</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>ret</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><name>top</name></expr></argument>, <argument><expr><operator>-</operator><call><name><name>child</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+            <return>return <expr><name>ret</name></expr>;</return>
+        }</block></function>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>void</name></type> <name>onViewDragStateChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>state</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewDragStateChanged</name></name><argument_list>(<argument><expr><name>state</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <if>if <condition>(<expr><name>mListeners</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>mListeners</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                <for>for <control>(<init><decl><type><name>SwipeListener</name></type> <name>listener</name> <range>: <expr><name>mListeners</name></expr></range></decl></init>)</control> <block>{
+                    <expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onScrollStateChange</name></name><argument_list>(<argument><expr><name>state</name></expr></argument>, <argument><expr><name>mScrollPercent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></for>
+            }</block></then></if>
+        }</block></function>
+    }</block></class>
+}</block></class>
+</unit>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\BindableConversationItem.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contactshare</name><operator>.</operator><name>Contact</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>Address</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>model</name><operator>.</operator><name>MmsMessageRecord</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>linkpreview</name><operator>.</operator><name>LinkPreview</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>recipients</name><operator>.</operator><name>Recipient</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>whispersystems</name><operator>.</operator><name>libsignal</name><operator>.</operator><name>util</name><operator>.</operator><name>guava</name><operator>.</operator><name>Optional</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>BindableConversationItem</name> <super><extends>extends <name>Unbindable</name></extends></super> <block>{
+  <function_decl><type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>MessageRecord</name></type>           <name>messageRecord</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></type> <name>previousMessageRecord</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Optional</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></type> <name>nextMessageRecord</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type>           <name>glideRequests</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Locale</name></type>                  <name>locale</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>MessageRecord</name></argument>&gt;</argument_list></name></type>      <name>batchSelected</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Recipient</name></type>               <name>recipients</name></decl></parameter>,
+            <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>String</name></type>                 <name>searchQuery</name></decl></parameter>,
+                     <parameter><decl><type><name>boolean</name></type>                 <name>pulseHighlight</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function_decl><type><name>MessageRecord</name></type> <name>getMessageRecord</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function_decl><type><name>void</name></type> <name>setEventListener</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>EventListener</name></type> <name>listener</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <interface>interface <name>EventListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onQuoteClicked</name><parameter_list>(<parameter><decl><type><name>MmsMessageRecord</name></type> <name>messageRecord</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onLinkPreviewClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>LinkPreview</name></type> <name>linkPreview</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onMoreTextClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Address</name></type> <name>conversationAddress</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>messageId</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isMms</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onSharedContactDetailsClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Contact</name></type> <name>contact</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>avatarTransitionView</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onAddToContactsClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Contact</name></type> <name>contact</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onMessageSharedContactClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>choices</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>onInviteSharedContactClicked</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Recipient</name></argument>&gt;</argument_list></name></type> <name>choices</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></interface>
+</unit>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\sms\IncomingIdentityDefaultMessage.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>sms</name></name>;</package>
+
+
+<class><specifier>public</specifier> class <name>IncomingIdentityDefaultMessage</name> <super><extends>extends <name>IncomingTextMessage</name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>IncomingIdentityDefaultMessage</name><parameter_list>(<parameter><decl><type><name>IncomingTextMessage</name></type> <name>base</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>base</name></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>isIdentityDefault</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

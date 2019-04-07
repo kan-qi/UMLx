@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\scribbles\multitouch\MoveGestureDetector.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>scribbles</name><operator>.</operator><name>multitouch</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PointF</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * @author Almer Thie (code.almeros.com)
+ *         Copyright (c) 2013, Almer Thie (code.almeros.com)
+ *         &lt;p&gt;
+ *         All rights reserved.
+ *         &lt;p&gt;
+ *         Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *         &lt;p&gt;
+ *         Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ *         Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
+ *         in the documentation and/or other materials provided with the distribution.
+ *         &lt;p&gt;
+ *         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *         INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *         IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ *         OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ *         OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ *         OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ *         OF SUCH DAMAGE.
+ */</comment>
+<class><specifier>public</specifier> class <name>MoveGestureDetector</name> <super><extends>extends <name>BaseGestureDetector</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>PointF</name></type> <name>FOCUS_DELTA_ZERO</name> <init>= <expr><operator>new</operator> <call><name>PointF</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>OnMoveGestureListener</name></type> <name>mListener</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>PointF</name></type> <name>mCurrFocusInternal</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>PointF</name></type> <name>mPrevFocusInternal</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>PointF</name></type> <name>mFocusExternal</name> <init>= <expr><operator>new</operator> <call><name>PointF</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>PointF</name></type> <name>mFocusDeltaExternal</name> <init>= <expr><operator>new</operator> <call><name>PointF</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <constructor><specifier>public</specifier> <name>MoveGestureDetector</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>OnMoveGestureListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mListener</name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>handleStartProgressEvent</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>actionCode</name></decl></parameter>, <parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+        <switch>switch <condition>(<expr><name>actionCode</name></expr>)</condition> <block>{
+            <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr>:</case>
+                <expr_stmt><expr><call><name>resetState</name><argument_list>()</argument_list></call></expr>;</expr_stmt> <comment type="line">// In case we missed an UP/CANCEL event</comment>
+
+                <expr_stmt><expr><name>mPrevEvent</name> <operator>=</operator> <call><name><name>MotionEvent</name><operator>.</operator><name>obtain</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>mTimeDelta</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+
+                <expr_stmt><expr><call><name>updateStateByEvent</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+
+            <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_MOVE</name></name></expr>:</case>
+                <expr_stmt><expr><name>mGestureInProgress</name> <operator>=</operator> <call><name><name>mListener</name><operator>.</operator><name>onMoveBegin</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>handleInProgressEvent</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>actionCode</name></decl></parameter>, <parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+        <switch>switch <condition>(<expr><name>actionCode</name></expr>)</condition> <block>{
+            <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_UP</name></name></expr>:</case>
+            <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_CANCEL</name></name></expr>:</case>
+                <expr_stmt><expr><call><name><name>mListener</name><operator>.</operator><name>onMoveEnd</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>resetState</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+
+            <case>case <expr><name><name>MotionEvent</name><operator>.</operator><name>ACTION_MOVE</name></name></expr>:</case>
+                <expr_stmt><expr><call><name>updateStateByEvent</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+                <comment type="line">// Only accept the event if our relative pressure is within</comment>
+                <comment type="line">// a certain limit. This can help filter shaky data as a</comment>
+                <comment type="line">// finger is lifted.</comment>
+                <if>if <condition>(<expr><name>mCurrPressure</name> <operator>/</operator> <name>mPrevPressure</name> <operator>&gt;</operator> <name>PRESSURE_THRESHOLD</name></expr>)</condition><then> <block>{
+                    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>updatePrevious</name> <init>= <expr><call><name><name>mListener</name><operator>.</operator><name>onMove</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <if>if <condition>(<expr><name>updatePrevious</name></expr>)</condition><then> <block>{
+                        <expr_stmt><expr><call><name><name>mPrevEvent</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        <expr_stmt><expr><name>mPrevEvent</name> <operator>=</operator> <call><name><name>MotionEvent</name><operator>.</operator><name>obtain</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    }</block></then></if>
+                }</block></then></if>
+                <break>break;</break>
+        }</block></switch>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>updateStateByEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>curr</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>updateStateByEvent</name></name><argument_list>(<argument><expr><name>curr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>MotionEvent</name></type> <name>prev</name> <init>= <expr><name>mPrevEvent</name></expr></init></decl>;</decl_stmt>
+
+        <comment type="line">// Focus intenal</comment>
+        <expr_stmt><expr><name>mCurrFocusInternal</name> <operator>=</operator> <call><name>determineFocalPoint</name><argument_list>(<argument><expr><name>curr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mPrevFocusInternal</name> <operator>=</operator> <call><name>determineFocalPoint</name><argument_list>(<argument><expr><name>prev</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <comment type="line">// Focus external</comment>
+        <comment type="line">// - Prevent skipping of focus delta when a finger is added or removed</comment>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>mSkipNextMoveEvent</name> <init>= <expr><call><name><name>prev</name><operator>.</operator><name>getPointerCount</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <call><name><name>curr</name><operator>.</operator><name>getPointerCount</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>mFocusDeltaExternal</name> <operator>=</operator> <ternary><condition><expr><name>mSkipNextMoveEvent</name></expr> ?</condition><then> <expr><name>FOCUS_DELTA_ZERO</name></expr> </then><else>: <expr><operator>new</operator> <call><name>PointF</name><argument_list>(<argument><expr><name><name>mCurrFocusInternal</name><operator>.</operator><name>x</name></name> <operator>-</operator> <name><name>mPrevFocusInternal</name><operator>.</operator><name>x</name></name></expr></argument>, <argument><expr><name><name>mCurrFocusInternal</name><operator>.</operator><name>y</name></name> <operator>-</operator> <name><name>mPrevFocusInternal</name><operator>.</operator><name>y</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</expr_stmt>
+
+        <comment type="line">// - Don't directly use mFocusInternal (or skipping will occur). Add</comment>
+        <comment type="line">// 	 unskipped delta values to mFocusExternal instead.</comment>
+        <expr_stmt><expr><name><name>mFocusExternal</name><operator>.</operator><name>x</name></name> <operator>+=</operator> <name><name>mFocusDeltaExternal</name><operator>.</operator><name>x</name></name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>mFocusExternal</name><operator>.</operator><name>y</name></name> <operator>+=</operator> <name><name>mFocusDeltaExternal</name><operator>.</operator><name>y</name></name></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Determine (multi)finger focal point (a.k.a. center point between all
+     * fingers)
+     *
+     * @return PointF focal point
+     */</comment>
+    <function><specifier>private</specifier> <type><name>PointF</name></type> <name>determineFocalPoint</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <comment type="line">// Number of fingers on screen</comment>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>pCount</name> <init>= <expr><call><name><name>e</name><operator>.</operator><name>getPointerCount</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>float</name></type> <name>x</name> <init>= <expr><literal type="number">0f</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>float</name></type> <name>y</name> <init>= <expr><literal type="number">0f</literal></expr></init></decl>;</decl_stmt>
+
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>pCount</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+            <expr_stmt><expr><name>x</name> <operator>+=</operator> <call><name><name>e</name><operator>.</operator><name>getX</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>y</name> <operator>+=</operator> <call><name><name>e</name><operator>.</operator><name>getY</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+
+        <return>return <expr><operator>new</operator> <call><name>PointF</name><argument_list>(<argument><expr><name>x</name> <operator>/</operator> <name>pCount</name></expr></argument>, <argument><expr><name>y</name> <operator>/</operator> <name>pCount</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>float</name></type> <name>getFocusX</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name><name>mFocusExternal</name><operator>.</operator><name>x</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>float</name></type> <name>getFocusY</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name><name>mFocusExternal</name><operator>.</operator><name>y</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>PointF</name></type> <name>getFocusDelta</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mFocusDeltaExternal</name></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Listener which must be implemented which is used by MoveGestureDetector
+     * to perform callbacks to any implementing class which is registered to a
+     * MoveGestureDetector via the constructor.
+     *
+     * @see MoveGestureDetector.SimpleOnMoveGestureListener
+     */</comment>
+    <interface><specifier>public</specifier> interface <name>OnMoveGestureListener</name> <block>{
+        <function_decl><specifier>public</specifier> <type><name>boolean</name></type> <name>onMove</name><parameter_list>(<parameter><decl><type><name>MoveGestureDetector</name></type> <name>detector</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><specifier>public</specifier> <type><name>boolean</name></type> <name>onMoveBegin</name><parameter_list>(<parameter><decl><type><name>MoveGestureDetector</name></type> <name>detector</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>onMoveEnd</name><parameter_list>(<parameter><decl><type><name>MoveGestureDetector</name></type> <name>detector</name></decl></parameter>)</parameter_list>;</function_decl>
+    }</block></interface>
+
+    <comment type="block" format="javadoc">/**
+     * Helper class which may be extended and where the methods may be
+     * implemented. This way it is not necessary to implement all methods
+     * of OnMoveGestureListener.
+     */</comment>
+    <class><specifier>public</specifier> <specifier>static</specifier> class <name>SimpleOnMoveGestureListener</name> <super><implements>implements <name>OnMoveGestureListener</name></implements></super> <block>{
+        <function><specifier>public</specifier> <type><name>boolean</name></type> <name>onMove</name><parameter_list>(<parameter><decl><type><name>MoveGestureDetector</name></type> <name>detector</name></decl></parameter>)</parameter_list> <block>{
+            <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+        }</block></function>
+
+        <function><specifier>public</specifier> <type><name>boolean</name></type> <name>onMoveBegin</name><parameter_list>(<parameter><decl><type><name>MoveGestureDetector</name></type> <name>detector</name></decl></parameter>)</parameter_list> <block>{
+            <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+        }</block></function>
+
+        <function><specifier>public</specifier> <type><name>void</name></type> <name>onMoveEnd</name><parameter_list>(<parameter><decl><type><name>MoveGestureDetector</name></type> <name>detector</name></decl></parameter>)</parameter_list> <block>{
+            <comment type="line">// Do nothing, overridden implementation may be used</comment>
+        }</block></function>
+    }</block></class>
+
+}</block></class>
+</unit>

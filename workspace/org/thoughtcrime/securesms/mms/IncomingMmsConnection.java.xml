@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mms\IncomingMmsConnection.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>mms</name><operator>.</operator><name>pdu_alt</name><operator>.</operator><name>RetrieveConf</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>IncomingMmsConnection</name> <block>{
+  <function_decl><annotation>@<name>Nullable</name></annotation>
+  <type><name>RetrieveConf</name></type> <name>retrieve</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>contentLocation</name></decl></parameter>, <parameter><decl><type><name><name>byte</name><index>[]</index></name></type> <name>transactionId</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>subscriptionId</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>MmsException</name></expr></argument>, <argument><expr><name>MmsRadioException</name></expr></argument>, <argument><expr><name>ApnUnavailableException</name></expr></argument>, <argument><expr><name>IOException</name></expr></argument></throws>;</function_decl>
+}</block></interface>
+</unit>

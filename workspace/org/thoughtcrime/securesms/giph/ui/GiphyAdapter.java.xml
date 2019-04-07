@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\giph\ui\GiphyAdapter.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>giph</name><operator>.</operator><name>ui</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>ColorDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ProgressBar</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>RequestBuilder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>DataSource</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>DiskCacheStrategy</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>engine</name><operator>.</operator><name>GlideException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>resource</name><operator>.</operator><name>drawable</name><operator>.</operator><name>DrawableTransitionOptions</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>load</name><operator>.</operator><name>resource</name><operator>.</operator><name>gif</name><operator>.</operator><name>GifDrawable</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>request</name><operator>.</operator><name>RequestListener</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>request</name><operator>.</operator><name>target</name><operator>.</operator><name>Target</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>bumptech</name><operator>.</operator><name>glide</name><operator>.</operator><name>util</name><operator>.</operator><name>ByteBufferUtil</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>color</name><operator>.</operator><name>MaterialColor</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>giph</name><operator>.</operator><name>model</name><operator>.</operator><name>GiphyImage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>giph</name><operator>.</operator><name>model</name><operator>.</operator><name>ChunkedImageUrl</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideApp</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mms</name><operator>.</operator><name>GlideRequests</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>Util</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>ViewUtil</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ExecutionException</name></name>;</import>
+
+
+<class>class <name>GiphyAdapter</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name><name>Adapter</name><argument_list type="generic">&lt;<argument><name><name>GiphyAdapter</name><operator>.</operator><name>GiphyViewHolder</name></name></argument>&gt;</argument_list></name></name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>GiphyAdapter</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type>       <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GlideRequests</name></type> <name>glideRequests</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GiphyImage</name></argument>&gt;</argument_list></name></type>     <name>images</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>OnItemClickListener</name></type>  <name>listener</name></decl>;</decl_stmt>
+
+  <class>class <name>GiphyViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends> <implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name>, <name><name>RequestListener</name><argument_list type="generic">&lt;<argument><name>Drawable</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <type><name>AspectRatioImageView</name></type> <name>thumbnail</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>GiphyImage</name></type>           <name>image</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><name>ProgressBar</name></type>          <name>gifProgress</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>volatile</specifier> <name>boolean</name></type>     <name>modelReady</name></decl>;</decl_stmt>
+
+    <constructor><name>GiphyViewHolder</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>thumbnail</name>   <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>gifProgress</name> <operator>=</operator> <call><name><name>ViewUtil</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>gif_progress</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>thumbnail</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>gifProgress</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name>listener</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name><name>listener</name><operator>.</operator><name>onClick</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onLoadFailed</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>GlideException</name></type> <name>e</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>model</name></decl></parameter>, <parameter><decl><type><name><name>Target</name><argument_list type="generic">&lt;<argument><name>Drawable</name></argument>&gt;</argument_list></name></type> <name>target</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isFirstResource</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+        <if>if <condition>(<expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getGifUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getGifSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>model</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name><name>this</name><operator>.</operator><name>modelReady</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></synchronized>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onResourceReady</name><parameter_list>(<parameter><decl><type><name>Drawable</name></type> <name>resource</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>model</name></decl></parameter>, <parameter><decl><type><name><name>Target</name><argument_list type="generic">&lt;<argument><name>Drawable</name></argument>&gt;</argument_list></name></type> <name>target</name></decl></parameter>, <parameter><decl><type><name>DataSource</name></type> <name>dataSource</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>isFirstResource</name></decl></parameter>)</parameter_list> <block>{
+      <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+        <if>if <condition>(<expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getGifUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getGifSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>model</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><name><name>this</name><operator>.</operator><name>modelReady</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></synchronized>
+
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+
+
+    <function><specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getData</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>forMms</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>ExecutionException</name></expr></argument>, <argument><expr><name>InterruptedException</name></expr></argument></throws> <block>{
+      <synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{
+        <while>while <condition>(<expr><operator>!</operator><name>modelReady</name></expr>)</condition> <block>{
+          <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>wait</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></while>
+      }</block></synchronized>
+
+      <decl_stmt><decl><type><name>GifDrawable</name></type> <name>drawable</name> <init>= <expr><call><name><name>glideRequests</name><operator>.</operator><name>asGif</name></name><argument_list>()</argument_list></call>
+                                          <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><ternary><condition><expr><name>forMms</name></expr> ?</condition><then> <expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getGifMmsUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getMmsGifSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr> </then><else>:
+                                                         <expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getGifUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getGifSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>submit</name><argument_list>(<argument><expr><name><name>Target</name><operator>.</operator><name>SIZE_ORIGINAL</name></name></expr></argument>, <argument><expr><name><name>Target</name><operator>.</operator><name>SIZE_ORIGINAL</name></name></expr></argument>)</argument_list></call>
+                                          <operator>.</operator><call><name>get</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <return>return <expr><call><name><name>ByteBufferUtil</name><operator>.</operator><name>toBytes</name></name><argument_list>(<argument><expr><call><name><name>drawable</name><operator>.</operator><name>getBuffer</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>synchronized</specifier> <type><name>void</name></type> <name>setModelReady</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>modelReady</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>notifyAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <constructor><name>GiphyAdapter</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>GlideRequests</name></type> <name>glideRequests</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>GiphyImage</name></argument>&gt;</argument_list></name></type> <name>images</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name>       <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>glideRequests</name></name> <operator>=</operator> <name>glideRequests</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>images</name></name>        <operator>=</operator> <name>images</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setImages</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>GiphyImage</name></argument>&gt;</argument_list></name></type> <name>images</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>images</name></name> <operator>=</operator> <name>images</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>addImages</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GiphyImage</name></argument>&gt;</argument_list></name></type> <name>images</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>images</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><name>images</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>GiphyViewHolder</name></type> <name>onCreateViewHolder</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>parent</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>View</name></type> <name>itemView</name> <init>= <expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name><name>parent</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                                  <operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>giphy_thumbnail</name></name></expr></argument>, <argument><expr><name>parent</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><operator>new</operator> <call><name>GiphyViewHolder</name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><name>GiphyViewHolder</name></type> <name>holder</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>GiphyImage</name></type> <name>image</name> <init>= <expr><call><name><name>images</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>modelReady</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>holder</name><operator>.</operator><name>image</name></name>      <operator>=</operator> <name>image</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>thumbnail</name><operator>.</operator><name>setAspectRatio</name></name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getGifAspectRatio</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>gifProgress</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><name><name>RequestBuilder</name><argument_list type="generic">&lt;<argument><name>Drawable</name></argument>&gt;</argument_list></name></type> <name>thumbnailRequest</name> <init>= <expr><call><name><name>GlideApp</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+                                                        <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getStillUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getStillSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                                                        <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>ALL</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>Util</name><operator>.</operator><name>isLowMemory</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>load</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getStillUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getStillSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>placeholder</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getRandomElement</name></name><argument_list>(<argument><expr><call><name><name>MaterialColor</name><operator>.</operator><name>values</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>toConversationColor</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>ALL</name></name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>transition</name><argument_list>(<argument><expr><call><name><name>DrawableTransitionOptions</name><operator>.</operator><name>withCrossFade</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>listener</name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name><name>holder</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>setModelReady</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>load</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>ChunkedImageUrl</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getGifUrl</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>image</name><operator>.</operator><name>getGifSize</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>thumbnail</name><argument_list>(<argument><expr><name>thumbnailRequest</name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>placeholder</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ColorDrawable</name><argument_list>(<argument><expr><call><name><name>Util</name><operator>.</operator><name>getRandomElement</name></name><argument_list>(<argument><expr><call><name><name>MaterialColor</name><operator>.</operator><name>values</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>toConversationColor</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>diskCacheStrategy</name><argument_list>(<argument><expr><name><name>DiskCacheStrategy</name><operator>.</operator><name>ALL</name></name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>transition</name><argument_list>(<argument><expr><call><name><name>DrawableTransitionOptions</name><operator>.</operator><name>withCrossFade</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>listener</name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call>
+                   <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name><name>holder</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onViewRecycled</name><parameter_list>(<parameter><decl><type><name>GiphyViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewRecycled</name></name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>glideRequests</name><operator>.</operator><name>clear</name></name><argument_list>(<argument><expr><name><name>holder</name><operator>.</operator><name>thumbnail</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getItemCount</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>images</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setListener</name><parameter_list>(<parameter><decl><type><name>OnItemClickListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <name>listener</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>OnItemClickListener</name> <block>{
+    <function_decl><type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>GiphyViewHolder</name></type> <name>viewHolder</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class></unit>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\LongClickMovementMethod.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>ContextCompat</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Layout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Selection</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Spannable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>method</name><operator>.</operator><name>LinkMovementMethod</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>GestureDetector</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>R</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>LongClickMovementMethod</name> <super><extends>extends <name>LinkMovementMethod</name></extends></super> <block>{
+  <decl_stmt><decl><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"StaticFieldLeak"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>private</specifier> <specifier>static</specifier> <type><name>LongClickMovementMethod</name></type> <name>sInstance</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>GestureDetector</name></type> <name>gestureDetector</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>widget</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>LongClickCopySpan</name></type> <name>currentSpan</name></decl>;</decl_stmt>
+
+  <constructor><specifier>private</specifier> <name>LongClickMovementMethod</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name>gestureDetector</name> <operator>=</operator> <operator>new</operator> <call><name>GestureDetector</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>GestureDetector</name><operator>.</operator><name>SimpleOnGestureListener</name></name></super><argument_list>()</argument_list> <block>{
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>void</name></type> <name>onLongPress</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>currentSpan</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>widget</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>currentSpan</name><operator>.</operator><name>onLongClick</name></name><argument_list>(<argument><expr><name>widget</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>widget</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+          <expr_stmt><expr><name>currentSpan</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></function>
+
+      <function><annotation>@<name>Override</name></annotation>
+      <specifier>public</specifier> <type><name>boolean</name></type> <name>onSingleTapUp</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name>currentSpan</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>widget</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>currentSpan</name><operator>.</operator><name>onClick</name></name><argument_list>(<argument><expr><name>widget</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><name>widget</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+          <expr_stmt><expr><name>currentSpan</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        }</block></then></if>
+        <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+      }</block></function>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onTouchEvent</name><parameter_list>(<parameter><decl><type><name>TextView</name></type> <name>widget</name></decl></parameter>, <parameter><decl><type><name>Spannable</name></type> <name>buffer</name></decl></parameter>, <parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>action</name> <init>= <expr><call><name><name>event</name><operator>.</operator><name>getAction</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>action</name> <operator>==</operator> <name><name>MotionEvent</name><operator>.</operator><name>ACTION_UP</name></name> <operator>||</operator>
+            <name>action</name> <operator>==</operator> <name><name>MotionEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>x</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>event</name><operator>.</operator><name>getX</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>y</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>event</name><operator>.</operator><name>getY</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name>x</name> <operator>-=</operator> <call><name><name>widget</name><operator>.</operator><name>getTotalPaddingLeft</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>y</name> <operator>-=</operator> <call><name><name>widget</name><operator>.</operator><name>getTotalPaddingTop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>x</name> <operator>+=</operator> <call><name><name>widget</name><operator>.</operator><name>getScrollX</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>y</name> <operator>+=</operator> <call><name><name>widget</name><operator>.</operator><name>getScrollY</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><name>Layout</name></type> <name>layout</name> <init>= <expr><call><name><name>widget</name><operator>.</operator><name>getLayout</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>line</name> <init>= <expr><call><name><name>layout</name><operator>.</operator><name>getLineForVertical</name></name><argument_list>(<argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name>int</name></type> <name>off</name> <init>= <expr><call><name><name>layout</name><operator>.</operator><name>getOffsetForHorizontal</name></name><argument_list>(<argument><expr><name>line</name></expr></argument>, <argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><name>LongClickCopySpan</name></type> <name><name>longClickCopySpan</name><index>[]</index></name> <init>= <expr><call><name><name>buffer</name><operator>.</operator><name>getSpans</name></name><argument_list>(<argument><expr><name>off</name></expr></argument>, <argument><expr><name>off</name></expr></argument>, <argument><expr><name><name>LongClickCopySpan</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name><name>longClickCopySpan</name><operator>.</operator><name>length</name></name> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><name>LongClickCopySpan</name></type> <name>aSingleSpan</name> <init>= <expr><name><name>longClickCopySpan</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>action</name> <operator>==</operator> <name><name>MotionEvent</name><operator>.</operator><name>ACTION_DOWN</name></name></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>Selection</name><operator>.</operator><name>setSelection</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><call><name><name>buffer</name><operator>.</operator><name>getSpanStart</name></name><argument_list>(<argument><expr><name>aSingleSpan</name></expr></argument>)</argument_list></call></expr></argument>,
+                  <argument><expr><call><name><name>buffer</name><operator>.</operator><name>getSpanEnd</name></name><argument_list>(<argument><expr><name>aSingleSpan</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>aSingleSpan</name><operator>.</operator><name>setHighlighted</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>,
+                  <argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><call><name><name>widget</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>touch_highlight</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+          <expr_stmt><expr><call><name><name>Selection</name><operator>.</operator><name>removeSelection</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>aSingleSpan</name><operator>.</operator><name>setHighlighted</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>TRANSPARENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentSpan</name></name> <operator>=</operator> <name>aSingleSpan</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>widget</name></name> <operator>=</operator> <name>widget</name></expr>;</expr_stmt>
+        <return>return <expr><call><name><name>gestureDetector</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>action</name> <operator>==</operator> <name><name>MotionEvent</name><operator>.</operator><name>ACTION_CANCEL</name></name></expr>)</condition><then> <block>{
+      <comment type="line">// Remove Selections.</comment>
+      <decl_stmt><decl><type><name><name>LongClickCopySpan</name><index>[]</index></name></type> <name>spans</name> <init>= <expr><call><name><name>buffer</name><operator>.</operator><name>getSpans</name></name><argument_list>(<argument><expr><call><name><name>Selection</name><operator>.</operator><name>getSelectionStart</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call></expr></argument>,
+              <argument><expr><call><name><name>Selection</name><operator>.</operator><name>getSelectionEnd</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>LongClickCopySpan</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <for>for <control>(<init><decl><type><name>LongClickCopySpan</name></type> <name>aSpan</name> <range>: <expr><name>spans</name></expr></range></decl></init>)</control> <block>{
+        <expr_stmt><expr><call><name><name>aSpan</name><operator>.</operator><name>setHighlighted</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><name><name>Color</name><operator>.</operator><name>TRANSPARENT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+      <expr_stmt><expr><call><name><name>Selection</name><operator>.</operator><name>removeSelection</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return <expr><call><name><name>gestureDetector</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif></if>
+    <return>return <expr><call><name><name>super</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>widget</name></expr></argument>, <argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>LongClickMovementMethod</name></type> <name>getInstance</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>sInstance</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>sInstance</name> <operator>=</operator> <operator>new</operator> <call><name>LongClickMovementMethod</name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <return>return <expr><name>sInstance</name></expr>;</return>
+  }</block></function>
+}</block></class></unit>

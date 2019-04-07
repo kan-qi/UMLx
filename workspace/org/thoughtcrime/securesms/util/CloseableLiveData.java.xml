@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\util\CloseableLiveData.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>arch</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>MutableLiveData</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Closeable</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Implementation of {@link android.arch.lifecycle.LiveData} that will handle closing the contained
+ * {@link Closeable} when the value changes.
+ */</comment>
+<class><specifier>public</specifier> class <name><name>CloseableLiveData</name><parameter_list>&lt;<parameter><name>E</name> <extends>extends <name>Closeable</name></extends></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>MutableLiveData</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setValue</name><parameter_list>(<parameter><decl><type><name>E</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setValue</name><argument_list>(<argument><expr><name>value</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setValue</name><parameter_list>(<parameter><decl><type><name>E</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>closePrevious</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>E</name></type> <name>previous</name> <init>= <expr><call><name>getValue</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>previous</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>closePrevious</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>close</name></name><argument_list>(<argument><expr><name>previous</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setValue</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>close</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>E</name></type> <name>value</name> <init>= <expr><call><name>getValue</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>value</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Util</name><operator>.</operator><name>close</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

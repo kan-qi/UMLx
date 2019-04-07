@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\CountrySelectionFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>ListFragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>LoaderManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>content</name><operator>.</operator><name>Loader</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Editable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextWatcher</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>EditText</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ListView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>SimpleAdapter</name></name>;</import>
+
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>database</name><operator>.</operator><name>loaders</name><operator>.</operator><name>CountryListLoader</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CountrySelectionFragment</name> <super><extends>extends <name>ListFragment</name></extends> <implements>implements <name><name>LoaderManager</name><operator>.</operator><name><name>LoaderCallbacks</name><argument_list type="generic">&lt;<argument><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EditText</name></type> <name>countryFilter</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>CountrySelectedListener</name></type> <name>listener</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>country_selection_fragment</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreated</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityCreated</name></name><argument_list>(<argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>countryFilter</name></name> <operator>=</operator> <operator>(</operator><name>EditText</name><operator>)</operator><call><name>getView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>country_search</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>countryFilter</name><operator>.</operator><name>addTextChangedListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>FilterWatcher</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getLoaderManager</name><argument_list>()</argument_list></call><operator>.</operator><call><name>initLoader</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>forceLoad</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onAttach</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAttach</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>=</operator> <operator>(</operator><name>CountrySelectedListener</name><operator>)</operator><name>activity</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onListItemClick</name><parameter_list>(<parameter><decl><type><name>ListView</name></type> <name>listView</name></decl></parameter>, <parameter><decl><type><name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>long</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>item</name> <init>= <expr><operator>(</operator><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name><operator>)</operator><call><name><name>this</name><operator>.</operator><name>getListAdapter</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getItem</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>listener</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>listener</name><operator>.</operator><name>countrySelected</name></name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"country_name"</literal></expr></argument>)</argument_list></call></expr></argument>,
+                                    <argument><expr><call><name><name>Integer</name><operator>.</operator><name>parseInt</name></name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"country_code"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>substring</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>onCreateLoader</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>arg0</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>arg1</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>CountryListLoader</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLoadFinished</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>loader</name></decl></parameter>,
+                             <parameter><decl><type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>results</name></decl></parameter>)</parameter_list>
+  <block>{
+    <decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>from</name> <init>= <expr><block>{<expr><literal type="string">"country_name"</literal></expr>, <expr><literal type="string">"country_code"</literal></expr>}</block></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>int</name><index>[]</index></name></type> <name>to</name>      <init>= <expr><block>{<expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>country_name</name></name></expr>, <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>country_code</name></name></expr>}</block></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>setListAdapter</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>SimpleAdapter</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>results</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>country_list_item</name></name></expr></argument>, <argument><expr><name>from</name></expr></argument>, <argument><expr><name>to</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>countryFilter</name></name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>this</name><operator>.</operator><name>countryFilter</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>SimpleAdapter</name><operator>)</operator><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getFilter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>countryFilter</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLoaderReset</name><parameter_list>(<parameter><decl><type><name><name>Loader</name><argument_list type="generic">&lt;<argument><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>arg0</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>setListAdapter</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>CountrySelectedListener</name> <block>{
+    <function_decl><specifier>public</specifier> <type><name>void</name></type> <name>countrySelected</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>countryName</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>countryCode</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>private</specifier> class <name>FilterWatcher</name> <super><implements>implements <name>TextWatcher</name></implements></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>afterTextChanged</name><parameter_list>(<parameter><decl><type><name>Editable</name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name>getListAdapter</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><operator>(</operator><operator>(</operator><name>SimpleAdapter</name><operator>)</operator><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>getFilter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><call><name><name>s</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>beforeTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>after</name></decl></parameter>)</parameter_list> <block>{
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onTextChanged</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>s</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>before</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

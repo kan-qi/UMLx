@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\contacts\ArrayListCursor.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>contacts</name></name>;</package>
+<comment type="block">/*
+ * Copyright (C) 2006 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>AbstractCursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>CursorWindow</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>System</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A convenience class that presents a two-dimensional ArrayList
+ * as a Cursor.
+ */</comment>
+<class><specifier>public</specifier> class <name>ArrayListCursor</name> <super><extends>extends <name>AbstractCursor</name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>String</name><index>[]</index></name></type> <name>mColumnNames</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>&gt;</argument_list></name><index>[]</index></name></type> <name>mRows</name></decl>;</decl_stmt>
+
+    <constructor><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><block>{<expr><literal type="string">"unchecked"</literal></expr>}</block></expr></argument>)</argument_list></annotation>
+    <specifier>public</specifier> <name>ArrayListCursor</name><parameter_list>(<parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>columnNames</name></decl></parameter>, <parameter><decl><type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>ArrayList</name></argument>&gt;</argument_list></name></type> <name>rows</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>colCount</name> <init>= <expr><name><name>columnNames</name><operator>.</operator><name>length</name></name></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>foundID</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+        <comment type="line">// Add an _id column if not in columnNames</comment>
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>colCount</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{
+            <if>if <condition>(<expr><name><name>columnNames</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>compareToIgnoreCase</name><argument_list>(<argument><expr><literal type="string">"_id"</literal></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>mColumnNames</name> <operator>=</operator> <name>columnNames</name></expr>;</expr_stmt>
+                <expr_stmt><expr><name>foundID</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+                <break>break;</break>
+            }</block></then></if>
+        }</block></for>
+
+        <if>if <condition>(<expr><operator>!</operator><name>foundID</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>mColumnNames</name> <operator>=</operator> <operator>new</operator> <name><name>String</name><index>[<expr><name>colCount</name> <operator>+</operator> <literal type="number">1</literal></expr>]</index></name></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>arraycopy</name></name><argument_list>(<argument><expr><name>columnNames</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>mColumnNames</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>columnNames</name><operator>.</operator><name>length</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>mColumnNames</name><index>[<expr><name>colCount</name></expr>]</index></name> <operator>=</operator> <literal type="string">"_id"</literal></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>int</name></type> <name>rowCount</name> <init>= <expr><call><name><name>rows</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>mRows</name> <operator>=</operator> <operator>new</operator> <name><name>ArrayList</name><index>[<expr><name>rowCount</name></expr>]</index></name></expr>;</expr_stmt>
+
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>rowCount</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{
+            <expr_stmt><expr><name><name>mRows</name><index>[<expr><name>i</name></expr>]</index></name> <operator>=</operator> <call><name><name>rows</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <if>if <condition>(<expr><operator>!</operator><name>foundID</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name><name>mRows</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></for>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>fillWindow</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>CursorWindow</name></type> <name>window</name></decl></parameter>)</parameter_list> <block>{
+        <if>if <condition>(<expr><name><name>position</name> <argument_list type="generic">&lt; <argument><literal type="number">0</literal> <operator>||</operator> <name>position</name></argument> &gt;</argument_list></name> <call><name>getCount</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <return>return;</return>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>acquireReference</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <try>try <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>oldpos</name> <init>= <expr><name>mPos</name></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><name>mPos</name> <operator>=</operator> <name>position</name> <operator>-</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>setStartPosition</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>int</name></type> <name>columnNum</name> <init>= <expr><call><name>getColumnCount</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>setNumColumns</name></name><argument_list>(<argument><expr><name>columnNum</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <while>while <condition>(<expr><call><name>moveToNext</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>window</name><operator>.</operator><name>allocRow</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+                <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>columnNum</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+                    <decl_stmt><decl><type><specifier>final</specifier> <name>Object</name></type> <name>data</name> <init>= <expr><name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <if>if <condition>(<expr><name>data</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                        <if>if <condition>(<expr><name>data</name> <operator>instanceof</operator> <name><name>byte</name><index>[]</index></name></expr>)</condition><then> <block>{
+                            <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>field</name> <init>= <expr><operator>(</operator><name><name>byte</name><index>[]</index></name><operator>)</operator> <name>data</name></expr></init></decl>;</decl_stmt>
+                            <if>if <condition>(<expr><operator>!</operator><call><name><name>window</name><operator>.</operator><name>putBlob</name></name><argument_list>(<argument><expr><name>field</name></expr></argument>, <argument><expr><name>mPos</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                                <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>freeLastRow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                                <break>break;</break>
+                            }</block></then></if>
+                        }</block></then> <else>else <block>{
+                            <decl_stmt><decl><type><name>String</name></type> <name>field</name> <init>= <expr><call><name><name>data</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                            <if>if <condition>(<expr><operator>!</operator><call><name><name>window</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>field</name></expr></argument>, <argument><expr><name>mPos</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                                <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>freeLastRow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                                <break>break;</break>
+                            }</block></then></if>
+                        }</block></else></if>
+                    }</block></then> <else>else <block>{
+                        <if>if <condition>(<expr><operator>!</operator><call><name><name>window</name><operator>.</operator><name>putNull</name></name><argument_list>(<argument><expr><name>mPos</name></expr></argument>, <argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                            <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>freeLastRow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                            <break>break;</break>
+                        }</block></then></if>
+                    }</block></else></if>
+                }</block></for>
+            }</block></while>
+
+            <expr_stmt><expr><name>mPos</name> <operator>=</operator> <name>oldpos</name></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IllegalStateException</name></type> <name>e</name></decl></parameter>)</parameter_list><block>{
+            <comment type="line">// simply ignore it</comment>
+        }</block></catch> <finally>finally <block>{
+            <expr_stmt><expr><call><name><name>window</name><operator>.</operator><name>releaseReference</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></finally></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name><name>mRows</name><operator>.</operator><name>length</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>deleteRow</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>String</name><index>[]</index></name></type> <name>getColumnNames</name><parameter_list>()</parameter_list> <block>{
+        <return>return <expr><name>mColumnNames</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>getBlob</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><operator>(</operator><name><name>byte</name><index>[]</index></name><operator>)</operator> <name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>String</name></type> <name>getString</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Object</name></type> <name>cell</name> <init>= <expr><name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><ternary><condition><expr><operator>(</operator><name>cell</name> <operator>==</operator> <literal type="null">null</literal><operator>)</operator></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>cell</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>short</name></type> <name>getShort</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Number</name></type> <name>num</name> <init>= <expr><operator>(</operator><name>Number</name><operator>)</operator> <name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>num</name><operator>.</operator><name>shortValue</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getInt</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Number</name></type> <name>num</name> <init>= <expr><operator>(</operator><name>Number</name><operator>)</operator> <name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>num</name><operator>.</operator><name>intValue</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>long</name></type> <name>getLong</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Number</name></type> <name>num</name> <init>= <expr><operator>(</operator><name>Number</name><operator>)</operator> <name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>num</name><operator>.</operator><name>longValue</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>float</name></type> <name>getFloat</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Number</name></type> <name>num</name> <init>= <expr><operator>(</operator><name>Number</name><operator>)</operator> <name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>num</name><operator>.</operator><name>floatValue</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>double</name></type> <name>getDouble</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <decl_stmt><decl><type><name>Number</name></type> <name>num</name> <init>= <expr><operator>(</operator><name>Number</name><operator>)</operator> <name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>num</name><operator>.</operator><name>doubleValue</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>isNull</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>columnIndex</name></decl></parameter>)</parameter_list> <block>{
+        <return>return <expr><name><name>mRows</name><index>[<expr><name>mPos</name></expr>]</index></name><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>columnIndex</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

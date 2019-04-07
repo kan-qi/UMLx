@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\superCleanMaster\app\src\main\java\com\balaganovrocks\yourmasterclean\views\RippleView.java"><comment type="block">/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Robin Chutaux
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */</comment>
+
+<package>package <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>views</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuffXfermode</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Rect</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Handler</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>GestureDetector</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>Animation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>animation</name><operator>.</operator><name>ScaleAnimation</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>RelativeLayout</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>balaganovrocks</name><operator>.</operator><name>yourmasterclean</name><operator>.</operator><name>R</name></name>;</import>
+
+
+<class><specifier>public</specifier> class <name>RippleView</name> <super><extends>extends <name>RelativeLayout</name></extends></super> <block>{
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>WIDTH</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>HEIGHT</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>FRAME_RATE</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>DURATION</name> <init>= <expr><literal type="number">400</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>PAINT_ALPHA</name> <init>= <expr><literal type="number">90</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Handler</name></type> <name>canvasHandler</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>radiusMax</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>animationRunning</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>timer</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>timerEmpty</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>durationEmpty</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>x</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>y</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>zoomDuration</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>float</name></type> <name>zoomScale</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>ScaleAnimation</name></type> <name>scaleAnimation</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Boolean</name></type> <name>hasToZoom</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Boolean</name></type> <name>isCentered</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Integer</name></type> <name>rippleType</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Paint</name></type> <name>paint</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Bitmap</name></type> <name>originBitmap</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>rippleColor</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>View</name></type> <name>childView</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>ripplePadding</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>GestureDetector</name></type> <name>gestureDetector</name></decl>;</decl_stmt>
+	<decl_stmt><decl><specifier>private</specifier> <type><name>Runnable</name></type> <name>runnable</name> <init>= <expr><operator>new</operator> <class><super><name>Runnable</name></super><argument_list>()</argument_list> <block>{
+		<function><annotation>@<name>Override</name></annotation>
+		<specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+			<expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		}</block></function>
+	}</block></class></expr></init></decl>;</decl_stmt>
+
+	<constructor><specifier>public</specifier> <name>RippleView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></constructor>
+
+	<constructor><specifier>public</specifier> <name>RippleView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></constructor>
+
+	<constructor><specifier>public</specifier> <name>RippleView</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>defStyle</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></constructor>
+
+	<function><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"Recycle"</literal></expr></argument>)</argument_list></annotation>
+	<specifier>private</specifier> <type><name>void</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><call><name>isInEditMode</name><argument_list>()</argument_list></call></expr>)</condition><then>
+			<block type="pseudo"><return>return;</return></block></then></if>
+
+		<decl_stmt><decl><type><specifier>final</specifier> <name>TypedArray</name></type> <name>typedArray</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<expr_stmt><expr><name>rippleColor</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_color</name></name></expr></argument>, <argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>white</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>rippleType</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_type</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>hasToZoom</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_zoom</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>isCentered</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_centered</name></name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>DURATION</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInteger</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_rippleDuration</name></name></expr></argument>, <argument><expr><name>DURATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>FRAME_RATE</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInteger</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_framerate</name></name></expr></argument>, <argument><expr><name>FRAME_RATE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>PAINT_ALPHA</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInteger</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_alpha</name></name></expr></argument>, <argument><expr><name>PAINT_ALPHA</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>ripplePadding</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getDimensionPixelSize</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_ripplePadding</name></name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>canvasHandler</name> <operator>=</operator> <operator>new</operator> <call><name>Handler</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>zoomScale</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getFloat</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_zoomScale</name></name></expr></argument>, <argument><expr><literal type="number">1.03f</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>zoomDuration</name> <operator>=</operator> <call><name><name>typedArray</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>RippleView_rv_zoomDuration</name></name></expr></argument>, <argument><expr><literal type="number">200</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>paint</name> <operator>=</operator> <operator>new</operator> <call><name>Paint</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAntiAlias</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setStyle</name></name><argument_list>(<argument><expr><name><name>Paint</name><operator>.</operator><name>Style</name><operator>.</operator><name>FILL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>rippleColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><name>PAINT_ALPHA</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>setWillNotDraw</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+		<expr_stmt><expr><name>gestureDetector</name> <operator>=</operator> <operator>new</operator> <call><name>GestureDetector</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><operator>new</operator> <class><super><name><name>GestureDetector</name><operator>.</operator><name>SimpleOnGestureListener</name></name></super><argument_list>()</argument_list> <block>{
+			<function><annotation>@<name>Override</name></annotation>
+			<specifier>public</specifier> <type><name>boolean</name></type> <name>onSingleTapConfirmed</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+				<return>return <expr><literal type="boolean">true</literal></expr>;</return>
+			}</block></function>
+
+			<function><annotation>@<name>Override</name></annotation>
+			<specifier>public</specifier> <type><name>boolean</name></type> <name>onSingleTapUp</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+				<return>return <expr><literal type="boolean">true</literal></expr>;</return>
+			}</block></function>
+		}</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+		<expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>setDrawingCacheEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+
+	<function><annotation>@<name>Override</name></annotation>
+	<specifier>public</specifier> <type><name>void</name></type> <name>addView</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>child</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>index</name></decl></parameter>, <parameter><decl><type><name><name>ViewGroup</name><operator>.</operator><name>LayoutParams</name></name></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><name>childView</name> <operator>=</operator> <name>child</name></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>addView</name></name><argument_list>(<argument><expr><name>child</name></expr></argument>, <argument><expr><name>index</name></expr></argument>, <argument><expr><name>params</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+
+	<function><annotation>@<name>Override</name></annotation>
+	<specifier>public</specifier> <type><name>void</name></type> <name>draw</name><parameter_list>(<parameter><decl><type><name>Canvas</name></type> <name>canvas</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>draw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<if>if <condition>(<expr><name>animationRunning</name></expr>)</condition><then> <block>{
+			<if>if <condition>(<expr><name>DURATION</name> <operator>&lt;=</operator> <name>timer</name> <operator>*</operator> <name>FRAME_RATE</name></expr>)</condition><then> <block>{
+				<expr_stmt><expr><name>animationRunning</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+				<expr_stmt><expr><name>timer</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+				<expr_stmt><expr><name>durationEmpty</name> <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+				<expr_stmt><expr><name>timerEmpty</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+				<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>save</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+				<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>restore</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+				<expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+				<return>return;</return>
+			}</block></then> <else>else
+				<block type="pseudo"><expr_stmt><expr><call><name><name>canvasHandler</name><operator>.</operator><name>postDelayed</name></name><argument_list>(<argument><expr><name>runnable</name></expr></argument>, <argument><expr><name>FRAME_RATE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+			<if>if <condition>(<expr><name>timer</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then>
+				<block type="pseudo"><expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>save</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+			<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawCircle</name></name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>, <argument><expr><operator>(</operator><name>radiusMax</name> <operator>*</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name>timer</name> <operator>*</operator> <name>FRAME_RATE</name><operator>)</operator> <operator>/</operator> <name>DURATION</name><operator>)</operator><operator>)</operator></expr></argument>, <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+			<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><call><name>getResources</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getColor</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>holo_red_light</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+			<if>if <condition>(<expr><name>rippleType</name> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>originBitmap</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name>timer</name> <operator>*</operator> <name>FRAME_RATE</name><operator>)</operator> <operator>/</operator> <name>DURATION</name><operator>)</operator> <operator>&gt;</operator> <literal type="number">0.4f</literal></expr>)</condition><then> <block>{
+				<if>if <condition>(<expr><name>durationEmpty</name> <operator>==</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then>
+					<block type="pseudo"><expr_stmt><expr><name>durationEmpty</name> <operator>=</operator> <name>DURATION</name> <operator>-</operator> <name>timer</name> <operator>*</operator> <name>FRAME_RATE</name></expr>;</expr_stmt></block></then></if>
+
+				<expr_stmt><expr><name>timerEmpty</name><operator>++</operator></expr>;</expr_stmt>
+				<decl_stmt><decl><type><specifier>final</specifier> <name>Bitmap</name></type> <name>tmpBitmap</name> <init>= <expr><call><name>getCircleBitmap</name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><operator>(</operator><name>radiusMax</name><operator>)</operator> <operator>*</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name>timerEmpty</name> <operator>*</operator> <name>FRAME_RATE</name><operator>)</operator> <operator>/</operator> <operator>(</operator><name>durationEmpty</name><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+				<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawBitmap</name></name><argument_list>(<argument><expr><name>tmpBitmap</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+				<expr_stmt><expr><call><name><name>tmpBitmap</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+			}</block></then></if>
+
+			<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>rippleColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+			<if>if <condition>(<expr><name>rippleType</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+				<if>if <condition>(<expr><operator>(</operator><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name>timer</name> <operator>*</operator> <name>FRAME_RATE</name><operator>)</operator> <operator>/</operator> <name>DURATION</name><operator>)</operator> <operator>&gt;</operator> <literal type="number">0.6f</literal></expr>)</condition><then>
+					<block type="pseudo"><expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>PAINT_ALPHA</name> <operator>-</operator> <operator>(</operator><operator>(</operator><name>PAINT_ALPHA</name><operator>)</operator> <operator>*</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name>timerEmpty</name> <operator>*</operator> <name>FRAME_RATE</name><operator>)</operator> <operator>/</operator> <operator>(</operator><name>durationEmpty</name><operator>)</operator><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then>
+				<else>else
+					<block type="pseudo"><expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><name>PAINT_ALPHA</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+			}</block></then> <else>else
+				<block type="pseudo"><expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAlpha</name></name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>PAINT_ALPHA</name> <operator>-</operator> <operator>(</operator><operator>(</operator><name>PAINT_ALPHA</name><operator>)</operator> <operator>*</operator> <operator>(</operator><operator>(</operator><operator>(</operator><name>float</name><operator>)</operator> <name>timer</name> <operator>*</operator> <name>FRAME_RATE</name><operator>)</operator> <operator>/</operator> <name>DURATION</name><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></else></if>
+
+			<expr_stmt><expr><name>timer</name><operator>++</operator></expr>;</expr_stmt>
+		}</block></then></if>
+	}</block></function>
+
+	<function><annotation>@<name>Override</name></annotation>
+	<specifier>protected</specifier> <type><name>void</name></type> <name>onSizeChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>w</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>h</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldw</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>oldh</name></decl></parameter>)</parameter_list> <block>{
+		<expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onSizeChanged</name></name><argument_list>(<argument><expr><name>w</name></expr></argument>, <argument><expr><name>h</name></expr></argument>, <argument><expr><name>oldw</name></expr></argument>, <argument><expr><name>oldh</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><name>WIDTH</name> <operator>=</operator> <name>w</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>HEIGHT</name> <operator>=</operator> <name>h</name></expr>;</expr_stmt>
+
+		<expr_stmt><expr><name>scaleAnimation</name> <operator>=</operator> <operator>new</operator> <call><name>ScaleAnimation</name><argument_list>(<argument><expr><literal type="number">1.0f</literal></expr></argument>, <argument><expr><name>zoomScale</name></expr></argument>, <argument><expr><literal type="number">1.0f</literal></expr></argument>, <argument><expr><name>zoomScale</name></expr></argument>, <argument><expr><name>w</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>, <argument><expr><name>h</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setDuration</name></name><argument_list>(<argument><expr><name>zoomDuration</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setRepeatMode</name></name><argument_list>(<argument><expr><name><name>Animation</name><operator>.</operator><name>REVERSE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>scaleAnimation</name><operator>.</operator><name>setRepeatCount</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></function>
+
+	<function><annotation>@<name>Override</name></annotation>
+	<specifier>public</specifier> <type><name>boolean</name></type> <name>onTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+		<if>if <condition>(<expr><call><name><name>gestureDetector</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><name>animationRunning</name></expr>)</condition><then> <block>{
+			<if>if <condition>(<expr><name>hasToZoom</name></expr>)</condition><then>
+				<block type="pseudo"><expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><name>scaleAnimation</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+			<expr_stmt><expr><name>radiusMax</name> <operator>=</operator> <call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><name>WIDTH</name></expr></argument>, <argument><expr><name>HEIGHT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+			<if>if <condition>(<expr><name>rippleType</name> <operator>!=</operator> <literal type="number">2</literal></expr>)</condition><then>
+				<block type="pseudo"><expr_stmt><expr><name>radiusMax</name> <operator>/=</operator> <literal type="number">2</literal></expr>;</expr_stmt></block></then></if>
+
+			<expr_stmt><expr><name>radiusMax</name> <operator>-=</operator> <name>ripplePadding</name></expr>;</expr_stmt>
+
+			<if>if <condition>(<expr><name>isCentered</name> <operator>||</operator> <name>rippleType</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+				<expr_stmt><expr><name><name>this</name><operator>.</operator><name>x</name></name> <operator>=</operator> <call><name>getMeasuredWidth</name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+				<expr_stmt><expr><name><name>this</name><operator>.</operator><name>y</name></name> <operator>=</operator> <call><name>getMeasuredHeight</name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+			}</block></then> <else>else <block>{
+				<expr_stmt><expr><name><name>this</name><operator>.</operator><name>x</name></name> <operator>=</operator> <call><name><name>event</name><operator>.</operator><name>getX</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+				<expr_stmt><expr><name><name>this</name><operator>.</operator><name>y</name></name> <operator>=</operator> <call><name><name>event</name><operator>.</operator><name>getY</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+			}</block></else></if>
+
+			<expr_stmt><expr><name>animationRunning</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+
+			<if>if <condition>(<expr><name>rippleType</name> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>originBitmap</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then>
+				<block type="pseudo"><expr_stmt><expr><name>originBitmap</name> <operator>=</operator> <call><name>getDrawingCache</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+
+			<expr_stmt><expr><call><name>invalidate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+			<expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>performClick</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+		}</block></then></if>
+
+		<expr_stmt><expr><call><name><name>childView</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<return>return <expr><literal type="boolean">true</literal></expr>;</return>
+	}</block></function>
+
+	<function><annotation>@<name>Override</name></annotation>
+	<specifier>public</specifier> <type><name>boolean</name></type> <name>onInterceptTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+		<return>return <expr><literal type="boolean">true</literal></expr>;</return>
+	}</block></function>
+
+	<function><specifier>private</specifier> <type><name>Bitmap</name></type> <name>getCircleBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+		<decl_stmt><decl><type><specifier>final</specifier> <name>Bitmap</name></type> <name>output</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><call><name><name>originBitmap</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>originBitmap</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>ARGB_8888</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><specifier>final</specifier> <name>Canvas</name></type> <name>canvas</name> <init>= <expr><operator>new</operator> <call><name>Canvas</name><argument_list>(<argument><expr><name>output</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><specifier>final</specifier> <name>Paint</name></type> <name>paint</name> <init>= <expr><operator>new</operator> <call><name>Paint</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><specifier>final</specifier> <name>Rect</name></type> <name>rect</name> <init>= <expr><operator>new</operator> <call><name>Rect</name><argument_list>(<argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>x</name> <operator>-</operator> <name>radius</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>y</name> <operator>-</operator> <name>radius</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>x</name> <operator>+</operator> <name>radius</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call>(<name>int</name>) <argument_list>(<argument><expr><name>y</name> <operator>+</operator> <name>radius</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+		<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAntiAlias</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawARGB</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawCircle</name></name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>, <argument><expr><name>radius</name></expr></argument>, <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+		<expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setXfermode</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PorterDuffXfermode</name><argument_list>(<argument><expr><name><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>SRC_IN</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+		<expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawBitmap</name></name><argument_list>(<argument><expr><name>originBitmap</name></expr></argument>, <argument><expr><name>rect</name></expr></argument>, <argument><expr><name>rect</name></expr></argument>, <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+		<return>return <expr><name>output</name></expr>;</return>
+	}</block></function>
+}</block></class>
+</unit>

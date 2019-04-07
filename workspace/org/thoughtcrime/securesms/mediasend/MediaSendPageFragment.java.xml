@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\mediasend\MediaSendPageFragment.java"><package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>mediasend</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A page that sits in the {@link MediaSendFragmentPagerAdapter}.
+ */</comment>
+<interface><specifier>public</specifier> interface <name>MediaSendPageFragment</name> <block>{
+
+  <function_decl><annotation>@<name>NonNull</name></annotation> <type><name>Uri</name></type> <name>getUri</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function_decl><type><name>void</name></type> <name>setUri</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function_decl><annotation>@<name>Nullable</name></annotation> <type><name>View</name></type> <name>getPlaybackControls</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function_decl><annotation>@<name>Nullable</name></annotation> <type><name>Object</name></type> <name>saveState</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function_decl><type><name>void</name></type> <name>restoreState</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Object</name></type> <name>state</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

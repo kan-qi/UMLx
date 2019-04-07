@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\Signal-Android\src\org\thoughtcrime\securesms\PassphraseChangeActivity.java"><comment type="block" format="javadoc">/**
+ * Copyright (C) 2011 Whisper Systems
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */</comment>
+<package>package <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>AsyncTask</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Editable</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>logging</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name><operator>.</operator><name>OnClickListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>EditText</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>InvalidPassphraseException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecret</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>crypto</name><operator>.</operator><name>MasterSecretUtil</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicLanguage</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>DynamicTheme</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>thoughtcrime</name><operator>.</operator><name>securesms</name><operator>.</operator><name>util</name><operator>.</operator><name>TextSecurePreferences</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity for changing a user's local encryption passphrase.
+ *
+ * @author Moxie Marlinspike
+ */</comment>
+
+<class><specifier>public</specifier> class <name>PassphraseChangeActivity</name> <super><extends>extends <name>PassphraseActivity</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicTheme</name></type>    <name>dynamicTheme</name>    <init>= <expr><operator>new</operator> <call><name>DynamicTheme</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>DynamicLanguage</name></type> <name>dynamicLanguage</name> <init>= <expr><operator>new</operator> <call><name>DynamicLanguage</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EditText</name></type> <name>originalPassphrase</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EditText</name></type> <name>newPassphrase</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>EditText</name></type> <name>repeatPassphrase</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Button</name></type>   <name>okButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Button</name></type>   <name>cancelButton</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>change_passphrase_activity</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>initializeResources</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicTheme</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>dynamicLanguage</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>initializeResources</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>originalPassphrase</name></name>      <operator>=</operator> <operator>(</operator><name>EditText</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>old_passphrase</name></name></expr></argument>      )</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>newPassphrase</name></name>           <operator>=</operator> <operator>(</operator><name>EditText</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>new_passphrase</name></name></expr></argument>      )</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>repeatPassphrase</name></name>        <operator>=</operator> <operator>(</operator><name>EditText</name><operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>repeat_passphrase</name></name></expr></argument>   )</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>okButton</name></name>                <operator>=</operator> <operator>(</operator><name>Button</name>  <operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>ok_button</name></name></expr></argument>           )</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cancelButton</name></name>            <operator>=</operator> <operator>(</operator><name>Button</name>  <operator>)</operator> <call><name>findViewById</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>cancel_button</name></name></expr></argument>       )</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>okButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>OkButtonClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cancelButton</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>CancelButtonClickListener</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>originalPassphrase</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>originalPassphrase</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>verifyAndSavePassphrases</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Editable</name></type> <name>originalText</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>originalPassphrase</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Editable</name></type> <name>newText</name>      <init>= <expr><call><name><name>this</name><operator>.</operator><name>newPassphrase</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>Editable</name></type> <name>repeatText</name>   <init>= <expr><call><name><name>this</name><operator>.</operator><name>repeatPassphrase</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><name>String</name></type> <name>original</name>         <init>= <expr><operator>(</operator><ternary><condition><expr><name>originalText</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">""</literal></expr> </then><else>: <expr><call><name><name>originalText</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>passphrase</name>       <init>= <expr><operator>(</operator><ternary><condition><expr><name>newText</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">""</literal></expr> </then><else>: <expr><call><name><name>newText</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>String</name></type> <name>passphraseRepeat</name> <init>= <expr><operator>(</operator><ternary><condition><expr><name>repeatText</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="string">""</literal></expr> </then><else>: <expr><call><name><name>repeatText</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></else></ternary><operator>)</operator></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>isPasswordDisabled</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>original</name> <operator>=</operator> <name><name>MasterSecretUtil</name><operator>.</operator><name>UNENCRYPTED_PASSPHRASE</name></name></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>passphrase</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>passphraseRepeat</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>newPassphrase</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>repeatPassphrase</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>newPassphrase</name><operator>.</operator><name>setError</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>PassphraseChangeActivity_passphrases_dont_match_exclamation</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>newPassphrase</name><operator>.</operator><name>requestFocus</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>passphrase</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>newPassphrase</name><operator>.</operator><name>setError</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>PassphraseChangeActivity_enter_new_passphrase_exclamation</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>newPassphrase</name><operator>.</operator><name>requestFocus</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><operator>new</operator> <call><name>ChangePassphraseTask</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>executeOnExecutor</name><argument_list>(<argument><expr><name><name>AsyncTask</name><operator>.</operator><name>THREAD_POOL_EXECUTOR</name></name></expr></argument>, <argument><expr><name>original</name></expr></argument>, <argument><expr><name>passphrase</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <class><specifier>private</specifier> class <name>CancelButtonClickListener</name> <super><implements>implements <name>OnClickListener</name></implements></super> <block>{
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>OkButtonClickListener</name> <super><implements>implements <name>OnClickListener</name></implements></super> <block>{
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><name>View</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>verifyAndSavePassphrases</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>private</specifier> class <name>ChangePassphraseTask</name> <super><extends>extends <name><name>AsyncTask</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Void</name></argument>, <argument><name>MasterSecret</name></argument>&gt;</argument_list></name></extends></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ChangePassphraseTask</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPreExecute</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>okButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>MasterSecret</name></type> <name>doInBackground</name><parameter_list>(<parameter><decl><type><name>String</name><modifier>...</modifier></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+      <try>try <block>{
+        <decl_stmt><decl><type><name>MasterSecret</name></type> <name>masterSecret</name> <init>= <expr><call><name><name>MasterSecretUtil</name><operator>.</operator><name>changeMasterSecretPassphrase</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>params</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>params</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>TextSecurePreferences</name><operator>.</operator><name>setPasswordDisabled</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <return>return <expr><name>masterSecret</name></expr>;</return>
+
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>InvalidPassphraseException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>w</name></name><argument_list>(<argument><expr><call><name><name>PassphraseChangeActivity</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="null">null</literal></expr>;</return>
+      }</block></catch></try>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostExecute</name><parameter_list>(<parameter><decl><type><name>MasterSecret</name></type> <name>masterSecret</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>okButton</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><name>masterSecret</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name>setMasterSecret</name><argument_list>(<argument><expr><name>masterSecret</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <expr_stmt><expr><call><name><name>originalPassphrase</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>originalPassphrase</name><operator>.</operator><name>setError</name></name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>PassphraseChangeActivity_incorrect_old_passphrase_exclamation</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>originalPassphrase</name><operator>.</operator><name>requestFocus</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></function>
+  }</block></class>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>cleanup</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>originalPassphrase</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>newPassphrase</name></name>      <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>repeatPassphrase</name></name>   <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>gc</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>
