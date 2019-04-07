@@ -308,6 +308,10 @@ var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparato
 var transactionFiles = [];
 var filteredTransactionFiles = [];
 var modelEvaluationFiles = [];
+var effortEstimationFilesEUCP = [];
+var effortEstimationFilesEXUCP = [];
+var effortEstimationFilesEUUCP = [];
+var effortEstimationFiles = [];
 
 for(var i in modelOutputDirs){
   //code here using lines[i] which will give you each line
@@ -320,6 +324,13 @@ for(var i in modelOutputDirs){
 	filteredTransactionFiles.push(modelOutputDir + pathSeparator +"filteredTransactionEvaluation.csv");
 	transactionFiles.push(modelOutputDir + pathSeparator + "transactionEvaluation.csv");
 	modelEvaluationFiles.push(modelOutputDir + pathSeparator + "modelEvaluation.csv");
+//	effortEstimationFilesEUCP.push(modelOutputDir + pathSeparator + "estimationResultEUCP.json");
+//	effortEstimationFilesEXUCP.push(modelOutputDir + pathSeparator + "estimationResultEXUCP.json");
+//	effortEstimationFilesDUCP.push(modelOutputDir + pathSeparator + "estimationResultDUCP.json");
+
+	effortEstimationFiles.push(modelOutputDir + pathSeparator + "estimationResultEUCP.json");
+	effortEstimationFiles.push(modelOutputDir + pathSeparator + "estimationResultEXUCP.json");
+	effortEstimationFiles.push(modelOutputDir + pathSeparator + "estimationResultDUCP.json");
 }
 
 
@@ -341,6 +352,22 @@ for(var i in modelEvaluationContents){
 }
 	  
 FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations.csv", modelEvaluationConsolidation);
+
+var effortEstimationContents = FileManagerUtil.readJSONFilesSync(effortEstimationFiles);
+var effortEstimationConsolidation = "project, eucp, exucp, ducp";
+for(var i = 0 ; i < effortEstimationContents.length; i++){
+	     if(i%3 == 0){
+	        effortEstimationConsolidation += "\n"+modelOutputDirs[i/3]+",";
+	     }
+	     else{
+	         effortEstimationConsolidation += ",";
+	     }
+
+		  effortEstimationConsolidation += effortEstimationContents[i].Effort;
+}
+
+FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "estimationResults.csv", effortEstimationConsolidation);
+
 
 var transactionEvaluationContents = FileManagerUtil.readFilesSync(transactionFiles);
 var transactionEvaluationConsolidation = "";

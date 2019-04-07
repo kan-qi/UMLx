@@ -53,6 +53,22 @@
 		 
 		 return fileContents;
 	 }
+
+	  function readJSONFilesSync(filePaths){
+     		 var fileContents = [];
+     		 for(var i in filePaths){
+     		 var path = filePaths[i];
+     		 if( fs.existsSync(path) ) {
+     			 var fileContent = fs.readFileSync(path, 'utf8');
+     			 fileContents.push(JSON.parse(fileContent));
+     		 }
+     		 else{
+     			 fileContents.push(null);
+     		 }
+     		 }
+
+     		 return fileContents;
+      }
 	 
 	 function readFileSync(filePath){
 		 if( fs.existsSync(filePath) ) {
@@ -237,6 +253,7 @@
 			deleteFileSync: deleteFileSync,
 			appendFile: appendFile,
 			existsSync: existsSync,
-			mkDirSync: mkDirSync
+			mkDirSync: mkDirSync,
+			readJSONFilesSync: readJSONFilesSync
 	}
 }())

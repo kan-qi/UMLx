@@ -371,6 +371,7 @@
 	
 	function generateAndroidAnalysis(project) {
 		var apkFileName = project.apkFileName;
+
 		var apkFilePath = project.path+"/"+apkFileName;
 		var outputDir = project.path;
 		console.log(outputDir);
@@ -559,7 +560,7 @@ function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, time
 		return new Promise(function (resolve, reject) {
 
 			var apkName = apkFileName.replace(/\.apk/g, "");
-			 
+
 			var dir = outputDir +"/"+apkName;
 			
 			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];

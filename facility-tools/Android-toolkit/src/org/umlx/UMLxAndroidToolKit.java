@@ -144,7 +144,10 @@ public class UMLxAndroidToolKit {
                 c.setApplicationClass();
                 components.add(c);
                 for(String mtd : flowDroidCallbacks.get(cls)){
-                    SootMethod entryPoint = c.getMethodByName(mtd);
+                    SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
+                    if(entryPoint == null){
+                        continue;
+                    }
                     callbackMethodSigs.put(c, entryPoint);
                 }
         }
@@ -155,7 +158,10 @@ public class UMLxAndroidToolKit {
             c.setApplicationClass();
             components.add(c);
             for(String mtd : gatorCallbacks.get(cls)){
-                SootMethod entryPoint = c.getMethod(mtd);
+                SootMethod entryPoint = c.getMethodUnsafe(mtd);
+                if(entryPoint == null){
+                    continue;
+                }
                 callbackMethodSigs.put(c, entryPoint);
                 System.out.println(entryPoint.getName());
             }
