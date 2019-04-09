@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\ActivityFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ActivityFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>ActivityFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Activity</name></type> <name>activity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Activity</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_WATCH</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>createdAt</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>(<argument><expr><literal type="number">123</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><call><name><name>IdFactory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>updatedAt</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>(<argument><expr><literal type="number">456</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>project</name><argument_list>(<argument><expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>user</name><argument_list>(<argument><expr><call><name><name>UserFactory</name><operator>.</operator><name>user</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Activity</name></type> <name>friendBackingActivity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_BACKING</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Activity</name></type> <name>projectStateChangedActivity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_FAILURE</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>project</name><argument_list>(<argument><expr><call><name><name>ProjectFactory</name><operator>.</operator><name>failedProject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Activity</name></type> <name>projectStateChangedPositiveActivity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_SUCCESS</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>project</name><argument_list>(<argument><expr><call><name><name>ProjectFactory</name><operator>.</operator><name>successfulProject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Activity</name></type> <name>updateActivity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_UPDATE</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>project</name><argument_list>(<argument><expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>user</name><argument_list>(<argument><expr><call><name><name>UserFactory</name><operator>.</operator><name>user</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

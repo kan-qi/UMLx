@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\ThreadUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Looper</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ThreadUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>ThreadUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isMainThread</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Looper</name><operator>.</operator><name>getMainLooper</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getThread</name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>Thread</name><operator>.</operator><name>currentThread</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

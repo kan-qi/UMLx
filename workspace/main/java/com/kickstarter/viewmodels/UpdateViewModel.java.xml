@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\UpdateViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KoalaContext</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RefTag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>NumberUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Update</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>UpdateActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>intentmappers</name><operator>.</operator><name>ProjectIntentMapper</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>neverError</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>takeWhen</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>UpdateViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call when an external link has been activated. */</comment>
+    <function_decl><type><name>void</name></type> <name>externalLinkActivated</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when a project update comments uri request has been made. */</comment>
+    <function_decl><type><name>void</name></type> <name>goToCommentsRequest</name><parameter_list>(<parameter><decl><type><name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when a project uri request has been made. */</comment>
+    <function_decl><type><name>void</name></type> <name>goToProjectRequest</name><parameter_list>(<parameter><decl><type><name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when a project update uri request has been made. */</comment>
+    <function_decl><type><name>void</name></type> <name>goToUpdateRequest</name><parameter_list>(<parameter><decl><type><name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the share button is clicked. */</comment>
+    <function_decl><type><name>void</name></type> <name>shareIconButtonClicked</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits when we should start the share intent to show the share sheet. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>startShareIntent</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits an update to start the comments activity with. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>startCommentsActivity</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a project and a ref tag to start the project activity with. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>RefTag</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startProjectActivity</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a string to display in the toolbar title. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>updateSequence</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a url to load in the web view. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>webViewUrl</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>UpdateActivity</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ApiClientType</name></type> <name>client</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>apiClient</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>initialUpdate</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>UPDATE</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>Update</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>ProjectIntentMapper</name><operator>.</operator><name>project</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>client</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>initialUpdateUrl</name> <init>= <expr><call><name><name>initialUpdate</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>u</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>u</name><operator>.</operator><name>urls</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>web</name><argument_list>()</argument_list></call><operator>.</operator><call><name>update</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>anotherUpdateUrl</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>goToUpdateRequest</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>request</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>request</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(<argument><expr><name>initialUpdateUrl</name></expr></argument>, <argument><expr><name>anotherUpdateUrl</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>webViewUrl</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>anotherUpdate</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>goToUpdateRequest</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>projectUpdateParams</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>switchMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>pu</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>client</name><operator>.</operator><name>fetchUpdate</name></name><argument_list>(<argument><expr><name><name>pu</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>pu</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>neverError</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>currentUpdate</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(<argument><expr><name>initialUpdate</name></expr></argument>, <argument><expr><name>anotherUpdate</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>currentUpdate</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>shareButtonClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>startShareIntent</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>currentUpdate</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>goToCommentsRequest</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>startCommentsActivity</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>currentUpdate</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>u</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NumberUtils</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>u</name><operator>.</operator><name>sequence</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>updateSequence</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>project</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>goToProjectRequest</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>startProjectActivity</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>, <argument><expr><call><name><name>RefTag</name><operator>.</operator><name>update</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>project</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>externalLinkActivated</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackOpenedExternalLink</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>, <argument><expr><name><name>KoalaContext</name><operator>.</operator><name>ExternalLink</name><operator>.</operator><name>PROJECT_UPDATE</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * Parses a request for project and update params.
+     *
+     * @param request   Comments or update request.
+     * @return          Pair of project param string and update param string.
+     */</comment>
+    <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectUpdateParams</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+      <comment type="line">// todo: build a Navigation helper for better param extraction</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>projectParam</name> <init>= <expr><call><name><name>request</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>encodedPathSegments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>updateParam</name> <init>= <expr><call><name><name>request</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>encodedPathSegments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>projectParam</name></expr></argument>, <argument><expr><name>updateParam</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Request</name></argument>&gt;</argument_list></name></type> <name>externalLinkActivated</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Request</name></argument>&gt;</argument_list></name></type> <name>goToCommentsRequest</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Request</name></argument>&gt;</argument_list></name></type> <name>goToProjectRequest</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Request</name></argument>&gt;</argument_list></name></type> <name>goToUpdateRequest</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>shareButtonClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>startShareIntent</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>startCommentsActivity</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>RefTag</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startProjectActivity</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>updateSequence</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>webViewUrl</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>externalLinkActivated</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>externalLinkActivated</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>goToCommentsRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>goToCommentsRequest</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>goToProjectRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>goToProjectRequest</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>goToUpdateRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>goToUpdateRequest</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>shareIconButtonClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>shareButtonClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>startShareIntent</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>startShareIntent</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Update</name></argument>&gt;</argument_list></name></type> <name>startCommentsActivity</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>startCommentsActivity</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>RefTag</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startProjectActivity</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>startProjectActivity</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>updateSequence</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>updateSequence</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>webViewUrl</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>webViewUrl</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\rx\operators\ApiErrorOperatorTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>operators</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>Gson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSRobolectricTestCase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Test</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>ResponseBody</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>Response</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>observers</name><operator>.</operator><name>TestSubscriber</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ApiErrorOperatorTest</name> <super><extends>extends <name>KSRobolectricTestCase</name></extends></super> <block>{
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testErrorResponse</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Gson</name></type> <name>gson</name> <init>= <expr><operator>new</operator> <call><name>Gson</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name><name>Response</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>response</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><call><name><name>response</name><operator>.</operator><name>lift</name></name><argument_list>(<argument><expr><call><name><name>Operators</name><operator>.</operator><name>apiError</name></name><argument_list>(<argument><expr><name>gson</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>TestSubscriber</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>resultTest</name> <init>= <expr><operator>new</operator> <call><name><name>TestSubscriber</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>subscribe</name></name><argument_list>(<argument><expr><name>resultTest</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><call><name><name>Response</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="number">400</literal></expr></argument>, <argument><expr><call><name><name>ResponseBody</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>resultTest</name><operator>.</operator><name>assertNoValues</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><call><name><name>resultTest</name><operator>.</operator><name>getOnErrorEvents</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testSuccessResponse</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Gson</name></type> <name>gson</name> <init>= <expr><operator>new</operator> <call><name>Gson</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name><name>Response</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>response</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><call><name><name>response</name><operator>.</operator><name>lift</name></name><argument_list>(<argument><expr><call><name><name>Operators</name><operator>.</operator><name>apiError</name></name><argument_list>(<argument><expr><name>gson</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>TestSubscriber</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>resultTest</name> <init>= <expr><operator>new</operator> <call><name><name>TestSubscriber</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>subscribe</name></name><argument_list>(<argument><expr><name>resultTest</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>response</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><call><name><name>Response</name><operator>.</operator><name>success</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>resultTest</name><operator>.</operator><name>assertValues</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>resultTest</name><operator>.</operator><name>assertCompleted</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

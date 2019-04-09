@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\outputs\DiscoveryFragmentViewModelOutputs.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name><operator>.</operator><name>outputs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RefTag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>DiscoveryFragmentViewModelOutputs</name> <block>{
+  <comment type="block" format="javadoc">/** Emits a list of projects to display.*/</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectList</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Emits when the activity feed should be shown
+   */</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>showActivityFeed</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Emits an activity for the activity sample view
+   */</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Activity</name></argument>&gt;</argument_list></name></type> <name>activity</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Emits when the login tout activity should be shown
+   */</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>showLoginTout</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Emits a boolean that determines if the onboarding view should be shown
+   */</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>shouldShowOnboardingView</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Emits a Project and RefTag pair when we should start the {@link com.kickstarter.ui.activities.ProjectActivity}.
+   */</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>RefTag</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startProjectActivity</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Emits an activity when we should start the {@link com.kickstarter.ui.activities.UpdateActivity}.
+   */</comment>
+  <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Activity</name></argument>&gt;</argument_list></name></type> <name>startUpdateActivity</name><parameter_list>()</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

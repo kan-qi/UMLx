@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\core\issue\IssueUtils.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Issue</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>PullRequest</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Utilities for working with {@link Issue} models
+ */</comment>
+<class><specifier>public</specifier> class <name>IssueUtils</name> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Is the given issue a pull request?
+     *
+     * @param issue
+     * @return true if pull request, false otherwise
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPullRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Issue</name></type> <name>issue</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.core.issue.IssueUtils.isPullRequest(com.meisolsson.githubsdk.model.Issue)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.core.issue.IssueUtils.isPullRequest(com.meisolsson.githubsdk.model.Issue)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>issue</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>issue</name><operator>.</operator><name>pullRequest</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal>
+                <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>issue</name><operator>.</operator><name>pullRequest</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>htmlUrl</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Convert {@link PullRequest} model {@link Issue} model
+     *
+     * @param pullRequest
+     * @return issue
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Issue</name></type> <name>toIssue</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>PullRequest</name></type> <name>pullRequest</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Issue com.github.pockethub.android.core.issue.IssueUtils.toIssue(com.meisolsson.githubsdk.model.PullRequest)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>pullRequest</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Issue com.github.pockethub.android.core.issue.IssueUtils.toIssue(com.meisolsson.githubsdk.model.PullRequest)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></then></if>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Issue com.github.pockethub.android.core.issue.IssueUtils.toIssue(com.meisolsson.githubsdk.model.PullRequest)"</literal></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>Issue</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>assignee</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>assignee</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>body</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>bodyHtml</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>bodyHtml</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>closedAt</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>closedAt</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>comments</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>comments</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>createdAt</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>createdAt</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>htmlUrl</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>htmlUrl</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>number</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>number</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>milestone</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>milestone</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>pullRequest</name><argument_list>(<argument><expr><name>pullRequest</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>state</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>title</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>title</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>updatedAt</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>updatedAt</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>url</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>user</name><argument_list>(<argument><expr><call><name><name>pullRequest</name><operator>.</operator><name>user</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

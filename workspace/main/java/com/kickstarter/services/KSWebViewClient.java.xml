@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\KSWebViewClient.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>WebResourceResponse</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>WebView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>WebViewClient</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>FormContents</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>KSWebViewClient</name> <super><extends>extends <name>WebViewClient</name></extends></super> <block>{
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <block>{
+    <function_decl><type><name>void</name></type> <name>webViewOnPageStarted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>webViewOnPageFinished</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>webViewPageIntercepted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>webViewExternalLinkActivated</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <constructor><specifier>public</specifier> <name>KSWebViewClient</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>client</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>webEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>this</name><argument_list>(<argument><expr><name>client</name></expr></argument>, <argument><expr><name>webEndpoint</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>KSWebViewClient</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>client</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>webEndpoint</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setDelegate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Delegate</name></type> <name>delegate</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPageStarted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>WebView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bitmap</name></type> <name>favicon</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPageFinished</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>shouldOverrideUrlLoading</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>WebResourceResponse</name></type> <name>shouldInterceptRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="line">// The order of request handlers is important - we iterate through the request handlers</comment>
+  <comment type="line">// sequentially until a match is found.</comment>
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>registerRequestHandlers</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>RequestHandler</name></argument>&gt;</argument_list></name></type> <name>requestHandlers</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setFormContents</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>FormContents</name></type> <name>formContents</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+}</block></class>
+</unit>

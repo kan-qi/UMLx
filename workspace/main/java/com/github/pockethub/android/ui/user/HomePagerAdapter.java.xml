@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\user\HomePagerAdapter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>user</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>FragmentPagerAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>repo</name><operator>.</operator><name>RepositoryListFragment</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashSet</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Pager adapter for a user's different views
+ */</comment>
+<class><specifier>public</specifier> class <name>HomePagerAdapter</name> <super><extends>extends <name>FragmentPagerAdapter</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>User</name></type> <name>org</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>defaultUser</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>FragmentManager</name></type> <name>fragmentManager</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Resources</name></type> <name>resources</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>tags</name> <init>= <expr><operator>new</operator> <call><name><name>HashSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * @param fragment
+     * @param defaultUser
+     */</comment>
+    <constructor><specifier>public</specifier> <name>HomePagerAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Fragment</name></type> <name>fragment</name></decl></parameter>,
+        <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>defaultUser</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>User</name></type> <name>org</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>fragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.user.HomePagerAdapter.HomePagerAdapter(android.support.v4.app.Fragment,boolean,com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>org</name></name> <operator>=</operator> <name>org</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>fragmentManager</name> <operator>=</operator> <call><name><name>fragment</name><operator>.</operator><name>getChildFragmentManager</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>resources</name> <operator>=</operator> <call><name><name>fragment</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>defaultUser</name></name> <operator>=</operator> <name>defaultUser</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.user.HomePagerAdapter.HomePagerAdapter(android.support.v4.app.Fragment,boolean,com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Fragment</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.user.HomePagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <expr_stmt><expr><name>fragment</name> <operator>=</operator> <ternary><condition><expr><name>defaultUser</name></expr> ?</condition><then> <expr><operator>new</operator> <call><name>UserReceivedNewsFragment</name><argument_list>()</argument_list></call></expr>
+                    </then><else>: <expr><operator>new</operator> <call><name>OrganizationNewsFragment</name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</expr_stmt>
+                <break>break;</break>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>RepositoryListFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+            <case>case <expr><literal type="number">2</literal></expr>:</case>
+                <expr_stmt><expr><name>fragment</name> <operator>=</operator> <ternary><condition><expr><name>defaultUser</name></expr> ?</condition><then> <expr><operator>new</operator> <call><name>MyFollowersFragment</name><argument_list>()</argument_list></call></expr>
+                    </then><else>: <expr><operator>new</operator> <call><name>MembersFragment</name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</expr_stmt>
+                <break>break;</break>
+            <case>case <expr><literal type="number">3</literal></expr>:</case>
+                <expr_stmt><expr><name>fragment</name> <operator>=</operator> <operator>new</operator> <call><name>MyFollowingFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <break>break;</break>
+        }</block></switch>
+
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putParcelable</name></name><argument_list>(<argument><expr><literal type="string">"org"</literal></expr></argument>, <argument><expr><name>org</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.user.HomePagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>fragment</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getItemPosition</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.user.HomePagerAdapter.getItemPosition(Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.user.HomePagerAdapter.getItemPosition(Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>POSITION_NONE</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Object</name></type> <name>instantiateItem</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"Object com.github.pockethub.android.ui.user.HomePagerAdapter.instantiateItem(android.view.ViewGroup,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Object</name></type> <name>fragment</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>instantiateItem</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>fragment</name> <operator>instanceof</operator> <name>Fragment</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>tags</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>Fragment</name><operator>)</operator> <name>fragment</name><operator>)</operator><operator>.</operator><call><name>getTag</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Object com.github.pockethub.android.ui.user.HomePagerAdapter.instantiateItem(android.view.ViewGroup,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>fragment</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.user.HomePagerAdapter.getCount()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.user.HomePagerAdapter.getCount()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>defaultUser</name></expr> ?</condition><then> <expr><literal type="number">4</literal></expr> </then><else>: <expr><literal type="number">3</literal></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>CharSequence</name></type> <name>getPageTitle</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.user.HomePagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.user.HomePagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_news</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.user.HomePagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_repositories</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">2</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.user.HomePagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>defaultUser</name></expr> ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_followers_self</name></name></expr>
+                    </then><else>: <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_members</name></name></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">3</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.user.HomePagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_following_self</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.user.HomePagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+}</block></class>
+</unit>

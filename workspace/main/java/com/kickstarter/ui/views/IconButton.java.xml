@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\views\IconButton.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IconButton</name> <super><extends>extends <name>IconTextView</name></extends></super> <block>{
+  <constructor><specifier>public</specifier> <name>IconButton</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IconButton</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IconButton</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * For accessibility purposes, make this view behaves like a button. For example, if an {@link IconButton} has the
+   * content description "Star", TalkBack will read out "Star Button". TalkBack also communicates that it is
+   * a button in other languages using the appropriate grammar.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>CharSequence</name></type> <name>getAccessibilityClassName</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Button</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getName</name></name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

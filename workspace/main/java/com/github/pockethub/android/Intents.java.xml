@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\Intents.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>InfoUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Gist</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GistFile</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Issue</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Serializable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Helper for creating intents
+ */</comment>
+<class><specifier>public</specifier> class <name>Intents</name> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Prefix for all intents created
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>INTENT_PREFIX</name> <init>= <expr><name><name>BuildConfig</name><operator>.</operator><name>APPLICATION_ID</name></name> <operator>+</operator> <literal type="string">"."</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Prefix for all extra data added to intents
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>INTENT_EXTRA_PREFIX</name> <init>= <expr><name>INTENT_PREFIX</name> <operator>+</operator> <literal type="string">"extra."</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Repository handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_REPOSITORY</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"REPOSITORY"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Repository ids collection handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_REPOSITORIES</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"REPOSITORIES"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Repository name
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_REPOSITORY_NAME</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"REPOSITORY_NAME"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Repository owner
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_REPOSITORY_OWNER</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"REPOSITORY_OWNER"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Issue number
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_ISSUE_NUMBER</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"ISSUE_NUMBER"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Issue handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_ISSUE</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"ISSUE"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Issue number collection handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_ISSUE_NUMBERS</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"ISSUE_NUMBERS"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Gist id
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_GIST_ID</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"GIST_ID"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * List of Gist ids
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_GIST_IDS</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"GIST_IDS"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Gist handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_GIST</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"GIST"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Gist file handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_GIST_FILE</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"GIST_FILE"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * User handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_USER</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"USER"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * {@link ArrayList} handle of {@link User} objects
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_USERS</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"USERS"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Boolean value which indicates if a user is a collaborator on the repo
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_IS_COLLABORATOR</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"IS_COLLABORATOR"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Boolean value which indicates if a user is owner of the repo
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_IS_OWNER</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"IS_OWNER"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Boolean value which indicates if a user can write to a repo (Push, pull and edit)
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_CAN_WRITE_REPO</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"CAN_WRITE_REPO"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Issue filter handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_ISSUE_FILTER</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"ISSUE_FILTER"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Comment body
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_COMMENT_BODY</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"COMMENT_BODY"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Comments handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_COMMENTS</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"COMMENTS"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Comment handle
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_COMMENT</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"COMMENT"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Integer position
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_POSITION</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name>
+            <operator>+</operator> <literal type="string">"POSITION"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Base commit name
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_BASE</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"BASE"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Base commit names
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_BASES</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"BASES"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Base commit name
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_HEAD</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"HEAD"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Handle to a {@link String} path
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>EXTRA_PATH</name> <init>= <expr><name>INTENT_EXTRA_PREFIX</name> <operator>+</operator> <literal type="string">"PATH"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Resolve the {@link Repository} referenced by the given intent
+     *
+     * @param intent
+     * @return repository id
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Repository</name></type> <name>repoFrom</name><parameter_list>(<parameter><decl><type><name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Repository com.github.pockethub.android.Intents.repoFrom(android.content.Intent)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>String</name></type> <name>repoName</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY_NAME</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>repoOwner</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY_OWNER</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Repository com.github.pockethub.android.Intents.repoFrom(android.content.Intent)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>InfoUtils</name><operator>.</operator><name>createRepoFromData</name></name><argument_list>(<argument><expr><name>repoOwner</name></expr></argument>, <argument><expr><name>repoName</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Builder for generating an intent configured with extra data such as an
+     * issue, repository, or gist
+     */</comment>
+    <class><specifier>public</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name></decl>;</decl_stmt>
+
+        <comment type="block" format="javadoc">/**
+         * Create builder with suffix
+         *
+         * @param actionSuffix
+         */</comment>
+        <constructor><specifier>public</specifier> <name>Builder</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>actionSuffix</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder.Builder(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><comment type="line">// actionSuffix = e.g. "repos.VIEW"</comment>
+            <expr_stmt><expr><name>intent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>INTENT_PREFIX</name> <operator>+</operator> <name>actionSuffix</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder.Builder(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <comment type="block" format="javadoc">/**
+         * Add repository to intent being built up
+         *
+         * @param repository
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>repo</name><parameter_list>(<parameter><decl><type><name>Repository</name></type> <name>repository</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.repo(com.meisolsson.githubsdk.model.Repository)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.repo(com.meisolsson.githubsdk.model.Repository)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY</name></expr></argument>, <argument><expr><name>repository</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add issue to intent being built up
+         *
+         * @param issue
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>issue</name><parameter_list>(<parameter><decl><type><name>Issue</name></type> <name>issue</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.issue(com.meisolsson.githubsdk.model.Issue)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.issue(com.meisolsson.githubsdk.model.Issue)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>repo</name><argument_list>(<argument><expr><call><name><name>InfoUtils</name><operator>.</operator><name>createRepoFromUrl</name></name><argument_list>(<argument><expr><call><name><name>issue</name><operator>.</operator><name>htmlUrl</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_ISSUE</name></expr></argument>,
+                    <argument><expr><name>issue</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_ISSUE_NUMBER</name></expr></argument>, <argument><expr><call><name><name>issue</name><operator>.</operator><name>number</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add gist to intent being built up
+         *
+         * @param gist
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>gist</name><parameter_list>(<parameter><decl><type><name>Gist</name></type> <name>gist</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.gist(com.meisolsson.githubsdk.model.Gist)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.gist(com.meisolsson.githubsdk.model.Gist)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_GIST</name></expr></argument>, <argument><expr><name>gist</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add gist id to intent being built up
+         *
+         * @param gist
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>gist</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>gist</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.gist(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.gist(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_GIST_ID</name></expr></argument>, <argument><expr><name>gist</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add gist file to intent being built up
+         *
+         * @param file
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>gistFile</name><parameter_list>(<parameter><decl><type><name>GistFile</name></type> <name>file</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.gistFile(com.meisolsson.githubsdk.model.GistFile)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.gistFile(com.meisolsson.githubsdk.model.GistFile)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_GIST_FILE</name></expr></argument>, <argument><expr><name>file</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add user to intent being built up
+         *
+         * @param user
+         * @return this builder;
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>user</name><parameter_list>(<parameter><decl><type><name>User</name></type> <name>user</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.user(com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.user(com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_USER</name></expr></argument>, <argument><expr><name>user</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param value
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data values to intent being built up
+         *
+         * @param fieldName
+         * @param values
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name><name>CharSequence</name><index>[]</index></name></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,[CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,[CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param value
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param values
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,[int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,[int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param values
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name><name>boolean</name><index>[]</index></name></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,[boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,[boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param value
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name>Serializable</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,java.io.Serializable)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,java.io.Serializable)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param value
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name>Parcelable</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,android.os.Parcelable)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,android.os.Parcelable)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Add extra field data value to intent being built up
+         *
+         * @param fieldName
+         * @param value
+         * @return this builder
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Builder</name></type> <name>add</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>fieldName</name></decl></parameter>, <parameter><decl><type><name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>?</name> <extends>extends <name>Parcelable</name></extends></argument>&gt;</argument_list></name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,ArrayList&lt;? extends Parcelable&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putParcelableArrayListExtra</name></name><argument_list>(<argument><expr><name>fieldName</name></expr></argument>, <argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.Intents$Builder com.github.pockethub.android.Intents$Builder.add(String,ArrayList&lt;? extends Parcelable&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Get built intent
+         *
+         * @return intent
+         */</comment>
+        <function><specifier>public</specifier> <type><name>Intent</name></type> <name>toIntent</name><parameter_list>()</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.Intents$Builder.toIntent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.Intents$Builder.toIntent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>intent</name></expr>;</return>
+        }</block></function>
+    }</block></class>
+}</block></class>
+</unit>

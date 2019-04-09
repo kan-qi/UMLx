@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\issue\IssueSearchSuggestionsProvider.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SearchRecentSuggestionsProvider</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>provider</name><operator>.</operator><name>SearchRecentSuggestions</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Suggestions provider for recently searched for issue queries
+ */</comment>
+<class><specifier>public</specifier> class <name>IssueSearchSuggestionsProvider</name> <super><extends>extends
+        <name>SearchRecentSuggestionsProvider</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>AUTHORITY</name> <init>= <expr><name><name>BuildConfig</name><operator>.</operator><name>PROVIDER_AUTHORITY_SEARCH_SUGGEST_ISSUES</name></name></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Save query to history
+     *
+     * @param context
+     * @param query
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>save</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>query</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.save(android.content.Context,String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>suggestions</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>saveRecentQuery</name><argument_list>(<argument><expr><name>query</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.save(android.content.Context,String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Clear query history
+     *
+     * @param context
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>clear</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.clear(android.content.Context)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>suggestions</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>clearHistory</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.clear(android.content.Context)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>SearchRecentSuggestions</name></type> <name>suggestions</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.provider.SearchRecentSuggestions com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.suggestions(android.content.Context)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.provider.SearchRecentSuggestions com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.suggestions(android.content.Context)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>SearchRecentSuggestions</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>AUTHORITY</name></expr></argument>,
+                <argument><expr><name>DATABASE_MODE_QUERIES</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Create suggestions provider for searched for issue queries
+     */</comment>
+    <constructor><specifier>public</specifier> <name>IssueSearchSuggestionsProvider</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.IssueSearchSuggestionsProvider()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>setupSuggestions</name><argument_list>(<argument><expr><name>AUTHORITY</name></expr></argument>, <argument><expr><name>DATABASE_MODE_QUERIES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssueSearchSuggestionsProvider.IssueSearchSuggestionsProvider()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+}</block></class>
+</unit>

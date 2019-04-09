@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\WebView.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MotionEvent</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Web view extension with scrolling fixes
+ */</comment>
+<class><specifier>public</specifier> class <name>WebView</name> <super><extends>extends <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>WebView</name></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>intercept</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * @param context
+     * @param attrs
+     * @param defStyle
+     * @param privateBrowsing
+     */</comment>
+    <constructor><specifier>public</specifier> <name>WebView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>,
+                   <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyle</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>privateBrowsing</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyle</name></expr></argument>, <argument><expr><name>privateBrowsing</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context,android.util.AttributeSet,int,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context,android.util.AttributeSet,int,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */</comment>
+    <constructor><specifier>public</specifier> <name>WebView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>,
+                   <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyle</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context,android.util.AttributeSet,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context,android.util.AttributeSet,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * @param context
+     * @param attrs
+     */</comment>
+    <constructor><specifier>public</specifier> <name>WebView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context,android.util.AttributeSet)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context,android.util.AttributeSet)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * @param context
+     */</comment>
+    <constructor><specifier>public</specifier> <name>WebView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.WebView.WebView(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onInterceptTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>p_event</name></decl></parameter>)</parameter_list>
+    <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.onInterceptTouchEvent(android.view.MotionEvent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.onInterceptTouchEvent(android.view.MotionEvent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onTouchEvent</name><parameter_list>(<parameter><decl><type><name>MotionEvent</name></type> <name>p_event</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.onTouchEvent(android.view.MotionEvent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>intercept</name> <operator>&amp;&amp;</operator> <call><name>getParent</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>getParent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>requestDisallowInterceptTouchEvent</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.onTouchEvent(android.view.MotionEvent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onTouchEvent</name></name><argument_list>(<argument><expr><name>p_event</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>boolean</name></type> <name>canScrollCodeHorizontally</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>direction</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.canScrollCodeHorizontally(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>range</name> <init>= <expr><call><name>computeHorizontalScrollRange</name><argument_list>()</argument_list></call>
+                <operator>-</operator> <call><name>computeHorizontalScrollExtent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>range</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.canScrollCodeHorizontally(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">false</literal></expr>;</return>}</block>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><name>direction</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.canScrollCodeHorizontally(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>computeHorizontalScrollOffset</name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>;</return>}</block>
+        }</block></then> <else>else <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.WebView.canScrollCodeHorizontally(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>computeHorizontalScrollOffset</name><argument_list>()</argument_list></call> <operator>&lt;</operator> <name>range</name> <operator>-</operator> <literal type="number">1</literal></expr>;</return>}</block>
+        }</block></else></if>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>startIntercept</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.WebView.startIntercept()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>intercept</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.WebView.startIntercept()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>stopIntercept</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.WebView.stopIntercept()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>intercept</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.WebView.stopIntercept()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

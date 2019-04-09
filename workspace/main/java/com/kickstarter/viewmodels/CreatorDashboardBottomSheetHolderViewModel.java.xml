@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\CreatorDashboardBottomSheetHolderViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>CreatorDashboardBottomSheetViewHolder</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>CreatorDashboardBottomSheetHolderViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Current project. */</comment>
+    <function_decl><type><name>void</name></type> <name>projectInput</name><parameter_list>(<parameter><decl><type><name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when project is selected. */</comment>
+    <function_decl><type><name>void</name></type> <name>projectSwitcherProjectClicked</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits the project launch date to be formatted for display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectLaunchDate</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the project name for display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when project is selected. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectSwitcherProject</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>CreatorDashboardBottomSheetViewHolder</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectNameText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>currentProject</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectLaunchDate</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>currentProject</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>launchedAt</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectSwitcherProject</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>currentProject</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>takeWhen</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>projectSwitcherClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>currentProject</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>projectSwitcherClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectLaunchDate</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectSwitcherProject</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>projectInput</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>currentProject</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>projectSwitcherProjectClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectSwitcherClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectLaunchDate</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectLaunchDate</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectNameText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectSwitcherProject</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectSwitcherProject</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

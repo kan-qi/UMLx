@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\util\ShareUtils.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>ACTION_SEND</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>EXTRA_SUBJECT</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>EXTRA_TEXT</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Utilities for creating a share intent
+ */</comment>
+<class><specifier>public</specifier> class <name>ShareUtils</name> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Create intent with subject and body
+     *
+     * @param subject
+     * @param body
+     * @return intent
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>create</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>subject</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>body</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.util.ShareUtils.create(CharSequence,CharSequence)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>ACTION_SEND</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>setType</name></name><argument_list>(<argument><expr><literal type="string">"text/plain"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>subject</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_SUBJECT</name></expr></argument>, <argument><expr><name>subject</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_TEXT</name></expr></argument>, <argument><expr><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.util.ShareUtils.create(CharSequence,CharSequence)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>intent</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get body from intent
+     *
+     * @param intent
+     * @return body
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getBody</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.util.ShareUtils.getBody(android.content.Intent)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.util.ShareUtils.getBody(android.content.Intent)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>intent</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name>EXTRA_TEXT</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get subject from intent
+     *
+     * @param intent
+     * @return subject
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>String</name></type> <name>getSubject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.util.ShareUtils.getSubject(android.content.Intent)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.util.ShareUtils.getSubject(android.content.Intent)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>intent</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name>EXTRA_SUBJECT</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\apiresponses\ErrorEnvelope.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AutoGson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ListUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiException</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Retention</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RetentionPolicy</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>StringDef</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<class><annotation>@<name>AutoGson</name></annotation>
+<annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>ErrorEnvelope</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>errorMessages</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>int</name></type> <name>httpCode</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>ksrCode</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>FacebookUser</name></type> <name>facebookUser</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>static</specifier> <specifier>abstract</specifier> class <name>FacebookUser</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>long</name></type> <name>id</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>name</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>email</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>public</specifier> <specifier>static</specifier> <specifier>abstract</specifier> class <name>Builder</name> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>id</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>name</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>email</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>FacebookUser</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_ErrorEnvelope_FacebookUser</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>errorMessages</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>httpCode</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>ksrCode</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>facebookUser</name><parameter_list>(<parameter><decl><type><name>FacebookUser</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>ErrorEnvelope</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_ErrorEnvelope</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CONFIRM_FACEBOOK_SIGNUP</name> <init>= <expr><literal type="string">"confirm_facebook_signup"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>INVALID_XAUTH_LOGIN</name> <init>= <expr><literal type="string">"invalid_xauth_login"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TFA_FAILED</name> <init>= <expr><literal type="string">"tfa_failed"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TFA_REQUIRED</name> <init>= <expr><literal type="string">"tfa_required"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>MISSING_FACEBOOK_EMAIL</name> <init>= <expr><literal type="string">"missing_facebook_email"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>FACEBOOK_INVALID_ACCESS_TOKEN</name> <init>= <expr><literal type="string">"facebook_invalid_access_token"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNAUTHORIZED</name> <init>= <expr><literal type="string">"unauthorized"</literal></expr></init></decl>;</decl_stmt>
+
+  <annotation_defn><annotation>@<name>StringDef</name><argument_list>(<argument><expr><block>{<expr><name>INVALID_XAUTH_LOGIN</name></expr>, <argument><expr><name>TFA_FAILED</name></expr></argument>, <argument><expr><name>TFA_REQUIRED</name></expr></argument>}</block></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>Retention</name><argument_list>(<argument><expr><name><name>RetentionPolicy</name><operator>.</operator><name>SOURCE</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> @interface <name>ErrorCode</name> <block>{}</block></annotation_defn>
+
+  <comment type="block" format="javadoc">/**
+   * Tries to extract an {@link ErrorEnvelope} from an exception, and if it
+   * can't returns null.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>ErrorEnvelope</name></type> <name>fromThrowable</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Throwable</name></type> <name>t</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>t</name> <operator>instanceof</operator> <name>ApiException</name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>ApiException</name></type> <name>exception</name> <init>= <expr><operator>(</operator><name>ApiException</name><operator>)</operator> <name>t</name></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>exception</name><operator>.</operator><name>errorEnvelope</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isConfirmFacebookSignupError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>CONFIRM_FACEBOOK_SIGNUP</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isInvalidLoginError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>INVALID_XAUTH_LOGIN</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isTfaRequiredError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>TFA_REQUIRED</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isTfaFailedError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>TFA_FAILED</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isMissingFacebookEmailError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>MISSING_FACEBOOK_EMAIL</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isFacebookInvalidAccessTokenError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>FACEBOOK_INVALID_ACCESS_TOKEN</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isUnauthorizedError</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>UNAUTHORIZED</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block">/*
+    When logging in the only two possible errors are INVALID_XAUTH_LOGIN
+    and TFA_REQUIRED, so we consider anything else an unknown error.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isGenericLoginError</name><parameter_list>()</parameter_list> <block>{
+    <return>return
+      <expr><operator>!</operator><call><name><name>INVALID_XAUTH_LOGIN</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+        <operator>!</operator><call><name><name>TFA_REQUIRED</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name>ksrCode</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the first error message available, or `null` if there are none.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>errorMessage</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>errorMessages</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><call><name><name>ListUtils</name><operator>.</operator><name>first</name></name><argument_list>(<argument><expr><call><name>errorMessages</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\utils\BackingUtilsTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSRobolectricTestCase</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name><operator>.</operator><name>BackingFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name><operator>.</operator><name>ProjectFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name><operator>.</operator><name>RewardFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Backing</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Test</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>BackingUtilsTest</name> <super><extends>extends <name>KSRobolectricTestCase</name></extends></super> <block>{
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testIsBacked</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>backedProject</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>backedProject</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>BackingUtils</name><operator>.</operator><name>isBacked</name></name><argument_list>(<argument><expr><name>backedProject</name></expr></argument>, <argument><expr><call><name><name>backedProject</name><operator>.</operator><name>backing</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>reward</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>BackingUtils</name><operator>.</operator><name>isBacked</name></name><argument_list>(<argument><expr><name>backedProject</name></expr></argument>, <argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testIsShippable</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Backing</name></type> <name>backingWithShipping</name> <init>= <expr><call><name><name>BackingFactory</name><operator>.</operator><name>backing</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>reward</name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>rewardWithShipping</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>BackingUtils</name><operator>.</operator><name>isShippable</name></name><argument_list>(<argument><expr><name>backingWithShipping</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>BackingUtils</name><operator>.</operator><name>isShippable</name></name><argument_list>(<argument><expr><call><name><name>BackingFactory</name><operator>.</operator><name>backing</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

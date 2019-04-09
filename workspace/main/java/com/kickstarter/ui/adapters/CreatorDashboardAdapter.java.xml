@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\adapters\CreatorDashboardAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ProjectStatsEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>CreatorDashboardHeaderViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>CreatorDashboardReferrerBreakdownViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>CreatorDashboardReferrerStatsViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>CreatorDashboardRewardStatsViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>KSViewHolder</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CreatorDashboardAdapter</name> <super><extends>extends <name>KSAdapter</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_FUNDING_VIEW</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_REWARD_STATS_VIEW</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_REFERRER_BREAKDOWN_LAYOUT</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_REFERRER_STATS_VIEW</name> <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <super><extends>extends <name><name>CreatorDashboardHeaderViewHolder</name><operator>.</operator><name>Delegate</name></name></extends></super> <block>{}</block></interface>
+
+  <constructor><specifier>public</specifier> <name>CreatorDashboardAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_FUNDING_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_REWARD_STATS_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_REFERRER_BREAKDOWN_LAYOUT</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_REFERRER_STATS_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>protected</specifier> <annotation>@<name>LayoutRes</name></annotation> <type><name>int</name></type> <name>layout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>SECTION_FUNDING_VIEW</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_funding_view</name></name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>SECTION_REWARD_STATS_VIEW</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_reward_stats_view</name></name></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>SECTION_REFERRER_BREAKDOWN_LAYOUT</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_referrer_breakdown_layout</name></name></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_referrer_stats_view</name></name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>viewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>layout</name> <operator>==</operator> <name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_funding_view</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>CreatorDashboardHeaderViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>layout</name> <operator>==</operator> <name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_reward_stats_view</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>CreatorDashboardRewardStatsViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>layout</name> <operator>==</operator> <name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>dashboard_referrer_breakdown_layout</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name>CreatorDashboardReferrerBreakdownViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><operator>new</operator> <call><name>CreatorDashboardReferrerStatsViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takeProjectAndStats</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>ProjectStatsEnvelope</name></argument>&gt;</argument_list></name></type> <name>projectAndStatsEnvelope</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_FUNDING_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>projectAndStatsEnvelope</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// add reward stats sections</comment>
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(
+      <argument><expr><name>SECTION_REWARD_STATS_VIEW</name></expr></argument>,
+      <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(
+        <argument><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>projectAndStatsEnvelope</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><call><name><name>projectAndStatsEnvelope</name><operator>.</operator><name>second</name><operator>.</operator><name>rewardDistribution</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr></argument>
+    )</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(
+      <argument><expr><name>SECTION_REFERRER_BREAKDOWN_LAYOUT</name></expr></argument>,
+      <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(
+        <argument><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>projectAndStatsEnvelope</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>projectAndStatsEnvelope</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr></argument>
+    )</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(
+      <argument><expr><name>SECTION_REFERRER_STATS_VIEW</name></expr></argument>,
+      <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(
+        <argument><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>projectAndStatsEnvelope</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><call><name><name>projectAndStatsEnvelope</name><operator>.</operator><name>second</name><operator>.</operator><name>referralDistribution</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr></argument>
+    )</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

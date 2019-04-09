@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\EnumAdapter.java"><comment type="block">/*
+ * Copyright 2014 Jake Wharton
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ***
+ *
+ * Original: https://github.com/JakeWharton/u2020/blob/b77f4e18751ee1e8fad8d7df25be86924d7d4a80/src/main/java/com/jakewharton/u2020/ui/misc/EnumAdapter.java
+ * Modifications: Some modifiers and annotations have been added by Kickstarter.
+ */</comment>
+
+<package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+
+<class><specifier>public</specifier> class <name><name>EnumAdapter</name><parameter_list>&lt;<parameter><name>T</name> <extends>extends <name><name>Enum</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name></extends></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>BindableAdapter</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>T</name><index>[]</index></name></type> <name>enumConstants</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>showNull</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>LayoutRes</name></annotation> <specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>spinnerItemResource</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>nullOffset</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>EnumAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Class</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>enumType</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>showNull</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>spinnerItemResource</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>enumConstants</name></name> <operator>=</operator> <call><name><name>enumType</name><operator>.</operator><name>getEnumConstants</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>showNull</name></name> <operator>=</operator> <name>showNull</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>spinnerItemResource</name></name> <operator>=</operator> <name>spinnerItemResource</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>nullOffset</name></name> <operator>=</operator> <ternary><condition><expr><name>showNull</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>enumConstants</name><operator>.</operator><name>length</name></name> <operator>+</operator> <name><name>this</name><operator>.</operator><name>nullOffset</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>T</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>showNull</name></name> <operator>&amp;&amp;</operator> <name>position</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><name><name>this</name><operator>.</operator><name>enumConstants</name><index>[<expr><name>position</name> <operator>-</operator> <name><name>this</name><operator>.</operator><name>nullOffset</name></name></expr>]</index></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>long</name></type> <name>getItemId</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>position</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>View</name></type> <name>newView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>ViewGroup</name></type> <name>container</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>spinnerItemResource</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>bindView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>T</name></type> <name>item</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>tv</name> <init>= <expr><call><name><name>ButterKnife</name><operator>.</operator><name>findById</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>text1</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>tv</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>getName</name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>View</name></type> <name>newDropDownView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>ViewGroup</name></type> <name>container</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>inflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>simple_spinner_dropdown_item</name></name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>String</name></type> <name>getName</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>T</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

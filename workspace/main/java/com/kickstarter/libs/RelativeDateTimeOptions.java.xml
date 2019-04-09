@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\RelativeDateTimeOptions.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<class><annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>RelativeDateTimeOptions</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <comment type="block" format="javadoc">/**
+   * Abbreviates string, e.g.: "in 1 hr"
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>boolean</name></type> <name>abbreviated</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Don't output tense, e.g.: "1 hour" instead of "in 1 hour"
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>boolean</name></type> <name>absolute</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Compare against this date instead of the current time
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>DateTime</name></type> <name>relativeToDateTime</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Number of seconds difference permitted before an attempt to describe the relative date is abandoned.
+   * For example, "738 days ago" is not helpful to users. The threshold defaults to 30 days.
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>int</name></type> <name>threshold</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>abbreviated</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>absolute</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>relativeToDateTime</name><parameter_list>(<parameter><decl><type><name>DateTime</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>threshold</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>RelativeDateTimeOptions</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_RelativeDateTimeOptions</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>abbreviated</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>absolute</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>threshold</name><argument_list>(<argument><expr><name>THIRTY_DAYS_IN_SECONDS</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name>int</name></type> <name>THIRTY_DAYS_IN_SECONDS</name> <init>= <expr><literal type="number">60</literal> <operator>*</operator> <literal type="number">60</literal> <operator>*</operator> <literal type="number">24</literal> <operator>*</operator> <literal type="number">30</literal></expr></init></decl>;</decl_stmt>
+}</block></class>
+
+
+</unit>

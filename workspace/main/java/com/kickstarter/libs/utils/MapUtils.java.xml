@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\MapUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>MapUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>MapUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a new map with all keys prefixed with another string.
+   */</comment>
+  <function><annotation>@<name>NonNull</name></annotation> <specifier>public</specifier> <specifier>static</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>prefixKeys</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>prefix</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">// Early out on a case that can come up often.</comment>
+    <if>if <condition>(<expr><literal type="string">""</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>prefix</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>source</name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name> <range>: <expr><call><name><name>source</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>prefix</name> <operator>+</operator> <name>key</name></expr></argument>, <argument><expr><call><name><name>source</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>result</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a new map with all `null` values removed.
+   */</comment>
+  <function><annotation>@<name>NonNull</name></annotation> <specifier>public</specifier> <specifier>static</specifier> <parameter_list type="generic">&lt;<parameter><name>S</name></parameter>, <parameter><name>T</name></parameter>&gt;</parameter_list> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>S</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>compact</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>S</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>S</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>output</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>S</name></type> <name>key</name> <range>: <expr><call><name><name>source</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>source</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>output</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></for>
+    <return>return <expr><name>output</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns an empty map.
+   */</comment>
+  <function><annotation>@<name>NonNull</name></annotation> <specifier>public</specifier> <specifier>static</specifier> <parameter_list type="generic">&lt;<parameter><name>S</name></parameter>, <parameter><name>T</name></parameter>&gt;</parameter_list> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>S</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></type> <name>empty</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

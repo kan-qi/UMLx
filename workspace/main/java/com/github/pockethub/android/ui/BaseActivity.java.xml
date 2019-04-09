@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\BaseActivity.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>CallSuper</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>uber</name><operator>.</operator><name>autodispose</name><operator>.</operator><name>AutoDispose</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>uber</name><operator>.</operator><name>autodispose</name><operator>.</operator><name>AutoDisposeConverter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>uber</name><operator>.</operator><name>autodispose</name><operator>.</operator><name>android</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>AndroidLifecycleScopeProvider</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindView</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>DaggerAppCompatActivity</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity that display dialogs
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>BaseActivity</name> <super><extends>extends <name>DaggerAppCompatActivity</name></extends> <implements>implements <name>DialogResultListener</name></implements></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>BindView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>toolbar</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>protected</specifier> <type><name>Toolbar</name></type> <name>toolbar</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onContentChanged</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.BaseActivity.onContentChanged()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onContentChanged</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setSupportActionBar</name><argument_list>(<argument><expr><name>toolbar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.BaseActivity.onContentChanged()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>Toolbar</name></type> <name>getToolbar</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v7.widget.Toolbar com.github.pockethub.android.ui.BaseActivity.getToolbar()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v7.widget.Toolbar com.github.pockethub.android.ui.BaseActivity.getToolbar()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>toolbar</name></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return parcelable
+     */</comment>
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unchecked"</literal></expr></argument>)</argument_list></annotation>
+    <specifier>protected</specifier> <parameter_list type="generic">&lt;<parameter><name>V</name> <extends>extends <name>Parcelable</name></extends></parameter>&gt;</parameter_list> <type><name>V</name></type> <name>getParcelableExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"V com.github.pockethub.android.ui.BaseActivity.getParcelableExtra(android.os.Bundle,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"V com.github.pockethub.android.ui.BaseActivity.getParcelableExtra(android.os.Bundle,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>(</operator><name>V</name><operator>)</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return int
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>int</name></type> <name>getIntExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.BaseActivity.getIntExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.BaseActivity.getIntExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getIntExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return int array
+     */</comment>
+    <function><specifier>protected</specifier> <type><name><name>int</name><index>[]</index></name></type> <name>getIntArrayExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"[int com.github.pockethub.android.ui.BaseActivity.getIntArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"[int com.github.pockethub.android.ui.BaseActivity.getIntArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getIntArrayExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return boolean array
+     */</comment>
+    <function><specifier>protected</specifier> <type><name><name>boolean</name><index>[]</index></name></type> <name>getBooleanArrayExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"[boolean com.github.pockethub.android.ui.BaseActivity.getBooleanArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"[boolean com.github.pockethub.android.ui.BaseActivity.getBooleanArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBooleanArrayExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return string
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>String</name></type> <name>getStringExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.BaseActivity.getStringExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.BaseActivity.getStringExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return string array
+     */</comment>
+    <function><specifier>protected</specifier> <type><name><name>String</name><index>[]</index></name></type> <name>getStringArrayExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"[String com.github.pockethub.android.ui.BaseActivity.getStringArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"[String com.github.pockethub.android.ui.BaseActivity.getStringArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getStringArrayExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get intent extra
+     *
+     * @param name
+     * @return char sequence array
+     */</comment>
+    <function><specifier>protected</specifier> <type><name><name>CharSequence</name><index>[]</index></name></type> <name>getCharSequenceArrayExtra</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>name</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"[CharSequence com.github.pockethub.android.ui.BaseActivity.getCharSequenceArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"[CharSequence com.github.pockethub.android.ui.BaseActivity.getCharSequenceArrayExtra(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getCharSequenceArrayExtra</name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDialogResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>arguments</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.BaseActivity.onDialogResult(int,int,android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><comment type="line">// Intentionally left blankcom.mijack.Xlog.logMethodExit("void com.github.pockethub.android.ui.BaseActivity.onDialogResult(int,int,android.os.Bundle)",this);</comment>
+    }</block></function>
+}</block></class>
+</unit>

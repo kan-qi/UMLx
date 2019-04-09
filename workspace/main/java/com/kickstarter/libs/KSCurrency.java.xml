@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\KSCurrency.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>NumberUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>math</name><operator>.</operator><name>RoundingMode</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+<import>import <name><name>type</name><operator>.</operator><name>CurrencyCode</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>KSCurrency</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CurrentConfigType</name></type> <name>currentConfig</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KSCurrency</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentConfigType</name></type> <name>currentConfig</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentConfig</name></name> <operator>=</operator> <name>currentConfig</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a currency string appropriate to the user's locale and location relative to a project.
+   *
+   * @param initialValue Value to display, local to the project's currency.
+   * @param project      The project to use to look up currency information.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>initialValue</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>format</name><argument_list>(<argument><expr><name>initialValue</name></expr></argument>, <argument><expr><name>project</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><name><name>RoundingMode</name><operator>.</operator><name>DOWN</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a currency string appropriate to the user's locale and location relative to a project.
+   *
+   * @param initialValue        Value to display, local to the project's currency.
+   * @param project             The project to use to look up currency information.
+   * @param excludeCurrencyCode If true, hide the currency code, even if that makes the returned value ambiguous.
+   *                            This is used when space is constrained and the currency code can be determined elsewhere.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>initialValue</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>excludeCurrencyCode</name></decl></parameter>)</parameter_list> <block>{
+
+    <return>return <expr><call><name>format</name><argument_list>(<argument><expr><name>initialValue</name></expr></argument>, <argument><expr><name>project</name></expr></argument>, <argument><expr><name>excludeCurrencyCode</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><name><name>RoundingMode</name><operator>.</operator><name>DOWN</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a currency string appropriate to the user's locale and location relative to a project.
+   *
+   * @param initialValue        Value to display, local to the project's currency.
+   * @param project             The project to use to look up currency information.
+   * @param excludeCurrencyCode If true, hide the currency code, even if that makes the returned value ambiguous.
+   *                            This is used when space is constrained and the currency code can be determined elsewhere.
+   * @param preferUSD           Attempt to convert a project from it's local currency to USD, if the user is located in
+   *                            the US.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>initialValue</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>excludeCurrencyCode</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>preferUSD</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RoundingMode</name></type> <name>roundingMode</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CurrencyOptions</name></type> <name>currencyOptions</name> <init>= <expr><call><name>currencyOptions</name><argument_list>(<argument><expr><name>initialValue</name></expr></argument>, <argument><expr><name>project</name></expr></argument>, <argument><expr><name>preferUSD</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>showCurrencyCode</name> <init>= <expr><call><name>showCurrencyCode</name><argument_list>(<argument><expr><name>currencyOptions</name></expr></argument>, <argument><expr><name>excludeCurrencyCode</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>NumberOptions</name></type> <name>numberOptions</name> <init>= <expr><call><name><name>NumberOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><ternary><condition><expr><name>showCurrencyCode</name></expr> ?</condition><then> <expr><call><name><name>currencyOptions</name><operator>.</operator><name>currencyCode</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="string">""</literal></expr></else></ternary></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>currencySymbol</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>roundingMode</name><argument_list>(<argument><expr><name>roundingMode</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>NumberUtils</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>value</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>numberOptions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a currency string appropriate to the user's locale, chosenCurrency and project preferred currency.
+   *
+   * @param initialValue Value to display, local to the project's currency.
+   * @param project The project to use to look up currency information.
+   * @param roundingMode This determines whether we should round the values down or up.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>formatWithProjectCurrency</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>initialValue</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RoundingMode</name></type> <name>roundingMode</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CurrencyOptions</name></type> <name>currencyOptions</name> <init>= <expr><call><name>projectCurrencyOptions</name><argument_list>(<argument><expr><name>initialValue</name></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>NumberOptions</name></type> <name>numberOptions</name> <init>= <expr><call><name><name>NumberOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>currencySymbol</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>roundingMode</name><argument_list>(<argument><expr><name>roundingMode</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>NumberUtils</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>value</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>numberOptions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a currency string appropriate to the user's locale and preferred currency.
+   *
+   * @param initialValue Value to display, local to the project's currency.
+   * @param project The project to use to look up currency information.
+   * @param roundingMode This determines whether we should round the values down or up.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>formatWithUserPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>initialValue</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RoundingMode</name></type> <name>roundingMode</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CurrencyOptions</name></type> <name>currencyOptions</name> <init>= <expr><call><name>userCurrencyOptions</name><argument_list>(<argument><expr><name>initialValue</name></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>NumberOptions</name></type> <name>numberOptions</name> <init>= <expr><call><name><name>NumberOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>currencySymbol</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>roundingMode</name><argument_list>(<argument><expr><name>roundingMode</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>NumberUtils</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>value</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>numberOptions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Build {@link CurrencyOptions} based on the project and whether we would prefer to show USD. Even if USD is preferred,
+   * we only show USD if the user is in the US.
+   */</comment>
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>CurrencyOptions</name></type> <name>currencyOptions</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>preferUSD</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Config</name></type> <name>config</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>currentConfig</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Float</name></type> <name>staticUsdRate</name> <init>= <expr><call><name><name>project</name><operator>.</operator><name>staticUsdRate</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>preferUSD</name> <operator>&amp;&amp;</operator> <call><name><name>config</name><operator>.</operator><name>countryCode</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <name>staticUsdRate</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>CurrencyOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>country</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><literal type="string">"$"</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>value</name><argument_list>(<argument><expr><name>value</name> <operator>*</operator> <name>staticUsdRate</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then> <else>else <block>{
+      <return>return <expr><call><name><name>CurrencyOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>country</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>country</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>currency</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>currencySymbol</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>value</name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/** Show's the pledge amount for a project's Reward in the project's currency. If the user's preference is USD and
+   * the user is located in the US then $ will show for the currency symbol. If the user has a preference of USD
+   * and is located outside of the US and the project is a US based project the currency symbol will show as $US
+   */</comment>
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>CurrencyOptions</name></type> <name>projectCurrencyOptions</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Config</name></type> <name>config</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>currentConfig</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>shouldShowDollar</name> <init>= <expr><call><name><name>config</name><operator>.</operator><name>countryCode</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+      <call><name><name>project</name><operator>.</operator><name>currency</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>USD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>&amp;&amp;</operator> <call><name><name>project</name><operator>.</operator><name>currentCurrency</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>USD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+
+    <return>return <expr><call><name><name>CurrencyOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>country</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>country</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><ternary><condition><expr><name>shouldShowDollar</name></expr> ?</condition><then> <expr><literal type="string">"$"</literal></expr> </then><else>: <expr><call><name>getSymbolForCurrency</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>currency</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>value</name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/** Show's the project in the user's preferred currency. If the user has no preferred currency the project is shown
+   * in $ as a default if the user is in the US. If the user is located outside of the US the default will show as
+   * $US.
+   */</comment>
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>CurrencyOptions</name></type> <name>userCurrencyOptions</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>value</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Config</name></type> <name>config</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>currentConfig</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Float</name></type> <name>fxRate</name> <init>= <expr><call><name><name>project</name><operator>.</operator><name>fxRate</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>shouldShowDollar</name> <init>= <expr><call><name><name>config</name><operator>.</operator><name>countryCode</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator>
+      <call><name><name>project</name><operator>.</operator><name>currentCurrency</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>USD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>CurrencyOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>country</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>country</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><ternary><condition><expr><name>shouldShowDollar</name></expr> ?</condition><then> <expr><literal type="string">"$"</literal></expr></then><else>: <expr><call><name>getSymbolForCurrency</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>currentCurrency</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>value</name><argument_list>(<argument><expr><name>value</name> <operator>*</operator> <name>fxRate</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the proper currency symbol based on the user's chosenCurrency preference.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>getSymbolForCurrency</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>chosenCurrency</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>symbol</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Config</name></type> <name>config</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>currentConfig</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>config</name><operator>.</operator><name>countryCode</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"XX"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>symbol</name> <operator>=</operator> <literal type="string">"US$ "</literal></expr>;</expr_stmt>
+      <return>return <expr><name>symbol</name></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>AUD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"AU$ "</literal></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>CAD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"CA$ "</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>CHF</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"CHF"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>DKK</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"DKK"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>EUR</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"â¬"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>GBP</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"Â£"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>HKD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"HK$ "</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>JPY</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"Â¥"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>MXN</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"MX$ "</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>NOK</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"NOK"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>NZD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"NZ$ "</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>SEK</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"SEK"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>SGD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"S$ "</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name><name>chosenCurrency</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>CurrencyCode</name><operator>.</operator><name>USD</name><operator>.</operator><name>rawValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"US$ "</literal></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><name>symbol</name> <operator>=</operator> <literal type="string">"US$ "</literal></expr>;</expr_stmt>
+    }</block></else></if>
+    <return>return <expr><name>symbol</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines whether the currency code should be shown. If the currency is ambiguous (e.g. CAD and USD both use `$`),
+   * we show the currency code if the user is not in the US, or the project is not in the US.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>showCurrencyCode</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrencyOptions</name></type> <name>currencyOptions</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>excludeCurrencyCode</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>excludeCurrencyCode</name></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Config</name></type> <name>config</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>currentConfig</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>currencyIsDupe</name> <init>= <expr><call><name><name>config</name><operator>.</operator><name>currencyNeedsCode</name></name><argument_list>(<argument><expr><call><name><name>currencyOptions</name><operator>.</operator><name>currencySymbol</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>userIsUS</name> <init>= <expr><call><name><name>config</name><operator>.</operator><name>countryCode</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>projectIsUS</name> <init>= <expr><call><name><name>currencyOptions</name><operator>.</operator><name>country</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><operator>(</operator><name>currencyIsDupe</name> <operator>&amp;&amp;</operator> <operator>!</operator><name>userIsUS</name><operator>)</operator> <operator>||</operator> <operator>(</operator><name>currencyIsDupe</name> <operator>&amp;&amp;</operator> <operator>!</operator><name>projectIsUS</name><operator>)</operator></expr>;</return>
+  }</block></function>
+
+  <class><annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>CurrencyOptions</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>country</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencyCode</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencySymbol</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>float</name></type> <name>value</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>country</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>currencyCode</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>currencySymbol</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>value</name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>CurrencyOptions</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_KSCurrency_CurrencyOptions</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+}</block></class>
+</unit>

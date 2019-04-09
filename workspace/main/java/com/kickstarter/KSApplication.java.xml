@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\KSApplication.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>crashlytics</name><operator>.</operator><name>android</name><operator>.</operator><name>Crashlytics</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>facebook</name><operator>.</operator><name>FacebookSdk</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>FirebaseApp</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>iid</name><operator>.</operator><name>FirebaseInstanceId</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ApiEndpoint</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>PushNotifications</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ApplicationLifecycleUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>Secrets</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>squareup</name><operator>.</operator><name>leakcanary</name><operator>.</operator><name>LeakCanary</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>squareup</name><operator>.</operator><name>leakcanary</name><operator>.</operator><name>RefWatcher</name></name>;</import>
+
+<import>import <name><name>net</name><operator>.</operator><name>danlew</name><operator>.</operator><name>android</name><operator>.</operator><name>joda</name><operator>.</operator><name>JodaTimeAndroid</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieHandler</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieManager</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>HttpCookie</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URI</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>UUID</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>CallSuper</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>multidex</name><operator>.</operator><name>MultiDex</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>multidex</name><operator>.</operator><name>MultiDexApplication</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>fabric</name><operator>.</operator><name>sdk</name><operator>.</operator><name>android</name><operator>.</operator><name>Fabric</name></name>;</import>
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>KSApplication</name> <super><extends>extends <name>MultiDexApplication</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>ApplicationComponent</name></type> <name>component</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>RefWatcher</name></type> <name>refWatcher</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>protected</specifier> <type><name>CookieManager</name></type> <name>cookieManager</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>protected</specifier> <type><name>PushNotifications</name></type> <name>pushNotifications</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <annotation>@<name>CallSuper</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>MultiDex</name><operator>.</operator><name>install</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Only log for internal builds</comment>
+    <if>if <condition>(<expr><call><name><name>BuildConfig</name><operator>.</operator><name>FLAVOR</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><literal type="string">"internal"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>plant</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>Timber</name><operator>.</operator><name>DebugTree</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name>isInUnitTests</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>refWatcher</name></name> <operator>=</operator> <call><name><name>LeakCanary</name><operator>.</operator><name>install</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>JodaTimeAndroid</name><operator>.</operator><name>init</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Fabric</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>new</operator> <call><name>Crashlytics</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>component</name></name> <operator>=</operator> <call><name><name>DaggerApplicationComponent</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>applicationModule</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ApplicationModule</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>inject</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>FirebaseApp</name><operator>.</operator><name>initializeApp</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name>isInUnitTests</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setVisitorCookie</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>FacebookSdk</name><operator>.</operator><name>sdkInitialize</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pushNotifications</name><operator>.</operator><name>initialize</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>ApplicationLifecycleUtil</name></type> <name>appUtil</name> <init>= <expr><operator>new</operator> <call><name>ApplicationLifecycleUtil</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>registerActivityLifecycleCallbacks</name><argument_list>(<argument><expr><name>appUtil</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>registerComponentCallbacks</name><argument_list>(<argument><expr><name>appUtil</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>ApplicationComponent</name></type> <name>component</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>component</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>RefWatcher</name></type> <name>getRefWatcher</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>KSApplication</name></type> <name>application</name> <init>= <expr><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name><name>application</name><operator>.</operator><name>refWatcher</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isInUnitTests</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setVisitorCookie</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>deviceId</name> <init>= <expr><call><name><name>FirebaseInstanceId</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getId</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>uniqueIdentifier</name> <init>= <expr><ternary><condition><expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>deviceId</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><call><name><name>UUID</name><operator>.</operator><name>randomUUID</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><name>deviceId</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><operator>new</operator> <call><name>HttpCookie</name><argument_list>(<argument><expr><literal type="string">"vis"</literal></expr></argument>, <argument><expr><name>uniqueIdentifier</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setMaxAge</name></name><argument_list>(<argument><expr><call><name><name>DateTime</name><operator>.</operator><name>now</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>plusYears</name><argument_list>(<argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getMillis</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setSecure</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>URI</name></type> <name>webUri</name> <init>= <expr><call><name><name>URI</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>Secrets</name><operator>.</operator><name>WebEndpoint</name><operator>.</operator><name>PRODUCTION</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>URI</name></type> <name>apiUri</name> <init>= <expr><call><name><name>URI</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><call><name><name>ApiEndpoint</name><operator>.</operator><name>PRODUCTION</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cookieManager</name><operator>.</operator><name>getCookieStore</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>webUri</name></expr></argument>, <argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cookieManager</name><operator>.</operator><name>getCookieStore</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>apiUri</name></expr></argument>, <argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>CookieHandler</name><operator>.</operator><name>setDefault</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>cookieManager</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

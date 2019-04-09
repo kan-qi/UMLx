@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\issue\DashboardIssueFragment.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>issue</name><operator>.</operator><name>IssueStore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>PagedItemFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>item</name><operator>.</operator><name>issue</name><operator>.</operator><name>IssueDashboardItem</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>item</name><operator>.</operator><name>issue</name><operator>.</operator><name>IssueItem</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AvatarLoader</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>core</name><operator>.</operator><name>ServiceGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Issue</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Page</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>issues</name><operator>.</operator><name>IssueService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>xwray</name><operator>.</operator><name>groupie</name><operator>.</operator><name>Item</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Single</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>Response</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>RequestCodes</name><operator>.</operator><name>ISSUE_VIEW</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Fragment to display a pageable list of dashboard issues
+ */</comment>
+<class><specifier>public</specifier> class <name>DashboardIssueFragment</name> <super><extends>extends <name><name>PagedItemFragment</name><argument_list type="generic">&lt;<argument><name>Issue</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Filter data argument
+     */</comment>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>ARG_FILTER</name> <init>= <expr><literal type="string">"filter"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>IssueService</name></type> <name>service</name> <init>= <expr><call><name><name>ServiceGenerator</name><operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>IssueService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>IssueStore</name></type> <name>store</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>AvatarLoader</name></type> <name>avatars</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>filterData</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unchecked"</literal></expr></argument>)</argument_list></annotation>
+    <annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreated</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.DashboardIssueFragment.onActivityCreated(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>filterData</name> <operator>=</operator> <operator>(</operator><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name><operator>)</operator> <call><name>getArguments</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSerializable</name><argument_list>(<argument><expr><name>ARG_FILTER</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityCreated</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.DashboardIssueFragment.onActivityCreated(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Intent</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.DashboardIssueFragment.onActivityResult(int,int,android.content.Intent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>requestCode</name> <operator>==</operator> <name>ISSUE_VIEW</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>forceRefresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.DashboardIssueFragment.onActivityResult(int,int,android.content.Intent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>Single</name><argument_list type="generic">&lt;<argument><name><name>Response</name><argument_list type="generic">&lt;<argument><name><name>Page</name><argument_list type="generic">&lt;<argument><name>Issue</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>loadData</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>page</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;Response&lt;Page&lt;Issue&gt;&gt;&gt; com.github.pockethub.android.ui.issue.DashboardIssueFragment.loadData(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;Response&lt;Page&lt;Issue&gt;&gt;&gt; com.github.pockethub.android.ui.issue.DashboardIssueFragment.loadData(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>service</name><operator>.</operator><name>getIssues</name></name><argument_list>(<argument><expr><name>filterData</name></expr></argument>, <argument><expr><name>page</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onItemClick</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>Item</name></type> <name>clickedItem</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.DashboardIssueFragment.onItemClick(@NonNull Item,@NonNull View)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>clickedItem</name> <operator>instanceof</operator> <name>IssueDashboardItem</name></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>position</name> <init>= <expr><call><name>getListAdapter</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAdapterPosition</name><argument_list>(<argument><expr><name>clickedItem</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>Issue</name></argument>&gt;</argument_list></name></type> <name>issues</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <for>for <control>(<init><decl><type><name>Item</name></type> <name>item</name> <range>: <expr><name>items</name></expr></range></decl></init>)</control> <block>{
+                <if>if <condition>(<expr><name>item</name> <operator>instanceof</operator> <name>IssueDashboardItem</name></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>issues</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>(</operator><operator>(</operator><name>IssueItem</name><operator>)</operator> <name>item</name><operator>)</operator><operator>.</operator><call><name>getIssue</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></then></if>
+            }</block></for>
+            <expr_stmt><expr><call><name>startActivityForResult</name><argument_list>(<argument><expr><call><name><name>IssuesViewActivity</name><operator>.</operator><name>createIntent</name></name><argument_list>(<argument><expr><name>issues</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>ISSUE_VIEW</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.DashboardIssueFragment.onItemClick(@NonNull Item,@NonNull View)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>int</name></type> <name>getLoadingMessage</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.issue.DashboardIssueFragment.getLoadingMessage()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.issue.DashboardIssueFragment.getLoadingMessage()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>loading_issues</name></name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>int</name></type> <name>getErrorMessage</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.issue.DashboardIssueFragment.getErrorMessage()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.issue.DashboardIssueFragment.getErrorMessage()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>error_issues_load</name></name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>Item</name></type> <name>createItem</name><parameter_list>(<parameter><decl><type><name>Issue</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.item.issue.IssueDashboardItem com.github.pockethub.android.ui.issue.DashboardIssueFragment.createItem(com.meisolsson.githubsdk.model.Issue)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.item.issue.IssueDashboardItem com.github.pockethub.android.ui.issue.DashboardIssueFragment.createItem(com.meisolsson.githubsdk.model.Issue)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>IssueDashboardItem</name><argument_list>(<argument><expr><name>avatars</name></expr></argument>, <argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

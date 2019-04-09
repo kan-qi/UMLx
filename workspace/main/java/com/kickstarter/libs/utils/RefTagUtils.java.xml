@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\RefTagUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RefTag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieManager</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieStore</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>HttpCookie</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>MalformedURLException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>URL</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>RefTagUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>RefTagUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>COOKIE_VALUE_SEPARATOR</name> <init>= <expr><literal type="string">"%3F"</literal></expr></init></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Name of the cookie that should store the ref tag for a particular project. Fits the template:
+   *
+   * ref_{project_pid}
+   */</comment>
+  <function><specifier>protected</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>cookieNameForProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="string">"ref_"</literal> <operator>+</operator> <call><name><name>project</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Value to store in the ref tag cookie. Fits the template:
+   *
+   * {ref_tag} + {separator} + {time_of_setting}
+   */</comment>
+  <function><specifier>protected</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>cookieValueForRefTag</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RefTag</name></type> <name>refTag</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>refTag</name><operator>.</operator><name>tag</name></name><argument_list>()</argument_list></call> <operator>+</operator> <name>COOKIE_VALUE_SEPARATOR</name> <operator>+</operator> <call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>SystemUtils</name><operator>.</operator><name>secondsSinceEpoch</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * If a ref tag cookie has been stored for this project this returns the ref tag embedded in the cookie. If a
+   * cookie has not yet been set it returns `null`.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>RefTag</name></type> <name>storedCookieRefTagForProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieManager</name></type> <name>cookieManager</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><call><name>findRefTagCookieForProject</name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>cookieManager</name></expr></argument>, <argument><expr><name>sharedPreferences</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>cookie</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>components</name> <init>= <expr><call><name><name>cookie</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>split</name><argument_list>(<argument><expr><name>COOKIE_VALUE_SEPARATOR</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name><name>components</name><operator>.</operator><name>length</name></name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>RefTag</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name><name>components</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Constructs a cookie for the given ref tag and project. This method can return `null` if a cookie cannot be
+   * constructed, e.g. the project has a malformed project url.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>HttpCookie</name></type> <name>buildCookieWithRefTagAndProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RefTag</name></type> <name>refTag</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+
+    <return>return <expr><call><name>buildCookieWithValueAndProject</name><argument_list>(<argument><expr><call><name>cookieValueForRefTag</name><argument_list>(<argument><expr><name>refTag</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Constructs a cookie for the given cookie value and project. This method can return `null` if a cookie cannot be
+   * constructed, e.g. the project has a malformed project url.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>HttpCookie</name></type> <name>buildCookieWithValueAndProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>cookieValue</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><operator>new</operator> <call><name>HttpCookie</name><argument_list>(<argument><expr><call><name>cookieNameForProject</name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>cookieValue</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Try extracting the path and domain for the cookie from the project.</comment>
+    <try>try <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>URL</name></type> <name>url</name> <init>= <expr><operator>new</operator> <call><name>URL</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>webProjectUrl</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setPath</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setDomain</name></name><argument_list>(<argument><expr><call><name><name>url</name><operator>.</operator><name>getHost</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>MalformedURLException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></catch></try>
+
+    <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setVersion</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Cookie expires on the project deadline, or some days into the future if there is no deadline.</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>DateTime</name></type> <name>deadline</name> <init>= <expr><call><name><name>project</name><operator>.</operator><name>deadline</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>deadline</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setMaxAge</name></name><argument_list>(<argument><expr><call><name><name>ProjectUtils</name><operator>.</operator><name>timeInSecondsUntilDeadline</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>cookie</name><operator>.</operator><name>setMaxAge</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call><operator>.</operator><call><name>plusDays</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getMillis</name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">1000l</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <return>return <expr><name>cookie</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Converts a pair (params, project) into a (project, refTag) pair that does some extra logic around
+   * featured projects.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>RefTag</name></argument>&gt;</argument_list></name></type> <name>projectAndRefTagFromParamsAndProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DiscoveryParams</name></type> <name>params</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>refTag</name> <init>= <expr><ternary><condition><expr><call><name><name>project</name><operator>.</operator><name>isFeaturedToday</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><call><name><name>RefTag</name><operator>.</operator><name>categoryFeatured</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><call><name><name>DiscoveryParamsUtils</name><operator>.</operator><name>refTag</name></name><argument_list>(<argument><expr><name>params</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>refTag</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Stores the ref tag in a cookie and shared preference for the project.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>storeCookie</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RefTag</name></type> <name>refTag</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieManager</name></type> <name>cookieManager</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><call><name>buildCookieWithRefTagAndProject</name><argument_list>(<argument><expr><name>refTag</name></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>cookieManager</name><operator>.</operator><name>getCookieStore</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>cookie</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>SharedPreferences</name><operator>.</operator><name>Editor</name></name></type> <name>editor</name> <init>= <expr><call><name><name>sharedPreferences</name><operator>.</operator><name>edit</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>editor</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><call><name><name>cookie</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>cookie</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>editor</name><operator>.</operator><name>apply</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Finds the ref tag cookie associated with a project. Returns `null` if no cookie has yet been set.
+   */</comment>
+  <function><specifier>protected</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>HttpCookie</name></type> <name>findRefTagCookieForProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieManager</name></type> <name>cookieManager</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>cookieName</name> <init>= <expr><call><name>cookieNameForProject</name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// First try finding the cookie in the cookie store</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CookieStore</name></type> <name>cookieStore</name> <init>= <expr><call><name><name>cookieManager</name><operator>.</operator><name>getCookieStore</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <range>: <expr><call><name><name>cookieStore</name><operator>.</operator><name>getCookies</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>cookieName</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>cookie</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><name>cookie</name></expr>;</return>
+      }</block></then></if>
+    }</block></for>
+
+    <comment type="line">// If we can't find it in the cookie store let's look in shared prefs</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>cookieValue</name> <init>= <expr><call><name><name>sharedPreferences</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>cookieName</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>cookieValue</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name>buildCookieWithValueAndProject</name><argument_list>(<argument><expr><name>cookieValue</name></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

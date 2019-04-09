@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ApplicationComponent.java"><package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Application</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>gist</name><operator>.</operator><name>GistStore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>dagger</name><operator>.</operator><name>ActivityBuilder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>dagger</name><operator>.</operator><name>DialogFragmentBuilder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>dagger</name><operator>.</operator><name>ServiceBuilder</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Singleton</name></name>;</import>
+
+<import>import <name><name>dagger</name><operator>.</operator><name>BindsInstance</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>Component</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>android</name><operator>.</operator><name>AndroidInjector</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>AndroidSupportInjectionModule</name></name>;</import>
+
+<interface><annotation>@<name>Singleton</name></annotation>
+<annotation>@<name>Component</name><argument_list>(<argument><expr><name>modules</name> <operator>=</operator> <block>{
+        <expr><name><name>AndroidSupportInjectionModule</name><operator>.</operator><name>class</name></name></expr>,
+        <argument><expr><name><name>ApplicationModule</name><operator>.</operator><name>class</name></name></expr></argument>,
+        <argument><expr><name><name>PocketHubModule</name><operator>.</operator><name>class</name></name></expr></argument>,
+        <argument><expr><name><name>ActivityBuilder</name><operator>.</operator><name>class</name></name></expr></argument>,
+        <argument><expr><name><name>ServiceBuilder</name><operator>.</operator><name>class</name></name></expr></argument>,
+        <argument><expr><name><name>DialogFragmentBuilder</name><operator>.</operator><name>class</name></name></expr></argument>,
+        <argument><expr><name><name>GitHubModule</name><operator>.</operator><name>class</name></name></expr></argument>
+}</block></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> interface <name>ApplicationComponent</name> <super><extends>extends <name><name>AndroidInjector</name><argument_list type="generic">&lt;<argument><name>PocketHub</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <function_decl><type><name>GistStore</name></type> <name>gistStore</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>Component</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>abstract</specifier> class <name>Builder</name> <super><extends>extends <name><name>AndroidInjector</name><operator>.</operator><name><name>Builder</name><argument_list type="generic">&lt;<argument><name>PocketHub</name></argument>&gt;</argument_list></name></name></extends></super> <block>{
+
+        <function_decl><annotation>@<name>BindsInstance</name></annotation>
+        <specifier>abstract</specifier> <type><name>Builder</name></type> <name>application</name><parameter_list>(<parameter><decl><type><name>Application</name></type> <name>application</name></decl></parameter>)</parameter_list>;</function_decl>
+
+        <function_decl><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <specifier>abstract</specifier> <type><name>ApplicationComponent</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+}</block></interface></unit>

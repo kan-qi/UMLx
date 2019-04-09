@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\rx\transformers\NeverApiErrorTransformer.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ErrorEnvelope</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>functions</name><operator>.</operator><name>Action1</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name><name>NeverApiErrorTransformer</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <super><implements>implements <name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name><name>Action1</name><argument_list type="generic">&lt;<argument><name>ErrorEnvelope</name></argument>&gt;</argument_list></name></type> <name>errorAction</name></decl>;</decl_stmt>
+
+  <constructor><specifier>protected</specifier> <name>NeverApiErrorTransformer</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>errorAction</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>protected</specifier> <name>NeverApiErrorTransformer</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name><name>Action1</name><argument_list type="generic">&lt;<argument><name>ErrorEnvelope</name></argument>&gt;</argument_list></name></type> <name>errorAction</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>errorAction</name></name> <operator>=</operator> <name>errorAction</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>call</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>source</name>
+      <operator>.</operator><name>doOnError</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>e</name></decl></parameter></parameter_list> -&gt; <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>ErrorEnvelope</name></type> <name>env</name> <init>= <expr><call><name><name>ErrorEnvelope</name><operator>.</operator><name>fromThrowable</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>env</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name><name>this</name><operator>.</operator><name>errorAction</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>errorAction</name><operator>.</operator><name>call</name></name><argument_list>(<argument><expr><name>env</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>onErrorResumeNext</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>e</name></decl></parameter></parameter_list> -&gt; <block>{
+        <if>if <condition>(<expr><call><name><name>ErrorEnvelope</name><operator>.</operator><name>fromThrowable</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></then> <else>else <block>{
+          <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>;</return>
+        }</block></else></if>
+      }</block></lambda></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

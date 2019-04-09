@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\activities\HelpActivity.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>RequiresActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>WebEndpoint</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>AnimationUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSWebViewClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name><operator>.</operator><name>KSWebView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name><operator>.</operator><name>HelpViewModel</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Retention</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RetentionPolicy</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>IntDef</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+
+<class><annotation>@<name>RequiresActivityViewModel</name><argument_list>(<argument><expr><name><name>HelpViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>HelpActivity</name> <super><extends>extends <name><name>BaseActivity</name><argument_list type="generic">&lt;<argument><name>HelpViewModel</name></argument>&gt;</argument_list></name></extends> <implements>implements <name><name>KSWebViewClient</name><operator>.</operator><name>Delegate</name></name></implements></super> <block>{
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>HELP_TYPE_TERMS</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>HELP_TYPE_PRIVACY</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>HELP_TYPE_HOW_IT_WORKS</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>HELP_TYPE_COOKIE_POLICY</name> <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TERMS_OF_USE</name> <init>= <expr><literal type="string">"terms-of-use"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>PRIVACY</name> <init>= <expr><literal type="string">"privacy"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>HELLO</name> <init>= <expr><literal type="string">"hello"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>COOKIES</name> <init>= <expr><literal type="string">"cookies"</literal></expr></init></decl>;</decl_stmt>
+
+  <annotation_defn><annotation>@<name>IntDef</name><argument_list>(<argument><expr><block>{<expr><name>HELP_TYPE_TERMS</name></expr>, <argument><expr><name>HELP_TYPE_PRIVACY</name></expr></argument>, <argument><expr><name>HELP_TYPE_HOW_IT_WORKS</name></expr></argument>, <argument><expr><name>HELP_TYPE_COOKIE_POLICY</name></expr></argument>}</block></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>Retention</name><argument_list>(<argument><expr><name><name>RetentionPolicy</name><operator>.</operator><name>SOURCE</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> @interface <name>HelpType</name> <block>{}</block></annotation_defn>
+
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>HelpType</name></annotation> <type><name>int</name></type> <name>helpType</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>kickstarter_web_view</name></name></expr></argument>)</argument_list></annotation> <type><name>KSWebView</name></type> <name>kickstarterWebView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>loading_indicator_view</name></name></expr></argument>)</argument_list></annotation> <type><name>View</name></type> <name>loadingIndicatorView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>WebEndpoint</name></annotation> <type><name>String</name></type> <name>webEndpoint</name></decl>;</decl_stmt>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>helpType</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>HelpType</name></annotation> <name>int</name></type> <name>helpType</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>helpType</name></name> <operator>=</operator> <name>helpType</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Terms</name> <super><extends>extends <name>HelpActivity</name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <name>Terms</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name>helpType</name><argument_list>(<argument><expr><name>HELP_TYPE_TERMS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>Privacy</name> <super><extends>extends <name>HelpActivity</name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <name>Privacy</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name>helpType</name><argument_list>(<argument><expr><name>HELP_TYPE_PRIVACY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> class <name>CookiePolicy</name> <super><extends>extends <name>HelpActivity</name></extends></super> <block>{
+    <constructor><specifier>public</specifier> <name>CookiePolicy</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name>helpType</name><argument_list>(<argument><expr><name>HELP_TYPE_COOKIE_POLICY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+  }</block></class>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>help_layout</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>webEndpoint</name></name> <operator>=</operator> <call><name>environment</name><argument_list>()</argument_list></call><operator>.</operator><call><name>webEndpoint</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>url</name> <init>= <expr><call><name>getUrlForHelpType</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>helpType</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>kickstarterWebView</name><operator>.</operator><name>loadUrl</name></name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>kickstarterWebView</name><operator>.</operator><name>client</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDelegate</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>String</name></type> <name>getUrlForHelpType</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>HelpType</name></annotation> <name>int</name></type> <name>helpType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Uri</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>webEndpoint</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>buildUpon</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <switch>switch <condition>(<expr><name>helpType</name></expr>)</condition> <block>{
+      <case>case <expr><name>HELP_TYPE_TERMS</name></expr>:</case>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>appendEncodedPath</name></name><argument_list>(<argument><expr><name>TERMS_OF_USE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name>HELP_TYPE_PRIVACY</name></expr>:</case>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>appendEncodedPath</name></name><argument_list>(<argument><expr><name>PRIVACY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name>HELP_TYPE_HOW_IT_WORKS</name></expr>:</case>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>appendEncodedPath</name></name><argument_list>(<argument><expr><name>HELLO</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name>HELP_TYPE_COOKIE_POLICY</name></expr>:</case>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>appendEncodedPath</name></name><argument_list>(<argument><expr><name>COOKIES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+    }</block></switch>
+    <return>return <expr><call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewExternalLinkActivated</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewOnPageStarted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>loadingIndicatorView</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><call><name><name>AnimationUtils</name><operator>.</operator><name>INSTANCE</name><operator>.</operator><name>appearAnimation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewOnPageFinished</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>loadingIndicatorView</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><call><name><name>AnimationUtils</name><operator>.</operator><name>INSTANCE</name><operator>.</operator><name>disappearAnimation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewPageIntercepted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+}</block></class>
+</unit>

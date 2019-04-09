@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\MessageThreadEnvelopeFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>MessageThreadEnvelope</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>MessageThreadEnvelopeFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>MessageThreadEnvelopeFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>MessageThreadEnvelope</name></type> <name>empty</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>messageThreadEnvelope</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>messages</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>MessageThreadEnvelope</name></type> <name>messageThreadEnvelope</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>MessageThreadEnvelope</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>messages</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><call><name><name>MessageFactory</name><operator>.</operator><name>message</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>messageThread</name><argument_list>(<argument><expr><call><name><name>MessageThreadFactory</name><operator>.</operator><name>messageThread</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>participants</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><call><name><name>UserFactory</name><operator>.</operator><name>user</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

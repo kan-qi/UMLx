@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\intentmappers\IntentMapper.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>intentmappers</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A class that can be configured to inspect the data in an intent, and output data that the
+ * activity/viewmodel can use to initialize itself. Activities should create instances of this
+ * class and feed it any intent it encounters via the `intent()` method.
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>IntentMapper</name> <block>{
+
+  <comment type="block" format="javadoc">/**
+   * Attempts to extract a uri from the intent data. There may be a uri in intent data if the intent launched from a url,
+   * e.g. with a deep link.
+   */</comment>
+  <function><specifier>protected</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Uri</name></type> <name>uri</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><call><name><name>intent</name><operator>.</operator><name>getDataString</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>string</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>string</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the "app_banner" query param is set in the intent uri.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>appBannerIsSet</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Uri</name></type> <name>uri</name> <init>= <expr><call><name>uri</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>uri</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then> <else>else <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>queryParam</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"app_banner"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><literal type="string">"1"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>queryParam</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+}</block></class>
+</unit>

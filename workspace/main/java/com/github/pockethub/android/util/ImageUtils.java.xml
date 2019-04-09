@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\util\ImageUtils.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapFactory</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapFactory</name><operator>.</operator><name>Options</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Point</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuffXfermode</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>RectF</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>RandomAccessFile</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>ARGB_8888</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Color</name><operator>.</operator><name>WHITE</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>PorterDuff</name><operator>.</operator><name>Mode</name><operator>.</operator><name>DST_IN</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Image utilities
+ */</comment>
+<class><specifier>public</specifier> class <name>ImageUtils</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"ImageUtils"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Get a bitmap from the image path
+     *
+     * @param imagePath
+     * @return bitmap or null if read fails
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>imagePath</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getBitmap</name><argument_list>(<argument><expr><name>imagePath</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get a bitmap from the image path
+     *
+     * @param imagePath
+     * @param sampleSize
+     * @return bitmap or null if read fails
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>imagePath</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>sampleSize</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>Options</name></type> <name>options</name> <init>= <expr><operator>new</operator> <call><name>Options</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name><name>options</name><operator>.</operator><name>inDither</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>options</name><operator>.</operator><name>inSampleSize</name></name> <operator>=</operator> <name>sampleSize</name></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>RandomAccessFile</name></type> <name>file</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <try>try <block>{
+            <expr_stmt><expr><name>file</name> <operator>=</operator> <operator>new</operator> <call><name>RandomAccessFile</name><argument_list>(<argument><expr><name>imagePath</name></expr></argument>, <argument><expr><literal type="string">"r"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String,int)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>BitmapFactory</name><operator>.</operator><name>decodeFileDescriptor</name></name><argument_list>(<argument><expr><call><name><name>file</name><operator>.</operator><name>getFD</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>,
+                    <argument><expr><name>options</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>e</name><operator>.</operator><name>getMessage</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String,int)"</literal></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></catch> <finally>finally <block>{
+            <if>if <condition>(<expr><name>file</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <try>try <block>{
+                    <expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>e</name><operator>.</operator><name>getMessage</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></catch></try>
+            }</block></then></if>
+        }</block></finally></try>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get a bitmap from the image
+     *
+     * @param image
+     * @param sampleSize
+     * @return bitmap or null if read fails
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>image</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>sampleSize</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap([byte,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>Options</name></type> <name>options</name> <init>= <expr><operator>new</operator> <call><name>Options</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name><name>options</name><operator>.</operator><name>inDither</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>options</name><operator>.</operator><name>inSampleSize</name></name> <operator>=</operator> <name>sampleSize</name></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap([byte,int)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>BitmapFactory</name><operator>.</operator><name>decodeByteArray</name></name><argument_list>(<argument><expr><name>image</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>image</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name>options</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get scale for image of size and max height/width
+     *
+     * @param size
+     * @param width
+     * @param height
+     * @return scale
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>getScale</name><parameter_list>(<parameter><decl><type><name>Point</name></type> <name>size</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.util.ImageUtils.getScale(android.graphics.Point,int,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name><name>size</name><operator>.</operator><name>x</name></name> <operator>&gt;</operator> <name>width</name> <operator>||</operator> <name><name>size</name><operator>.</operator><name>y</name></name> <operator>&gt;</operator> <name>height</name></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.util.ImageUtils.getScale(android.graphics.Point,int,int)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>Math</name><operator>.</operator><name>max</name></name><argument_list>(<argument><expr><call><name><name>Math</name><operator>.</operator><name>round</name></name><argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator> <name><name>size</name><operator>.</operator><name>y</name></name> <operator>/</operator> <operator>(</operator><name>float</name><operator>)</operator> <name>height</name></expr></argument>)</argument_list></call></expr></argument>,
+                    <argument><expr><call><name><name>Math</name><operator>.</operator><name>round</name></name><argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator> <name><name>size</name><operator>.</operator><name>x</name></name> <operator>/</operator> <operator>(</operator><name>float</name><operator>)</operator> <name>width</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then> <else>else <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.util.ImageUtils.getScale(android.graphics.Point,int,int)"</literal></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="number">1</literal></expr>;</return>}</block>
+        }</block></else></if>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get size of image
+     *
+     * @param imagePath
+     * @return size
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Point</name></type> <name>getSize</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>imagePath</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Point com.github.pockethub.android.util.ImageUtils.getSize(String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>Options</name></type> <name>options</name> <init>= <expr><operator>new</operator> <call><name>Options</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name><name>options</name><operator>.</operator><name>inJustDecodeBounds</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>RandomAccessFile</name></type> <name>file</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+        <try>try <block>{
+            <expr_stmt><expr><name>file</name> <operator>=</operator> <operator>new</operator> <call><name>RandomAccessFile</name><argument_list>(<argument><expr><name>imagePath</name></expr></argument>, <argument><expr><literal type="string">"r"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>BitmapFactory</name><operator>.</operator><name>decodeFileDescriptor</name></name><argument_list>(<argument><expr><call><name><name>file</name><operator>.</operator><name>getFD</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>options</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Point com.github.pockethub.android.util.ImageUtils.getSize(String)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>Point</name><argument_list>(<argument><expr><name><name>options</name><operator>.</operator><name>outWidth</name></name></expr></argument>, <argument><expr><name><name>options</name><operator>.</operator><name>outHeight</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>e</name><operator>.</operator><name>getMessage</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Point com.github.pockethub.android.util.ImageUtils.getSize(String)"</literal></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></catch> <finally>finally <block>{
+            <if>if <condition>(<expr><name>file</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <try>try <block>{
+                    <expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                    <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><call><name><name>e</name><operator>.</operator><name>getMessage</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></catch></try>
+            }</block></then></if>
+        }</block></finally></try>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get size of image
+     *
+     * @param image
+     * @return size
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Point</name></type> <name>getSize</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>image</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Point com.github.pockethub.android.util.ImageUtils.getSize([byte)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>Options</name></type> <name>options</name> <init>= <expr><operator>new</operator> <call><name>Options</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name><name>options</name><operator>.</operator><name>inJustDecodeBounds</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>BitmapFactory</name><operator>.</operator><name>decodeByteArray</name></name><argument_list>(<argument><expr><name>image</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>image</name><operator>.</operator><name>length</name></name></expr></argument>, <argument><expr><name>options</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Point com.github.pockethub.android.util.ImageUtils.getSize([byte)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>Point</name><argument_list>(<argument><expr><name><name>options</name><operator>.</operator><name>outWidth</name></name></expr></argument>, <argument><expr><name><name>options</name><operator>.</operator><name>outHeight</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get bitmap with maximum height or width
+     *
+     * @param imagePath
+     * @param width
+     * @param height
+     * @return image
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>imagePath</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String,int,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Point</name></type> <name>size</name> <init>= <expr><call><name>getSize</name><argument_list>(<argument><expr><name>imagePath</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(String,int,int)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getBitmap</name><argument_list>(<argument><expr><name>imagePath</name></expr></argument>, <argument><expr><call><name>getScale</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get bitmap with maximum height or width
+     *
+     * @param image
+     * @param width
+     * @param height
+     * @return image
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>image</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap([byte,int,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Point</name></type> <name>size</name> <init>= <expr><call><name>getSize</name><argument_list>(<argument><expr><name>image</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap([byte,int,int)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getBitmap</name><argument_list>(<argument><expr><name>image</name></expr></argument>, <argument><expr><call><name>getScale</name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get bitmap with maximum height or width
+     *
+     * @param image
+     * @param width
+     * @param height
+     * @return image
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>File</name></type> <name>image</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>width</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>height</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(java.io.File,int,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(java.io.File,int,int)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getBitmap</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get a bitmap from the image file
+     *
+     * @param image
+     * @return bitmap or null if read fails
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>getBitmap</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>File</name></type> <name>image</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(java.io.File)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.getBitmap(java.io.File)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getBitmap</name><argument_list>(<argument><expr><call><name><name>image</name><operator>.</operator><name>getAbsolutePath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Load a {@link Bitmap} from the given path and set it on the given
+     * {@link ImageView}
+     *
+     * @param imagePath
+     * @param view
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>setImage</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>imagePath</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>ImageView</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.util.ImageUtils.setImage(String,android.widget.ImageView)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>setImage</name><argument_list>(<argument><expr><operator>new</operator> <call><name>File</name><argument_list>(<argument><expr><name>imagePath</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.util.ImageUtils.setImage(String,android.widget.ImageView)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Load a {@link Bitmap} from the given {@link File} and set it on the given
+     * {@link ImageView}
+     *
+     * @param image
+     * @param view
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>setImage</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>File</name></type> <name>image</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>ImageView</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.util.ImageUtils.setImage(java.io.File,android.widget.ImageView)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name>getBitmap</name><argument_list>(<argument><expr><name>image</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>bitmap</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setImageBitmap</name></name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.util.ImageUtils.setImage(java.io.File,android.widget.ImageView)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Round the corners of a {@link Bitmap}
+     *
+     * @param source
+     * @param radius
+     * @return rounded corner bitmap
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Bitmap</name></type> <name>roundCorners</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Bitmap</name></type> <name>source</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.roundCorners(android.graphics.Bitmap,float)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>int</name></type> <name>width</name> <init>= <expr><call><name><name>source</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>height</name> <init>= <expr><call><name><name>source</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>Paint</name></type> <name>paint</name> <init>= <expr><operator>new</operator> <call><name>Paint</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAntiAlias</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><name>WHITE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>Bitmap</name></type> <name>clipped</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>, <argument><expr><name>ARGB_8888</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Canvas</name></type> <name>canvas</name> <init>= <expr><operator>new</operator> <call><name>Canvas</name><argument_list>(<argument><expr><name>clipped</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawRoundRect</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>RectF</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>radius</name></expr></argument>, <argument><expr><name>radius</name></expr></argument>,
+                <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setXfermode</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>PorterDuffXfermode</name><argument_list>(<argument><expr><name>DST_IN</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>Bitmap</name></type> <name>rounded</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><name>width</name></expr></argument>, <argument><expr><name>height</name></expr></argument>, <argument><expr><name>ARGB_8888</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>canvas</name> <operator>=</operator> <operator>new</operator> <call><name>Canvas</name><argument_list>(<argument><expr><name>rounded</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawBitmap</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawBitmap</name></name><argument_list>(<argument><expr><name>clipped</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>source</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>clipped</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.Bitmap com.github.pockethub.android.util.ImageUtils.roundCorners(android.graphics.Bitmap,float)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>rounded</name></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

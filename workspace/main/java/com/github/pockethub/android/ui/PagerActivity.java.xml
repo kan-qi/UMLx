@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\PagerActivity.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewPager</name><operator>.</operator><name>OnPageChangeListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity that displays a {@link ViewPager} and has workarounds for
+ * ActionBar/ViewPager bugs
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>PagerActivity</name> <super><extends>extends <name>BaseActivity</name></extends> <implements>implements
+        <name>OnPageChangeListener</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>menuCreated</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Get provider of the currently selected fragment
+     *
+     * @return fragment provider
+     */</comment>
+    <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name>FragmentProvider</name></type> <name>getProvider</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/**
+     * Get selected fragment
+     *
+     * @return fragment
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>Fragment</name></type> <name>getFragment</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.PagerActivity.getFragment()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>FragmentProvider</name></type> <name>provider</name> <init>= <expr><call><name>getProvider</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>provider</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.PagerActivity.getFragment()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>provider</name><operator>.</operator><name>getSelected</name></name><argument_list>()</argument_list></call></expr>;</return>}</block>
+        }</block></then> <else>else <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.PagerActivity.getFragment()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></else></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><call><name>getFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>fragment</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then></if>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>invalidateOptionsMenu</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagerActivity.invalidateOptionsMenu()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>menuCreated</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>invalidateOptionsMenu</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagerActivity.invalidateOptionsMenu()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onCreateOptionsMenu</name><parameter_list>(<parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onCreateOptionsMenu(android.view.Menu)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><call><name>getFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>onCreateOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>, <argument><expr><call><name>getMenuInflater</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>boolean</name></type> <name>created</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>onCreateOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>menuCreated</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onCreateOptionsMenu(android.view.Menu)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>created</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onPrepareOptionsMenu</name><parameter_list>(<parameter><decl><type><name>Menu</name></type> <name>menu</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onPrepareOptionsMenu(android.view.Menu)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Fragment</name></type> <name>fragment</name> <init>= <expr><call><name>getFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>onPrepareOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.PagerActivity.onPrepareOptionsMenu(android.view.Menu)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onPrepareOptionsMenu</name></name><argument_list>(<argument><expr><name>menu</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPageScrolled</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>positionOffset</name></decl></parameter>,
+            <parameter><decl><type><name>int</name></type> <name>positionOffsetPixels</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagerActivity.onPageScrolled(int,float,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><comment type="line">// Intentionally left blankcom.mijack.Xlog.logMethodExit("void com.github.pockethub.android.ui.PagerActivity.onPageScrolled(int,float,int)",this);</comment>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPageSelected</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagerActivity.onPageSelected(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagerActivity.onPageSelected(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPageScrollStateChanged</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>state</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagerActivity.onPageScrollStateChanged(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><comment type="line">// Intentionally left blankcom.mijack.Xlog.logMethodExit("void com.github.pockethub.android.ui.PagerActivity.onPageScrollStateChanged(int)",this);</comment>
+    }</block></function>
+}</block></class>
+</unit>

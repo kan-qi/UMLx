@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\utils\MapUtilsTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>junit</name><operator>.</operator><name>framework</name><operator>.</operator><name>TestCase</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MapUtilsTest</name> <super><extends>extends <name>TestCase</name></extends></super> <block>{
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testCompact_withoutNullValues</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>map</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"b"</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"c"</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><call><name><name>MapUtils</name><operator>.</operator><name>compact</name></name><argument_list>(<argument><expr><name>map</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>map</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testCompact_withNullValues</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>map</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"b"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"c"</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>mapWithoutNull</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"c"</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><call><name><name>MapUtils</name><operator>.</operator><name>compact</name></name><argument_list>(<argument><expr><name>map</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>mapWithoutNull</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testPrefixKeys</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>map</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"b"</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"c"</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>mapWithPrefix</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"test_a"</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"test_b"</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"test_c"</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><call><name><name>MapUtils</name><operator>.</operator><name>prefixKeys</name></name><argument_list>(<argument><expr><name>map</name></expr></argument>, <argument><expr><literal type="string">"test_"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>mapWithPrefix</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

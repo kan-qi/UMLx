@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\PagedItemFragment.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>LinearLayoutManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Page</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>xwray</name><operator>.</operator><name>groupie</name><operator>.</operator><name>Item</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Single</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>Response</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * List fragment that adds more elements when the bottom of the list is scrolled
+ * to.
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name><name>PagedItemFragment</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>ItemListFragment</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>RecyclerView</name><operator>.</operator><name>OnScrollListener</name></name></type> <name>scrollListener</name> <init>=
+            <expr><operator>new</operator> <class><super><name><name>RecyclerView</name><operator>.</operator><name>OnScrollListener</name></name></super><argument_list>()</argument_list> <block>{
+                <function><annotation>@<name>Override</name></annotation>
+                <specifier>public</specifier> <type><name>void</name></type> <name>onScrollStateChanged</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>recyclerView</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>newState</name></decl></parameter>)</parameter_list> <block>{
+                    <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.1.onScrollStateChanged(android.support.v7.widget.RecyclerView,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onScrollStateChanged</name></name><argument_list>(<argument><expr><name>recyclerView</name></expr></argument>, <argument><expr><name>newState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.1.onScrollStateChanged(android.support.v7.widget.RecyclerView,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></function>
+
+                <function><annotation>@<name>Override</name></annotation>
+                <specifier>public</specifier> <type><name>void</name></type> <name>onScrolled</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>recyclerView</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dx</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>dy</name></decl></parameter>)</parameter_list> <block>{
+                    <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.1.onScrolled(android.support.v7.widget.RecyclerView,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onScrolled</name></name><argument_list>(<argument><expr><name>recyclerView</name></expr></argument>, <argument><expr><name>dx</name></expr></argument>, <argument><expr><name>dy</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <if>if <condition>(<expr><operator>!</operator><call><name>isAdded</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.1.onScrolled(android.support.v7.widget.RecyclerView,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+                    }</block></then></if>
+                    <if>if <condition>(<expr><operator>!</operator><name>hasMore</name></expr>)</condition><then> <block>{
+                        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.1.onScrolled(android.support.v7.widget.RecyclerView,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+                    }</block></then></if>
+
+                    <comment type="line">// The item count minus the footer</comment>
+                    <decl_stmt><decl><type><name>int</name></type> <name>count</name> <init>= <expr><call><name>getMainSection</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getItemCount</name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+                    <decl_stmt><decl><type><name>LinearLayoutManager</name></type> <name>layoutManager</name> <init>= <expr><call><name>getLayoutManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+                    <if>if <condition>(<expr><name>layoutManager</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                        <if>if <condition>(<expr><call><name><name>layoutManager</name><operator>.</operator><name>findLastVisibleItemPosition</name></name><argument_list>()</argument_list></call> <operator>&gt;=</operator> <name>count</name></expr>)</condition><then> <block>{
+                            <expr_stmt><expr><call><name>showMore</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        }</block></then></if>
+                    }</block></then></if>
+                }</block></function>
+            }</block></class></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>ResourceLoadingIndicator</name></type> <name>loadingIndicator</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * The current page.
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>page</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Is there more items to fetch.
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>hasMore</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Get resource id of {@link String} to display when loading.
+     *
+     * @return string resource id
+     */</comment>
+    <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name>int</name></type> <name>getLoadingMessage</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>configureList</name><parameter_list>(<parameter><decl><type><name>RecyclerView</name></type> <name>recyclerView</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.configureList(android.support.v7.widget.RecyclerView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>configureList</name></name><argument_list>(<argument><expr><name>recyclerView</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>loadingIndicator</name> <operator>=</operator> <operator>new</operator> <call><name>ResourceLoadingIndicator</name><argument_list>(<argument><expr><call><name>getLoadingMessage</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>getMainSection</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.configureList(android.support.v7.widget.RecyclerView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreated</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.onActivityCreated(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityCreated</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>getRecyclerView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addOnScrollListener</name><argument_list>(<argument><expr><name>scrollListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.onActivityCreated(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onDestroyView</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.onDestroyView()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>getRecyclerView</name><argument_list>()</argument_list></call><operator>.</operator><call><name>removeOnScrollListener</name><argument_list>(<argument><expr><name>scrollListener</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroyView</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.onDestroyView()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name><name>Single</name><argument_list type="generic">&lt;<argument><name><name>Response</name><argument_list type="generic">&lt;<argument><name><name>Page</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>loadData</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>page</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>Single</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>loadData</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>forceRefresh</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;List&lt;E&gt;&gt; com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.loadData(boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;List&lt;E&gt;&gt; com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.loadData(boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>loadData</name><argument_list>(<argument><expr><name>page</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Response</name><operator>::</operator><name>body</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>page</name></decl></parameter></parameter_list> -&gt; <block>{
+                    <expr_stmt><expr><name>hasMore</name> <operator>=</operator> <call><name><name>page</name><operator>.</operator><name>next</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+                    <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;List&lt;E&gt;&gt; com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.loadData(boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>page</name></expr>;</return>}</block>
+                }</block></lambda></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Page</name><operator>::</operator><name>items</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>resetPagingData</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.resetPagingData()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>page</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>hasMore</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.resetPagingData()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>forceRefresh</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.forceRefresh()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>resetPagingData</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>loadingIndicator</name><operator>.</operator><name>setVisible</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>forceRefresh</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.forceRefresh()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>refresh</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.refresh()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>refresh</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.refresh()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>refreshWithProgress</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.refreshWithProgress()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>resetPagingData</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>loadingIndicator</name><operator>.</operator><name>setVisible</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>refreshWithProgress</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.refreshWithProgress()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Show more events while retaining the current pager state.
+     */</comment>
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>showMore</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.showMore()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><call><name>isAdded</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><name>isLoading</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>page</name><operator>++</operator></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>refresh</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.showMore()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onDataLoaded</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Item</name></argument>&gt;</argument_list></name></type> <name>items</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.onDataLoaded(List&lt;Item&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDataLoaded</name></name><argument_list>(<argument><expr><name>items</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>loadingIndicator</name><operator>.</operator><name>setVisible</name></name><argument_list>(<argument><expr><name>hasMore</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.PagedItemFragment&lt;E&gt;.onDataLoaded(List&lt;Item&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\test\java\com\github\pockethub\android\AccountManagerShadow.java"><package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>Account</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>AccountManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>mockito</name><operator>.</operator><name>Mockito</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>robolectric</name><operator>.</operator><name>RuntimeEnvironment</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>robolectric</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Implementation</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>robolectric</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Implements</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>robolectric</name><operator>.</operator><name>shadows</name><operator>.</operator><name>ShadowAccountManager</name></name>;</import>
+
+<import>import static <name><name>org</name><operator>.</operator><name>mockito</name><operator>.</operator><name>Mockito</name><operator>.</operator><name>mock</name></name>;</import>
+<import>import static <name><name>org</name><operator>.</operator><name>mockito</name><operator>.</operator><name>Mockito</name><operator>.</operator><name>when</name></name>;</import>
+
+<class><annotation>@<name>Implements</name><argument_list>(<argument><expr><name><name>AccountManager</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>AccountManagerShadow</name> <super><extends>extends <name>ShadowAccountManager</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name>AccountManager</name></type> <name>mockManager</name> <init>= <expr><call><name><name>Mockito</name><operator>.</operator><name>mock</name></name><argument_list>(<argument><expr><name><name>AccountManager</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name><name>Account</name><index>[]</index></name></type> <name>accounts</name></decl>;</decl_stmt>
+
+    <static>static <block>{
+        <decl_stmt><decl><type><name>String</name></type> <name>accountType</name> <init>= <expr><call><name><name>RuntimeEnvironment</name><operator>.</operator><name>application</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>account_type</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Account</name></type> <name>firstGitHubAccount</name> <init>= <expr><operator>new</operator> <call><name>Account</name><argument_list>(<argument><expr><literal type="string">"GitHubAccount"</literal></expr></argument>, <argument><expr><name>accountType</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Account</name></type> <name>secondGitHubAccount</name> <init>= <expr><operator>new</operator> <call><name>Account</name><argument_list>(<argument><expr><literal type="string">"GitHubAccount2"</literal></expr></argument>, <argument><expr><name>accountType</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>accounts</name> <operator>=</operator> <operator>new</operator> <name><name>Account</name><index>[]</index></name><block>{<expr><name>firstGitHubAccount</name></expr>, <expr><name>secondGitHubAccount</name></expr>}</block></expr>;</expr_stmt>
+        <expr_stmt><expr><name>mockManager</name> <operator>=</operator> <call><name>mock</name><argument_list>(<argument><expr><name><name>AccountManager</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>when</name><argument_list>(<argument><expr><call><name><name>mockManager</name><operator>.</operator><name>getAccountsByType</name></name><argument_list>(<argument><expr><name>accountType</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>thenReturn</name><argument_list>(<argument><expr><name>accounts</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></static>
+
+    <function><annotation>@<name>Implementation</name></annotation>
+    <specifier>public</specifier> <specifier>static</specifier> <type><name>AccountManager</name></type> <name>get</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.accounts.AccountManager com.github.pockethub.android.AccountManagerShadow.get(android.content.Context)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.accounts.AccountManager com.github.pockethub.android.AccountManagerShadow.get(android.content.Context)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>mockManager</name></expr>;</return>
+    }</block></function>
+}</block></class></unit>

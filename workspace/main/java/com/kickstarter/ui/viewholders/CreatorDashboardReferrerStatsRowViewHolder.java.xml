@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\viewholders\CreatorDashboardReferrerStatsRowViewHolder.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSCurrency</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ProjectStatsEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name><operator>.</operator><name>CreatorDashboardReferrerStatsRowHolderViewModel</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>core</name><operator>.</operator><name>content</name><operator>.</operator><name>ContextCompat</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>core</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>DrawableCompat</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>observeForUI</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name><operator>.</operator><name>requireNonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>CreatorDashboardReferrerStatsRowViewHolder</name> <super><extends>extends <name>KSViewHolder</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>CreatorDashboardReferrerStatsRowHolderViewModel</name><operator>.</operator><name>ViewModel</name></name></type> <name>viewModel</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>amount_pledged_for_referrer_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>amountPledgedForReferrerTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>referrer_source_circle</name></name></expr></argument>)</argument_list></annotation> <type><name>ImageView</name></type> <name>referrerSourceCircleImageView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>referrer_source_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>referrerSourceTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>referrer_backer_count_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>referrerBackerCountTextView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>KSCurrency</name></type> <name>ksCurrency</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CreatorDashboardReferrerStatsRowViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>=</operator> <operator>new</operator> <call><name><name>CreatorDashboardReferrerStatsRowHolderViewModel</name><operator>.</operator><name>ViewModel</name></name><argument_list>(<argument><expr><call><name>environment</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>ksCurrency</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>environment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>ksCurrency</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>projectAndPledgedForReferrer</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>setPledgedColumnValue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>referrerBackerCount</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>referrerBackerCountTextView</name></name><operator>::</operator><name>setText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>referrerSourceColorId</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>setReferrerCircleColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>referrerSourceName</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>referrerSourceTextView</name></name><operator>::</operator><name>setText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>bindData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>data</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name></name></argument>&gt;</argument_list></name></type> <name>projectAndReferrerStats</name> <init>= <expr><call><name>requireNonNull</name><argument_list>(<argument><expr><operator>(</operator><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name></name></argument>&gt;</argument_list></name><operator>)</operator> <name>data</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>inputs</name><operator>.</operator><name>projectAndReferrerStatsInput</name></name><argument_list>(<argument><expr><name>projectAndReferrerStats</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setPledgedColumnValue</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>projectAndPledgedForReferrer</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>goalString</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>ksCurrency</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name><name>projectAndPledgedForReferrer</name><operator>.</operator><name>second</name></name></expr></argument>, <argument><expr><name><name>projectAndPledgedForReferrer</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>amountPledgedForReferrerTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>goalString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setReferrerCircleColor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Integer</name></type> <name>referrerCircleColorResourceId</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>color</name> <init>= <expr><call><name><name>ContextCompat</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><call><name>context</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>referrerCircleColorResourceId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>DrawableCompat</name><operator>.</operator><name>setTint</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>referrerSourceCircleImageView</name><operator>.</operator><name>getDrawable</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>color</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

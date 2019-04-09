@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\core\ItemStore.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>ref</name><operator>.</operator><name>ReferenceQueue</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>ref</name><operator>.</operator><name>WeakReference</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>ConcurrentHashMap</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Generic weak store of ids to items
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>ItemStore</name> <block>{
+
+    <class><specifier>private</specifier> <specifier>static</specifier> class <name><name>ItemReference</name><parameter_list>&lt;<parameter><name>V</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>WeakReference</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+        <decl_stmt><decl><specifier>private</specifier> <type><name>Object</name></type> <name>id</name></decl>;</decl_stmt>
+
+        <comment type="block" format="javadoc">/**
+         * Create item reference
+         *
+         * @param item
+         * @param id
+         * @param queue
+         */</comment>
+        <constructor><specifier>public</specifier> <name>ItemReference</name><parameter_list>(<parameter><decl><type><name>V</name></type> <name>item</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name><name>ReferenceQueue</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <name>V</name></super></argument>&gt;</argument_list></name></type> <name>queue</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>item</name></expr></argument>, <argument><expr><name>queue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.ItemStore$ItemReference&lt;V&gt;.ItemReference(V,Object,ReferenceQueue&lt;? super V&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>id</name></name> <operator>=</operator> <name>id</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.ItemStore$ItemReference&lt;V&gt;.ItemReference(V,Object,ReferenceQueue&lt;? super V&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></constructor>
+    }</block></class>
+
+    <comment type="block" format="javadoc">/**
+     * Generic reference store
+     *
+     * @param &lt;V&gt;
+     */</comment>
+    <class><specifier>protected</specifier> <specifier>static</specifier> class <name><name>ItemReferences</name><parameter_list>&lt;<parameter><name>V</name></parameter>&gt;</parameter_list></name> <block>{
+
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>ReferenceQueue</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>queue</name></decl>;</decl_stmt>
+
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name><name>ItemReference</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>items</name></decl>;</decl_stmt>
+
+        <comment type="block" format="javadoc">/**
+         * Create reference store
+         */</comment>
+        <constructor><specifier>public</specifier> <name>ItemReferences</name><parameter_list>()</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.ItemReferences()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>queue</name> <operator>=</operator> <operator>new</operator> <call><name><name>ReferenceQueue</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>items</name> <operator>=</operator> <operator>new</operator> <call><name><name>ConcurrentHashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.ItemReferences()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <function><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"rawtypes"</literal></expr></argument>)</argument_list></annotation>
+        <specifier>private</specifier> <type><name>void</name></type> <name>expungeEntries</name><parameter_list>()</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.expungeEntries()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>ItemReference</name></type> <name>ref</name></decl>;</decl_stmt>
+            <while>while <condition>(<expr><operator>(</operator><name>ref</name> <operator>=</operator> <operator>(</operator><name>ItemReference</name><operator>)</operator> <call><name><name>queue</name><operator>.</operator><name>poll</name></name><argument_list>()</argument_list></call><operator>)</operator> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+                <expr_stmt><expr><call><name><name>items</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name><name>ref</name><operator>.</operator><name>id</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></while><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.expungeEntries()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Get item with id from store
+         *
+         * @param id
+         * @return item
+         */</comment>
+        <function><specifier>public</specifier> <type><name>V</name></type> <name>get</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Object</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"V com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.get(Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>expungeEntries</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name><name>WeakReference</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>ref</name> <init>= <expr><call><name><name>items</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"V com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.get(Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>ref</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>ref</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>}</block>
+        }</block></function>
+
+        <comment type="block" format="javadoc">/**
+         * Insert item with id into store
+         *
+         * @param id
+         * @param item
+         */</comment>
+        <function><specifier>public</specifier> <type><name>void</name></type> <name>put</name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><name>V</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.put(Object,V)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>expungeEntries</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>items</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>ItemReference</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>item</name></expr></argument>, <argument><expr><name>id</name></expr></argument>, <argument><expr><name>queue</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.core.ItemStore$ItemReferences&lt;V&gt;.put(Object,V)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></function>
+    }</block></class>
+}</block></class>
+</unit>

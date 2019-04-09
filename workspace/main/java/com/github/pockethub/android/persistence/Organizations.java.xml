@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\persistence\Organizations.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>persistence</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>sqlite</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>sqlite</name><operator>.</operator><name>SQLiteQueryBuilder</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>core</name><operator>.</operator><name>ServiceGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Page</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>organizations</name><operator>.</operator><name>OrganizationService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>users</name><operator>.</operator><name>UserService</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Cache of organization under an account
+ */</comment>
+<class><specifier>public</specifier> class <name>Organizations</name> <super><implements>implements <name><name>PersistableResource</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create organizations cache with services to load from
+     *
+     * @param context
+     */</comment>
+    <constructor><annotation>@<name>Inject</name></annotation>
+    <specifier>public</specifier> <name>Organizations</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.persistence.Organizations.Organizations(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.persistence.Organizations.Organizations(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Cursor</name></type> <name>getCursor</name><parameter_list>(<parameter><decl><type><name>SQLiteDatabase</name></type> <name>readableDatabase</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.database.Cursor com.github.pockethub.android.persistence.Organizations.getCursor(android.database.sqlite.SQLiteDatabase)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>SQLiteQueryBuilder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>SQLiteQueryBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setTables</name></name><argument_list>(<argument><expr><literal type="string">"orgs JOIN users ON (orgs.id = users.id)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.database.Cursor com.github.pockethub.android.persistence.Organizations.getCursor(android.database.sqlite.SQLiteDatabase)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>builder</name>
+                <operator>.</operator><name>query</name></name><argument_list>(<argument><expr><name>readableDatabase</name></expr></argument>, <argument><expr><operator>new</operator> <name><name>String</name><index>[]</index></name> <block>{ <expr><literal type="string">"users.id"</literal></expr>,
+                        <expr><literal type="string">"users.name"</literal></expr>, <expr><literal type="string">"users.avatarurl"</literal></expr> }</block></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>,
+                        <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>User</name></type> <name>loadFrom</name><parameter_list>(<parameter><decl><type><name>Cursor</name></type> <name>cursor</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.User com.github.pockethub.android.persistence.Organizations.loadFrom(android.database.Cursor)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.User com.github.pockethub.android.persistence.Organizations.loadFrom(android.database.Cursor)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>User</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getLong</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>login</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>avatarUrl</name><argument_list>(<argument><expr><call><name><name>cursor</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>store</name><parameter_list>(<parameter><decl><type><name>SQLiteDatabase</name></type> <name>db</name></decl></parameter>, <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>orgs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.persistence.Organizations.store(android.database.sqlite.SQLiteDatabase,List&lt;User&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>delete</name></name><argument_list>(<argument><expr><literal type="string">"orgs"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><call><name><name>orgs</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.persistence.Organizations.store(android.database.sqlite.SQLiteDatabase,List&lt;User&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>ContentValues</name></type> <name>values</name> <init>= <expr><operator>new</operator> <call><name>ContentValues</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>User</name></type> <name>user</name> <range>: <expr><name>orgs</name></expr></range></decl></init>)</control> <block>{
+            <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"id"</literal></expr></argument>, <argument><expr><call><name><name>user</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="string">"orgs"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"name"</literal></expr></argument>, <argument><expr><call><name><name>user</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>values</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"avatarurl"</literal></expr></argument>, <argument><expr><call><name><name>user</name><operator>.</operator><name>avatarUrl</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="string">"users"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>values</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>request</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;User&gt; com.github.pockethub.android.persistence.Organizations.request()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>User</name></type> <name>user</name> <init>= <expr><call><name><name>ServiceGenerator</name><operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>UserService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>getUser</name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>blockingGet</name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>body</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>all</name> <init>= <expr><call><name>getAllOrgs</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>all</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;User&gt; com.github.pockethub.android.persistence.Organizations.request()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>all</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>getAllOrgs</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;User&gt; com.github.pockethub.android.persistence.Organizations.getAllOrgs()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>repos</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>current</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>last</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+        <while>while<condition>(<expr><name>current</name> <operator>!=</operator> <name>last</name></expr>)</condition> <block>{
+            <decl_stmt><decl><type><name><name>Page</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>page</name> <init>= <expr><call><name><name>ServiceGenerator</name><operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>OrganizationService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>getMyOrganizations</name><argument_list>(<argument><expr><name>current</name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>blockingGet</name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>body</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <expr_stmt><expr><call><name><name>repos</name><operator>.</operator><name>addAll</name></name><argument_list>(<argument><expr><call><name><name>page</name><operator>.</operator><name>items</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>last</name> <operator>=</operator> <ternary><condition><expr><call><name><name>page</name><operator>.</operator><name>last</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>page</name><operator>.</operator><name>last</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><operator>-</operator><literal type="number">1</literal></expr></else></ternary></expr>;</expr_stmt>
+            <expr_stmt><expr><name>current</name> <operator>=</operator> <ternary><condition><expr><call><name><name>page</name><operator>.</operator><name>next</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>page</name><operator>.</operator><name>next</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><operator>-</operator><literal type="number">1</literal></expr></else></ternary></expr>;</expr_stmt>
+        }</block></while>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;User&gt; com.github.pockethub.android.persistence.Organizations.getAllOrgs()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>repos</name></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

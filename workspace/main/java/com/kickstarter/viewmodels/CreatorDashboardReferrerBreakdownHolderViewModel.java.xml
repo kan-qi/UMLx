@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\CreatorDashboardReferrerBreakdownHolderViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>IntegerUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>NumberUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>PairUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ProjectStatsEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>CreatorDashboardReferrerBreakdownViewHolder</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>combineLatestPair</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>CreatorDashboardReferrerBreakdownHolderViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** current project and related stats object **/</comment>
+    <function_decl><type><name>void</name></type> <name>projectAndStatsInput</name><parameter_list>(<parameter><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>ProjectStatsEnvelope</name></argument>&gt;</argument_list></name></type> <name>projectAndStats</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if breakdown chart is gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>breakdownViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the percentage of total pledges from a custom referrer. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>customReferrerPercent</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the text for the percentage of total pledges from a custom referrer. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>customReferrerPercentText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if empty view is gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>emptyViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the percentage of total pledges from a external referrer. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPercent</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the text for the percentage of total pledges from an external referrer. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPercentText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the percentage of total pledges from a Kickstarter referrer. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPercent</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the text for the percentage of total pledges from a Kickstarter referrer. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPercentText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the pledged via custom layout is gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaCustomLayoutIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the pledged via external layout is gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaExternalLayoutIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the pledged via Kickstarter layout is gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaKickstarterLayoutIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the current project and the average pledge for that project. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndAveragePledge</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the current project and the amount pledged via custom referrers. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndCustomReferrerPledgedAmount</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the current project and the amount pledged via external referrers. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndExternalReferrerPledgedAmount</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the current project and the amount pledged via Kickstarter referrers. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndKickstarterReferrerPledgedAmount</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>CreatorDashboardReferrerBreakdownViewHolder</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>currentProject</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>projectAndProjectStatsInput</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>first</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>ProjectStatsEnvelope</name></argument>&gt;</argument_list></name></type> <name>projectStats</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>projectAndProjectStatsInput</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>second</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name></argument>&gt;</argument_list></name></type> <name>referralAggregates</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>projectAndProjectStatsInput</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>second</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ProjectStatsEnvelope</name><operator>::</operator><name>referralAggregates</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>referrerStats</name> <init>= <expr><call><name><name>projectStats</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>ProjectStatsEnvelope</name><operator>::</operator><name>referralDistribution</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>CumulativeStats</name></name></argument>&gt;</argument_list></name></type> <name>cumulativeStats</name> <init>= <expr><call><name><name>projectStats</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>ProjectStatsEnvelope</name><operator>::</operator><name>cumulative</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>averagePledge</name> <init>= <expr><call><name><name>cumulativeStats</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>CumulativeStats</name></name><operator>::</operator><name>averagePledge</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Float</name><operator>::</operator><name>intValue</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>pledged</name> <init>= <expr><call><name><name>cumulativeStats</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>CumulativeStats</name></name><operator>::</operator><name>pledged</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectAndAveragePledge</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(<argument><expr><name>currentProject</name></expr></argument>, <argument><expr><name>averagePledge</name></expr></argument>, <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>emptyStats</name> <init>= <expr><call><name><name>referrerStats</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>List</name><operator>::</operator><name>isEmpty</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>breakdownViewIsGone</name></name> <operator>=</operator> <name>emptyStats</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>emptyViewIsGone</name></name> <operator>=</operator> <call><name><name>emptyStats</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>customReferrerPercent</name></name> <operator>=</operator> <call><name><name>referralAggregates</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name><operator>::</operator><name>custom</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name>pledged</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>customAndPledged</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name><name>IntegerUtils</name><operator>.</operator><name>isZero</name></name><argument_list>(<argument><expr><call><name><name>customAndPledged</name><operator>.</operator><name>second</name><operator>.</operator><name>intValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr> ?</condition><then>  <expr><literal type="number">0</literal></expr> </then><else>: <expr><name><name>customAndPledged</name><operator>.</operator><name>first</name></name> <operator>/</operator> <name><name>customAndPledged</name><operator>.</operator><name>second</name></name></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>customReferrerPercentText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>customReferrerPercent</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>percent</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NumberUtils</name><operator>.</operator><name>flooredPercentage</name></name><argument_list>(<argument><expr><name>percent</name> <operator>*</operator> <literal type="number">100f</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>customReferrerPledgedAmount</name></name> <operator>=</operator> <call><name><name>referralAggregates</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name><operator>::</operator><name>custom</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectAndCustomReferrerPledgedAmount</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name>currentProject</name></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>customReferrerPledgedAmount</name></name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>externalReferrerPercent</name></name> <operator>=</operator> <call><name><name>referralAggregates</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name><operator>::</operator><name>external</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name>pledged</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>externalAndPledged</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name><name>IntegerUtils</name><operator>.</operator><name>isZero</name></name><argument_list>(<argument><expr><call><name><name>externalAndPledged</name><operator>.</operator><name>second</name><operator>.</operator><name>intValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr> ?</condition><then>  <expr><literal type="number">0</literal></expr> </then><else>: <expr><name><name>externalAndPledged</name><operator>.</operator><name>first</name></name> <operator>/</operator> <name><name>externalAndPledged</name><operator>.</operator><name>second</name></name></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>externalReferrerPercentText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>externalReferrerPercent</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>percent</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NumberUtils</name><operator>.</operator><name>flooredPercentage</name></name><argument_list>(<argument><expr><name>percent</name> <operator>*</operator> <literal type="number">100f</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>externalReferrerPledgedAmount</name></name> <operator>=</operator> <call><name><name>referralAggregates</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name><operator>::</operator><name>external</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectAndExternalReferrerPledgedAmount</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name>currentProject</name></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>externalReferrerPledgedAmount</name></name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>kickstarterReferrerPercent</name></name> <operator>=</operator> <call><name><name>referralAggregates</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name><operator>::</operator><name>internal</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name>pledged</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>internalAndPledged</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name><name>IntegerUtils</name><operator>.</operator><name>isZero</name></name><argument_list>(<argument><expr><call><name><name>internalAndPledged</name><operator>.</operator><name>second</name><operator>.</operator><name>intValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr> ?</condition><then>  <expr><literal type="number">0</literal></expr> </then><else>: <expr><name><name>internalAndPledged</name><operator>.</operator><name>first</name></name> <operator>/</operator> <name><name>internalAndPledged</name><operator>.</operator><name>second</name></name></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>kickstarterReferrerPercentText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>kickstarterReferrerPercent</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>percent</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NumberUtils</name><operator>.</operator><name>flooredPercentage</name></name><argument_list>(<argument><expr><name>percent</name> <operator>*</operator> <literal type="number">100f</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>kickstarterReferrerPledgedAmount</name></name> <operator>=</operator> <call><name><name>referralAggregates</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name><operator>::</operator><name>internal</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectAndKickstarterReferrerPledgedAmount</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name>currentProject</name></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>kickstarterReferrerPledgedAmount</name></name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pledgedViaCustomLayoutIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>customReferrerPledgedAmount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>amount</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>amount</name> <operator>&lt;=</operator> <literal type="number">0f</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pledgedViaExternalLayoutIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>externalReferrerPledgedAmount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>amount</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>amount</name> <operator>&lt;=</operator> <literal type="number">0f</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>pledgedViaKickstarterLayoutIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>kickstarterReferrerPledgedAmount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>amount</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>amount</name> <operator>&lt;=</operator> <literal type="number">0f</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>ProjectStatsEnvelope</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndProjectStatsInput</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>breakdownViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>customReferrerPercent</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>customReferrerPercentText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>customReferrerPledgedAmount</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>emptyViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPercent</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPercentText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPledgedAmount</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPercent</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPercentText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPledgedAmount</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaCustomLayoutIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaExternalLayoutIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaKickstarterLayoutIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndAveragePledge</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndCustomReferrerPledgedAmount</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndExternalReferrerPledgedAmount</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndKickstarterReferrerPledgedAmount</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>projectAndStatsInput</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>ProjectStatsEnvelope</name></argument>&gt;</argument_list></name></type> <name>projectAndStats</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectAndProjectStatsInput</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>projectAndStats</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>breakdownViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>breakdownViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>customReferrerPercent</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>customReferrerPercent</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>customReferrerPercentText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>customReferrerPercentText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>emptyViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>emptyViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPercent</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>externalReferrerPercent</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>externalReferrerPercentText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>externalReferrerPercentText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPercent</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>kickstarterReferrerPercent</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>kickstarterReferrerPercentText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>kickstarterReferrerPercentText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaCustomLayoutIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>pledgedViaCustomLayoutIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaExternalLayoutIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>pledgedViaExternalLayoutIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>pledgedViaKickstarterLayoutIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>pledgedViaKickstarterLayoutIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndAveragePledge</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectAndAveragePledge</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndCustomReferrerPledgedAmount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectAndCustomReferrerPledgedAmount</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndExternalReferrerPledgedAmount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectAndExternalReferrerPledgedAmount</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projectAndKickstarterReferrerPledgedAmount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectAndKickstarterReferrerPledgedAmount</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

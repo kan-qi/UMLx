@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\viewholders\EmptyCommentsViewHolder.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>Button</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>OnClick</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name><operator>.</operator><name>requireNonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>EmptyCommentsViewHolder</name> <super><extends>extends <name>KSViewHolder</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Project</name></type> <name>project</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>User</name></type> <name>user</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>comments_login_button</name></name></expr></argument>)</argument_list></annotation> <type><name>Button</name></type> <name>commentsLoginButton</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>no_comments_message</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>noCommentsMessageTextView</name></decl>;</decl_stmt>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <block>{
+    <function_decl><type><name>void</name></type> <name>emptyCommentsLoginClicked</name><parameter_list>(<parameter><decl><type><name>EmptyCommentsViewHolder</name></type> <name>viewHolder</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <constructor><specifier>public</specifier> <name>EmptyCommentsViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>bindData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>data</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><annotation>@<name>SuppressWarnings</name><argument_list>(<argument><expr><literal type="string">"unchecked"</literal></expr></argument>)</argument_list></annotation>
+    <type><specifier>final</specifier> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>User</name></argument>&gt;</argument_list></name></type> <name>projectAndUser</name> <init>= <expr><call><name>requireNonNull</name><argument_list>(<argument><expr><operator>(</operator><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>User</name></argument>&gt;</argument_list></name><operator>)</operator> <name>data</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>project</name></name> <operator>=</operator> <call><name>requireNonNull</name><argument_list>(<argument><expr><name><name>projectAndUser</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>Project</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>user</name></name> <operator>=</operator> <name><name>projectAndUser</name><operator>.</operator><name>second</name></name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>onBind</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>user</name></name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>commentsLoginButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>noCommentsMessageTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>project_comments_empty_state_logged_out_message_log_in</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>project</name><operator>.</operator><name>isBacking</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>commentsLoginButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>noCommentsMessageTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>project_comments_empty_state_backer_message</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>commentsLoginButton</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>noCommentsMessageTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>update_comments_empty_state_non_backer_message</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>comments_login_button</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>emptyCommentsLogin</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>delegate</name><operator>.</operator><name>emptyCommentsLoginClicked</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

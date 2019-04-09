@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\sync\SyncAdapter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>sync</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>Account</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>AbstractThreadedSyncAdapter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentProviderClient</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SyncResult</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Singleton</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Sync adapter
+ */</comment>
+<class><annotation>@<name>Singleton</name></annotation>
+<specifier>public</specifier> class <name>SyncAdapter</name> <super><extends>extends <name>AbstractThreadedSyncAdapter</name></extends></super> <block>{
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>SyncCampaignFactory</name></type> <name>campaignFactory</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>SyncCampaign</name></type> <name>campaign</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create sync adapter for context
+     *
+     * @param context
+     */</comment>
+    <constructor><annotation>@<name>Inject</name></annotation>
+    <specifier>public</specifier> <name>SyncAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.sync.SyncAdapter.SyncAdapter(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.sync.SyncAdapter.SyncAdapter(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPerformSync</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Account</name></type> <name>account</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Bundle</name></type> <name>extras</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>authority</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>ContentProviderClient</name></type> <name>provider</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name>SyncResult</name></type> <name>syncResult</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncAdapter.onPerformSync(android.accounts.Account,android.os.Bundle,String,android.content.ContentProviderClient,android.content.SyncResult)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>cancelCampaign</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>campaign</name> <operator>=</operator> <call><name><name>campaignFactory</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>syncResult</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>campaign</name><operator>.</operator><name>run</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncAdapter.onPerformSync(android.accounts.Account,android.os.Bundle,String,android.content.ContentProviderClient,android.content.SyncResult)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onSyncCanceled</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncAdapter.onSyncCanceled()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>cancelCampaign</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncAdapter.onSyncCanceled()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>cancelCampaign</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncAdapter.cancelCampaign()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>campaign</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>campaign</name><operator>.</operator><name>cancel</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncAdapter.cancelCampaign()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

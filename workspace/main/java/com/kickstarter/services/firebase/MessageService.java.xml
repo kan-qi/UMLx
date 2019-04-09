@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\firebase\MessageService.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>firebase</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>messaging</name><operator>.</operator><name>FirebaseMessagingService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>messaging</name><operator>.</operator><name>RemoteMessage</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>Gson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>PushNotifications</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>pushdata</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>pushdata</name><operator>.</operator><name>GCM</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>PushNotificationEnvelope</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MessageService</name> <super><extends>extends <name>FirebaseMessagingService</name></extends></super> <block>{
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>protected</specifier> <type><name>Gson</name></type> <name>gson</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <specifier>protected</specifier> <type><name>PushNotifications</name></type> <name>pushNotifications</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>inject</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called when a message is received from Firebase.
+   *
+   * @param remoteMessage Object containing message information.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onMessageReceived</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>RemoteMessage</name></type> <name>remoteMessage</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onMessageReceived</name></name><argument_list>(<argument><expr><name>remoteMessage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>senderId</name> <init>= <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>gcm_defaultSenderId</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>from</name> <init>= <expr><call><name><name>remoteMessage</name><operator>.</operator><name>getFrom</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>from</name></expr></argument>, <argument><expr><name>senderId</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><literal type="string">"Received a message from %s, expecting %s"</literal></expr></argument>, <argument><expr><name>from</name></expr></argument>, <argument><expr><name>senderId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>data</name> <init>= <expr><call><name><name>remoteMessage</name><operator>.</operator><name>getData</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>PushNotificationEnvelope</name></type> <name>envelope</name> <init>= <expr><call><name><name>PushNotificationEnvelope</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>activity</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>gson</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"activity"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>Activity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>gcm</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>gson</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"gcm"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>GCM</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>message</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>gson</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"message"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PushNotificationEnvelope</name><operator>.</operator><name>Message</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>project</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>gson</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"project"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PushNotificationEnvelope</name><operator>.</operator><name>Project</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>survey</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>gson</name><operator>.</operator><name>fromJson</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"survey"</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>PushNotificationEnvelope</name><operator>.</operator><name>Survey</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>envelope</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><literal type="string">"Cannot parse message, malformed or unexpected data: %s"</literal></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"Received message: %s"</literal></expr></argument>, <argument><expr><call><name><name>envelope</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pushNotifications</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>envelope</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

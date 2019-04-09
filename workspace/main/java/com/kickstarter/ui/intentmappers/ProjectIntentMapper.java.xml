@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\intentmappers\ProjectIntentMapper.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>intentmappers</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RefTag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>PushNotificationEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Matcher</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ProjectIntentMapper</name> <block>{
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SCHEME_KSR</name> <init>= <expr><literal type="string">"ksr"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>SCHEME_HTTPS</name> <init>= <expr><literal type="string">"https"</literal></expr></init></decl>;</decl_stmt>
+  <constructor><specifier>private</specifier> <name>ProjectIntentMapper</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="line">// /projects/param-1/param-2*</comment>
+  <decl_stmt><decl><type><specifier>final</specifier> <specifier>static</specifier> <name>Pattern</name></type> <name>PROJECT_PATTERN</name> <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"\\A\\/projects\\/([a-zA-Z0-9_-]+)(\\/([a-zA-Z0-9_-]+)).*"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Returns an observable of projects retrieved from intent data. May hit the API if the intent only contains a project
+   * param rather than a parceled project.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>intentProject</name> <init>= <expr><call><name>projectFromIntent</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectFromParceledProject</name> <init>= <expr><ternary><condition><expr><name>intentProject</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>Observable</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>intentProject</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><name>client</name><operator>::</operator><name>fetchProject</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>startWith</name><argument_list>(<argument><expr><name>intentProject</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>retry</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectFromParceledParam</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name>paramFromIntent</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><name>client</name><operator>::</operator><name>fetchProject</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>retry</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>projectFromParceledProject</name>
+      <operator>.</operator><name>mergeWith</name></name><argument_list>(<argument><expr><name>projectFromParceledParam</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>neverError</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a {@link RefTag} observable. If there is no parceled RefTag, emit `null`.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>RefTag</name></argument>&gt;</argument_list></name></type> <name>refTag</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>REF_TAG</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns an observable of push notification envelopes from the intent data. This will emit only when the project
+   * is launched from a push notification.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>PushNotificationEnvelope</name></argument>&gt;</argument_list></name></type> <name>pushNotificationEnvelope</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name><name>intent</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PUSH_NOTIFICATION_ENVELOPE</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>PushNotificationEnvelope</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Gets a parceled project from the intent data, may return `null`.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Project</name></type> <name>projectFromIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>intent</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PROJECT</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Gets a project param from the intent data, may return `null`.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>paramFromIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>intent</name><operator>.</operator><name>hasExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PROJECT_PARAM</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>intent</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PROJECT_PARAM</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name>paramFromUri</name><argument_list>(<argument><expr><call><name><name>IntentMapper</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+
+  <comment type="block" format="javadoc">/**
+   * Extract the project param from a uri. e.g.: A uri like `ksr://www.kickstarter.com/projects/1186238668/skull-graphic-tee`
+   * returns `skull-graphic-tee`.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>paramFromUri</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>uri</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>scheme</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getScheme</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><operator>!</operator><operator>(</operator><call><name><name>scheme</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>SCHEME_KSR</name></expr></argument>)</argument_list></call> <operator>||</operator> <call><name><name>scheme</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>SCHEME_HTTPS</name></expr></argument>)</argument_list></call><operator>)</operator></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Matcher</name></type> <name>matcher</name> <init>= <expr><call><name><name>PROJECT_PATTERN</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>matcher</name><operator>.</operator><name>matches</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

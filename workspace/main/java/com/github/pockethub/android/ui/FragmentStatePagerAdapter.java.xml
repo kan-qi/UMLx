@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\FragmentStatePagerAdapter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Pager that stores current fragment
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>FragmentStatePagerAdapter</name> <super><extends>extends
+    <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>FragmentStatePagerAdapter</name></name></extends> <implements>implements
+    <name>FragmentProvider</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>AppCompatActivity</name></type> <name>activity</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Fragment</name></type> <name>selected</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * @param activity
+     */</comment>
+    <constructor><specifier>public</specifier> <name>FragmentStatePagerAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>AppCompatActivity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><call><name><name>activity</name><operator>.</operator><name>getSupportFragmentManager</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.FragmentStatePagerAdapter.FragmentStatePagerAdapter(android.support.v7.app.AppCompatActivity)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name> <operator>=</operator> <name>activity</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.FragmentStatePagerAdapter.FragmentStatePagerAdapter(android.support.v7.app.AppCompatActivity)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * @param fragment
+     */</comment>
+    <constructor><specifier>public</specifier> <name>FragmentStatePagerAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Fragment</name></type> <name>fragment</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><call><name><name>fragment</name><operator>.</operator><name>getChildFragmentManager</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.FragmentStatePagerAdapter.FragmentStatePagerAdapter(android.support.v4.app.Fragment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name> <operator>=</operator> <operator>(</operator><name>AppCompatActivity</name><operator>)</operator> <call><name><name>fragment</name><operator>.</operator><name>getActivity</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.FragmentStatePagerAdapter.FragmentStatePagerAdapter(android.support.v4.app.Fragment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Fragment</name></type> <name>getSelected</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.FragmentStatePagerAdapter.getSelected()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.FragmentStatePagerAdapter.getSelected()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>selected</name></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>setPrimaryItem</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>,
+        <parameter><decl><type><specifier>final</specifier> <name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.FragmentStatePagerAdapter.setPrimaryItem(android.view.ViewGroup,int,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setPrimaryItem</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name>position</name></expr></argument>, <argument><expr><name>object</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>boolean</name></type> <name>changed</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>object</name> <operator>instanceof</operator> <name>Fragment</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>changed</name> <operator>=</operator> <name>object</name> <operator>!=</operator> <name>selected</name></expr>;</expr_stmt>
+            <expr_stmt><expr><name>selected</name> <operator>=</operator> <operator>(</operator><name>Fragment</name><operator>)</operator> <name>object</name></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>changed</name> <operator>=</operator> <name>object</name> <operator>!=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+            <expr_stmt><expr><name>selected</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        }</block></else></if>
+
+        <if>if <condition>(<expr><name>changed</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>invalidateOptionsMenu</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.FragmentStatePagerAdapter.setPrimaryItem(android.view.ViewGroup,int,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

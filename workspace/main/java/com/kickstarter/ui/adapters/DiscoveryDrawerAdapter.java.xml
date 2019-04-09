@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\adapters\DiscoveryDrawerAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name><operator>.</operator><name>data</name><operator>.</operator><name>NavigationDrawerData</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>EmptyViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>KSViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>discoverydrawer</name><operator>.</operator><name>ChildFilterViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>discoverydrawer</name><operator>.</operator><name>HeaderViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>discoverydrawer</name><operator>.</operator><name>LoggedInViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>discoverydrawer</name><operator>.</operator><name>LoggedOutViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>discoverydrawer</name><operator>.</operator><name>ParentFilterViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>discoverydrawer</name><operator>.</operator><name>TopFilterViewHolder</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>DiscoveryDrawerAdapter</name> <super><extends>extends <name>KSAdapter</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>NavigationDrawerData</name></type> <name>drawerData</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>DiscoveryDrawerAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setHasStableIds</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getItemId</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>position</name></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <super><extends>extends <name><name>LoggedInViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>LoggedOutViewHolder</name><operator>.</operator><name>Delegate</name></name>,
+    <name><name>TopFilterViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>ParentFilterViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>ChildFilterViewHolder</name><operator>.</operator><name>Delegate</name></name></extends></super> <block>{}</block></interface>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>int</name></type> <name>layout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Object</name></type> <name>object</name> <init>= <expr><call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <switch>switch <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><literal type="number">0</literal></expr>:</case>
+        <return>return <expr><ternary><condition><expr><operator>(</operator><name>object</name> <operator>==</operator> <literal type="null">null</literal><operator>)</operator></expr> ?</condition><then>
+          <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_logged_out_view</name></name></expr> </then><else>:
+          <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_logged_in_view</name></name></expr></else></ternary></expr>;</return>
+      <default>default:</default>
+        <return>return <expr><call><name>layoutForDatum</name><argument_list>(<argument><expr><name>object</name></expr></argument>, <argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></switch>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>layoutForDatum</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Object</name></type> <name>datum</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>datum</name> <operator>instanceof</operator> <name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name></type> <name>row</name> <init>= <expr><operator>(</operator><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name><operator>)</operator> <name>datum</name></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>row</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <return>return <expr><ternary><condition><expr><call><name><name>row</name><operator>.</operator><name>params</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isCategorySet</name><argument_list>()</argument_list></call></expr> ?</condition><then>
+          <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_parent_filter_view</name></name></expr> </then><else>:
+          <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_top_filter_view</name></name></expr></else></ternary></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_child_filter_view</name></name></expr>;</return>
+      }</block></else></if>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>datum</name> <operator>instanceof</operator> <name>Integer</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_header</name></name></expr>;</return>
+    }</block></then></if></elseif></if>
+    <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>horizontal_line_1dp_view</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Object</name></type> <name>objectFromSectionRow</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Object</name></type> <name>object</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>objectFromSectionRow</name></name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>object</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></then></if>
+    <if>if <condition>(<expr><name>object</name> <operator>instanceof</operator> <name>User</name> <operator>||</operator> <name>object</name> <operator>instanceof</operator> <name>Integer</name></expr>)</condition><then> <block>{
+      <return>return <expr><name>object</name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name></type> <name>row</name> <init>= <expr><operator>(</operator><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name><operator>)</operator> <name>object</name></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>expanded</name></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>row</name><operator>.</operator><name>params</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>this</name><operator>.</operator><name>drawerData</name><operator>.</operator><name>expandedCategory</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>expanded</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><name>expanded</name> <operator>=</operator> <call><name><name>row</name><operator>.</operator><name>params</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>rootId</name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>this</name><operator>.</operator><name>drawerData</name><operator>.</operator><name>expandedCategory</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>rootId</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <return>return <expr><call><name><name>row</name>
+      <operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>selected</name><argument_list>(<argument><expr><call><name><name>row</name><operator>.</operator><name>params</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>drawerData</name><operator>.</operator><name>selectedParams</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>rootIsExpanded</name><argument_list>(<argument><expr><name>expanded</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>viewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>layout</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_logged_in_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>LoggedInViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_logged_out_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>LoggedOutViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_parent_filter_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ParentFilterViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_top_filter_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>TopFilterViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_child_filter_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ChildFilterViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_drawer_header</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>HeaderViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>horizontal_line_1dp_view</name></name></expr>:</case>
+      <default>default:</default>
+        <return>return <expr><operator>new</operator> <call><name>EmptyViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></switch>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takeData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>NavigationDrawerData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>drawerData</name></name> <operator>=</operator> <name>data</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sections</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>clear</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sections</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>addAll</name><argument_list>(<argument><expr><call><name>sectionsFromData</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>sectionsFromData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>NavigationDrawerData</name></type> <name>data</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>newSections</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>user</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// Divider</comment>
+
+    <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Collections</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></argument>&gt;</argument_list></name></type> <name>topFilterSections</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>sections</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name><operator>::</operator><name>isTopFilter</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></argument>&gt;</argument_list></name></type> <name>categoryFilterSections</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>sections</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name><operator>::</operator><name>isCategoryFilter</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></type> <name>section</name> <range>: <expr><name>topFilterSections</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>section</name><operator>.</operator><name>rows</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// Divider</comment>
+
+    <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>discovery_filters_categories_title</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></type> <name>section</name> <range>: <expr><name>categoryFilterSections</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>newSections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>section</name><operator>.</operator><name>rows</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>newSections</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

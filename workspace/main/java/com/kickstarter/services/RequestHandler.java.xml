@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\RequestHandler.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>WebView</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>RequestHandler</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>RequestHandler</name><operator>.</operator><name>Matcher</name></name></type> <name>matcher</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>RequestHandler</name><operator>.</operator><name>Action</name></name></type> <name>action</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>RequestHandler</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>RequestHandler</name><operator>.</operator><name>Matcher</name></name></type> <name>matcher</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>RequestHandler</name><operator>.</operator><name>Action</name></name></type> <name>action</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>matcher</name></name> <operator>=</operator> <name>matcher</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>action</name></name> <operator>=</operator> <name>action</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>matches</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>webEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>matcher</name><operator>.</operator><name>call</name></name><argument_list>(<argument><expr><name>uri</name></expr></argument>, <argument><expr><name>webEndpoint</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>action</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>webView</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>action</name><operator>.</operator><name>call</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>, <argument><expr><name>webView</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <interface><specifier>public</specifier> interface <name>Matcher</name> <block>{
+    <function_decl><type><name>boolean</name></type> <name>call</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>webEndpoint</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface><specifier>public</specifier> interface <name>Action</name> <block>{
+    <function_decl><type><name>boolean</name></type> <name>call</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>webView</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+}</block></class>
+</unit>

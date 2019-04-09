@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\viewholders\ProjectStateChangedPositiveViewHolder.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSCurrency</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSString</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>DateTimeUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Photo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>squareup</name><operator>.</operator><name>picasso</name><operator>.</operator><name>Picasso</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>cardview</name><operator>.</operator><name>widget</name><operator>.</operator><name>CardView</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindColor</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindString</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>OnClick</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name><operator>.</operator><name>coalesce</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ProjectStateChangedPositiveViewHolder</name> <super><extends>extends <name>ActivityListViewHolder</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>card_view</name></name></expr></argument>)</argument_list></annotation> <type><name>CardView</name></type> <name>cardView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>left_stat_first</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>leftStatFirstTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>left_stat_second</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>leftStatSecondTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>project_photo</name></name></expr></argument>)</argument_list></annotation> <type><name>ImageView</name></type> <name>projectPhotoImageView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>right_stat_first</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>rightStatFirstTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>right_stat_second</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>rightStatSecondTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>title</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>titleTextView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>blue_darken_10</name></name></expr></argument>)</argument_list></annotation> <type><name>int</name></type> <name>blueDarken10Color</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindColor</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>green_darken_10</name></name></expr></argument>)</argument_list></annotation> <type><name>int</name></type> <name>greenDarken10Color</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>activity_project_state_change_creator_launched_a_project</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>creatorLaunchedProjectString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>activity_project_state_change_goal</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>goalString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>activity_project_state_change_launched</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>launchedString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>activity_project_state_change_pledged_of_goal</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>pledgedOfGoalString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>project_status_funded</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>fundedString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>activity_project_state_change_project_was_successfully_funded</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>projectSuccessfullyFundedString</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>KSCurrency</name></type> <name>ksCurrency</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>KSString</name></type> <name>ksString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <block>{
+    <function_decl><type><name>void</name></type> <name>projectStateChangedPositiveClicked</name><parameter_list>(<parameter><decl><type><name>ProjectStateChangedPositiveViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <constructor><specifier>public</specifier> <name>ProjectStateChangedPositiveViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>ksCurrency</name></name> <operator>=</operator> <call><name>environment</name><argument_list>()</argument_list></call><operator>.</operator><call><name>ksCurrency</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>ksString</name></name> <operator>=</operator> <call><name>environment</name><argument_list>()</argument_list></call><operator>.</operator><call><name>ksString</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBind</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name> <init>= <expr><call><name>context</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>project</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>project</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>User</name></type> <name>user</name> <init>= <expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>user</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>user</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Photo</name></type> <name>photo</name> <init>= <expr><call><name><name>project</name><operator>.</operator><name>photo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>photo</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <switch>switch <condition>(<expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_LAUNCH</name></name></expr>:</case>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>DateTime</name></type> <name>launchedAt</name> <init>= <expr><call><name>coalesce</name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>launchedAt</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cardView</name><operator>.</operator><name>setCardBackgroundColor</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>blueDarken10Color</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>leftStatFirstTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>ksCurrency</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>goal</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>leftStatSecondTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>goalString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rightStatFirstTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>launchedString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rightStatSecondTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>DateTimeUtils</name><operator>.</operator><name>mediumDate</name></name><argument_list>(<argument><expr><name>launchedAt</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>titleTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(
+          <argument><expr><name><name>this</name><operator>.</operator><name>creatorLaunchedProjectString</name></name></expr></argument>,
+          <argument><expr><literal type="string">"creator_name"</literal></expr></argument>,
+          <argument><expr><call><name><name>user</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><literal type="string">"project_name"</literal></expr></argument>,
+          <argument><expr><call><name><name>project</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>
+        )</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_SUCCESS</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cardView</name><operator>.</operator><name>setCardBackgroundColor</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>greenDarken10Color</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>leftStatFirstTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>ksCurrency</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>pledged</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>leftStatSecondTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(
+          <argument><expr><name><name>this</name><operator>.</operator><name>pledgedOfGoalString</name></name></expr></argument>,
+          <argument><expr><literal type="string">"goal"</literal></expr></argument>,
+          <argument><expr><call><name><name>this</name><operator>.</operator><name>ksCurrency</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>goal</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>project</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>
+        )</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rightStatFirstTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>fundedString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rightStatSecondTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>DateTimeUtils</name><operator>.</operator><name>mediumDate</name></name><argument_list>(<argument><expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>createdAt</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>titleTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(
+          <argument><expr><name><name>this</name><operator>.</operator><name>projectSuccessfullyFundedString</name></name></expr></argument>,
+          <argument><expr><literal type="string">"project_name"</literal></expr></argument>,
+          <argument><expr><call><name><name>project</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>
+        )</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <default>default:</default>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>cardView</name><operator>.</operator><name>setCardBackgroundColor</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>greenDarken10Color</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>leftStatFirstTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>leftStatSecondTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rightStatFirstTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rightStatSecondTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>titleTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></switch>
+    <comment type="line">// TODO: Switch to "You launched a project" if current user launched</comment>
+    <comment type="line">//return context.getString(R.string.creator_launched_a_project, activity.user().name(), activity.project().name());</comment>
+
+    <expr_stmt><expr><call><name><name>Picasso</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>load</name><argument_list>(<argument><expr><call><name><name>photo</name><operator>.</operator><name>full</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>projectPhotoImageView</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>card_view</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>delegate</name><operator>.</operator><name>projectStateChangedPositiveClicked</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><call><name>activity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

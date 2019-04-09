@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\rx\transformers\ObserveForUITransformer.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ThreadUtils</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>android</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>AndroidSchedulers</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>Schedulers</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name><name>ObserveForUITransformer</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <super><implements>implements <name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>call</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+
+    <return>return <expr><call><name><name>source</name><operator>.</operator><name>flatMap</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>value</name></decl></parameter></parameter_list> -&gt; <block>{
+      <if>if <condition>(<expr><call><name><name>ThreadUtils</name><operator>.</operator><name>isMainThread</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>Schedulers</name><operator>.</operator><name>immediate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></then> <else>else <block>{
+        <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>AndroidSchedulers</name><operator>.</operator><name>mainThread</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+      }</block></else></if>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

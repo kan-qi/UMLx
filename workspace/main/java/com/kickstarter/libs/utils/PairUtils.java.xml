@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\PairUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>PairUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>PairUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the first of any input pair
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <parameter_list type="generic">&lt;<parameter><name>R</name></parameter>&gt;</parameter_list> <type><name>R</name></type> <name>first</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>R</name></argument>, <argument><name>?</name></argument>&gt;</argument_list></name></type> <name>anyPair</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name><name>anyPair</name><operator>.</operator><name>first</name></name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the second of any input pair
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <parameter_list type="generic">&lt;<parameter><name>R</name></parameter>&gt;</parameter_list> <type><name>R</name></type> <name>second</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>?</name></argument>, <argument><name>R</name></argument>&gt;</argument_list></name></type> <name>anyPair</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name><name>anyPair</name><operator>.</operator><name>second</name></name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

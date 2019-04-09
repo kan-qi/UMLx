@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\UserFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>UserFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>UserFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>User</name></type> <name>user</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>User</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>avatar</name><argument_list>(<argument><expr><call><name><name>AvatarFactory</name><operator>.</operator><name>avatar</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><call><name><name>IdFactory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"Some Name"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>optedOutOfRecommendations</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>location</name><argument_list>(<argument><expr><call><name><name>LocationFactory</name><operator>.</operator><name>unitedStates</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>User</name></type> <name>socialUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>user</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>social</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>User</name></type> <name>collaborator</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>user</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>createdProjectsCount</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>memberProjectsCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>User</name></type> <name>creator</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>user</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>createdProjectsCount</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>memberProjectsCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>User</name></type> <name>germanUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>user</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>location</name><argument_list>(<argument><expr><call><name><name>LocationFactory</name><operator>.</operator><name>germany</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>User</name></type> <name>noRecommendations</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>user</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>optedOutOfRecommendations</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\sync\ContentProviderAdapter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>sync</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentProvider</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ContentValues</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>Cursor</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Content provider adapter that does nothing
+ */</comment>
+<class><specifier>public</specifier> class <name>ContentProviderAdapter</name> <super><extends>extends <name>ContentProvider</name></extends></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>delete</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>selection</name></decl></parameter>, <parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>selectionArgs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.sync.ContentProviderAdapter.delete(android.net.Uri,String,[String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.sync.ContentProviderAdapter.delete(android.net.Uri,String,[String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>String</name></type> <name>getType</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.sync.ContentProviderAdapter.getType(android.net.Uri)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.sync.ContentProviderAdapter.getType(android.net.Uri)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Uri</name></type> <name>insert</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>ContentValues</name></type> <name>values</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.net.Uri com.github.pockethub.android.sync.ContentProviderAdapter.insert(android.net.Uri,android.content.ContentValues)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.net.Uri com.github.pockethub.android.sync.ContentProviderAdapter.insert(android.net.Uri,android.content.ContentValues)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.sync.ContentProviderAdapter.onCreate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.sync.ContentProviderAdapter.onCreate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Cursor</name></type> <name>query</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>projection</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>selection</name></decl></parameter>,
+            <parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>selectionArgs</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>sortOrder</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.database.Cursor com.github.pockethub.android.sync.ContentProviderAdapter.query(android.net.Uri,[String,String,[String,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.database.Cursor com.github.pockethub.android.sync.ContentProviderAdapter.query(android.net.Uri,[String,String,[String,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>update</name><parameter_list>(<parameter><decl><type><name>Uri</name></type> <name>uri</name></decl></parameter>, <parameter><decl><type><name>ContentValues</name></type> <name>values</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>selection</name></decl></parameter>,
+            <parameter><decl><type><name><name>String</name><index>[]</index></name></type> <name>selectionArgs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.sync.ContentProviderAdapter.update(android.net.Uri,android.content.ContentValues,String,[String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.sync.ContentProviderAdapter.update(android.net.Uri,android.content.ContentValues,String,[String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

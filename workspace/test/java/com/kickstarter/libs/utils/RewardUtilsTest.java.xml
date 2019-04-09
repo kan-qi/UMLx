@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\utils\RewardUtilsTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name><operator>.</operator><name>RewardFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Reward</name></name>;</import>
+
+<import>import <name><name>junit</name><operator>.</operator><name>framework</name><operator>.</operator><name>TestCase</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>RewardUtilsTest</name> <super><extends>extends <name>TestCase</name></extends></super> <block>{
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testHasBackers</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>hasBackers</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>backers</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>hasBackers</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>noBackers</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsLimited</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>rewardWithRemaining</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>remaining</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>limit</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isLimited</name></name><argument_list>(<argument><expr><name>rewardWithRemaining</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>rewardWithNoneRemaining</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>remaining</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>limit</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isLimited</name></name><argument_list>(<argument><expr><name>rewardWithNoneRemaining</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>rewardWithNoLimitAndRemainingSet</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>remaining</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>limit</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isLimited</name></name><argument_list>(<argument><expr><name>rewardWithNoLimitAndRemainingSet</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsItemized</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isItemized</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isItemized</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>itemized</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsLimitReachedWhenLimitSetAndRemainingIsZero</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>reward</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>limit</name><argument_list>(<argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>remaining</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isLimitReached</name></name><argument_list>(<argument><expr><name>reward</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsLimitNotReachedWhenLimitSetButRemainingIsNull</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>reward</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>limit</name><argument_list>(<argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isLimitReached</name></name><argument_list>(<argument><expr><name>reward</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsLimitReachedWhenRemainingIsGreaterThanZero</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>reward</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>limit</name><argument_list>(<argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>remaining</name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isLimitReached</name></name><argument_list>(<argument><expr><name>reward</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsReward</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isReward</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isReward</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>noReward</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsNoReward</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isNoReward</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>noReward</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isNoReward</name></name><argument_list>(<argument><expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsShippable</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>rewardWithNullShippingEnabled</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>shippingEnabled</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isShippable</name></name><argument_list>(<argument><expr><name>rewardWithNullShippingEnabled</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>rewardWithFalseShippingEnabled</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>shippingEnabled</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isShippable</name></name><argument_list>(<argument><expr><name>rewardWithFalseShippingEnabled</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Reward</name></type> <name>rewardWithShippingEnabled</name> <init>= <expr><call><name><name>RewardFactory</name><operator>.</operator><name>reward</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>shippingEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>RewardUtils</name><operator>.</operator><name>isShippable</name></name><argument_list>(<argument><expr><name>rewardWithShippingEnabled</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

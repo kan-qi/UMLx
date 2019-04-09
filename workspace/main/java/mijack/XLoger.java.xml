@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\mijack\XLoger.java"><package>package <name><name>com</name><operator>.</operator><name>mijack</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedWriter</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>FileWriter</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<import>import <name><name>mijack</name><operator>.</operator><name>Log4jHelper</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * @author Mi&amp;Jack
+ */</comment>
+<class><specifier>public</specifier> class <name>XLoger</name> <block>{
+    <decl_stmt><decl><specifier>static</specifier> <type><name><name>org</name><operator>.</operator><name>apache</name><operator>.</operator><name>log4j</name><operator>.</operator><name>Logger</name></name></type> <name>log</name><init>= <expr><call><name><name>Log4jHelper</name><operator>.</operator><name>getLogger</name></name><argument_list>( <argument><expr><literal type="string">"PocketHub-1"</literal></expr></argument> )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>d</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>msg</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>v</name></name><argument_list>(<argument><expr><name>tag</name></expr></argument>, <argument><expr><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<comment type="line">//      appendLog(tag+" : "+msg);</comment>
+        <expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><name>tag</name><operator>+</operator><literal type="string">" : "</literal><operator>+</operator><name>msg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+<comment type="line">//    public static void appendLog(String text) {</comment>
+<comment type="line">//        File logFile = new File("sdcard/log.file");</comment>
+<comment type="line">//        if (!logFile.exists()) {</comment>
+<comment type="line">//            try {</comment>
+<comment type="line">//                logFile.createNewFile();</comment>
+<comment type="line">//            } catch (IOException e) {</comment>
+<comment type="line">//                // TODO Auto-generated catch block</comment>
+<comment type="line">//                e.printStackTrace();</comment>
+<comment type="line">//            }</comment>
+<comment type="line">//        }</comment>
+<comment type="line">//        try {</comment>
+<comment type="line">//            //BufferedWriter for performance, true to set append to file flag</comment>
+<comment type="line">//            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));</comment>
+<comment type="line">//            buf.append(text);</comment>
+<comment type="line">//            buf.newLine();</comment>
+<comment type="line">//            buf.close();</comment>
+<comment type="line">//        } catch (IOException e) {</comment>
+<comment type="line">//            // TODO Auto-generated catch block</comment>
+<comment type="line">//            e.printStackTrace();</comment>
+<comment type="line">//        }</comment>
+<comment type="line">//    }</comment>
+}</block></class>
+</unit>

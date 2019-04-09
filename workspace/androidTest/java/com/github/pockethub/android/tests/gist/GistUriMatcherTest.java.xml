@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\androidTest\java\com\github\pockethub\android\tests\gist\GistUriMatcherTest.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>tests</name><operator>.</operator><name>gist</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>test</name><operator>.</operator><name>AndroidTestCase</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>gist</name><operator>.</operator><name>GistUriMatcher</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Gist</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Unit tests of {@link GistUriMatcher}
+ */</comment>
+<class><specifier>public</specifier> class <name>GistUriMatcherTest</name> <super><extends>extends <name>AndroidTestCase</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Verify empty uri
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testEmptyUri</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testEmptyUri()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>GistUriMatcher</name><operator>.</operator><name>getGist</name></name><argument_list>(<argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testEmptyUri()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify invalid Gist ids in URIs
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testNonGistId</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testNonGistId()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>GistUriMatcher</name><operator>.</operator><name>getGist</name></name><argument_list>(<argument><expr><call><name><name>Uri</name>
+                <operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"https://gist.github.com/TEST"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>GistUriMatcher</name><operator>.</operator><name>getGist</name></name><argument_list>(<argument><expr><call><name><name>Uri</name>
+                <operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"https://gist.github.com/abc%20"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>GistUriMatcher</name><operator>.</operator><name>getGist</name></name><argument_list>(<argument><expr><call><name><name>Uri</name>
+                <operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"https://gist.github.com/abcdefg"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testNonGistId()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify public Gist id
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testPublicGist</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testPublicGist()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Gist</name></type> <name>gist</name> <init>= <expr><call><name><name>GistUriMatcher</name><operator>.</operator><name>getGist</name></name><argument_list>(<argument><expr><call><name><name>Uri</name>
+                <operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"https://gist.github.com/1234"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>gist</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"1234"</literal></expr></argument>, <argument><expr><call><name><name>gist</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testPublicGist()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify public Gist id
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testPrivateGist</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testPrivateGist()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Gist</name></type> <name>gist</name> <init>= <expr><call><name><name>GistUriMatcher</name><operator>.</operator><name>getGist</name></name><argument_list>(<argument><expr><call><name><name>Uri</name>
+                <operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><literal type="string">"https://gist.github.com/abcd1234abcd1234abcd"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>gist</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"abcd1234abcd1234abcd"</literal></expr></argument>, <argument><expr><call><name><name>gist</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.gist.GistUriMatcherTest.testPrivateGist()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

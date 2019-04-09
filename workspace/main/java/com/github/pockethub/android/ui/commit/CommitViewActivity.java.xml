@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\commit\CommitViewActivity.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>commit</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>ActionBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>item</name><operator>.</operator><name>commit</name><operator>.</operator><name>CommitItem</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Commit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>Builder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>commit</name><operator>.</operator><name>CommitUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>FragmentProvider</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>PagerActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>ViewPager</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>repo</name><operator>.</operator><name>RepositoryViewActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AvatarLoader</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>InfoUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>xwray</name><operator>.</operator><name>groupie</name><operator>.</operator><name>Item</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindView</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TOP</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_SINGLE_TOP</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>EXTRA_BASES</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>EXTRA_POSITION</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>EXTRA_REPOSITORY</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity to display a commit
+ */</comment>
+<class><specifier>public</specifier> class <name>CommitViewActivity</name> <super><extends>extends <name>PagerActivity</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Create intent for this activity
+     *
+     * @param repository
+     * @param id
+     * @return intent
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>createIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Repository</name></type> <name>repository</name></decl></parameter>,
+        <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.commit.CommitViewActivity.createIntent(com.meisolsson.githubsdk.model.Repository,String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.commit.CommitViewActivity.createIntent(com.meisolsson.githubsdk.model.Repository,String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>createIntent</name><argument_list>(<argument><expr><name>repository</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Create intent for this activity
+     *
+     * @param repository
+     * @param position
+     * @param commits
+     * @return intent
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>createIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Repository</name></type> <name>repository</name></decl></parameter>,
+                                      <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name>Item</name></argument>&gt;</argument_list></name></type> <name>commits</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.commit.CommitViewActivity.createIntent(com.meisolsson.githubsdk.model.Repository,int,Collection&lt;Item&gt;)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name><name>String</name><index>[]</index></name></type> <name>ids</name> <init>= <expr><operator>new</operator> <name><name>String</name><index>[<expr><call><name><name>commits</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>]</index></name></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>index</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>Item</name></type> <name>item</name> <range>: <expr><name>commits</name></expr></range></decl></init>)</control> <block>{
+            <decl_stmt><decl><type><name>Commit</name></type> <name>commit</name> <init>= <expr><operator>(</operator><operator>(</operator><name>CommitItem</name><operator>)</operator> <name>item</name><operator>)</operator><operator>.</operator><call><name>getCommit</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><name><name>ids</name><index>[<expr><name>index</name><operator>++</operator></expr>]</index></name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>sha</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.commit.CommitViewActivity.createIntent(com.meisolsson.githubsdk.model.Repository,int,Collection&lt;Item&gt;)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>createIntent</name><argument_list>(<argument><expr><name>repository</name></expr></argument>, <argument><expr><name>position</name></expr></argument>, <argument><expr><name>ids</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Create intent for this activity
+     *
+     * @param repository
+     * @param position
+     * @param ids
+     * @return intent
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>createIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Repository</name></type> <name>repository</name></decl></parameter>,
+        <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name><modifier>...</modifier></type> <name>ids</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.commit.CommitViewActivity.createIntent(com.meisolsson.githubsdk.model.Repository,int,[String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Builder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>Builder</name><argument_list>(<argument><expr><literal type="string">"commits.VIEW"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>EXTRA_POSITION</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>EXTRA_BASES</name></expr></argument>, <argument><expr><name>ids</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>repo</name></name><argument_list>(<argument><expr><name>repository</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.commit.CommitViewActivity.createIntent(com.meisolsson.githubsdk.model.Repository,int,[String)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>builder</name><operator>.</operator><name>toIntent</name></name><argument_list>()</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <decl_stmt><decl><annotation>@<name>BindView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>vp_pages</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>protected</specifier> <type><name>ViewPager</name></type> <name>pager</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Repository</name></type> <name>repository</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>CharSequence</name><index>[]</index></name></type> <name>ids</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>initialPosition</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>AvatarLoader</name></type> <name>avatars</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>CommitPagerAdapter</name></type> <name>adapter</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.CommitViewActivity.onCreate(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_pager</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>repository</name> <operator>=</operator> <call><name>getIntent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>ids</name> <operator>=</operator> <call><name>getCharSequenceArrayExtra</name><argument_list>(<argument><expr><name>EXTRA_BASES</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>initialPosition</name> <operator>=</operator> <call><name>getIntExtra</name><argument_list>(<argument><expr><name>EXTRA_POSITION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>adapter</name> <operator>=</operator> <operator>new</operator> <call><name>CommitPagerAdapter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>repository</name></expr></argument>, <argument><expr><name>ids</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>addOnPageChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>scheduleSetItem</name></name><argument_list>(<argument><expr><name>initialPosition</name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>onPageSelected</name><argument_list>(<argument><expr><name>initialPosition</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>ActionBar</name></type> <name>actionBar</name> <init>= <expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>actionBar</name><operator>.</operator><name>setDisplayHomeAsUpEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>actionBar</name><operator>.</operator><name>setSubtitle</name></name><argument_list>(<argument><expr><call><name><name>InfoUtils</name><operator>.</operator><name>createRepoId</name></name><argument_list>(<argument><expr><name>repository</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>avatars</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>actionBar</name></expr></argument>, <argument><expr><call><name><name>repository</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.CommitViewActivity.onCreate(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.CommitViewActivity.onDestroy()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>removeOnPageChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.CommitViewActivity.onDestroy()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.commit.CommitViewActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+            <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><call><name><name>RepositoryViewActivity</name><operator>.</operator><name>createIntent</name></name><argument_list>(<argument><expr><name>repository</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>addFlags</name></name><argument_list>(<argument><expr><name>FLAG_ACTIVITY_CLEAR_TOP</name> <operator>|</operator> <name>FLAG_ACTIVITY_SINGLE_TOP</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.commit.CommitViewActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.commit.CommitViewActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPageSelected</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.CommitViewActivity.onPageSelected(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPageSelected</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>id</name> <init>= <expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><name><name>ids</name><index>[<expr><name>position</name></expr>]</index></name><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setTitle</name><argument_list>(<argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>commit_prefix</name></name></expr></argument>)</argument_list></call> <operator>+</operator> <name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.CommitViewActivity.onPageSelected(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>FragmentProvider</name></type> <name>getProvider</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.FragmentProvider com.github.pockethub.android.ui.commit.CommitViewActivity.getProvider()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.FragmentProvider com.github.pockethub.android.ui.commit.CommitViewActivity.getProvider()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>adapter</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

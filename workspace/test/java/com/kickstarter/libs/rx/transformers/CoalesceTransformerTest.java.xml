@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\rx\transformers\CoalesceTransformerTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name></name>;</package>
+
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Test</name></name>;</import>
+
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>observers</name><operator>.</operator><name>TestSubscriber</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>coalesce</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>CoalesceTransformerTest</name> <block>{
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testCoalesceTransformer</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>theDefault</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>source</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>result</name> <init>= <expr><call><name><name>source</name>
+      <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><name>theDefault</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>TestSubscriber</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>resultTest</name> <init>= <expr><call><name><name>TestSubscriber</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>subscribe</name></name><argument_list>(<argument><expr><name>resultTest</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>source</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>resultTest</name><operator>.</operator><name>assertValue</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>source</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>resultTest</name><operator>.</operator><name>assertValues</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>source</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>resultTest</name><operator>.</operator><name>assertValues</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><name>theDefault</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

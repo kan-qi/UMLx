@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\apiresponses\PushNotificationEnvelope.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AutoGson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>pushdata</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>pushdata</name><operator>.</operator><name>GCM</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<class><annotation>@<name>AutoGson</name></annotation>
+<annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>PushNotificationEnvelope</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Activity</name></type> <name>activity</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>GCM</name></type> <name>gcm</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Message</name></type> <name>message</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Project</name></type> <name>project</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Survey</name></type> <name>survey</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <specifier>static</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>PROJECT_NOTIFICATION_CATEGORIES</name> <init>= <expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(
+    <argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_BACKING</name></name></expr></argument>,
+    <argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_CANCELLATION</name></name></expr></argument>,
+    <argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_FAILURE</name></name></expr></argument>,
+    <argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_LAUNCH</name></name></expr></argument>,
+    <argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_SUCCESS</name></name></expr></argument>
+  )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>activity</name><parameter_list>(<parameter><decl><type><name>Activity</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>gcm</name><parameter_list>(<parameter><decl><type><name>GCM</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>message</name><parameter_list>(<parameter><decl><type><name>Message</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>project</name><parameter_list>(<parameter><decl><type><name>Project</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>survey</name><parameter_list>(<parameter><decl><type><name>Survey</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>PushNotificationEnvelope</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_PushNotificationEnvelope</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isFriendFollow</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activity</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_FOLLOW</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isMessage</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>message</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isProjectActivity</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>activity</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>PROJECT_NOTIFICATION_CATEGORIES</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isProjectReminder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>project</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isProjectUpdateActivity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activity</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>activity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name><operator>.</operator><name>CATEGORY_UPDATE</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isSurvey</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>survey</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>int</name></type> <name>signature</name><parameter_list>()</parameter_list> <block>{
+    <comment type="line">// When we display an Android notification, we can give it a id. If the server sends a notification with the same</comment>
+    <comment type="line">// id, Android updates the existing notification with new information rather than creating a new notification.</comment>
+    <comment type="line">//</comment>
+    <comment type="line">// The server doesn't send unique notification ids, so hashing the alert text is a weak substitute. Probably won't</comment>
+    <comment type="line">// make use of this feature anyhow.</comment>
+    <return>return <expr><call><name>gcm</name><argument_list>()</argument_list></call><operator>.</operator><call><name>alert</name><argument_list>()</argument_list></call><operator>.</operator><call><name>hashCode</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Message</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Long</name></type> <name>messageThreadId</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Long</name></type> <name>projectId</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>messageThreadId</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>projectId</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Message</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_PushNotificationEnvelope_Message</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Project</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Long</name></type> <name>id</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>photo</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>id</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>photo</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Project</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_PushNotificationEnvelope_Project</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Survey</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Long</name></type> <name>id</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Long</name></type> <name>projectId</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>id</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>projectId</name><parameter_list>(<parameter><decl><type><name>Long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Survey</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_PushNotificationEnvelope_Survey</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>ActivityPushData</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Long</name></type> <name>id</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>category</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Long</name></type> <name>projectId</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>projectPhoto</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>userPhoto</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Long</name></type> <name>commentId</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Long</name></type> <name>updateId</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+}</block></class>
+</unit>

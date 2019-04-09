@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\RequestCodes.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name></name>;</package>
+
+<comment type="block" format="javadoc">/**
+ * Request codes
+ */</comment>
+<interface><specifier>public</specifier> interface <name>RequestCodes</name> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Request to view a Gist
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>GIST_VIEW</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to view an issue
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_VIEW</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to edit an issue filter
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_FILTER_EDIT</name> <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to create a new issue
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_CREATE</name> <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to update an issue's labels
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_LABELS_UPDATE</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to update an issue's milestone
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_MILESTONE_UPDATE</name> <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to update an issue's assignee
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_ASSIGNEE_UPDATE</name> <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to close an issue
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_CLOSE</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to reopen an issue
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_REOPEN</name> <init>= <expr><literal type="number">6</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to edit an issue
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>ISSUE_EDIT</name> <init>= <expr><literal type="number">7</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to create a comment
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>COMMENT_CREATE</name> <init>= <expr><literal type="number">8</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to create a gist
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>GIST_CREATE</name> <init>= <expr><literal type="number">9</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to view a commit
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>COMMIT_VIEW</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to update the current reference
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>REF_UPDATE</name> <init>= <expr><literal type="number">11</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to view a repository
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>REPOSITORY_VIEW</name> <init>= <expr><literal type="number">12</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to enter two-factor authentication OTP code
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>OTP_CODE_ENTER</name> <init>= <expr><literal type="number">13</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to edit a comment
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>COMMENT_EDIT</name> <init>= <expr><literal type="number">14</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Request to delete a comment
+     */</comment>
+    <decl_stmt><decl><type><name>int</name></type> <name>COMMENT_DELETE</name> <init>= <expr><literal type="number">15</literal></expr></init></decl>;</decl_stmt>
+}</block></interface>
+</unit>

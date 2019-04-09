@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\IOUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>ByteArrayOutputStream</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>InputStream</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>IOUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>IOUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>byte</name><index>[]</index></name></type> <name>readFully</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>InputStream</name></type> <name>inputStream</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>ByteArrayOutputStream</name></type> <name>out</name> <init>= <expr><operator>new</operator> <call><name>ByteArrayOutputStream</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>byte</name><index>[]</index></name></type> <name>buffer</name> <init>= <expr><operator>new</operator> <name><name>byte</name><index>[<expr><literal type="number">1024</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>count</name></decl>;</init> <condition><expr><operator>(</operator><name>count</name> <operator>=</operator> <call><name><name>inputStream</name><operator>.</operator><name>read</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call><operator>)</operator> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>;</condition> <incr/>)</control> <block>{
+      <expr_stmt><expr><call><name><name>out</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>count</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+    <return>return <expr><call><name><name>out</name><operator>.</operator><name>toByteArray</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

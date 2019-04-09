@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\ConfigFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Config</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ConfigFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>ConfigFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Config</name></type> <name>config</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Config</name><operator>.</operator><name>LaunchedCountry</name></name></type> <name>US</name> <init>= <expr><call><name><name>Config</name><operator>.</operator><name>LaunchedCountry</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><literal type="string">"USD"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><literal type="string">"$"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>trailingCode</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Config</name><operator>.</operator><name>LaunchedCountry</name></name></type> <name>GB</name> <init>= <expr><call><name><name>Config</name><operator>.</operator><name>LaunchedCountry</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"GB"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><literal type="string">"GBP"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><literal type="string">"Â£"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>trailingCode</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Config</name><operator>.</operator><name>LaunchedCountry</name></name></type> <name>CA</name> <init>= <expr><call><name><name>Config</name><operator>.</operator><name>LaunchedCountry</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"CA"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencyCode</name><argument_list>(<argument><expr><literal type="string">"CAD"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currencySymbol</name><argument_list>(<argument><expr><literal type="string">"$"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>trailingCode</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>Config</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>countryCode</name><argument_list>(<argument><expr><literal type="string">"US"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>features</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyMap</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>launchedCountries</name><argument_list>(<argument><expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(<argument><expr><name>US</name></expr></argument>, <argument><expr><name>GB</name></expr></argument>, <argument><expr><name>CA</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Config</name></type> <name>configForUSUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>config</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Config</name></type> <name>configForCAUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>config</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>countryCode</name><argument_list>(<argument><expr><literal type="string">"CA"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Config</name></type> <name>configWithFeatureEnabled</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>featureKey</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>config</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>features</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonMap</name></name><argument_list>(<argument><expr><name>featureKey</name></expr></argument>, <argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

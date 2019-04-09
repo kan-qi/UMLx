@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\RefTag.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A {@link RefTag} is a string identifier that Kickstarter uses to credit a pledge to a source of traffic, e.g. discovery,
+ * activity, search, etc. This class represents all possible ref tags we support in the app.
+ */</comment>
+<class><annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>RefTag</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>tag</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>RefTag</name></type> <name>from</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>tag</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><name>tag</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>activity</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"activity"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>activitySample</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"discovery_activity_sample"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>category</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"category"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>category</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>DiscoveryParams</name><operator>.</operator><name>Sort</name></name></type> <name>sort</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"category"</literal> <operator>+</operator> <call><name><name>sort</name><operator>.</operator><name>refTagSuffix</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>categoryFeatured</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"category_featured"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>city</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"city"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>dashboard</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"dashboard"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>discovery</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"discovery"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>pledgeInfo</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"pledge_info"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>push</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"push"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>recommended</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"recommended"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>recommended</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>DiscoveryParams</name><operator>.</operator><name>Sort</name></name></type> <name>sort</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"recommended"</literal> <operator>+</operator> <call><name><name>sort</name><operator>.</operator><name>refTagSuffix</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>search</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"search"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>searchFeatured</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"search_featured"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>searchPopular</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"search_popular_title_view"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>searchPopularFeatured</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"search_popular_featured"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>social</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"social"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>survey</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"survey"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>thanks</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"thanks"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>RefTag</name></type> <name>update</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AutoParcel_RefTag</name><argument_list>(<argument><expr><literal type="string">"update"</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

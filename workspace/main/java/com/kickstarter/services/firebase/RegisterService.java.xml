@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\firebase\RegisterService.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>firebase</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>firebase</name><operator>.</operator><name>jobdispatcher</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>firebase</name><operator>.</operator><name>jobdispatcher</name><operator>.</operator><name>JobService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>iid</name><operator>.</operator><name>FirebaseInstanceId</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>messaging</name><operator>.</operator><name>FirebaseMessaging</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>DeviceRegistrar</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>RegisterService</name> <super><extends>extends <name>JobService</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>ApiClientType</name></type> <name>apiClient</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>REGISTER_SERVICE</name> <init>= <expr><literal type="string">"Register-service"</literal></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>inject</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onStartJob</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>JobParameters</name></type> <name>job</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>FirebaseInstanceId</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getInstanceId</name><argument_list>()</argument_list></call><operator>.</operator><call><name>addOnSuccessListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>instanceIdResult</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>newToken</name> <init>= <expr><call><name><name>instanceIdResult</name><operator>.</operator><name>getToken</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"newToken"</literal></expr></argument>, <argument><expr><name>newToken</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>sendTokenToApi</name><argument_list>(<argument><expr><name>newToken</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>subscribeToGlobalTopic</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onStopJob</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>JobParameters</name></type> <name>job</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Persist token to app servers.
+   *
+   * @param token The new token.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>sendTokenToApi</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>token</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>observable</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt;
+        <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>apiClient</name><operator>.</operator><name>registerPushToken</name></name><argument_list>(<argument><expr><name>token</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>neverError</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>
+      )</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Subscribe to generic global topic - not using more specific topics.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>subscribeToGlobalTopic</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>FirebaseMessaging</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>subscribeToTopic</name><argument_list>(<argument><expr><name><name>DeviceRegistrar</name><operator>.</operator><name>TOPIC_GLOBAL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+
+</unit>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\comment\CreateCommentActivity.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>comment</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>Menu</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>TabPagerActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AvatarLoader</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubComment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>git</name><operator>.</operator><name>GitComment</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>EXTRA_COMMENT</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>view</name><operator>.</operator><name>OcticonTextView</name><operator>.</operator><name>ICON_EDIT</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>view</name><operator>.</operator><name>OcticonTextView</name><operator>.</operator><name>ICON_WATCH</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Base activity for creating comments
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>CreateCommentActivity</name> <super><extends>extends
+    <name><name>TabPagerActivity</name><argument_list type="generic">&lt;<argument><name>CommentPreviewPagerAdapter</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>MenuItem</name></type> <name>applyItem</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Avatar loader
+     */</comment>
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>AvatarLoader</name></type> <name>avatars</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostCreate</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.onPostCreate(@Nullable Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDisplayHomeAsUpEnabled</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>configureTabPager</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.onPostCreate(@Nullable Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onPageSelected</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.onPageSelected(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPageSelected</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>setCurrentItem</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.onPageSelected(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>invalidateOptionsMenu</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.invalidateOptionsMenu()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>invalidateOptionsMenu</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <if>if <condition>(<expr><name>applyItem</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>applyItem</name><operator>.</operator><name>setEnabled</name></name><argument_list>(<argument><expr><name>adapter</name> <operator>!=</operator> <literal type="null">null</literal>
+                    <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>adapter</name><operator>.</operator><name>getCommentText</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.invalidateOptionsMenu()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>setCurrentItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.setCurrentItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setCurrentItem</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>adapter</name><operator>.</operator><name>setCurrentItem</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.setCurrentItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Create comment
+     *
+     * @param comment
+     */</comment>
+    <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>createComment</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>comment</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/**
+     * Finish this activity passing back the created comment
+     *
+     * @param comment
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>finish</name><parameter_list>(<parameter><decl><type><name>GitHubComment</name></type> <name>comment</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.finish(com.meisolsson.githubsdk.model.GitHubComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Intent</name></type> <name>data</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>data</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_COMMENT</name></expr></argument>, <argument><expr><name>comment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setResult</name><argument_list>(<argument><expr><name>RESULT_OK</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.finish(com.meisolsson.githubsdk.model.GitHubComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>finish</name><parameter_list>(<parameter><decl><type><name>GitComment</name></type> <name>comment</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.finish(com.meisolsson.githubsdk.model.git.GitComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Intent</name></type> <name>data</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>data</name><operator>.</operator><name>putExtra</name></name><argument_list>(<argument><expr><name>EXTRA_COMMENT</name></expr></argument>, <argument><expr><name>comment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setResult</name><argument_list>(<argument><expr><name>RESULT_OK</name></expr></argument>, <argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.comment.CreateCommentActivity.finish(com.meisolsson.githubsdk.model.git.GitComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.comment.CreateCommentActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+            <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>
+                <expr_stmt><expr><call><name>finish</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.comment.CreateCommentActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>}</block>
+            <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>m_apply</name></name></expr>:</case>
+                <expr_stmt><expr><call><name>createComment</name><argument_list>(<argument><expr><call><name><name>adapter</name><operator>.</operator><name>getCommentText</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.comment.CreateCommentActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.comment.CreateCommentActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>String</name></type> <name>getTitle</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>write</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>preview</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>getTitle</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>String</name></type> <name>getIcon</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>ICON_EDIT</name></expr>;</return>}</block>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>ICON_WATCH</name></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.comment.CreateCommentActivity.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>getIcon</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>CommentPreviewPagerAdapter</name></type> <name>createAdapter</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.comment.CommentPreviewPagerAdapter com.github.pockethub.android.ui.comment.CreateCommentActivity.createAdapter()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.comment.CommentPreviewPagerAdapter com.github.pockethub.android.ui.comment.CreateCommentActivity.createAdapter()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>CommentPreviewPagerAdapter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onCreateOptionsMenu</name><parameter_list>(<parameter><decl><type><name>Menu</name></type> <name>options</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.comment.CreateCommentActivity.onCreateOptionsMenu(android.view.Menu)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>getMenuInflater</name><argument_list>()</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>activity_comment</name></name></expr></argument>, <argument><expr><name>options</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>applyItem</name> <operator>=</operator> <call><name><name>options</name><operator>.</operator><name>findItem</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>m_apply</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.comment.CreateCommentActivity.onCreateOptionsMenu(android.view.Menu)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\viewholders\KSViewHolder.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityLifecycleType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>ActivityEvent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>RxLifecycle</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>recyclerview</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>KSViewHolder</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name>ViewHolder</name></name></extends> <implements>implements <name><name>View</name><operator>.</operator><name>OnClickListener</name></name>,
+  <name>ActivityLifecycleType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>View</name></type> <name>view</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>ActivityEvent</name></argument>&gt;</argument_list></name></type> <name>lifecycle</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KSViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>view</name></name> <operator>=</operator> <name>view</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setOnClickListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * No-op click implementation. Subclasses should override this method to implement click handling.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"Default KSViewHolder projectClicked event"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Populate a view with data that was bound in `bindData`.
+   *
+   * @deprecated Prefer creating subscriptions to a viewmodel in the constructor, then using #{link #bindData} to
+   *             send new data to the viewmodel.
+   */</comment>
+  <function><annotation>@<name>Deprecated</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBind</name><parameter_list>()</parameter_list> <block>{}</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Implementations of this should inspect `data` to set instance variables in the view holder that
+   * `onBind` can then use without worrying about type safety.
+   *
+   * @throws Exception Raised when binding is unsuccessful.
+   */</comment>
+  <function_decl><specifier>abstract</specifier> <specifier>public</specifier> <type><name>void</name></type> <name>bindData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>data</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws>;</function_decl>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>ActivityEvent</name></argument>&gt;</argument_list></name></type> <name>lifecycle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * This method is intended to be called only from `KSAdapter` in order for it to inform the view holder
+   * of its lifecycle.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>lifecycleEvent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ActivityEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name><name>ActivityEvent</name><operator>.</operator><name>DESTROY</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>destroy</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Completes an observable when an {@link ActivityEvent} occurs in the activity's lifecycle.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>final</specifier> <annotation>@<name><name>NonNull</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></annotation> <type><name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></type> <name>bindUntilEvent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ActivityEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>RxLifecycle</name><operator>.</operator><name>bindUntilActivityEvent</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Completes an observable when the lifecycle event opposing the current lifecyle event is emitted.
+   * For example, if a subscription is made during {@link ActivityEvent#CREATE}, the observable will be completed
+   * in {@link ActivityEvent#DESTROY}.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>final</specifier> <annotation>@<name><name>NonNull</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></annotation> <type><name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></type> <name>bindToLifecycle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>RxLifecycle</name><operator>.</operator><name>bindActivity</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called when the ViewHolder is being detached. Subclasses should override if they need to do any work
+   * when the ViewHolder is being de-allocated.
+   */</comment>
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>destroy</name><parameter_list>()</parameter_list> <block>{}</block></function>
+
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>View</name></type> <name>view</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>view</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Context</name></type> <name>context</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>view</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Environment</name></type> <name>environment</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name>context</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>environment</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

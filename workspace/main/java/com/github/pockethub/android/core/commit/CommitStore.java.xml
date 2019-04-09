@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\core\commit\CommitStore.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>commit</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>ItemStore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>InfoUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>core</name><operator>.</operator><name>ServiceGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Commit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>repositories</name><operator>.</operator><name>RepositoryCommitService</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Singleton</name></name>;</import>
+
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Single</name></name>;</import>
+
+
+<comment type="block" format="javadoc">/**
+ * Store of commits
+ */</comment>
+<class><annotation>@<name>Singleton</name></annotation>
+<specifier>public</specifier> class <name>CommitStore</name> <super><extends>extends <name>ItemStore</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name><name>ItemReferences</name><argument_list type="generic">&lt;<argument><name>Commit</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>commits</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>RepositoryCommitService</name></type> <name>service</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create commit store.
+     */</comment>
+    <constructor><annotation>@<name>Inject</name></annotation>
+    <specifier>public</specifier> <name>CommitStore</name><parameter_list>()</parameter_list> <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExecute</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.commit.CommitStore.CommitStore()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * Get commit
+     *
+     * @param repo
+     * @param id
+     * @return commit or null if not in store
+     */</comment>
+    <function><specifier>public</specifier> <type><name>Commit</name></type> <name>getCommit</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Repository</name></type> <name>repo</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.CommitStore.getCommit(com.meisolsson.githubsdk.model.Repository,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name><name>ItemReferences</name><argument_list type="generic">&lt;<argument><name>Commit</name></argument>&gt;</argument_list></name></type> <name>repoCommits</name> <init>= <expr><call><name><name>commits</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><call><name><name>InfoUtils</name><operator>.</operator><name>createRepoId</name></name><argument_list>(<argument><expr><name>repo</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.CommitStore.getCommit(com.meisolsson.githubsdk.model.Repository,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>repoCommits</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>repoCommits</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Add commit to store
+     *
+     * @param repo
+     * @param commit
+     * @return commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name>Commit</name></type> <name>addCommit</name><parameter_list>(<parameter><decl><type><name>Repository</name></type> <name>repo</name></decl></parameter>, <parameter><decl><type><name>Commit</name></type> <name>commit</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.CommitStore.addCommit(com.meisolsson.githubsdk.model.Repository,com.meisolsson.githubsdk.model.Commit)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Commit</name></type> <name>current</name> <init>= <expr><call><name>getCommit</name><argument_list>(<argument><expr><name>repo</name></expr></argument>, <argument><expr><call><name><name>commit</name><operator>.</operator><name>sha</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>current</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>current</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.CommitStore.addCommit(com.meisolsson.githubsdk.model.Repository,com.meisolsson.githubsdk.model.Commit)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>current</name></expr>;</return>}</block>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>repoId</name> <init>= <expr><call><name><name>InfoUtils</name><operator>.</operator><name>createRepoId</name></name><argument_list>(<argument><expr><name>repo</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>ItemReferences</name><argument_list type="generic">&lt;<argument><name>Commit</name></argument>&gt;</argument_list></name></type> <name>repoCommits</name> <init>= <expr><call><name><name>commits</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>repoId</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>repoCommits</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>repoCommits</name> <operator>=</operator> <operator>new</operator> <call><name><name>ItemReferences</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>commits</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>repoId</name></expr></argument>, <argument><expr><name>repoCommits</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <expr_stmt><expr><call><name><name>repoCommits</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><call><name><name>commit</name><operator>.</operator><name>sha</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.CommitStore.addCommit(com.meisolsson.githubsdk.model.Repository,com.meisolsson.githubsdk.model.Commit)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>commit</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Refresh commit.
+     *
+     * @param repo The repo which the commit is in
+     * @param id The id of the commit
+     * @return refreshed commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name><name>Single</name><argument_list type="generic">&lt;<argument><name>Commit</name></argument>&gt;</argument_list></name></type> <name>refreshCommit</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Repository</name></type> <name>repo</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;Commit&gt; com.github.pockethub.android.core.commit.CommitStore.refreshCommit(com.meisolsson.githubsdk.model.Repository,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;Commit&gt; com.github.pockethub.android.core.commit.CommitStore.refreshCommit(com.meisolsson.githubsdk.model.Repository,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>service</name>
+                <operator>.</operator><name>getCommit</name></name><argument_list>(<argument><expr><call><name><name>repo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>login</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>repo</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>response</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>addCommit</name><argument_list>(<argument><expr><name>repo</name></expr></argument>, <argument><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

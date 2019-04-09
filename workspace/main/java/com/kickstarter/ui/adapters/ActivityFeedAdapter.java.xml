@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\adapters\ActivityFeedAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ListUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>SurveyResponse</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>EmptyActivityFeedViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>EmptyViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>FriendBackingViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>FriendFollowViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>KSViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ProjectStateChangedPositiveViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ProjectStateChangedViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ProjectUpdateViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>SurveyHeaderViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>SurveyViewHolder</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ActivityFeedAdapter</name> <super><extends>extends <name>KSAdapter</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_LOGGED_IN_EMPTY_VIEW</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_LOGGED_OUT_EMPTY_VIEW</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_SURVEYS_HEADER_VIEW</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_SURVEYS_VIEW</name> <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_ACTIVITIES_VIEW</name> <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <super><extends>extends <name><name>FriendBackingViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>ProjectStateChangedPositiveViewHolder</name><operator>.</operator><name>Delegate</name></name>,
+    <name><name>ProjectStateChangedViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>ProjectUpdateViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>EmptyActivityFeedViewHolder</name><operator>.</operator><name>Delegate</name></name></extends></super> <block>{}</block></interface>
+
+  <constructor><specifier>public</specifier> <name>ActivityFeedAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_LOGGED_IN_EMPTY_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_LOGGED_OUT_EMPTY_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_SURVEYS_HEADER_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_SURVEYS_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_ACTIVITIES_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takeActivities</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Activity</name></argument>&gt;</argument_list></name></type> <name>activities</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_ACTIVITIES_VIEW</name></expr></argument>, <argument><expr><name>activities</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takeSurveys</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>SurveyResponse</name></argument>&gt;</argument_list></name></type> <name>surveyResponses</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>surveyResponses</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_SURVEYS_HEADER_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><call><name><name>surveyResponses</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_SURVEYS_VIEW</name></expr></argument>, <argument><expr><name>surveyResponses</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_SURVEYS_HEADER_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_SURVEYS_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>showLoggedInEmptyState</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>show</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_LOGGED_IN_EMPTY_VIEW</name></expr></argument>, <argument><expr><ternary><condition><expr><name>show</name></expr> ?</condition><then> <expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>ListUtils</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>showLoggedOutEmptyState</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>show</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_LOGGED_OUT_EMPTY_VIEW</name></expr></argument>, <argument><expr><ternary><condition><expr><name>show</name></expr> ?</condition><then> <expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>ListUtils</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>LayoutRes</name></annotation> <type><name>int</name></type> <name>layout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name>SECTION_LOGGED_IN_EMPTY_VIEW</name></expr>:</case>
+        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_activity_feed_view</name></name></expr>;</return>
+      <case>case <expr><name>SECTION_LOGGED_OUT_EMPTY_VIEW</name></expr>:</case>
+        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_activity_feed_view</name></name></expr>;</return>
+      <case>case <expr><name>SECTION_SURVEYS_HEADER_VIEW</name></expr>:</case>
+        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_survey_header_view</name></name></expr>;</return>
+      <case>case <expr><name>SECTION_SURVEYS_VIEW</name></expr>:</case>
+        <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_survey_view</name></name></expr>;</return>
+      <case>case <expr><name>SECTION_ACTIVITIES_VIEW</name></expr>:</case>
+        <return>return <expr><call><name>getActivityLayoutId</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></switch>
+    <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_view</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getActivityLayoutId</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call> <operator>instanceof</operator> <name>Activity</name></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>Activity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>Activity</name><operator>)</operator> <call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <switch>switch <condition>(<expr><call><name><name>activity</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_BACKING</name></name></expr>:</case>
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_friend_backing_view</name></name></expr>;</return>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_FOLLOW</name></name></expr>:</case>
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_friend_follow_view</name></name></expr>;</return>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_FAILURE</name></name></expr>:</case>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_CANCELLATION</name></name></expr>:</case>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_SUSPENSION</name></name></expr>:</case>
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_project_state_changed_view</name></name></expr>;</return>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_LAUNCH</name></name></expr>:</case>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_SUCCESS</name></name></expr>:</case>
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_project_state_changed_positive_view</name></name></expr>;</return>
+        <case>case <expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_UPDATE</name></name></expr>:</case>
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_project_update_view</name></name></expr>;</return>
+      }</block></switch>
+    }</block></then></if>
+    <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_view</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>viewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>layout</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_survey_header_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>SurveyHeaderViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_survey_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>SurveyViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_friend_backing_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>FriendBackingViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_friend_follow_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>FriendFollowViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_project_state_changed_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ProjectStateChangedViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_project_state_changed_positive_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ProjectStateChangedPositiveViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_project_update_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ProjectUpdateViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_activity_feed_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>EmptyActivityFeedViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <default>default:</default>
+        <return>return <expr><operator>new</operator> <call><name>EmptyViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></switch>
+  }</block></function>
+}</block></class>
+</unit>

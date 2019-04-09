@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\CommentUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Comment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>CommentUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>CommentUtils</name><parameter_list>()</parameter_list> <block>{
+    <throw>throw <expr><operator>new</operator> <call><name>AssertionError</name><argument_list>()</argument_list></call></expr>;</throw>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isUserAuthor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Comment</name></type> <name>comment</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>User</name></type> <name>user</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>user</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>comment</name><operator>.</operator><name>author</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>user</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDeleted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Comment</name></type> <name>comment</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>!</operator><call><name><name>DateTimeUtils</name><operator>.</operator><name>isEpoch</name></name><argument_list>(<argument><expr><call><name><name>comment</name><operator>.</operator><name>deletedAt</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

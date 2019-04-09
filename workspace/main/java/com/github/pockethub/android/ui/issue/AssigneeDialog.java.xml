@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\issue\AssigneeDialog.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>GitHubRequest</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>rx</name><operator>.</operator><name>RxProgress</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>RxPageUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>core</name><operator>.</operator><name>ServiceGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Page</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>ToastUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>issues</name><operator>.</operator><name>IssueAssigneeService</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Single</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>Response</name></name>;</import>
+
+<import>import static <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>String</name><operator>.</operator><name>CASE_INSENSITIVE_ORDER</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Dialog helper to display a list of assignees to select one from
+ */</comment>
+<class><specifier>public</specifier> class <name>AssigneeDialog</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"AssigneeDialog"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>requestCode</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>BaseActivity</name></type> <name>activity</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Single</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>assigneeSingle</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create dialog helper to display assignees
+     *
+     * @param activity
+     * @param requestCode
+     * @param repository
+     */</comment>
+    <constructor><specifier>public</specifier> <name>AssigneeDialog</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>BaseActivity</name></type> <name>activity</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Repository</name></type> <name>repository</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.AssigneeDialog.AssigneeDialog(com.github.pockethub.android.ui.BaseActivity,int,com.meisolsson.githubsdk.model.Repository)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>activity</name></name> <operator>=</operator> <name>activity</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>requestCode</name></name> <operator>=</operator> <name>requestCode</name></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name><name>GitHubRequest</name><argument_list type="generic">&lt;<argument><name><name>Response</name><argument_list type="generic">&lt;<argument><name><name>Page</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>gitHubRequest</name> <init>= <expr><lambda><parameter_list type="pseudo"><parameter><decl><name>page</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>ServiceGenerator</name>
+                <operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>IssueAssigneeService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>getAssignees</name><argument_list>(<argument><expr><call><name><name>repository</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>login</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>repository</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>page</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><name>assigneeSingle</name> <operator>=</operator> <call><name><name>RxPageUtil</name><operator>.</operator><name>getAllPages</name></name><argument_list>(<argument><expr><name>gitHubRequest</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>page</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Observable</name><operator>.</operator><name>fromIterable</name></name><argument_list>(<argument><expr><call><name><name>page</name><operator>.</operator><name>items</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>toSortedList</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>o1</name></decl></parameter>, <parameter><decl><name>o2</name></decl></parameter>)</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>CASE_INSENSITIVE_ORDER</name><operator>.</operator><name>compare</name></name><argument_list>(<argument><expr><call><name><name>o1</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>o2</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>RxProgress</name><operator>.</operator><name>bindToLifecycle</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>loading_collaborators</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>cache</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.AssigneeDialog.AssigneeDialog(com.github.pockethub.android.ui.BaseActivity,int,com.meisolsson.githubsdk.model.Repository)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * Show dialog with given assignee selected
+     *
+     * @param selectedAssignee
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>show</name><parameter_list>(<parameter><decl><type><name>User</name></type> <name>selectedAssignee</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.AssigneeDialog.show(com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>assigneeSingle</name><operator>.</operator><name>subscribe</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>collaborators</name></decl></parameter></parameter_list> -&gt; <block>{
+            <decl_stmt><decl><type><name>int</name></type> <name>checked</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>selectedAssignee</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>collaborators</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+                    <if>if <condition>(<expr><call><name><name>selectedAssignee</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>collaborators</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>login</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                        <expr_stmt><expr><name>checked</name> <operator>=</operator> <name>i</name></expr>;</expr_stmt>
+                    }</block></then></if>
+                }</block></for>
+            }</block></then></if>
+            <expr_stmt><expr><call><name><name>AssigneeDialogFragment</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name>requestCode</name></expr></argument>,
+                    <argument><expr><call><name><name>activity</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>select_assignee</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>collaborators</name></expr></argument>)</argument_list></call></expr></argument>,
+                    <argument><expr><name>checked</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></lambda></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>error</name></decl></parameter></parameter_list> -&gt; <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Exception loading collaborators"</literal></expr></argument>, <argument><expr><name>error</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>ToastUtils</name><operator>.</operator><name>show</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>error_collaborators_load</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.AssigneeDialog.show(com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

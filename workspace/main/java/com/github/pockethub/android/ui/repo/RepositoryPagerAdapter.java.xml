@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\repo\RepositoryPagerAdapter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>repo</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>FragmentPagerAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>code</name><operator>.</operator><name>RepositoryCodeFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>commit</name><operator>.</operator><name>CommitListFragment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name><operator>.</operator><name>IssuesFragment</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Adapter to view a repository's various pages
+ */</comment>
+<class><specifier>public</specifier> class <name>RepositoryPagerAdapter</name> <super><extends>extends <name>FragmentPagerAdapter</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Resources</name></type> <name>resources</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>hasIssues</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>boolean</name></type> <name>hasReadme</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>RepositoryCodeFragment</name></type> <name>codeFragment</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>CommitListFragment</name></type> <name>commitsFragment</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create repository pager adapter
+     *
+     * @param activity
+     * @param hasIssues
+     */</comment>
+    <constructor><specifier>public</specifier> <name>RepositoryPagerAdapter</name><parameter_list>(<parameter><decl><type><name>AppCompatActivity</name></type> <name>activity</name></decl></parameter>,
+                                  <parameter><decl><type><name>boolean</name></type> <name>hasIssues</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>hasReadme</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.RepositoryPagerAdapter(android.support.v7.app.AppCompatActivity,boolean,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>resources</name> <operator>=</operator> <call><name><name>activity</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>hasReadme</name></name> <operator>=</operator> <name>hasReadme</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>hasIssues</name></name> <operator>=</operator> <name>hasIssues</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.RepositoryPagerAdapter(android.support.v7.app.AppCompatActivity,boolean,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>CharSequence</name></type> <name>getPageTitle</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>position</name> <operator>=</operator> <ternary><condition><expr><name>hasReadme</name></expr> ?</condition><then> <expr><name>position</name></expr> </then><else>: <expr><name>position</name> <operator>+</operator> <literal type="number">1</literal></expr></else></ternary></expr>;</expr_stmt>
+
+        <switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_readme</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_news</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">2</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_code</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">3</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_commits</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">4</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>tab_issues</name></name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getPageTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">6</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Fragment</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>position</name> <operator>=</operator> <ternary><condition><expr><name>hasReadme</name></expr> ?</condition><then> <expr><name>position</name></expr> </then><else>: <expr><name>position</name> <operator>+</operator> <literal type="number">1</literal></expr></else></ternary></expr>;</expr_stmt>
+
+        <switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>RepositoryReadmeFragment</name><argument_list>()</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>RepositoryNewsFragment</name><argument_list>()</argument_list></call></expr>;</return>}</block>
+            <case>case <expr><literal type="number">2</literal></expr>:</case>
+                <expr_stmt><expr><name>codeFragment</name> <operator>=</operator> <operator>new</operator> <call><name>RepositoryCodeFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>codeFragment</name></expr>;</return>}</block>
+            <case>case <expr><literal type="number">3</literal></expr>:</case>
+                <expr_stmt><expr><name>commitsFragment</name> <operator>=</operator> <operator>new</operator> <call><name>CommitListFragment</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>commitsFragment</name></expr>;</return>}</block>
+            <case>case <expr><literal type="number">4</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>IssuesFragment</name><argument_list>()</argument_list></call></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">6</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getCount()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>int</name></type> <name>count</name> <init>= <expr><ternary><condition><expr><name>hasIssues</name></expr> ?</condition><then> <expr><literal type="number">5</literal></expr> </then><else>: <expr><literal type="number">4</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>count</name> <operator>=</operator> <ternary><condition><expr><name>hasReadme</name></expr> ?</condition><then> <expr><name>count</name></expr> </then><else>: <expr><name>count</name> <operator>-</operator> <literal type="number">1</literal></expr></else></ternary></expr>;</expr_stmt>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getCount()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>count</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Returns index of code page
+     */</comment>
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getItemCode</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItemCode()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItemCode()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>hasReadme</name></expr> ?</condition><then> <expr><literal type="number">2</literal></expr> </then><else>: <expr><literal type="number">1</literal></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Returns index of commits page
+     */</comment>
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>getItemCommits</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItemCommits()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.getItemCommits()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>hasReadme</name></expr> ?</condition><then> <expr><literal type="number">3</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Pass back button pressed event down to fragments
+     *
+     * @return true if handled, false otherwise
+     */</comment>
+    <function><specifier>public</specifier> <type><name>boolean</name></type> <name>onBackPressed</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.onBackPressed()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.onBackPressed()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>codeFragment</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>codeFragment</name><operator>.</operator><name>onBackPressed</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Deliver dialog result to fragment at given position
+     *
+     * @param position
+     * @param requestCode
+     * @param resultCode
+     * @param arguments
+     * @return this adapter
+     */</comment>
+    <function><specifier>public</specifier> <type><name>RepositoryPagerAdapter</name></type> <name>onDialogResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>,
+                                                 <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>arguments</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.repo.RepositoryPagerAdapter com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.onDialogResult(int,int,int,android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>position</name> <operator>==</operator> <call><name>getItemCode</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <name>codeFragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>codeFragment</name><operator>.</operator><name>onDialogResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>arguments</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <elseif>else <if>if <condition>(<expr><name>position</name> <operator>==</operator> <call><name>getItemCommits</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <name>commitsFragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>commitsFragment</name><operator>.</operator><name>onDialogResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>arguments</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if></elseif></if>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.repo.RepositoryPagerAdapter com.github.pockethub.android.ui.repo.RepositoryPagerAdapter.onDialogResult(int,int,int,android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+}</block></class></unit>

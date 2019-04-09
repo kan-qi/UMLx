@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\MessageHolderViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>PairUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Message</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>MessageViewHolder</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>MessageHolderViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call to configure the view model with a message. */</comment>
+    <function_decl><type><name>void</name></type> <name>configureWith</name><parameter_list>(<parameter><decl><type><name>Message</name></type> <name>message</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call to let view model know if message view holder is in the last adapter position. */</comment>
+    <function_decl><type><name>void</name></type> <name>isLastPosition</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isLastPosition</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits a boolean to determine whether the delivery status text view should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>deliveryStatusTextViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine whether the message recipient card view should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageBodyRecipientCardViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the recipient's message body text view text. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodyRecipientTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine whether the message sender card view should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageBodySenderCardViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the sender's message body text view text. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodySenderTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines whether the participant's avatar image should be hidden. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>participantAvatarImageHidden</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the url for the participant's avatar image. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantAvatarImageUrl</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>MessageViewHolder</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>currentUser</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageAndCurrentUserIsSender</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name><name>this</name><operator>.</operator><name>message</name></name></expr></argument>,
+        <argument><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>loggedInUser</name></name><argument_list>()</argument_list></call></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mu</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>mu</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><call><name><name>mu</name><operator>.</operator><name>first</name><operator>.</operator><name>sender</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>mu</name><operator>.</operator><name>second</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageBodyRecipientCardViewIsGone</name></name> <operator>=</operator> <call><name><name>messageAndCurrentUserIsSender</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>second</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageBodyRecipientTextViewText</name></name> <operator>=</operator> <call><name><name>messageAndCurrentUserIsSender</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mb</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><name><name>mb</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mb</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>mb</name><operator>.</operator><name>first</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageBodySenderCardViewIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>messageBodyRecipientCardViewIsGone</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageBodySenderTextViewText</name></name> <operator>=</operator> <call><name><name>messageAndCurrentUserIsSender</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mb</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>mb</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mb</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>mb</name><operator>.</operator><name>first</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>deliveryStatusTextViewIsGone</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>zip</name></name><argument_list>(
+        <argument><expr><name><name>this</name><operator>.</operator><name>isLastPosition</name></name></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>messageBodySenderCardViewIsGone</name></name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>isLastPositionAndSenderViewIsGone</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><operator>!</operator><name><name>isLastPositionAndSenderViewIsGone</name><operator>.</operator><name>first</name></name> <operator>||</operator> <name><name>isLastPositionAndSenderViewIsGone</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>
+        )</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>participantAvatarImageHidden</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>messageBodyRecipientCardViewIsGone</name></name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>participantAvatarImageUrl</name></name> <operator>=</operator> <call><name><name>messageAndCurrentUserIsSender</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mb</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><name><name>mb</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mb</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>mb</name><operator>.</operator><name>first</name><operator>.</operator><name>sender</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>avatar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>medium</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isLastPosition</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></type> <name>message</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>deliveryStatusTextViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageBodyRecipientCardViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodyRecipientTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageBodySenderCardViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodySenderTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>participantAvatarImageHidden</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantAvatarImageUrl</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>configureWith</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Message</name></type> <name>message</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>message</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>isLastPosition</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>isLastPosition</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>isLastPosition</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>isLastPosition</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>deliveryStatusTextViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>deliveryStatusTextViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageBodyRecipientCardViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageBodyRecipientCardViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageBodySenderCardViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageBodySenderCardViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodySenderTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageBodySenderTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodyRecipientTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageBodyRecipientTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>participantAvatarImageHidden</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>participantAvatarImageHidden</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantAvatarImageUrl</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>participantAvatarImageUrl</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\user\OrganizationNewsFragment.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>user</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>AccountUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>core</name><operator>.</operator><name>ServiceGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubEvent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Page</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>activity</name><operator>.</operator><name>EventService</name></name>;</import>
+
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Single</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>Response</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Fragment to display an organization's news
+ */</comment>
+<class><specifier>public</specifier> class <name>OrganizationNewsFragment</name> <super><extends>extends <name>UserNewsFragment</name></extends></super> <block>{
+
+    <decl_stmt><decl><type><name>EventService</name></type> <name>service</name> <init>= <expr><call><name><name>ServiceGenerator</name><operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>EventService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name><name>Single</name><argument_list type="generic">&lt;<argument><name><name>Response</name><argument_list type="generic">&lt;<argument><name><name>Page</name><argument_list type="generic">&lt;<argument><name>GitHubEvent</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>loadData</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>page</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;Response&lt;Page&lt;GitHubEvent&gt;&gt;&gt; com.github.pockethub.android.ui.user.OrganizationNewsFragment.loadData(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>String</name></type> <name>account</name> <init>= <expr><call><name><name>AccountUtils</name><operator>.</operator><name>getLogin</name></name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Single&lt;Response&lt;Page&lt;GitHubEvent&gt;&gt;&gt; com.github.pockethub.android.ui.user.OrganizationNewsFragment.loadData(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>service</name><operator>.</operator><name>getOrganizationEvents</name></name><argument_list>(<argument><expr><name>account</name></expr></argument>, <argument><expr><call><name><name>org</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>page</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

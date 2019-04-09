@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\PhotoFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Photo</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>PhotoFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>PhotoFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Photo</name></type> <name>photo</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>url</name> <init>= <expr><literal type="string">"https://ksr-ugc.imgix.net/assets/012/032/069/46817a8c099133d5bf8b64aad282a696_original.png?crop=faces&amp;w=1552&amp;h=873&amp;fit=crop&amp;v=1463725702&amp;auto=format&amp;q=92&amp;s=72501d155e4a5e399276632687c77959"</literal></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>Photo</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>ed</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>full</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>little</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>med</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>small</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>thumb</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

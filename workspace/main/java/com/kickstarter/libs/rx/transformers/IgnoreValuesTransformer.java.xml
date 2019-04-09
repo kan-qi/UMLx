@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\rx\transformers\IgnoreValuesTransformer.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name></name>;</package>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name><name>IgnoreValuesTransformer</name><parameter_list>&lt;<parameter><name>S</name></parameter>&gt;</parameter_list></name> <super><implements>implements <name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>S</name></argument>, <argument><name>Void</name></argument>&gt;</argument_list></name></name></implements></super> <block>{
+  <function><annotation>@<name>Override</name></annotation>
+  <annotation>@<name>NonNull</name></annotation> <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>call</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>S</name></argument>&gt;</argument_list></name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>source</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><literal type="null">null</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

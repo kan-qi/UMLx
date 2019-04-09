@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\sync\SyncCampaign.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>sync</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SyncResult</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>SQLException</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>persistence</name><operator>.</operator><name>DatabaseCache</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>persistence</name><operator>.</operator><name>OrganizationRepositories</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>persistence</name><operator>.</operator><name>OrganizationRepositoriesFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>persistence</name><operator>.</operator><name>Organizations</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>auto</name><operator>.</operator><name>factory</name><operator>.</operator><name>AutoFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>auto</name><operator>.</operator><name>factory</name><operator>.</operator><name>Provided</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * A cancelable sync operation to synchronize data for a given account
+ */</comment>
+<class><annotation>@<name>AutoFactory</name></annotation>
+<specifier>public</specifier> class <name>SyncCampaign</name> <super><implements>implements <name>Runnable</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><literal type="string">"SyncCampaign"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>DatabaseCache</name></type> <name>cache</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>OrganizationRepositoriesFactory</name></type> <name>repos</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>Organizations</name></type> <name>persistedOrgs</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SyncResult</name></type> <name>syncResult</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>cancelled</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create campaign for result
+     *
+     * @param syncResult
+     */</comment>
+    <constructor><specifier>public</specifier> <name>SyncCampaign</name><parameter_list>(<parameter><decl><type><name>SyncResult</name></type> <name>syncResult</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.sync.SyncCampaign.SyncCampaign(android.content.SyncResult)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>syncResult</name></name> <operator>=</operator> <name>syncResult</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.sync.SyncCampaign.SyncCampaign(android.content.SyncResult)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>run</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncCampaign.run()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>orgs</name></decl>;</decl_stmt>
+        <try>try <block>{
+            <expr_stmt><expr><name>orgs</name> <operator>=</operator> <call><name><name>cache</name><operator>.</operator><name>requestAndStore</name></name><argument_list>(<argument><expr><name>persistedOrgs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name><name>syncResult</name><operator>.</operator><name>stats</name><operator>.</operator><name>numUpdates</name></name><operator>++</operator></expr>;</expr_stmt>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> | <type><name>SQLException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><name><name>syncResult</name><operator>.</operator><name>stats</name><operator>.</operator><name>numIoExceptions</name></name><operator>++</operator></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Exception requesting users and orgs"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncCampaign.run()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        }</block></catch></try>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Syncing "</literal> <operator>+</operator> <call><name><name>orgs</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">" users and orgs"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <for>for <control>(<init><decl><type><name>User</name></type> <name>org</name> <range>: <expr><name>orgs</name></expr></range></decl></init>)</control> <block>{
+            <if>if <condition>(<expr><name>cancelled</name></expr>)</condition><then> <block>{
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncCampaign.run()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+            }</block></then></if>
+
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Syncing repos for "</literal> <operator>+</operator> <call><name><name>org</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <try>try <block>{
+                <expr_stmt><expr><call><name><name>cache</name><operator>.</operator><name>requestAndStore</name></name><argument_list>(<argument><expr><call><name><name>repos</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>org</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name><name>syncResult</name><operator>.</operator><name>stats</name><operator>.</operator><name>numUpdates</name></name><operator>++</operator></expr>;</expr_stmt>
+            }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> | <type><name>SQLException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+                <expr_stmt><expr><name><name>syncResult</name><operator>.</operator><name>stats</name><operator>.</operator><name>numIoExceptions</name></name><operator>++</operator></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Exception requesting repositories"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></catch></try>
+        }</block></for>
+
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Sync campaign finished"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Cancel campaign
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>cancel</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncCampaign.cancel()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>cancelled</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Cancelled"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.sync.SyncCampaign.cancel()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\viewholders\CreatorDashboardRewardStatsRowViewHolder.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSCurrency</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>IntegerUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ProjectStatsEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name><operator>.</operator><name>DashboardRewardStatsRowHolderViewModel</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindString</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>observeForUI</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name><operator>.</operator><name>requireNonNull</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CreatorDashboardRewardStatsRowViewHolder</name> <super><extends>extends <name>KSViewHolder</name></extends></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>DashboardRewardStatsRowHolderViewModel</name><operator>.</operator><name>ViewModel</name></name></type> <name>viewModel</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>reward_minimum_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>rewardMinimumTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>amount_pledged_for_reward_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>amountForRewardPledgedTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>percentage_pledged_for_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>percentagePledgedForRewardTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>reward_backer_count_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>rewardBackerCountTextView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>KSCurrency</name></type> <name>ksCurrency</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>dashboard_graphs_rewards_no_reward</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>noRewardString</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>CreatorDashboardRewardStatsRowViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>=</operator> <operator>new</operator> <call><name><name>DashboardRewardStatsRowHolderViewModel</name><operator>.</operator><name>ViewModel</name></name><argument_list>(<argument><expr><call><name>environment</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>ksCurrency</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>environment</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>ksCurrency</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>percentageOfTotalPledged</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>percentagePledgedForRewardTextView</name></name><operator>::</operator><name>setText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>projectAndRewardPledged</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>setPledgedColumnValue</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>rewardBackerCount</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>rewardBackerCountTextView</name></name><operator>::</operator><name>setText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>projectAndRewardMinimum</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>setRewardMinimumText</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>bindData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>data</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>RewardStats</name></name></argument>&gt;</argument_list></name></type> <name>projectAndRewardStats</name> <init>= <expr><call><name>requireNonNull</name><argument_list>(<argument><expr><operator>(</operator><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>RewardStats</name></name></argument>&gt;</argument_list></name><operator>)</operator> <name>data</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>inputs</name><operator>.</operator><name>projectAndRewardStats</name></name><argument_list>(<argument><expr><name>projectAndRewardStats</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setPledgedColumnValue</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Float</name></argument>&gt;</argument_list></name></type> <name>projectAndPledgedForReward</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>goalString</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>ksCurrency</name>
+      <operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name><name>projectAndPledgedForReward</name><operator>.</operator><name>second</name></name></expr></argument>, <argument><expr><name><name>projectAndPledgedForReward</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>amountForRewardPledgedTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>goalString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>setRewardMinimumText</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>projectAndMinimumForReward</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>minimumString</name> <init>= <expr><ternary><condition><expr><call><name><name>IntegerUtils</name><operator>.</operator><name>isZero</name></name><argument_list>(<argument><expr><name><name>projectAndMinimumForReward</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr> ?</condition><then>
+      <expr><name><name>this</name><operator>.</operator><name>noRewardString</name></name></expr> </then><else>: <expr><call><name><name>this</name><operator>.</operator><name>ksCurrency</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name><name>projectAndMinimumForReward</name><operator>.</operator><name>second</name></name></expr></argument>, <argument><expr><name><name>projectAndMinimumForReward</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>rewardMinimumTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>minimumString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

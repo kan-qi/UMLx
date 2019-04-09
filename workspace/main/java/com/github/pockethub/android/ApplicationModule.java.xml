@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ApplicationModule.java"><package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Application</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Singleton</name></name>;</import>
+
+<import>import <name><name>dagger</name><operator>.</operator><name>Binds</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>BindsInstance</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>Module</name></name>;</import>
+
+<class><annotation>@<name>Module</name></annotation>
+<specifier>abstract</specifier> class <name>ApplicationModule</name> <block>{
+
+    <function_decl><annotation>@<name>Binds</name></annotation>
+    <annotation>@<name>Singleton</name></annotation>
+    <specifier>abstract</specifier> <type><name>Context</name></type> <name>provideApplicationContext</name><parameter_list>(<parameter><decl><type><name>Application</name></type> <name>application</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></class>
+</unit>

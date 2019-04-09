@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\KoalaTrackingClient.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>common</name><operator>.</operator><name>ConnectionResult</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>common</name><operator>.</operator><name>GooglePlayServicesUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>common</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64Utils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>iid</name><operator>.</operator><name>FirebaseInstanceId</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>MapUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KoalaBackgroundService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>firebase</name><operator>.</operator><name>DispatcherKt</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONArray</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONException</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>json</name><operator>.</operator><name>JSONObject</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>fabric</name><operator>.</operator><name>sdk</name><operator>.</operator><name>android</name><operator>.</operator><name>Fabric</name></name>;</import>
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>KoalaTrackingClient</name> <super><extends>extends <name>TrackingClientType</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>TAG</name> <init>= <expr><call><name><name>KoalaTrackingClient</name><operator>.</operator><name><name>class</name><operator>.</operator><name>getSimpleName</name></name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>Build</name></type> <name>build</name></decl>;</decl_stmt>
+  <decl_stmt><decl><annotation>@<name>Nullable</name></annotation> <specifier>private</specifier> <type><name>User</name></type> <name>loggedInUser</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+  <comment type="line">// Cached values</comment>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Boolean</name></type> <name>isGooglePlayServicesAvailable</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KoalaTrackingClient</name><parameter_list>(
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>)</parameter_list> <block>{
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name> <operator>=</operator> <name>currentUser</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>androidPayCapability</name></name> <operator>=</operator> <name>androidPayCapability</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>build</name></name> <operator>=</operator> <name>build</name></expr>;</expr_stmt>
+
+    <comment type="line">// Cache the most recent logged in user for default Koala properties.</comment>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>observable</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>u</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>this</name><operator>.</operator><name>loggedInUser</name></name> <operator>=</operator> <name>u</name></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>track</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>eventName</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>additionalProperties</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>trackingData</name> <init>= <expr><call><name>getTrackingData</name><argument_list>(<argument><expr><name>eventName</name></expr></argument>, <argument><expr><call><name>combinedProperties</name><argument_list>(<argument><expr><name>additionalProperties</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>encodedTrackingData</name> <init>= <expr><call><name><name>Base64Utils</name><operator>.</operator><name>encodeUrlSafe</name></name><argument_list>(<argument><expr><call><name><name>trackingData</name>
+        <operator>.</operator><name>getBytes</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>Bundle</name></type> <name>bundle</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>bundle</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>KOALA_EVENT_NAME</name></name></expr></argument>, <argument><expr><name>eventName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>bundle</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>KOALA_EVENT</name></name></expr></argument>, <argument><expr><name>encodedTrackingData</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>uniqueJobName</name> <init>= <expr><name><name>KoalaBackgroundService</name><operator>.</operator><name>BASE_JOB_NAME</name></name> <operator>+</operator> <call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>DispatcherKt</name><operator>.</operator><name>dispatchJob</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>context</name></name></expr></argument>, <argument><expr><name><name>KoalaBackgroundService</name><operator>.</operator><name>class</name></name></expr></argument>, <argument><expr><name>uniqueJobName</name></expr></argument>, <argument><expr><name>bundle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>build</name><operator>.</operator><name>isDebug</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><name>TAG</name></expr></argument>, <argument><expr><literal type="string">"Queued event:"</literal> <operator>+</operator> <name>trackingData</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>JSONException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>build</name><operator>.</operator><name>isDebug</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><literal type="string">"Failed to encode event: "</literal> <operator>+</operator> <name>eventName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <expr_stmt><expr><call><name><name>Fabric</name><operator>.</operator><name>getLogger</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>e</name><argument_list>(<argument><expr><name><name>KoalaTrackingClient</name><operator>.</operator><name>TAG</name></name></expr></argument>, <argument><expr><literal type="string">"Failed to encode event: "</literal> <operator>+</operator> <name>eventName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>String</name></type> <name>getTrackingData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>eventName</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>newProperties</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>JSONException</name></expr></argument></throws> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>JSONObject</name></type> <name>trackingEvent</name> <init>= <expr><operator>new</operator> <call><name>JSONObject</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>trackingEvent</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"event"</literal></expr></argument>, <argument><expr><name>eventName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>compactProperties</name> <init>= <expr><call><name><name>MapUtils</name><operator>.</operator><name>compact</name></name><argument_list>(<argument><expr><name>newProperties</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>JSONObject</name></type> <name>propertiesJSON</name> <init>= <expr><operator>new</operator> <call><name>JSONObject</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Object</name></argument>&gt;</argument_list></name></name></type> <name>entry</name> <range>: <expr><call><name><name>compactProperties</name><operator>.</operator><name>entrySet</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name><name>propertiesJSON</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><call><name><name>entry</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>entry</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+    <expr_stmt><expr><call><name><name>trackingEvent</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><literal type="string">"properties"</literal></expr></argument>, <argument><expr><name>propertiesJSON</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>JSONArray</name></type> <name>trackingArray</name> <init>= <expr><operator>new</operator> <call><name>JSONArray</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>trackingArray</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>trackingEvent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><call><name><name>trackingArray</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>androidUUID</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>FirebaseInstanceId</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getId</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>brand</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>BRAND</name></name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Derives the device's orientation (portrait/landscape) from the `context`.
+   */</comment>
+  <function><specifier>protected</specifier>  <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>deviceOrientation</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getConfiguration</name><argument_list>()</argument_list></call><operator>.</operator><name>orientation</name> <operator>==</operator> <name><name>Configuration</name><operator>.</operator><name>ORIENTATION_LANDSCAPE</name></name></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"landscape"</literal></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><literal type="string">"portrait"</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>NonNull</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>deviceFormat</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><call><name><name>this</name><operator>.</operator><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getBoolean</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>bool</name><operator>.</operator><name>isTablet</name></name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><literal type="string">"tablet"</literal></expr> </then><else>: <expr><literal type="string">"phone"</literal></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>boolean</name></type> <name>isAndroidPayCapable</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>androidPayCapability</name><operator>.</operator><name>isCapable</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Derives the availability of google play services from the `context`.
+   */</comment>
+  <function><specifier>protected</specifier> <type><name>boolean</name></type> <name>isGooglePlayServicesAvailable</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>isGooglePlayServicesAvailable</name></name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>isGooglePlayServicesAvailable</name></name> <operator>=</operator> <call><name><name>GooglePlayServicesUtil</name><operator>.</operator><name>isGooglePlayServicesAvailable</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>context</name><operator>.</operator><name>getApplicationContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>!=</operator> <name><name>ConnectionResult</name><operator>.</operator><name>SUCCESS</name></name></expr>;</expr_stmt>
+    }</block></then></if>
+    <return>return <expr><name><name>this</name><operator>.</operator><name>isGooglePlayServicesAvailable</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>manufacturer</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>MANUFACTURER</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>model</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>MODEL</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>OSVersion</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Build</name><operator>.</operator><name>VERSION</name><operator>.</operator><name>RELEASE</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>Long</name></type> <name>time</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call> <operator>/</operator> <literal type="number">1000</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>User</name></type> <name>loggedInUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>loggedInUser</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>String</name></type> <name>versionName</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>BuildConfig</name><operator>.</operator><name>VERSION_NAME</name></name></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

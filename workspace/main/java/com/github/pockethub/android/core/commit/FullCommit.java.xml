@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\core\commit\FullCommit.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>commit</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Commit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubFile</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>git</name><operator>.</operator><name>GitComment</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>Serializable</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Iterator</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Commit model with comments
+ */</comment>
+<class><specifier>public</specifier> class <name>FullCommit</name> <super><extends>extends <name><name>ArrayList</name><argument_list type="generic">&lt;<argument><name>GitComment</name></argument>&gt;</argument_list></name></extends> <implements>implements
+        <name>Serializable</name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>long</name></type> <name>serialVersionUID</name> <init>= <expr><literal type="number">2470370479577730822L</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Commit</name></type> <name>commit</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>FullCommitFile</name></argument>&gt;</argument_list></name></type> <name>files</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create commit with no comments
+     *
+     * @param commit
+     */</comment>
+    <constructor><specifier>public</specifier> <name>FullCommit</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Commit</name></type> <name>commit</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.commit.FullCommit.FullCommit(com.meisolsson.githubsdk.model.Commit)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>commit</name></name> <operator>=</operator> <name>commit</name></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GitHubFile</name></argument>&gt;</argument_list></name></type> <name>rawFiles</name> <init>= <expr><call><name><name>commit</name><operator>.</operator><name>files</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>rawFiles</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>rawFiles</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>files</name> <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>rawFiles</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <for>for <control>(<init><decl><type><name>GitHubFile</name></type> <name>file</name> <range>: <expr><name>rawFiles</name></expr></range></decl></init>)</control> <block>{
+                <expr_stmt><expr><call><name><name>files</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>FullCommitFile</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></for>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>files</name> <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.commit.FullCommit.FullCommit(com.meisolsson.githubsdk.model.Commit)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * Create commit with comments
+     *
+     * @param commit
+     * @param comments
+     */</comment>
+    <constructor><specifier>public</specifier> <name>FullCommit</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Commit</name></type> <name>commit</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name>GitComment</name></argument>&gt;</argument_list></name></type> <name>comments</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.commit.FullCommit.FullCommit(com.meisolsson.githubsdk.model.Commit,Collection&lt;GitComment&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>commit</name></name> <operator>=</operator> <name>commit</name></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>GitHubFile</name></argument>&gt;</argument_list></name></type> <name>rawFiles</name> <init>= <expr><call><name><name>commit</name><operator>.</operator><name>files</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>hasComments</name> <init>= <expr><name>comments</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>comments</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>boolean</name></type> <name>hasFiles</name> <init>= <expr><name>rawFiles</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>rawFiles</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>hasFiles</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>files</name> <operator>=</operator> <operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>rawFiles</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <if>if <condition>(<expr><name>hasComments</name></expr>)</condition><then> <block>{
+                <for>for <control>(<init><decl><type><name>GitHubFile</name></type> <name>file</name> <range>: <expr><name>rawFiles</name></expr></range></decl></init>)</control> <block>{
+                    <decl_stmt><decl><type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><name>GitComment</name></argument>&gt;</argument_list></name></type> <name>iterator</name> <init>= <expr><call><name><name>comments</name><operator>.</operator><name>iterator</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <decl_stmt><decl><type><name>FullCommitFile</name></type> <name>full</name> <init>= <expr><operator>new</operator> <call><name>FullCommitFile</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                    <while>while <condition>(<expr><call><name><name>iterator</name><operator>.</operator><name>hasNext</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+                        <decl_stmt><decl><type><name>GitComment</name></type> <name>comment</name> <init>= <expr><call><name><name>iterator</name><operator>.</operator><name>next</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                        <if>if <condition>(<expr><call><name><name>file</name><operator>.</operator><name>filename</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>comment</name><operator>.</operator><name>path</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                            <expr_stmt><expr><call><name><name>full</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>comment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                            <expr_stmt><expr><call><name><name>iterator</name><operator>.</operator><name>remove</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+                        }</block></then></if>
+                    }</block></while>
+                    <expr_stmt><expr><call><name><name>files</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>full</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></for>
+                <expr_stmt><expr><name>hasComments</name> <operator>=</operator> <operator>!</operator><call><name><name>comments</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <for>for <control>(<init><decl><type><name>GitHubFile</name></type> <name>file</name> <range>: <expr><name>rawFiles</name></expr></range></decl></init>)</control> <block>{
+                    <expr_stmt><expr><call><name><name>files</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>FullCommitFile</name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></for>
+            }</block></else></if>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><name>files</name> <operator>=</operator> <call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+
+        <if>if <condition>(<expr><name>hasComments</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>addAll</name><argument_list>(<argument><expr><name>comments</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.commit.FullCommit.FullCommit(com.meisolsson.githubsdk.model.Commit,Collection&lt;GitComment&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>add</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>GitComment</name></type> <name>comment</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.core.commit.FullCommit.add(com.meisolsson.githubsdk.model.git.GitComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>String</name></type> <name>path</name> <init>= <expr><call><name><name>comment</name><operator>.</operator><name>path</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.core.commit.FullCommit.add(com.meisolsson.githubsdk.model.git.GitComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>comment</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then> <else>else <block>{
+            <decl_stmt><decl><type><name>boolean</name></type> <name>added</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+            <for>for <control>(<init><decl><type><name>FullCommitFile</name></type> <name>file</name> <range>: <expr><name>files</name></expr></range></decl></init>)</control> <block>{
+                <if>if <condition>(<expr><call><name><name>path</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>file</name><operator>.</operator><name>getFile</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>filename</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>file</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>comment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <expr_stmt><expr><name>added</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+                    <break>break;</break>
+                }</block></then></if>
+            }</block></for>
+            <if>if <condition>(<expr><operator>!</operator><name>added</name></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>added</name> <operator>=</operator> <call><name><name>super</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>comment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.core.commit.FullCommit.add(com.meisolsson.githubsdk.model.git.GitComment)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>added</name></expr>;</return>}</block>
+        }</block></else></if>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * @return files
+     */</comment>
+    <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>FullCommitFile</name></argument>&gt;</argument_list></name></type> <name>getFiles</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;FullCommitFile&gt; com.github.pockethub.android.core.commit.FullCommit.getFiles()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;FullCommitFile&gt; com.github.pockethub.android.core.commit.FullCommit.getFiles()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>files</name></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * @return commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name>Commit</name></type> <name>getCommit</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.FullCommit.getCommit()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.Commit com.github.pockethub.android.core.commit.FullCommit.getCommit()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>commit</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

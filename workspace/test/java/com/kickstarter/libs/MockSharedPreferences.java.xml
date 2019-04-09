@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\MockSharedPreferences.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Set</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<comment type="line">// TODO: Finish this implementation by storing all the shared prefs data into arrays/maps.</comment>
+<class><specifier>public</specifier> class <name>MockSharedPreferences</name> <super><implements>implements <name>SharedPreferences</name></implements></super> <block>{
+  <constructor><specifier>public</specifier> <name>MockSharedPreferences</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>?</name></argument>&gt;</argument_list></name></type> <name>getAll</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>String</name></type> <name>getString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>defValue</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>getStringSet</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>defValues</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>int</name></type> <name>getInt</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defValue</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>long</name></type> <name>getLong</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>long</name></type> <name>defValue</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>float</name></type> <name>getFloat</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>float</name></type> <name>defValue</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>getBoolean</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>defValue</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>contains</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Editor</name></type> <name>edit</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>registerOnSharedPreferenceChangeListener</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>OnSharedPreferenceChangeListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>unregisterOnSharedPreferenceChangeListener</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>OnSharedPreferenceChangeListener</name></type> <name>listener</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+}</block></class>
+</unit>

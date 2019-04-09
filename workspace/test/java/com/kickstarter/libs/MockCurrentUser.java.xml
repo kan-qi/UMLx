@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\MockCurrentUser.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>MockCurrentUser</name> <super><extends>extends <name>CurrentUserType</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>user</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><operator>(</operator><name>User</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>accessToken</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>MockCurrentUser</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>user</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>MockCurrentUser</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>User</name></type> <name>initialUser</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>user</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>initialUser</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>login</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>User</name></type> <name>newUser</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>accessToken</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>user</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>newUser</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>accessToken</name></name> <operator>=</operator> <name>accessToken</name></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>logout</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>user</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>accessToken</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getAccessToken</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>accessToken</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>refresh</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>User</name></type> <name>freshUser</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>user</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>freshUser</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>observable</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>user</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>User</name></type> <name>getUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>user</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

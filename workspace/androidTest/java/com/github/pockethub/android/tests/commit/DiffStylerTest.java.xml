@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\androidTest\java\com\github\pockethub\android\tests\commit\DiffStylerTest.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>tests</name><operator>.</operator><name>commit</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>test</name><operator>.</operator><name>AndroidTestCase</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>commit</name><operator>.</operator><name>DiffStyler</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubFile</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>BufferedReader</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>StringReader</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Tests of {@link DiffStyler}
+ */</comment>
+<class><specifier>public</specifier> class <name>DiffStylerTest</name> <super><extends>extends <name>AndroidTestCase</name></extends></super> <block>{
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>compareStyled</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>patch</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.compareStyled(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>patch</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>fileName</name> <init>= <expr><literal type="string">"file.txt"</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>DiffStyler</name></type> <name>styler</name> <init>= <expr><operator>new</operator> <call><name>DiffStyler</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>GitHubFile</name></type> <name>file</name> <init>= <expr><call><name><name>GitHubFile</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>filename</name><argument_list>(<argument><expr><name>fileName</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>patch</name><argument_list>(<argument><expr><name>patch</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name><name>styler</name><operator>.</operator><name>setFiles</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>styled</name> <init>= <expr><call><name><name>styler</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>fileName</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>styled</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>BufferedReader</name></type> <name>reader</name> <init>= <expr><operator>new</operator> <call><name>BufferedReader</name><argument_list>(<argument><expr><operator>new</operator> <call><name>StringReader</name><argument_list>(<argument><expr><name>patch</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>String</name></type> <name>line</name> <init>= <expr><call><name><name>reader</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>int</name></type> <name>processed</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+        <while>while <condition>(<expr><name>line</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition> <block>{
+            <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><name>line</name></expr></argument>, <argument><expr><call><name><name>styled</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>processed</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>line</name> <operator>=</operator> <call><name><name>reader</name><operator>.</operator><name>readLine</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>processed</name><operator>++</operator></expr>;</expr_stmt>
+        }</block></while>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><name>processed</name></expr></argument>, <argument><expr><call><name><name>styled</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.compareStyled(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler with empty files
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testEmptyFiles</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testEmptyFiles()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>DiffStyler</name></type> <name>styler</name> <init>= <expr><operator>new</operator> <call><name>DiffStyler</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>styler</name><operator>.</operator><name>setFiles</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>styler</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"navigation_drawer_header_background"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>styler</name><operator>.</operator><name>setFiles</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>styler</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"navigation_drawer_header_background"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testEmptyFiles()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler with empty patch
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testEmptyPatch</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testEmptyPatch()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>DiffStyler</name></type> <name>styler</name> <init>= <expr><operator>new</operator> <call><name>DiffStyler</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getResources</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>GitHubFile</name></type> <name>file</name> <init>= <expr><call><name><name>GitHubFile</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>filename</name><argument_list>(<argument><expr><literal type="string">"file.txt"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>styler</name><operator>.</operator><name>setFiles</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>styler</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"file.txt"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>file</name> <operator>=</operator> <call><name><name>file</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>filename</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>styler</name><operator>.</operator><name>setFiles</name></name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>styler</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"file.txt"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>isEmpty</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testEmptyPatch()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for file with only single newline
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testOnlyNewline</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testOnlyNewline()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testOnlyNewline()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for file with an empty patch line with other valid lines
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testEmptyPatchLineWithOtherValidLines</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testEmptyPatchLineWithOtherValidLines()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"@@ 0,1 0,1 @@\n\n-navigation_drawer_header_background\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testEmptyPatchLineWithOtherValidLines()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for file with trailing empty line
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testTrailingEmptyLine</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testTrailingEmptyLine()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"@@ 0,1 0,1 @@\n-navigation_drawer_header_background\n\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testTrailingEmptyLine()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for file with only newlines
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testOnlyNewlines</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testOnlyNewlines()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"\n\n\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testOnlyNewlines()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for patch with no trailing newline after the second line
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testNoTrailingNewlineAfterSecondLine</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testNoTrailingNewlineAfterSecondLine()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"@@ 1,2 1,2 @@\n+navigation_drawer_header_background"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testNoTrailingNewlineAfterSecondLine()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for patch with no trailing newline
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testNoTrailingNewline</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testNoTrailingNewline()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"@@ 1,2 1,2 @@"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testNoTrailingNewline()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test styler for file with valid patch
+     *
+     * @throws IOException
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testFormattedPatch</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testFormattedPatch()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>compareStyled</name><argument_list>(<argument><expr><literal type="string">"@@ 1,2 1,2 @@\n+navigation_drawer_header_background\n"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.DiffStylerTest.testFormattedPatch()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

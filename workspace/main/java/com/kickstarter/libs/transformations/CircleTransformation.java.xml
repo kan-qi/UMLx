@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\transformations\CircleTransformation.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>transformations</name></name>;</package>
+
+<comment type="block">/*
+ * Copyright 2014 Julian Shen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ***
+ *
+ * Original: https://gist.github.com/julianshen/5829333
+ * Modifications: Some modifiers and annotations have been added by Kickstarter.
+ */</comment>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapShader</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>squareup</name><operator>.</operator><name>picasso</name><operator>.</operator><name>Transformation</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>CircleTransformation</name> <super><implements>implements <name>Transformation</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>x</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>y</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Bitmap</name></type> <name>transform</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Bitmap</name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>size</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>min</name></name><argument_list>(<argument><expr><call><name><name>source</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>source</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>x</name></name> <operator>=</operator> <operator>(</operator><call><name><name>source</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>size</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>y</name></name> <operator>=</operator> <operator>(</operator><call><name><name>source</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call> <operator>-</operator> <name>size</name><operator>)</operator> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Bitmap</name></type> <name>squaredBitmap</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>x</name></name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>y</name></name></expr></argument>, <argument><expr><name>size</name></expr></argument>, <argument><expr><name>size</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>squaredBitmap</name> <operator>!=</operator> <name>source</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>source</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Bitmap</name><operator>.</operator><name>Config</name></name></type> <name>config</name> <init>= <expr><ternary><condition><expr><call><name><name>source</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>source</name><operator>.</operator><name>getConfig</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><name><name>Bitmap</name><operator>.</operator><name>Config</name><operator>.</operator><name>ARGB_8888</name></name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name><name>Bitmap</name><operator>.</operator><name>createBitmap</name></name><argument_list>(<argument><expr><name>size</name></expr></argument>, <argument><expr><name>size</name></expr></argument>, <argument><expr><name>config</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Canvas</name></type> <name>canvas</name> <init>= <expr><operator>new</operator> <call><name>Canvas</name><argument_list>(<argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Paint</name></type> <name>paint</name> <init>= <expr><operator>new</operator> <call><name>Paint</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>BitmapShader</name></type> <name>shader</name> <init>= <expr><operator>new</operator> <call><name>BitmapShader</name><argument_list>(<argument><expr><name>squaredBitmap</name></expr></argument>, <argument><expr><name><name>BitmapShader</name><operator>.</operator><name>TileMode</name><operator>.</operator><name>CLAMP</name></name></expr></argument>, <argument><expr><name><name>BitmapShader</name><operator>.</operator><name>TileMode</name><operator>.</operator><name>CLAMP</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setShader</name></name><argument_list>(<argument><expr><name>shader</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>paint</name><operator>.</operator><name>setAntiAlias</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>float</name></type> <name>r</name> <init>= <expr><name>size</name><operator>/</operator><literal type="number">2f</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawCircle</name></name><argument_list>(<argument><expr><name>r</name></expr></argument>, <argument><expr><name>r</name></expr></argument>, <argument><expr><name>r</name></expr></argument>, <argument><expr><name>paint</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>squaredBitmap</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>bitmap</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>String</name></type> <name>key</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="string">"circle(x="</literal> <operator>+</operator> <name><name>this</name><operator>.</operator><name>x</name></name> <operator>+</operator> <literal type="string">",y="</literal> <operator>+</operator> <name><name>this</name><operator>.</operator><name>y</name></name> <operator>+</operator> <literal type="string">")"</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\ApplicationLifecycleUtil.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Application</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>ComponentCallbacks2</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Configuration</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>facebook</name><operator>.</operator><name>appevents</name><operator>.</operator><name>AppEventsLogger</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentConfigType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Koala</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Logout</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ErrorEnvelope</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ApplicationLifecycleUtil</name> <super><implements>implements <name><name>Application</name><operator>.</operator><name>ActivityLifecycleCallbacks</name></name>, <name>ComponentCallbacks2</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>Koala</name></type> <name>koala</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>ApiClientType</name></type> <name>client</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>CurrentConfigType</name></type> <name>config</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Inject</name></annotation> <type><name>Logout</name></type> <name>logout</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>KSApplication</name></type> <name>application</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>isInBackground</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ApplicationLifecycleUtil</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSApplication</name></type> <name>application</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>application</name></name> <operator>=</operator> <name>application</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>application</name><operator>.</operator><name>component</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>inject</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityCreated</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityStarted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityResumed</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+    <if>if<condition>(<expr><name><name>this</name><operator>.</operator><name>isInBackground</name></name></expr>)</condition><then><block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackAppOpen</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Facebook: logs 'install' and 'app activate' App Events.</comment>
+      <expr_stmt><expr><call><name><name>AppEventsLogger</name><operator>.</operator><name>activateApp</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Refresh the config file</comment>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>client</name><operator>.</operator><name>config</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>pipeApiErrorsTo</name></name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>handleConfigApiError</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>neverError</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>c</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>config</name><operator>.</operator><name>config</name></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Refresh the user</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>accessToken</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>getAccessToken</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>ObjectUtils</name><operator>.</operator><name>isNotNull</name></name><argument_list>(<argument><expr><name>accessToken</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>client</name><operator>.</operator><name>fetchCurrentUser</name></name><argument_list>()</argument_list></call>
+          <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>neverError</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>u</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>refresh</name></name><argument_list>(<argument><expr><name>u</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>isInBackground</name></name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Handles a config API error by logging the user out in the case of a 401. We will interpret
+   * 401's on the config request as meaning the user's current access token is no longer valid,
+   * as that endpoint should never 401 othewise.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>handleConfigApiError</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ErrorEnvelope</name></type> <name>error</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>error</name><operator>.</operator><name>httpCode</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">401</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>logout</name><operator>.</operator><name>execute</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>ApplicationUtils</name><operator>.</operator><name>startNewDiscoveryActivity</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>application</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityPaused</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">// Facebook: logs 'app deactivate' App Event.</comment>
+    <expr_stmt><expr><call><name><name>AppEventsLogger</name><operator>.</operator><name>deactivateApp</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityStopped</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivitySaveInstanceState</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>bundle</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onActivityDestroyed</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onConfigurationChanged</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Configuration</name></type> <name>configuration</name></decl></parameter>)</parameter_list> <block>{
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onLowMemory</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackMemoryWarning</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Memory availability callback. TRIM_MEMORY_UI_HIDDEN means the app's UI is no longer visible.
+   * This is triggered when the user navigates out of the app and primarily used to free resources used by the UI.
+   * http://developer.android.com/training/articles/memory.html
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onTrimMemory</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{
+    <if>if<condition>(<expr><name>i</name> <operator>==</operator> <name><name>ComponentCallbacks2</name><operator>.</operator><name>TRIM_MEMORY_UI_HIDDEN</name></name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackAppClose</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>isInBackground</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

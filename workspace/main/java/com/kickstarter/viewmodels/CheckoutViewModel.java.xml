@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\CheckoutViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>wallet</name><operator>.</operator><name>FullWallet</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>wallet</name><operator>.</operator><name>MaskedWallet</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>wallet</name><operator>.</operator><name>WalletConstants</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>Gson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>AndroidPayCapability</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>models</name><operator>.</operator><name>AndroidPayPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>AndroidPayUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>CheckoutActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name><operator>.</operator><name>ActivityResult</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>combineLatestPair</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>takeWhen</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>CheckoutViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call when any back button is pressed. */</comment>
+    <function_decl><type><name>void</name></type> <name>backButtonClicked</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the user has clicked the confirm android pay button. */</comment>
+    <function_decl><type><name>void</name></type> <name>confirmAndroidPayClicked</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Takes a url whenever a page has been intercepted by the web view.
+     * @param url The url that has been intercepted */</comment>
+    <function_decl><type><name>void</name></type> <name>pageIntercepted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the activity obtains a base 64 payload from an android pay button in the web page. */</comment>
+    <function_decl><type><name>void</name></type> <name>takePayloadString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>payloadString</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits when we should show an Android Pay error. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>androidPayError</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the masked wallet and android pay payload when it is time to attempt to convert the masked
+     * wallet into a full wallet. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>, <argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>attemptAndroidPayConfirmation</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a full wallet when android pay has been completely confirmed, and we are now ready to interact
+     * with our payment processor. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>FullWallet</name></argument>&gt;</argument_list></name></type> <name>completeAndroidPay</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the android pay confirmation should be shown or not. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>displayAndroidPayConfirmation</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean if this device is capable of android pay. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isAndroidPayAvailable</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when the activity should pop itself off the navigation stack. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>popActivityOffStack</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** The project associated with the current checkout. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a payload whenever an android pay sheet should be displayed.
+     * Can emit `null`, which means a prompt should not be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></type> <name>showAndroidPaySheet</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** The title to display to the user. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>title</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a masked wallet and payload when the confirmation view should be updated with the newest data. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>, <argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>updateAndroidPayConfirmation</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** The URL the web view should load, if its state has been destroyed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>url</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>CheckoutActivity</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Gson</name></type> <name>gson</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>androidPayCapability</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>androidPayCapability</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>gson</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>gson</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PROJECT</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>project</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>TOOLBAR_TITLE</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>String</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>title</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getStringExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>URL</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>String</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>mergeWith</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>pageIntercepted</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>url</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>&gt;</argument_list></name></type> <name>maskedWallet</name> <init>= <expr><call><name>activityResult</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>AndroidPayUtils</name><operator>::</operator><name>isMaskedWalletRequest</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ActivityResult</name><operator>::</operator><name>intent</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>WalletConstants</name><operator>.</operator><name>EXTRA_MASKED_WALLET</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>MaskedWallet</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>FullWallet</name></argument>&gt;</argument_list></name></type> <name>fullWallet</name> <init>= <expr><call><name>activityResult</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>AndroidPayUtils</name><operator>::</operator><name>isFullWalletRequest</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ActivityResult</name><operator>::</operator><name>intent</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>WalletConstants</name><operator>.</operator><name>EXTRA_FULL_WALLET</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>FullWallet</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>androidPayError</name></name> <operator>=</operator> <call><name>activityResult</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>AndroidPayUtils</name><operator>::</operator><name>walletRequestError</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></type> <name>payload</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>payloadString</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>str</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>AndroidPayUtils</name><operator>.</operator><name>payloadFromString</name></name><argument_list>(<argument><expr><name>str</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>gson</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>AndroidPayPayload</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>confirmationVisibilityOnBack</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>displayAndroidPayConfirmation</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>backButtonClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>payload</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>showAndroidPaySheet</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>confirmationVisibilityOnBack</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>isFalse</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>popActivityOffStack</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>confirmationVisibilityOnBack</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>isTrue</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><literal type="boolean">false</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>mergeWith</name><argument_list>(<argument><expr><call><name><name>maskedWallet</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><literal type="boolean">true</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>displayAndroidPayConfirmation</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>maskedWallet</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>wp</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>wp</name><operator>.</operator><name>first</name></name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name><name>wp</name><operator>.</operator><name>second</name></name> <operator>!=</operator> <literal type="null">null</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>updateAndroidPayConfirmation</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>maskedWallet</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>confirmAndroidPayClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>wp</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>wp</name><operator>.</operator><name>second</name></name> <operator>!=</operator> <literal type="null">null</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>attemptAndroidPayConfirmation</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>fullWallet</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>completeAndroidPay</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>showAndroidPaySheet</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackShowAndroidPaySheet</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>completeAndroidPay</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackAndroidPayFinished</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Start by not showing the confirmation page.</comment>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>displayAndroidPayConfirmation</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>backButtonClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>confirmAndroidPayClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>pageIntercepted</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>payloadString</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>androidPayError</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>, <argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>attemptAndroidPayConfirmation</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>FullWallet</name></argument>&gt;</argument_list></name></type> <name>completeAndroidPay</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>displayAndroidPayConfirmation</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>popActivityOffStack</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></type> <name>showAndroidPaySheet</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>title</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>, <argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>updateAndroidPayConfirmation</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>url</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>pageIntercepted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>pageIntercepted</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>str</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>backButtonClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>backButtonClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>takePayloadString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>payloadString</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>payloadString</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>payloadString</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>confirmAndroidPayClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>confirmAndroidPayClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>androidPayError</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>androidPayError</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>, <argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>attemptAndroidPayConfirmation</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>attemptAndroidPayConfirmation</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>FullWallet</name></argument>&gt;</argument_list></name></type> <name>completeAndroidPay</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>completeAndroidPay</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>displayAndroidPayConfirmation</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>displayAndroidPayConfirmation</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isAndroidPayAvailable</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>androidPayCapability</name><operator>.</operator><name>isCapable</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>popActivityOffStack</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>popActivityOffStack</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>project</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></type> <name>showAndroidPaySheet</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>showAndroidPaySheet</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>title</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>title</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>url</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>url</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>MaskedWallet</name></argument>, <argument><name>AndroidPayPayload</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>updateAndroidPayConfirmation</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>updateAndroidPayConfirmation</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

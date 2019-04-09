@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\views\HtmlTextView.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Html</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>appcompat</name><operator>.</operator><name>widget</name><operator>.</operator><name>AppCompatTextView</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>HtmlTextView</name> <super><extends>extends <name>AppCompatTextView</name></extends></super> <block>{
+  <constructor><specifier>public</specifier> <name>HtmlTextView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>init</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>HtmlTextView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>init</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>init</name><parameter_list>()</parameter_list><block>{
+    <expr_stmt><expr><call><name>setText</name><argument_list>(<argument><expr><call><name><name>Html</name><operator>.</operator><name>fromHtml</name></name><argument_list>(<argument><expr><call><name>getText</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\util\HttpImageGetter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Bitmap</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>BitmapFactory</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>BitmapDrawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>DimenRes</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>Html</name><operator>.</operator><name>ImageGetter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Log</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>bugsnag</name><operator>.</operator><name>android</name><operator>.</operator><name>Bugsnag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>core</name><operator>.</operator><name>ServiceGenerator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Content</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>request</name><operator>.</operator><name>RequestMarkdown</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>misc</name><operator>.</operator><name>MarkdownService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>service</name><operator>.</operator><name>repositories</name><operator>.</operator><name>RepositoryContentService</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>File</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>Single</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>android</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>AndroidSchedulers</name></name>;</import>
+<import>import <name><name>io</name><operator>.</operator><name>reactivex</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>Schedulers</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Response</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Base64</name><operator>.</operator><name>DEFAULT</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name><operator>.</operator><name>GONE</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name><operator>.</operator><name>VISIBLE</name></name>;</import>
+<import>import static <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>Integer</name><operator>.</operator><name>MAX_VALUE</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Getter for an image
+ */</comment>
+<class><specifier>public</specifier> class <name>HttpImageGetter</name> <super><implements>implements <name>ImageGetter</name></implements></super> <block>{
+
+    <class><specifier>private</specifier> <specifier>static</specifier> class <name>LoadingImageGetter</name> <super><implements>implements <name>ImageGetter</name></implements></super> <block>{
+
+        <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Drawable</name></type> <name>image</name></decl>;</decl_stmt>
+
+        <constructor><specifier>private</specifier> <name>LoadingImageGetter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><annotation>@<name>DimenRes</name></annotation> <specifier>final</specifier> <name>int</name></type> <name>size</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter$LoadingImageGetter.LoadingImageGetter(android.content.Context,@DimenRes  int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>int</name></type> <name>imageSize</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDimensionPixelSize</name><argument_list>(<argument><expr><name>size</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><name>image</name> <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getDrawable</name><argument_list>(
+                    <argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>image_loading_icon</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>image</name><operator>.</operator><name>setBounds</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>imageSize</name></expr></argument>, <argument><expr><name>imageSize</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter$LoadingImageGetter.LoadingImageGetter(android.content.Context,@DimenRes  int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></constructor>
+
+        <function><annotation>@<name>Override</name></annotation>
+        <specifier>public</specifier> <type><name>Drawable</name></type> <name>getDrawable</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.drawable.BitmapDrawable com.github.pockethub.android.util.HttpImageGetter$LoadingImageGetter.getDrawable(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.graphics.drawable.BitmapDrawable com.github.pockethub.android.util.HttpImageGetter$LoadingImageGetter.getDrawable(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>image</name></expr>;</return>
+        }</block></function>
+    }</block></class>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>containsImages</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>html</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.util.HttpImageGetter.containsImages(String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.util.HttpImageGetter.containsImages(String)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>html</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><literal type="string">"&lt;img"</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>HOST_DEFAULT</name> <init>= <expr><literal type="string">"github.com"</literal></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>LoadingImageGetter</name></type> <name>loading</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>File</name></type> <name>dir</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>width</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>rawHtmlCache</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>, <argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>fullHtmlCache</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>OkHttpClient</name></type> <name>okHttpClient</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create image getter for context
+     *
+     * @param context
+     */</comment>
+    <constructor><annotation>@<name>Inject</name></annotation>
+    <specifier>public</specifier> <name>HttpImageGetter</name><parameter_list>(<parameter><decl><type><name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter.HttpImageGetter(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name><name>this</name><operator>.</operator><name>context</name></name> <operator>=</operator> <name>context</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>dir</name> <operator>=</operator> <call><name><name>context</name><operator>.</operator><name>getCacheDir</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>width</name> <operator>=</operator> <call><name><name>ServiceUtils</name><operator>.</operator><name>getDisplayWidth</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>loading</name> <operator>=</operator> <operator>new</operator> <call><name>LoadingImageGetter</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>image_loading_size</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>okHttpClient</name> <operator>=</operator> <operator>new</operator> <call><name>OkHttpClient</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter.HttpImageGetter(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>private</specifier> <type><name>HttpImageGetter</name></type> <name>show</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>html</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.show(android.widget.TextView,CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.show(android.widget.TextView,CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>hide</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name>trim</name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>VISIBLE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTag</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.show(android.widget.TextView,CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>HttpImageGetter</name></type> <name>hide</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.hide(android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name>GONE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTag</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.hide(android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="line">//All comments end with "\n\n" removing 2 chars</comment>
+    <function><specifier>private</specifier> <type><name>CharSequence</name></type> <name>trim</name><parameter_list>(<parameter><decl><type><name>CharSequence</name></type> <name>val</name></decl></parameter>)</parameter_list><block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.util.HttpImageGetter.trim(CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if<condition>(<expr><call><name><name>val</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><call><name><name>val</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="char">'\n'</literal> <operator>&amp;&amp;</operator> <call><name><name>val</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><call><name><name>val</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call><operator>-</operator><literal type="number">2</literal></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="char">'\n'</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>val</name> <operator>=</operator> <call><name><name>val</name><operator>.</operator><name>subSequence</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>val</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.util.HttpImageGetter.trim(CharSequence)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>val</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Encode given HTML string and map it to the given id
+     *
+     * @param id
+     * @param html
+     * @return this image getter
+     */</comment>
+    <function><specifier>public</specifier> <type><name>HttpImageGetter</name></type> <name>encode</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Object</name></type> <name>id</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>html</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.encode(Object,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.encode(Object,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>CharSequence</name></type> <name>encoded</name> <init>= <expr><call><name><name>HtmlUtils</name><operator>.</operator><name>encode</name></name><argument_list>(<argument><expr><name>html</name></expr></argument>, <argument><expr><name>loading</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// Use default encoding if no img tags</comment>
+        <if>if <condition>(<expr><call><name>containsImages</name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name>CharSequence</name></type> <name>currentEncoded</name> <init>= <expr><call><name><name>rawHtmlCache</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <comment type="line">// Remove full html if raw html has changed</comment>
+            <if>if <condition>(<expr><name>currentEncoded</name> <operator>==</operator> <literal type="null">null</literal>
+                    <operator>||</operator> <operator>!</operator><call><name><name>currentEncoded</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>encoded</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>fullHtmlCache</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>rawHtmlCache</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>fullHtmlCache</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.encode(Object,String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Bind text view to HTML string
+     *
+     * @param view
+     * @param html
+     * @param id
+     * @return this image getter
+     */</comment>
+    <function><specifier>public</specifier> <type><name>HttpImageGetter</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>html</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name>Object</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.bind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.bind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>hide</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>CharSequence</name></type> <name>encoded</name> <init>= <expr><call><name><name>fullHtmlCache</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>encoded</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.bind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>show</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then></if>
+
+        <expr_stmt><expr><name>encoded</name> <operator>=</operator> <call><name><name>rawHtmlCache</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>encoded</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>html</name><operator>.</operator><name>matches</name></name><argument_list>(<argument><expr><literal type="string">"&lt;[a-z][\\s\\S]*&gt;"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <decl_stmt><decl><type><name>RequestMarkdown</name></type> <name>requestMarkdown</name> <init>= <expr><call><name><name>RequestMarkdown</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                        <operator>.</operator><call><name>text</name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+                <expr_stmt><expr><call><name><name>ServiceGenerator</name><operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>MarkdownService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>renderMarkdown</name><argument_list>(<argument><expr><name>requestMarkdown</name></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>subscribeOn</name><argument_list>(<argument><expr><call><name><name>Schedulers</name><operator>.</operator><name>io</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>AndroidSchedulers</name><operator>.</operator><name>mainThread</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>data</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>continueBind</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>,
+                                <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>e</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>continueBind</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>html</name></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then> <else>else <block>{
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.bind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>continueBind</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>html</name></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+            }</block></else></if>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.bind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>continueBind</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>html</name></expr></argument>, <argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>HttpImageGetter</name></type> <name>continueBind</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>html</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>Object</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.continueBind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>CharSequence</name></type> <name>encoded</name> <init>= <expr><call><name><name>HtmlUtils</name><operator>.</operator><name>encode</name></name><argument_list>(<argument><expr><name>html</name></expr></argument>, <argument><expr><name>loading</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name>containsImages</name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>rawHtmlCache</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>rawHtmlCache</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>fullHtmlCache</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.continueBind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>show</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></else></if>
+
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.util.HttpImageGetter com.github.pockethub.android.util.HttpImageGetter.continueBind(android.widget.TextView,String,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name>hide</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then></if>
+
+        <expr_stmt><expr><call><name>show</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>encoded</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTag</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Single</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>html</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>subscribeOn</name><argument_list>(<argument><expr><call><name><name>Schedulers</name><operator>.</operator><name>computation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>htmlString</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>HtmlUtils</name><operator>.</operator><name>encode</name></name><argument_list>(<argument><expr><name>htmlString</name></expr></argument>, <argument><expr><name>this</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>AndroidSchedulers</name><operator>.</operator><name>mainThread</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>htmlCharSequence</name></decl></parameter></parameter_list> -&gt; <block>{
+                    <expr><call><name><name>fullHtmlCache</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><name>htmlCharSequence</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>;
+                    if <argument><expr><operator>(</operator><call><name><name>id</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>view</name><operator>.</operator><name>getTag</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>)</operator> <block>{
+                        <expr><call><name>show</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>htmlCharSequence</name></expr></argument>)</argument_list></call></expr>;
+                    }</block></expr></argument></argument_list></call></expr></expr_stmt>
+                }</block></function>)</block>;</class>
+        <return>return <expr><name>this</name></expr>;</return>
+    }
+
+    <comment type="block" format="javadoc">/**
+     * Request an image using the contents API if the source URI is a path to a
+     * file already in the repository
+     *
+     * @param source
+     * @return
+     * @throws IOException
+     */</comment>
+    private <function><type><name>Drawable</name></type> <name>requestRepositoryImage</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>source</name></decl></parameter>)</parameter_list>
+            <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>Uri</name></type> <name>uri</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><operator>!</operator><call><name><name>HOST_DEFAULT</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getHost</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>segments</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getPathSegments</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>segments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&lt;</operator> <literal type="number">5</literal></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>prefix</name> <init>= <expr><call><name><name>segments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <comment type="line">// Two types of urls supported:</comment>
+        <comment type="line">// github.com/github/android/raw/master/app/res/drawable-xhdpi/app_icon.png</comment>
+        <comment type="line">// github.com/github/android/blob/master/app/res/drawable-xhdpi/app_icon.png?raw=true</comment>
+        <if>if <condition>(<expr><operator>!</operator><operator>(</operator><literal type="string">"raw"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>prefix</name></expr></argument>)</argument_list></call> <operator>||</operator> <operator>(</operator><literal type="string">"blob"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>prefix</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>TextUtils</name>
+                <operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"raw"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>)</operator><operator>)</operator></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>String</name></type> <name>owner</name> <init>= <expr><call><name><name>segments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>owner</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+        <decl_stmt><decl><type><name>String</name></type> <name>name</name> <init>= <expr><call><name><name>segments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+        <decl_stmt><decl><type><name>String</name></type> <name>branch</name> <init>= <expr><call><name><name>segments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>branch</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>StringBuilder</name></type> <name>path</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>(<argument><expr><call><name><name>segments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>segments</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{
+            <decl_stmt><decl><type><name>String</name></type> <name>segment</name> <init>= <expr><call><name><name>segments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>segment</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><call><name><name>path</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="char">'/'</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>segment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></then></if>
+        }</block></for>
+
+        <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><name>Content</name></type> <name>contents</name> <init>= <expr><call><name><name>ServiceGenerator</name><operator>.</operator><name>createService</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>RepositoryContentService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>getContents</name><argument_list>(<argument><expr><name>owner</name></expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><call><name><name>path</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>branch</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>blockingGet</name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>body</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>contents</name><operator>.</operator><name>content</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <decl_stmt><decl><type><name><name>byte</name><index>[]</index></name></type> <name>content</name> <init>= <expr><call><name><name>Base64</name><operator>.</operator><name>decode</name></name><argument_list>(<argument><expr><call><name><name>contents</name><operator>.</operator><name>content</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>DEFAULT</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name><name>ImageUtils</name><operator>.</operator><name>getBitmap</name></name><argument_list>(<argument><expr><name>content</name></expr></argument>, <argument><expr><name>width</name></expr></argument>, <argument><expr><name>MAX_VALUE</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>bitmap</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <return>return <expr><call><name><name>loading</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr>;</return>
+            }</block></then></if>
+            <decl_stmt><decl><type><name>BitmapDrawable</name></type> <name>drawable</name> <init>= <expr><operator>new</operator> <call><name>BitmapDrawable</name><argument_list>(
+                    <argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>drawable</name><operator>.</operator><name>setBounds</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>bitmap</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>bitmap</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><name>drawable</name></expr>;</return>
+        }</block></then> <else>else <block>{
+            <return>return <expr><literal type="null">null</literal></expr>;</return>
+        }</block></else></if>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Drawable</name></type> <name>getDrawable</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>source</name></decl></parameter>)</parameter_list> <block>{
+        <try>try <block>{
+            <decl_stmt><decl><type><name>Drawable</name></type> <name>repositoryImage</name> <init>= <expr><call><name>requestRepositoryImage</name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>repositoryImage</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <return>return <expr><name>repositoryImage</name></expr>;</return>
+            }</block></then></if>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <comment type="line">// Ignore and attempt request over regular HTTP request</comment>
+        }</block></catch></try>
+
+        <try>try <block>{
+            <decl_stmt><decl><type><name>String</name></type> <name>logMessage</name> <init>= <expr><literal type="string">"Loading image: "</literal> <operator>+</operator> <name>source</name></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><call><name>getClass</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSimpleName</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>logMessage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>Bugsnag</name><operator>.</operator><name>leaveBreadcrumb</name></name><argument_list>(<argument><expr><name>logMessage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+            <decl_stmt><decl><type><name>Request</name></type> <name>request</name> <init>= <expr><operator>new</operator> <call><name><name>Request</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>get</name><argument_list>()</argument_list></call>
+                    <operator>.</operator><call><name>url</name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call>
+                    <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <decl_stmt><decl><type><name>Response</name></type> <name>response</name> <init>= <expr><call><name><name>okHttpClient</name><operator>.</operator><name>newCall</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>execute</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>response</name><operator>.</operator><name>isSuccessful</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                <throw>throw <expr><operator>new</operator> <call><name>IOException</name><argument_list>(<argument><expr><literal type="string">"Unexpected response code: "</literal> <operator>+</operator> <call><name><name>response</name><operator>.</operator><name>code</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</throw>
+            }</block></then></if>
+
+            <decl_stmt><decl><type><name>Bitmap</name></type> <name>bitmap</name> <init>= <expr><call><name><name>BitmapFactory</name><operator>.</operator><name>decodeStream</name></name><argument_list>(<argument><expr><call><name><name>response</name><operator>.</operator><name>body</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>byteStream</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+            <if>if <condition>(<expr><name>bitmap</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <return>return <expr><call><name><name>loading</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr>;</return>
+            }</block></then></if>
+
+            <decl_stmt><decl><type><name>BitmapDrawable</name></type> <name>drawable</name> <init>= <expr><operator>new</operator> <call><name>BitmapDrawable</name><argument_list>( <argument><expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>bitmap</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>drawable</name><operator>.</operator><name>setBounds</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>bitmap</name><operator>.</operator><name>getWidth</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>bitmap</name><operator>.</operator><name>getHeight</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><name>drawable</name></expr>;</return>
+        }</block> <catch>catch <parameter_list>(<parameter><decl><type><name>IOException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+            <expr_stmt><expr><call><name><name>Log</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><call><name>getClass</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getSimpleName</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"Error loading image"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>Bugsnag</name><operator>.</operator><name>notify</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <return>return <expr><call><name><name>loading</name><operator>.</operator><name>getDrawable</name></name><argument_list>(<argument><expr><name>source</name></expr></argument>)</argument_list></call></expr>;</return>
+        }</block></catch></try>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Remove Object from cache store.
+     * @param id
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>removeFromCache</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Object</name></type> <name>id</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>rawHtmlCache</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>fullHtmlCache</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}
+</unit>

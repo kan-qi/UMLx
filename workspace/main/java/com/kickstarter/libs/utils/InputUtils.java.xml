@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\InputUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>IBinder</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>inputmethod</name><operator>.</operator><name>InputMethodManager</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>InputUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>InputUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>hideKeyboard</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>InputMethodManager</name></type> <name>inputManager</name> <init>= <expr><operator>(</operator><name>InputMethodManager</name><operator>)</operator> <call><name><name>context</name><operator>.</operator><name>getSystemService</name></name><argument_list>(<argument><expr><name><name>Context</name><operator>.</operator><name>INPUT_METHOD_SERVICE</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>IBinder</name></type> <name>windowToken</name> <init>= <expr><ternary><condition><expr><name>view</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name><name>view</name><operator>.</operator><name>getWindowToken</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>inputManager</name><operator>.</operator><name>hideSoftInputFromWindow</name></name><argument_list>(<argument><expr><name>windowToken</name></expr></argument>, <argument><expr><name><name>InputMethodManager</name><operator>.</operator><name>HIDE_NOT_ALWAYS</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

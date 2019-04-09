@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\TransitionUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>TransitionUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>TransitionUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Explicitly set a transition after starting an activity.
+   *
+   * @param context The activity that started the new intent.
+   * @param transition A pair of animation ids, first is the enter animation, second is the exit animation.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>transition</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>transition</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><operator>(</operator><name>context</name> <operator>instanceof</operator> <name>Activity</name><operator>)</operator></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Activity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>Activity</name><operator>)</operator> <name>context</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>overridePendingTransition</name></name><argument_list>(<argument><expr><name><name>transition</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>transition</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>slideInFromRight</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_in_right</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_out_slide_out_left</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>slideInFromLeft</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>fade_in_slide_in_left</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>slide_out_right</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>slideUpFromBottom</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>settings_slide_in_from_bottom</name></name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>anim</name><operator>.</operator><name>settings_slide_out_from_top</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

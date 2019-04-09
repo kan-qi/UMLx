@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\models\AndroidPayPayload.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>models</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AutoGson</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * An object that represents the JSON payload received during checkout which describes how to construct native
+ * Android Pay objects.
+ */</comment>
+<class><annotation>@<name>AutoGson</name></annotation>
+<annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>AndroidPayPayload</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>stripePublishableKey</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>stripeVersion</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>merchantName</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Boolean</name></type> <name>phoneNumberRequired</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Boolean</name></type> <name>shippingAddressRequired</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencyCode</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>estimatedTotalPrice</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Boolean</name></type> <name>allowDebitCard</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Boolean</name></type> <name>allowPrepaidCard</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Cart</name></type> <name>cart</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Cart</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencyCode</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>totalPrice</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>LineItem</name></argument>&gt;</argument_list></name></type> <name>lineItems</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name>AutoGson</name></annotation>
+    <annotation>@<name>AutoParcel</name></annotation>
+    <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>LineItem</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencyCode</name><parameter_list>()</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>description</name><parameter_list>()</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>quantity</name><parameter_list>()</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>totalPrice</name><parameter_list>()</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>unitPrice</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+  }</block></class>
+}</block></class>
+</unit>

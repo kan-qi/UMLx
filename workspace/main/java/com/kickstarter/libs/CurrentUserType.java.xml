@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\CurrentUserType.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>CurrentUserType</name> <block>{
+
+  <comment type="block" format="javadoc">/**
+   * Call when a user has logged in. The implementation of `CurrentUserType` is responsible
+   * for persisting the user and access token.
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>login</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>User</name></type> <name>newUser</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>accessToken</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Call when a user should be logged out.
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>logout</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Get the logged in user's access token.
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>getAccessToken</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Updates the persisted current user with a fresh, new user.
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>refresh</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>User</name></type> <name>freshUser</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Returns an observable representing the current user. It emits immediately
+   * with the current user, and then again each time the user is updated.
+   */</comment>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>observable</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the most recently emitted user from the user observable.
+   * @deprecated Prefer {@link #observable()}
+   */</comment>
+  <function_decl><annotation>@<name>Deprecated</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>User</name></type> <name>getUser</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a boolean that determines if there is a currently logged in user or not.
+   * @deprecated Prefer {@link #observable()}
+   */</comment>
+  <function><annotation>@<name>Deprecated</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>exists</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>getUser</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Emits a boolean that determines if the user is logged in or not. The returned
+   * observable will emit immediately with the logged in state, and then again
+   * each time the current user is updated.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isLoggedIn</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>observable</name><argument_list>()</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Emits only values of a logged in user. The returned observable may never emit.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>loggedInUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>observable</name><argument_list>()</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Emits only values of a logged out user. The returned observable may never emit.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>loggedOutUser</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>observable</name><argument_list>()</argument_list></call><operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNull</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

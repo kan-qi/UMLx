@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\external\java\com\kickstarter\libs\NoopBuildCheck.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>WebClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name><operator>.</operator><name>DiscoveryViewModel</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>NoopBuildCheck</name> <super><implements>implements <name>BuildCheck</name></implements></super> <block>{
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>bind</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>DiscoveryViewModel</name><operator>.</operator><name>ViewModel</name></name></type> <name>viewModel</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">// No-op, distribution through Play Store</comment>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\DateTimeUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSString</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>NumberOptions</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RelativeDateTimeOptions</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTimeZone</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>Seconds</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>format</name><operator>.</operator><name>DateTimeFormat</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>format</name><operator>.</operator><name>DateTimeFormatter</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>DateTimeUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>DateTimeUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: December 2015.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>estimatedDeliveryOn</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>estimatedDeliveryOn</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: December 2015.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>estimatedDeliveryOn</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>forPattern</name></name><argument_list>(<argument><expr><call><name>localePattern</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZoneUTC</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isDateToday</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>withZone</name></name><argument_list>(<argument><expr><name><name>DateTimeZone</name><operator>.</operator><name>UTC</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withTimeAtStartOfDay</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><call><name><name>DateTime</name><operator>.</operator><name>now</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withTimeAtStartOfDay</name><argument_list>()</argument_list></call><operator>.</operator><call><name>withZoneRetainFields</name><argument_list>(<argument><expr><name><name>DateTimeZone</name><operator>.</operator><name>UTC</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a boolean indicating whether or not a DateTime value is the Epoch. Returns `true` if the
+   * DateTime equals 1970-01-01T00:00:00Z.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isEpoch</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>getMillis</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Tuesday, June 20, 2017
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>fullDate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>fullDate</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Tuesday, June 20, 2017
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>fullDate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>fullDate</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZoneUTC</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>IllegalArgumentException</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <comment type="line">// JodaTime doesn't support the 'cccc' pattern, triggered by fullDate and fullDateTime. See: https://github.com/dlew/joda-time-android/issues/30</comment>
+      <comment type="line">// Instead just return a medium date.</comment>
+      <return>return <expr><call><name>mediumDate</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the proper DateTime format pattern for supported locales.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>localePattern</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch<condition>(<expr><call><name><name>locale</name><operator>.</operator><name>getLanguage</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><literal type="string">"de"</literal></expr>:</case>
+        <return>return <expr><literal type="string">"MMMM yyyy"</literal></expr>;</return>
+      <case>case <expr><literal type="string">"en"</literal></expr>:</case>
+        <return>return <expr><literal type="string">"MMMM yyyy"</literal></expr>;</return>
+      <case>case <expr><literal type="string">"es"</literal></expr>:</case>
+        <return>return <expr><literal type="string">"MMMM yyyy"</literal></expr>;</return>
+      <case>case <expr><literal type="string">"fr"</literal></expr>:</case>
+        <return>return <expr><literal type="string">"MMMM yyyy"</literal></expr>;</return>
+      <case>case <expr><literal type="string">"ja"</literal></expr>:</case>
+        <return>return <expr><literal type="string">"yyyy'å¹´'MMMM"</literal></expr>;</return> <comment type="line">// NB Japanese in general should show year before month</comment>
+      <default>default:</default>
+        <return>return <expr><literal type="string">"MMMM yyyy"</literal></expr>;</return>
+    }</block></switch>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: June 20, 2017
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>longDate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>longDate</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: June 20, 2017
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>longDate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>longDate</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZoneUTC</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Dec 17, 2015.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>mediumDate</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Dec 17, 2015.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>mediumDate</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZoneUTC</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Jan 14, 2016 2:20 PM.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDateShortTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>mediumDateShortTime</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>DateTimeZone</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Jan 14, 2016 2:20 PM.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDateShortTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTimeZone</name></type> <name>dateTimeZone</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>mediumDateShortTime</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><name>dateTimeZone</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Jan 14, 2016 2:20 PM.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDateShortTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTimeZone</name></type> <name>dateTimeZone</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>mediumShortStyle</name> <init>= <expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>patternForStyle</name></name><argument_list>(<argument><expr><literal type="string">"MS"</literal></expr></argument>, <argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>DateTimeFormatter</name></type> <name>formatter</name> <init>= <expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>forPattern</name></name><argument_list>(<argument><expr><name>mediumShortStyle</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZone</name><argument_list>(<argument><expr><name>dateTimeZone</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><name>formatter</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Dec 17, 2015 6:35:05 PM.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDateTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>mediumDateTime</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>DateTimeZone</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Dec 17, 2015 6:35:05 PM.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDateTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTimeZone</name></type> <name>dateTimeZone</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>mediumDateTime</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><name>dateTimeZone</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: Dec 17, 2015 6:35:05 PM.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>mediumDateTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTimeZone</name></type> <name>dateTimeZone</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>mediumDateTime</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZone</name><argument_list>(<argument><expr><name>dateTimeZone</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a string indicating the distance between {@link DateTime}s. Defaults to comparing the input {@link DateTime} to
+   * the current time.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>relative</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSString</name></type> <name>ksString</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>relative</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>ksString</name></expr></argument>, <argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>RelativeDateTimeOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a string indicating the distance between {@link DateTime}s. Defaults to comparing the input {@link DateTime} to
+   * the current time.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>relative</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSString</name></type> <name>ksString</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>RelativeDateTimeOptions</name></type> <name>options</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>DateTime</name></type> <name>relativeToDateTime</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>coalesce</name></name><argument_list>(<argument><expr><call><name><name>options</name><operator>.</operator><name>relativeToDateTime</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>DateTime</name><operator>.</operator><name>now</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Seconds</name></type> <name>seconds</name> <init>= <expr><call><name><name>Seconds</name><operator>.</operator><name>secondsBetween</name></name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><name>relativeToDateTime</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>secondsDifference</name> <init>= <expr><call><name><name>seconds</name><operator>.</operator><name>getSeconds</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>secondsDifference</name> <operator>&gt;=</operator> <literal type="number">0.0</literal> <operator>&amp;&amp;</operator> <name>secondsDifference</name> <operator>&lt;=</operator> <literal type="number">60.0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>dates_just_now</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>secondsDifference</name> <operator>&gt;=</operator> <operator>-</operator><literal type="number">60.0</literal> <operator>&amp;&amp;</operator> <name>secondsDifference</name> <operator>&lt;=</operator> <literal type="number">0.0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>dates_right_now</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unitAndDifference</name> <init>= <expr><call><name>unitAndDifference</name><argument_list>(<argument><expr><name>secondsDifference</name></expr></argument>, <argument><expr><call><name><name>options</name><operator>.</operator><name>threshold</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>unitAndDifference</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <comment type="line">// Couldn't find a good match, just render the date.</comment>
+      <return>return <expr><call><name>mediumDate</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>unit</name> <init>= <expr><name><name>unitAndDifference</name><operator>.</operator><name>first</name></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>difference</name> <init>= <expr><name><name>unitAndDifference</name><operator>.</operator><name>second</name></name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>willHappenIn</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>boolean</name></type> <name>happenedAgo</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name><name>options</name><operator>.</operator><name>absolute</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name>secondsDifference</name> <operator>&lt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>willHappenIn</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+      }</block></then> <elseif>else <if>if <condition>(<expr><name>secondsDifference</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>happenedAgo</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+      }</block></then></if></elseif></if>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><name>happenedAgo</name> <operator>&amp;&amp;</operator> <literal type="string">"days"</literal><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>unit</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <name>difference</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>dates_yesterday</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>StringBuilder</name></type> <name>baseKeyPath</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>willHappenIn</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>baseKeyPath</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"dates_time_in_%s"</literal></expr></argument>, <argument><expr><name>unit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>happenedAgo</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>baseKeyPath</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"dates_time_%s_ago"</literal></expr></argument>, <argument><expr><name>unit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif> <else>else <block>{
+      <expr_stmt><expr><call><name><name>baseKeyPath</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><call><name><name>String</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><literal type="string">"dates_time_%s"</literal></expr></argument>, <argument><expr><name>unit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <if>if <condition>(<expr><call><name><name>options</name><operator>.</operator><name>abbreviated</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>baseKeyPath</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">"_abbreviated"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>baseKeyPath</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>difference</name></expr></argument>,
+      <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><call><name><name>NumberUtils</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>difference</name></expr></argument>, <argument><expr><call><name><name>NumberOptions</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: 4:20 PM
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>shortTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>shortTime</name><argument_list>(<argument><expr><name>dateTime</name></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * e.g.: 4:20 PM
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>shortTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DateTime</name></type> <name>dateTime</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Locale</name></type> <name>locale</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>dateTime</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name><name>DateTimeFormat</name><operator>.</operator><name>shortTime</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withLocale</name><argument_list>(<argument><expr><name>locale</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>withZoneUTC</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Utility to pair a unit (e.g. "minutes", "hours", "days") with a measurement. Returns `null` if the difference
+   * exceeds the threshold.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unitAndDifference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>initialSecondsDifference</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>threshold</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>secondsDifference</name> <init>= <expr><call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><name>initialSecondsDifference</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>daysDifference</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>Math</name><operator>.</operator><name>floor</name></name><argument_list>(<argument><expr><name>secondsDifference</name> <operator>/</operator> <literal type="number">86400</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>secondsDifference</name> <operator>&lt;</operator> <literal type="number">3600</literal></expr>)</condition><then> <block>{ <comment type="line">// 1 hour</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>minutesDifference</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>Math</name><operator>.</operator><name>floor</name></name><argument_list>(<argument><expr><name>secondsDifference</name> <operator>/</operator> <literal type="number">60.0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><literal type="string">"minutes"</literal></expr></argument>, <argument><expr><name>minutesDifference</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>secondsDifference</name> <operator>&lt;</operator> <literal type="number">86400</literal></expr>)</condition><then> <block>{ <comment type="line">// 24 hours</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>hoursDifference</name> <init>= <expr><operator>(</operator><name>int</name><operator>)</operator> <call><name><name>Math</name><operator>.</operator><name>floor</name></name><argument_list>(<argument><expr><name>secondsDifference</name> <operator>/</operator> <literal type="number">60.0</literal> <operator>/</operator> <literal type="number">60.0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><literal type="string">"hours"</literal></expr></argument>, <argument><expr><name>hoursDifference</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>secondsDifference</name> <operator>&lt;</operator> <name>threshold</name></expr>)</condition><then> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>Pair</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><literal type="string">"days"</literal></expr></argument>, <argument><expr><name>daysDifference</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif></if>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

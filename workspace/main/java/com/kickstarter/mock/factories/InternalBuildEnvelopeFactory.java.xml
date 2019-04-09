@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\InternalBuildEnvelopeFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>InternalBuildEnvelope</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>InternalBuildEnvelopeFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>InternalBuildEnvelopeFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>InternalBuildEnvelope</name></type> <name>internalBuildEnvelope</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>InternalBuildEnvelope</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>(<argument><expr><literal type="number">123456</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>changelog</name><argument_list>(<argument><expr><literal type="string">"Bug fixes"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>newerBuildAvailable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>InternalBuildEnvelope</name></type> <name>newerBuildAvailable</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>internalBuildEnvelope</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>newerBuildAvailable</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

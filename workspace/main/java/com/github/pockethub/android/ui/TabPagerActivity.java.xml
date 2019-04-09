@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\TabPagerActivity.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>design</name><operator>.</operator><name>widget</name><operator>.</operator><name>TabLayout</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>view</name><operator>.</operator><name>PagerAdapter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TabHost</name><operator>.</operator><name>OnTabChangeListener</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TabHost</name><operator>.</operator><name>TabContentFactory</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindView</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity with tabbed pages
+ *
+ * @param &lt;V&gt;
+ */</comment>
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name><name>TabPagerActivity</name><parameter_list>&lt;<parameter><name>V</name> <extends>extends <name>PagerAdapter</name></extends> <operator>&amp;</operator> <name>FragmentProvider</name></parameter>&gt;</parameter_list></name>
+        <super><extends>extends <name>PagerActivity</name></extends> <implements>implements <name>OnTabChangeListener</name>, <name>TabContentFactory</name></implements></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * View pager
+     */</comment>
+    <decl_stmt><decl><annotation>@<name>BindView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>vp_pages</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>protected</specifier> <type><name>ViewPager</name></type> <name>pager</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Tab host
+     */</comment>
+    <decl_stmt><decl><annotation>@<name>BindView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>sliding_tabs_layout</name></name></expr></argument>)</argument_list></annotation>
+    <specifier>protected</specifier> <type><name>TabLayout</name></type> <name>slidingTabsLayout</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Pager adapter
+     */</comment>
+    <decl_stmt><decl><specifier>protected</specifier> <type><name>V</name></type> <name>adapter</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onTabChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tabId</name></decl></parameter>)</parameter_list> <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExecute</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.onTabChanged(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>View</name></type> <name>createTabContent</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>tag</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.view.View com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.createTabContent(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>View</name></type> <name>view</name> <init>= <expr><operator>new</operator> <call><name>View</name><argument_list>(<argument><expr><call><name>getApplication</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.view.View com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.createTabContent(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>view</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Create pager adapter
+     *
+     * @return pager adapter
+     */</comment>
+    <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name>V</name></type> <name>createAdapter</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/**
+     * Get title for position
+     *
+     * @param position
+     * @return title
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>String</name></type> <name>getTitle</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.getTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.getTitle(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>adapter</name><operator>.</operator><name>getPageTitle</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get icon for position
+     *
+     * @param position
+     * @return icon
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>String</name></type> <name>getIcon</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set tab and pager as gone or visible
+     *
+     * @param gone
+     * @return this activity
+     */</comment>
+    <function><specifier>protected</specifier> <type><name><name>TabPagerActivity</name><argument_list type="generic">&lt;<argument><name>V</name></argument>&gt;</argument_list></name></type> <name>setGone</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>gone</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"TabPagerActivity&lt;V&gt; com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.setGone(boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>gone</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>slidingTabsLayout</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <expr_stmt><expr><call><name><name>slidingTabsLayout</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></else></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"TabPagerActivity&lt;V&gt; com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.setGone(boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set current item to new position
+     * &lt;p/&gt;
+     * This is guaranteed to only be called when a position changes and the
+     * current item of the pager has already been updated to the given position
+     * &lt;p/&gt;
+     * Sub-classes may override this method
+     *
+     * @param position
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>setCurrentItem</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.setCurrentItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><comment type="line">// Intentionally left blankcom.mijack.Xlog.logMethodExit("void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.setCurrentItem(int)",this);</comment>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>updateCurrentItem</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>newPosition</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.updateCurrentItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>newPosition</name> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>newPosition</name> <operator>&lt;</operator> <call><name><name>adapter</name><operator>.</operator><name>getCount</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setItem</name></name><argument_list>(<argument><expr><name>newPosition</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>setCurrentItem</name><argument_list>(<argument><expr><name>newPosition</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.updateCurrentItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>createPager</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.createPager()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>adapter</name> <operator>=</operator> <call><name>createAdapter</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>invalidateOptionsMenu</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>setAdapter</name></name><argument_list>(<argument><expr><name>adapter</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.createPager()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>updateTabs</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.updateTabs()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>slidingTabsLayout</name><operator>.</operator><name>setupWithViewPager</name></name><argument_list>(<argument><expr><name>pager</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.updateTabs()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Configure tabs and pager
+     */</comment>
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>configureTabPager</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.configureTabPager()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><name>adapter</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name>createPager</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>updateTabs</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.configureTabPager()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onPostCreate</name><parameter_list>(<parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.onPostCreate(@Nullable Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPostCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>addOnPageChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.onPostCreate(@Nullable Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.onDestroy()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>pager</name><operator>.</operator><name>removeOnPageChangeListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.onDestroy()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>FragmentProvider</name></type> <name>getProvider</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"FragmentProvider com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.getProvider()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"FragmentProvider com.github.pockethub.android.ui.TabPagerActivity&lt;V extends PagerAdapter &amp; FragmentProvider&gt;.getProvider()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>adapter</name></expr>;</return>
+    }</block></function>
+}</block></class>
+</unit>

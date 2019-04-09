@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\interceptors\WebRequestInterceptor.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>interceptors</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>AndroidPayCapability</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>InternalToolsType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSUri</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Interceptor</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Response</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name><operator>.</operator><name>isNotNull</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Interceptor for web requests to Kickstarter, not API requests. Used by web views and the web client.
+ */</comment>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>WebRequestInterceptor</name> <super><implements>implements <name>Interceptor</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>endpoint</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>InternalToolsType</name></type> <name>internalTools</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>WebRequestInterceptor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>endpoint</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <name>InternalToolsType</name></type> <name>internalTools</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name> <operator>=</operator> <name>currentUser</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endpoint</name></name> <operator>=</operator> <name>endpoint</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>internalTools</name></name> <operator>=</operator> <name>internalTools</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>build</name></name> <operator>=</operator> <name>build</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>androidPayCapability</name></name> <operator>=</operator> <name>androidPayCapability</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Response</name></type> <name>intercept</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Chain</name></type> <name>chain</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>chain</name><operator>.</operator><name>proceed</name></name><argument_list>(<argument><expr><call><name>request</name><argument_list>(<argument><expr><call><name><name>chain</name><operator>.</operator><name>request</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Request</name></type> <name>request</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>initialRequest</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>shouldIntercept</name><argument_list>(<argument><expr><name>initialRequest</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>initialRequest</name></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Request</name><operator>.</operator><name>Builder</name></name></type> <name>requestBuilder</name> <init>= <expr><call><name><name>initialRequest</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>header</name><argument_list>(<argument><expr><literal type="string">"User-Agent"</literal></expr></argument>, <argument><expr><call><name>userAgent</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>build</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>basicAuthorizationHeader</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>internalTools</name><operator>.</operator><name>basicAuthorizationHeader</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>requestBuilder</name><operator>.</operator><name>addHeader</name></name><argument_list>(<argument><expr><literal type="string">"Authorization"</literal></expr></argument>, <argument><expr><literal type="string">"token "</literal> <operator>+</operator> <call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>getAccessToken</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>shouldAddBasicAuthorizationHeader</name><argument_list>(<argument><expr><name>initialRequest</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name>isNotNull</name><argument_list>(<argument><expr><name>basicAuthorizationHeader</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>requestBuilder</name><operator>.</operator><name>addHeader</name></name><argument_list>(<argument><expr><literal type="string">"Authorization"</literal></expr></argument>, <argument><expr><name>basicAuthorizationHeader</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if></elseif></if>
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>androidPayCapability</name><operator>.</operator><name>isCapable</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>requestBuilder</name><operator>.</operator><name>addHeader</name></name><argument_list>(<argument><expr><literal type="string">"Kickstarter-Android-Pay"</literal></expr></argument>, <argument><expr><literal type="string">"1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>requestBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>shouldIntercept</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>KSUri</name><operator>.</operator><name>isWebUri</name></name><argument_list>(<argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name><name>request</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>endpoint</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>shouldAddBasicAuthorizationHeader</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Uri</name></type> <name>initialRequestUri</name> <init>= <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name><name>request</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>KSUri</name><operator>.</operator><name>isHivequeenUri</name></name><argument_list>(<argument><expr><name>initialRequestUri</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>endpoint</name></name></expr></argument>)</argument_list></call> <operator>||</operator> <call><name><name>KSUri</name><operator>.</operator><name>isStagingUri</name></name><argument_list>(<argument><expr><name>initialRequestUri</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>endpoint</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>userAgent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>)</parameter_list> <block>{
+    <comment type="line">// TODO: Check whether device is mobile or tablet, append to user agent</comment>
+    <return>return <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">"Kickstarter Android Mobile Variant/"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><call><name><name>build</name><operator>.</operator><name>variant</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">" Code/"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><call><name><name>build</name><operator>.</operator><name>versionCode</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">" Version/"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><call><name><name>build</name><operator>.</operator><name>versionName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+
+</unit>

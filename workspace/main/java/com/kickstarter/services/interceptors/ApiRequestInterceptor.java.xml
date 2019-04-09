@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\interceptors\ApiRequestInterceptor.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>interceptors</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSUri</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>io</name><operator>.</operator><name>IOException</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>HttpUrl</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Interceptor</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Response</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ApiRequestInterceptor</name> <super><implements>implements <name>Interceptor</name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>clientId</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>endpoint</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ApiRequestInterceptor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>clientId</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>endpoint</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>clientId</name></name> <operator>=</operator> <name>clientId</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name> <operator>=</operator> <name>currentUser</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>endpoint</name></name> <operator>=</operator> <name>endpoint</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>Response</name></type> <name>intercept</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Chain</name></type> <name>chain</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+    <return>return <expr><call><name><name>chain</name><operator>.</operator><name>proceed</name></name><argument_list>(<argument><expr><call><name>request</name><argument_list>(<argument><expr><call><name><name>chain</name><operator>.</operator><name>request</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>Request</name></type> <name>request</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>initialRequest</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>shouldIntercept</name><argument_list>(<argument><expr><name>initialRequest</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>initialRequest</name></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>initialRequest</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>header</name><argument_list>(<argument><expr><literal type="string">"Accept"</literal></expr></argument>, <argument><expr><literal type="string">"application/json"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>url</name><argument_list>(<argument><expr><call><name>url</name><argument_list>(<argument><expr><call><name><name>initialRequest</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>HttpUrl</name></type> <name>url</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>HttpUrl</name></type> <name>initialHttpUrl</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>HttpUrl</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><call><name><name>initialHttpUrl</name><operator>.</operator><name>newBuilder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>setQueryParameter</name><argument_list>(<argument><expr><literal type="string">"client_id"</literal></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>clientId</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>exists</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>setQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"oauth_token"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>getAccessToken</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>shouldIntercept</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>KSUri</name><operator>.</operator><name>isApiUri</name></name><argument_list>(<argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name><name>request</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>endpoint</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

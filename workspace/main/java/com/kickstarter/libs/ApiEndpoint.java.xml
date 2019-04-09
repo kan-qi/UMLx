@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\ApiEndpoint.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>Secrets</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<enum><specifier>public</specifier> enum <name>ApiEndpoint</name> <block>{
+  <decl><name>PRODUCTION</name><argument_list>(<argument><expr><literal type="string">"Production"</literal></expr></argument>, <argument><expr><name><name>Secrets</name><operator>.</operator><name>Api</name><operator>.</operator><name>Endpoint</name><operator>.</operator><name>PRODUCTION</name></name></expr></argument>)</argument_list></decl>,
+  <decl><name>STAGING</name><argument_list>(<argument><expr><literal type="string">"Staging"</literal></expr></argument>, <argument><expr><name><name>Secrets</name><operator>.</operator><name>Api</name><operator>.</operator><name>Endpoint</name><operator>.</operator><name>STAGING</name></name></expr></argument>)</argument_list></decl>,
+  <decl><name>LOCAL</name><argument_list>(<argument><expr><literal type="string">"Local"</literal></expr></argument>, <argument><expr><literal type="string">"http://api.ksr.10.0.3.2.xip.io"</literal></expr></argument>)</argument_list></decl>,
+  <decl><name>CUSTOM</name><argument_list>(<argument><expr><literal type="string">"Custom"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></decl>;
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>name</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>String</name></type> <name>url</name></decl>;</decl_stmt>
+
+  <constructor><name>ApiEndpoint</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>name</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>url</name></name> <operator>=</operator> <name>url</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>url</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>url</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>String</name></type> <name>toString</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>name</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>ApiEndpoint</name></type> <name>from</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>ApiEndpoint</name></type> <name>value</name> <range>: <expr><call><name>values</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><name><name>value</name><operator>.</operator><name>url</name></name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>value</name><operator>.</operator><name>url</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><name>value</name></expr>;</return>
+      }</block></then></if>
+    }</block></for>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>ApiEndpoint</name></type> <name>endpoint</name> <init>= <expr><name>CUSTOM</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name><name>endpoint</name><operator>.</operator><name>url</name></name> <operator>=</operator> <name>url</name></expr>;</expr_stmt>
+    <return>return <expr><name>endpoint</name></expr>;</return>
+  }</block></function>
+}</block></enum>
+</unit>

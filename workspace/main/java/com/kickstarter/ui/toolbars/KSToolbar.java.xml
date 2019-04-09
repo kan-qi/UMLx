@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\toolbars\KSToolbar.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>toolbars</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Canvas</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Paint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>WebEndpoint</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>Secrets</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>CallSuper</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>appcompat</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>appcompat</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>core</name><operator>.</operator><name>content</name><operator>.</operator><name>ContextCompat</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindDimen</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>OnClick</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Subscription</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subscriptions</name><operator>.</operator><name>CompositeSubscription</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>KSToolbar</name> <super><extends>extends <name>Toolbar</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Nullable</name></annotation> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>title_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>titleTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindDimen</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>dimen</name><operator>.</operator><name>grid_2</name></name></expr></argument>)</argument_list></annotation> <type><name>float</name></type> <name>grid_2</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Paint</name></type> <name>backgroundPaint</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <annotation>@<name>WebEndpoint</name></annotation> <type><name>String</name></type> <name>webEndpoint</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CompositeSubscription</name></type> <name>subscriptions</name> <init>= <expr><operator>new</operator> <call><name>CompositeSubscription</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KSToolbar</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>KSToolbar</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>KSToolbar</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>init</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onDraw</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Canvas</name></type> <name>canvas</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDraw</name></name><argument_list>(<argument><expr><name>canvas</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><operator>!</operator><call><name>isInEditMode</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>this</name><operator>.</operator><name>webEndpoint</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>Secrets</name><operator>.</operator><name>WebEndpoint</name><operator>.</operator><name>PRODUCTION</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>canvas</name><operator>.</operator><name>drawRect</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>grid_2</name></name></expr></argument>, <argument><expr><call><name>getHeight</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>backgroundPaint</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Nullable</name></annotation> <annotation>@<name>OnClick</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>back_button</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>backButtonClick</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>getContext</name><argument_list>()</argument_list></call> <operator>instanceof</operator> <name>BaseActivity</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>BaseActivity</name><operator>)</operator> <call><name>getContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>back</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>AppCompatActivity</name><operator>)</operator> <call><name>getContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>onBackPressed</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Environment</name></type> <name>environment</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>environment</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * If the toolbar has a textview with id title_text_view, set its title.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setTitle</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>title</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>titleTextView</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>titleTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name>title</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onFinishInflate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onFinishInflate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onAttachedToWindow</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAttachedToWindow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onDetachedFromWindow</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDetachedFromWindow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subscriptions</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>addSubscription</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Subscription</name></type> <name>subscription</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subscriptions</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>subscription</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><call><name>isInEditMode</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>backgroundPaint</name></name> <operator>=</operator> <operator>new</operator> <call><name>Paint</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>backgroundPaint</name><operator>.</operator><name>setStyle</name></name><argument_list>(<argument><expr><name><name>Paint</name><operator>.</operator><name>Style</name><operator>.</operator><name>FILL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>backgroundPaint</name><operator>.</operator><name>setColor</name></name><argument_list>(<argument><expr><call><name><name>ContextCompat</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>ksr_cobalt_500</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>webEndpoint</name></name> <operator>=</operator> <call><name>environment</name><argument_list>()</argument_list></call><operator>.</operator><call><name>webEndpoint</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

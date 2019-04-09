@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\MessageThreadHolderViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>NumberUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Message</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>MessageThread</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>SharedPreferenceKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>MessageThreadViewHolder</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>observeForUI</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>takeWhen</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>MessageThreadHolderViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call to configure with a MessageThread. */</comment>
+    <function_decl><type><name>void</name></type> <name>configureWith</name><parameter_list>(<parameter><decl><type><name>MessageThread</name></type> <name>messageThread</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the the message thread card view has been clicked. */</comment>
+    <function_decl><type><name>void</name></type> <name>messageThreadCardViewClicked</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits when the card view should be elevated. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>cardViewIsElevated</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the date to display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>dateDateTime</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when the date font weight is medium. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>dateTextViewIsMediumWeight</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the message body to display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodyTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the participant's avatar url to display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantAvatarUrl</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when the participant name font weight is medium. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>participantNameTextViewIsMediumWeight</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the participant name to display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantNameTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when we want to start the {@link com.kickstarter.ui.activities.MessagesActivity}. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></type> <name>startMessagesActivity</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine if the unread count text view should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the unread count text view text to be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine if the unread indicator should be hidden. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadIndicatorViewHidden</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>MessageThreadViewHolder</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sharedPreferences</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>sharedPreferences</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Store the correct initial hasUnreadMessages value.</comment>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>messageThread</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>thread</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>setHasUnreadMessagesPreference</name><argument_list>(<argument><expr><name>thread</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>sharedPreferences</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasUnreadMessages</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(
+        <argument><expr><call><name><name>this</name><operator>.</operator><name>messageThread</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>thread</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>hasUnreadMessages</name><argument_list>(<argument><expr><name>thread</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>sharedPreferences</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>,
+        <argument><expr><call><name><name>this</name><operator>.</operator><name>messageThreadCardViewClicked</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><literal type="boolean">false</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></type> <name>lastMessage</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>messageThread</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThread</name><operator>::</operator><name>lastMessage</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>participant</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>messageThread</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThread</name><operator>::</operator><name>participant</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>cardViewIsElevated</name></name> <operator>=</operator> <name>hasUnreadMessages</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>dateDateTime</name></name> <operator>=</operator> <call><name><name>lastMessage</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Message</name><operator>::</operator><name>createdAt</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>dateTextViewIsMediumWeight</name></name> <operator>=</operator> <name>hasUnreadMessages</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>messageBodyTextViewText</name></name> <operator>=</operator> <call><name><name>lastMessage</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Message</name><operator>::</operator><name>body</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>participantAvatarUrl</name></name> <operator>=</operator> <call><name><name>participant</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>avatar</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>medium</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>participantNameTextViewIsMediumWeight</name></name> <operator>=</operator> <name>hasUnreadMessages</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>participantNameTextViewText</name></name> <operator>=</operator> <call><name><name>participant</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>User</name><operator>::</operator><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>startMessagesActivity</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>messageThread</name><operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageThreadCardViewClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewIsGone</name></name> <operator>=</operator> <call><name><name>hasUnreadMessages</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>messageThread</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThread</name><operator>::</operator><name>unreadMessagesCount</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>NumberUtils</name><operator>::</operator><name>format</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unreadIndicatorViewHidden</name></name> <operator>=</operator> <call><name><name>hasUnreadMessages</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>messageThread</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageThreadCardViewClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>thread</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>markedAsRead</name><argument_list>(<argument><expr><name>thread</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>sharedPreferences</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>cacheKey</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>MessageThread</name></type> <name>messageThread</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>MESSAGE_THREAD_HAS_UNREAD_MESSAGES</name></name> <operator>+</operator> <call><name><name>messageThread</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>hasUnreadMessages</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>MessageThread</name></type> <name>messageThread</name></decl></parameter>,
+      <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><call><name><name>sharedPreferences</name><operator>.</operator><name>getBoolean</name></name><argument_list>(<argument><expr><call><name>cacheKey</name><argument_list>(<argument><expr><name>messageThread</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageThread</name><operator>.</operator><name>unreadMessagesCount</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>markedAsRead</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>MessageThread</name></type> <name>messageThread</name></decl></parameter>,
+      <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>SharedPreferences</name><operator>.</operator><name>Editor</name></name></type> <name>editor</name> <init>= <expr><call><name><name>sharedPreferences</name><operator>.</operator><name>edit</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>editor</name><operator>.</operator><name>putBoolean</name></name><argument_list>(<argument><expr><call><name>cacheKey</name><argument_list>(<argument><expr><name>messageThread</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>editor</name><operator>.</operator><name>apply</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>setHasUnreadMessagesPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>MessageThread</name></type> <name>messageThread</name></decl></parameter>,
+      <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>SharedPreferences</name><operator>.</operator><name>Editor</name></name></type> <name>editor</name> <init>= <expr><call><name><name>sharedPreferences</name><operator>.</operator><name>edit</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>editor</name><operator>.</operator><name>putBoolean</name></name><argument_list>(<argument><expr><call><name>cacheKey</name><argument_list>(<argument><expr><name>messageThread</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>messageThread</name><operator>.</operator><name>unreadMessagesCount</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>editor</name><operator>.</operator><name>apply</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></type> <name>messageThread</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>messageThreadCardViewClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>cardViewIsElevated</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>dateDateTime</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>dateTextViewIsMediumWeight</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodyTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantAvatarUrl</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>participantNameTextViewIsMediumWeight</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantNameTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></type> <name>startMessagesActivity</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadIndicatorViewHidden</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>configureWith</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>MessageThread</name></type> <name>messageThread</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>messageThread</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>messageThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>messageThreadCardViewClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>messageThreadCardViewClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>cardViewIsElevated</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>cardViewIsElevated</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>dateDateTime</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>dateDateTime</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>dateTextViewIsMediumWeight</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>dateTextViewIsMediumWeight</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageBodyTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageBodyTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantAvatarUrl</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>participantAvatarUrl</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>participantNameTextViewIsMediumWeight</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>participantNameTextViewIsMediumWeight</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>participantNameTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>participantNameTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></type> <name>startMessagesActivity</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>startMessagesActivity</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadIndicatorViewHidden</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadIndicatorViewHidden</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

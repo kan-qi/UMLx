@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\DiscoveryDrawerUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Category</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name><operator>.</operator><name>data</name><operator>.</operator><name>NavigationDrawerData</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>TreeMap</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name><operator>.</operator><name>isFalse</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name><operator>.</operator><name>isTrue</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>DiscoveryDrawerUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>DiscoveryDrawerUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Converts all the disparate data representing the state of the menu data into a `NavigationDrawerData` object
+   * that can be used to populate a view.
+   *
+   * @param categories The full list of categories that can be displayed.
+   * @param selected The params that correspond to what is currently selected in the menu.
+   * @param expandedCategory The category that correspond to what is currently expanded in the menu.
+   * @param user The currently logged in user.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>NavigationDrawerData</name></type> <name>deriveNavigationDrawerData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Category</name></argument>&gt;</argument_list></name></type> <name>categories</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DiscoveryParams</name></type> <name>selected</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Category</name></type> <name>expandedCategory</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>User</name></type> <name>user</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>NavigationDrawerData</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><call><name><name>NavigationDrawerData</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></argument>&gt;</argument_list></name></type> <name>categorySections</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>categories</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>c</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>isVisible</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>expandedCategory</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>c</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>doubleRootIfExpanded</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>expandedCategory</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>c</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>DiscoveryDrawerUtils</name><operator>::</operator><name>paramsGroupedByRootCategory</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>sections</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>sectionsFromAllParams</name><argument_list>(<argument><expr><name>sections</name></expr></argument>, <argument><expr><name>expandedCategory</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></argument>&gt;</argument_list></name></type> <name>sections</name> <init>= <expr><call><name><name>Observable</name>
+      <operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>categorySections</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>startWith</name><argument_list>(<argument><expr><call><name>topSections</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>builder</name>
+      <operator>.</operator><name>sections</name></name><argument_list>(<argument><expr><name>sections</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>user</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>selectedParams</name><argument_list>(<argument><expr><name>selected</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>expandedCategory</name><argument_list>(<argument><expr><name>expandedCategory</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Given a doubly nested list of all possible category params and an (optional) expanded category this will
+   * create a list of sections that can be used in the drawer.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></argument>&gt;</argument_list></name></type> <name>sectionsFromAllParams</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>sections</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Category</name></type> <name>expandedCategory</name></decl></parameter>)</parameter_list> <block>{
+
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>sections</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>DiscoveryDrawerUtils</name><operator>::</operator><name>rowsFromParams</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>rows</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>rows</name></expr></argument>, <argument><expr><call><name>rowsAreExpanded</name><argument_list>(<argument><expr><name>rows</name></expr></argument>, <argument><expr><name>expandedCategory</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>rowsAndIsExpanded</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><call><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+            <operator>.</operator><call><name>rows</name><argument_list>(<argument><expr><name><name>rowsAndIsExpanded</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>expanded</name><argument_list>(<argument><expr><name><name>rowsAndIsExpanded</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>
+      )</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Converts a list of params into a list of rows that the drawer can use to display rows.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name></argument>&gt;</argument_list></name></type> <name>rowsFromParams</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>params</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>params</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>params</name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * From a list of rows and the currently expanded category figures out if the rows are expanded.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>rowsAreExpanded</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name></name></argument>&gt;</argument_list></name></type> <name>rows</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Category</name></type> <name>expandedCategory</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Category</name></type> <name>sectionCategory</name> <init>= <expr><call><name><name>rows</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>params</name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>sectionCategory</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>expandedCategory</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>sectionCategory</name><operator>.</operator><name>rootId</name></name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>expandedCategory</name><operator>.</operator><name>rootId</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines if a category is visible given what is the currently expanded category.
+   * @param category The category to determine its visibility.
+   * @param expandedCategory The category that is currently expandable, possible `null`.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isVisible</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Category</name></type> <name>category</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Category</name></type> <name>expandedCategory</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>expandedCategory</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>category</name><operator>.</operator><name>isRoot</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>category</name><operator>.</operator><name>isRoot</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>category</name><operator>.</operator><name>root</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>expandedCategory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Since there are two rows that correspond to a root category in an expanded section (e.g. "Art" &amp; "All of Art"),
+   * this method will double up that root category in such a situation.
+   * @param category The category that might potentially be doubled up.
+   * @param expandedCategory The currently expanded category.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Category</name></argument>&gt;</argument_list></name></type> <name>doubleRootIfExpanded</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Category</name></type> <name>category</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Category</name></type> <name>expandedCategory</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>expandedCategory</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>category</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>category</name><operator>.</operator><name>isRoot</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>category</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>expandedCategory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>category</name></expr></argument>, <argument><expr><name>category</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><name>category</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a list of top-level section filters that can be used based on the current user, which could be `null`.
+   * Each filter is its own section containing one single row.
+   *
+   * @param user The currently logged in user, can be `null`.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name></name></argument>&gt;</argument_list></name></type> <name>topSections</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>User</name></type> <name>user</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>filters</name> <init>= <expr><call><name><name>ListUtils</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>userIsLoggedIn</name> <init>= <expr><name>user</name> <operator>!=</operator> <literal type="null">null</literal></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>userIsLoggedIn</name> <operator>&amp;&amp;</operator> <call><name>isFalse</name><argument_list>(<argument><expr><call><name><name>user</name><operator>.</operator><name>optedOutOfRecommendations</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>filters</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>recommended</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>backed</name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>filters</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>filters</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>staffPicks</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>userIsLoggedIn</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>filters</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>starred</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if <condition>(<expr><call><name>isTrue</name><argument_list>(<argument><expr><call><name><name>user</name><operator>.</operator><name>social</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>filters</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>social</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>filters</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>Row</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>params</name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Collections</name><operator>::</operator><name>singletonList</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>rows</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>NavigationDrawerData</name><operator>.</operator><name>Section</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>rows</name><argument_list>(<argument><expr><name>rows</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Converts the full list of category discovery params into a grouped list of params. A group corresponds to a root
+   * category, and the list contains all subcategories.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>paramsGroupedByRootCategory</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>ps</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>grouped</name> <init>= <expr><operator>new</operator> <call><name><name>TreeMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>DiscoveryParams</name></type> <name>p</name> <range>: <expr><name>ps</name></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><operator>!</operator><call><name><name>grouped</name><operator>.</operator><name>containsKey</name></name><argument_list>(<argument><expr><call><name><name>p</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>root</name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>grouped</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><call><name><name>p</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>root</name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <expr_stmt><expr><call><name><name>grouped</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><call><name><name>p</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>root</name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>grouped</name><operator>.</operator><name>values</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

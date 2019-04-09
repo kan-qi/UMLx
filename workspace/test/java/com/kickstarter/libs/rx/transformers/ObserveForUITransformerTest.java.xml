@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\rx\transformers\ObserveForUITransformerTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Looper</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSRobolectricTestCase</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>After</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Before</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Test</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>robolectric</name><operator>.</operator><name>shadows</name><operator>.</operator><name>ShadowLooper</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>atomic</name><operator>.</operator><name>AtomicInteger</name></name>;</import>
+
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Scheduler</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>android</name><operator>.</operator><name>plugins</name><operator>.</operator><name>RxAndroidPlugins</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>android</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>AndroidSchedulers</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>Schedulers</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>observeForUI</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ObserveForUITransformerTest</name> <super><extends>extends <name>KSRobolectricTestCase</name></extends></super> <block>{
+  <function><annotation>@<name>Before</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>setUp</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>RxAndroidPlugins</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>reset</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ShadowLooper</name><operator>.</operator><name>pauseMainLooper</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>After</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>tearDown</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>RxAndroidPlugins</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>reset</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ShadowLooper</name><operator>.</operator><name>unPauseMainLooper</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>test</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Scheduler</name></type> <name>scheduler</name> <init>= <expr><call><name><name>AndroidSchedulers</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name><name>Looper</name><operator>.</operator><name>getMainLooper</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>AtomicInteger</name></type> <name>x</name> <init>= <expr><operator>new</operator> <call><name>AtomicInteger</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>AndroidSchedulers</name><operator>.</operator><name>mainThread</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>x</name><operator>::</operator><name>set</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Main looper is paused, so value should not change.</comment>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><call><name><name>x</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>Schedulers</name><operator>.</operator><name>immediate</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>x</name><operator>::</operator><name>set</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Since the work used the immediate scheduler, it is unaffected by the main looper being paused.</comment>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><call><name><name>x</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name>x</name><operator>::</operator><name>set</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// The main looper is paused but the code is executing on the main thread, so observeForUI() should schedule the</comment>
+    <comment type="line">// work immediately rather than queueing it up.</comment>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>, <argument><expr><call><name><name>x</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Run the queued work.</comment>
+    <expr_stmt><expr><call><name><name>ShadowLooper</name><operator>.</operator><name>runUiThreadTasks</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Code observed using `AndroidSchedulers.mainThread()` is now run.</comment>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><call><name><name>x</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

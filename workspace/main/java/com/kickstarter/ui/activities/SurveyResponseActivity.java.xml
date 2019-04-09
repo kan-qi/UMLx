@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\activities\SurveyResponseActivity.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>webkit</name><operator>.</operator><name>WebView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>RequiresActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>AnimationUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSUri</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSWebViewClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>RequestHandler</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name><operator>.</operator><name>KSWebView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name><operator>.</operator><name>SurveyResponseViewModel</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Arrays</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>appcompat</name><operator>.</operator><name>app</name><operator>.</operator><name>AlertDialog</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindString</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>Request</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>observeForUI</name></name>;</import>
+
+<class><annotation>@<name>RequiresActivityViewModel</name><argument_list>(<argument><expr><name><name>SurveyResponseViewModel</name><operator>.</operator><name>ViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> class <name>SurveyResponseActivity</name> <super><extends>extends <name><name>BaseActivity</name><argument_list type="generic">&lt;<argument><name><name>SurveyResponseViewModel</name><operator>.</operator><name>ViewModel</name></name></argument>&gt;</argument_list></name></extends> <implements>implements <name><name>KSWebViewClient</name><operator>.</operator><name>Delegate</name></name></implements></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>AlertDialog</name></type> <name>confirmationDialog</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>survey_response_web_view</name></name></expr></argument>)</argument_list></annotation> <type><name>KSWebView</name></type> <name>ksWebView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>survey_response_loading_indicator_view</name></name></expr></argument>)</argument_list></annotation> <type><name>View</name></type> <name>loadingIndicatorView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>general_alert_buttons_ok</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>okString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Got_it_your_survey_response_has_been_submitted</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>surveyResponseSubmittedString</name></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>survey_response_layout</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>ksWebView</name><operator>.</operator><name>client</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>setDelegate</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>ksWebView</name><operator>.</operator><name>client</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>registerRequestHandlers</name><argument_list>(
+      <argument><expr><call><name><name>Arrays</name><operator>.</operator><name>asList</name></name><argument_list>(
+        <argument><expr><operator>new</operator> <call><name>RequestHandler</name><argument_list>(<argument><expr><name>KSUri</name><operator>::</operator><name>isProjectSurveyUri</name></expr></argument>, <argument><expr><name>this</name><operator>::</operator><name>handleProjectSurveyUriRequest</name></expr></argument>)</argument_list></call></expr></argument>,
+        <argument><expr><operator>new</operator> <call><name>RequestHandler</name><argument_list>(<argument><expr><name>KSUri</name><operator>::</operator><name>isProjectUri</name></expr></argument>, <argument><expr><name>this</name><operator>::</operator><name>handleProjectUriRequest</name></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr></argument>
+    )</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>goBack</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>back</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>showConfirmationDialog</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>lazyConfirmationDialog</name><argument_list>()</argument_list></call><operator>.</operator><call><name>show</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>handleProjectUriRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>webView</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>inputs</name><operator>.</operator><name>projectUriRequest</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>boolean</name></type> <name>handleProjectSurveyUriRequest</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Request</name></type> <name>request</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebView</name></type> <name>webView</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>inputs</name><operator>.</operator><name>projectSurveyUriRequest</name></name><argument_list>(<argument><expr><name>request</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>AlertDialog</name></type> <name>lazyConfirmationDialog</name><parameter_list>()</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>confirmationDialog</name></name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>confirmationDialog</name></name> <operator>=</operator> <operator>new</operator> <call><name><name>AlertDialog</name><operator>.</operator><name>Builder</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setMessage</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>surveyResponseSubmittedString</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>setPositiveButton</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>okString</name></name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><name>__</name></decl></parameter>, <parameter><decl><name>___</name></decl></parameter>)</parameter_list> -&gt;
+          <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>inputs</name><operator>.</operator><name>okButtonClicked</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>
+        )</argument_list></call>
+        <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <return>return <expr><name><name>this</name><operator>.</operator><name>confirmationDialog</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>outputs</name><operator>.</operator><name>webViewUrl</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>observeForUI</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>ksWebView</name></name><operator>::</operator><name>loadUrl</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewExternalLinkActivated</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewOnPageFinished</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>loadingIndicatorView</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><call><name><name>AnimationUtils</name><operator>.</operator><name>INSTANCE</name><operator>.</operator><name>disappearAnimation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewOnPageStarted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>loadingIndicatorView</name><operator>.</operator><name>startAnimation</name></name><argument_list>(<argument><expr><call><name><name>AnimationUtils</name><operator>.</operator><name>INSTANCE</name><operator>.</operator><name>appearAnimation</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>webViewPageIntercepted</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSWebViewClient</name></type> <name>webViewClient</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>url</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+}</block></class>
+</unit>

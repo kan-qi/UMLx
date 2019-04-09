@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\KSString.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Matcher</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>regex</name><operator>.</operator><name>Pattern</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>KSString</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>packageName</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Resources</name></type> <name>resources</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>KSString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>packageName</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Resources</name></type> <name>resources</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>packageName</name></name> <operator>=</operator> <name>packageName</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>resources</name></name> <operator>=</operator> <name>resources</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Replace each key found in the string with its corresponding value.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>substitutions</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key1</name></type></decl></parameter>, <parameter><decl><type><name>value1</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>replace</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>substitutions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Replace each key found in the string with its corresponding value.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key2</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value2</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>substitutions</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key1</name></type></decl></parameter>, <parameter><decl><type><name>value1</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key2</name></type></decl></parameter>, <parameter><decl><type><name>value2</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>replace</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>substitutions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Replace each key found in the string with its corresponding value.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key2</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value2</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key3</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value3</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>substitutions</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key1</name></type></decl></parameter>, <parameter><decl><type><name>value1</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key2</name></type></decl></parameter>, <parameter><decl><type><name>value2</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key3</name></type></decl></parameter>, <parameter><decl><type><name>value3</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>replace</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>substitutions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Replace each key found in the string with its corresponding value.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key2</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value2</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key3</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value3</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key4</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value4</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>substitutions</name> <init>= <expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key1</name></type></decl></parameter>, <parameter><decl><type><name>value1</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key2</name></type></decl></parameter>, <parameter><decl><type><name>value2</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key3</name></type></decl></parameter>, <parameter><decl><type><name>value3</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>put</name><parameter_list>(<parameter><decl><type><name>key4</name></type></decl></parameter>, <parameter><decl><type><name>value4</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+      }</block>
+    }</block></class></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>replace</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>substitutions</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Given a base key path and count, find the appropriate string resource and replace each key
+   * found in the string resource with its corresponding value. For example, given a base key of `foo`,
+   * a count of 0 would give the string resource `foo_zero`, a count of 1 `foo_one`, and so on.
+   *
+   * This particular version is for strings that have no replaceable sections
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>baseKeyPath</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>stringFromKeyPath</name><argument_list>(<argument><expr><name>baseKeyPath</name></expr></argument>, <argument><expr><call><name>keyPathComponentForCount</name><argument_list>(<argument><expr><name>count</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Given a base key path and count, find the appropriate string resource and replace each key
+   * found in the string resource with its corresponding value. For example, given a base key of `foo`,
+   * a count of 0 would give the string resource `foo_zero`, a count of 1 `foo_one`, and so on.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>baseKeyPath</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>count</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><call><name>stringFromKeyPath</name><argument_list>(<argument><expr><name>baseKeyPath</name></expr></argument>, <argument><expr><call><name>keyPathComponentForCount</name><argument_list>(<argument><expr><name>count</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>key1</name></expr></argument>, <argument><expr><name>value1</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Given a base key path and count, find the appropriate string resource and replace each key
+   * found in the string resource with its corresponding value. For example, given a base key of `foo`,
+   * a count of 0 would give the string resource `foo_zero`, a count of 1 `foo_one`, and so on.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>baseKeyPath</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>count</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key2</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value2</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><call><name>stringFromKeyPath</name><argument_list>(<argument><expr><name>baseKeyPath</name></expr></argument>, <argument><expr><call><name>keyPathComponentForCount</name><argument_list>(<argument><expr><name>count</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>key1</name></expr></argument>, <argument><expr><name>value1</name></expr></argument>, <argument><expr><name>key2</name></expr></argument>, <argument><expr><name>value2</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Given a base key path and count, find the appropriate string resource and replace each key
+   * found in the string resource with its corresponding value. For example, given a base key of `foo`,
+   * a count of 0 would give the string resource `foo_zero`, a count of 1 `foo_one`, and so on.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>format</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>baseKeyPath</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>count</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key1</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value1</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key2</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value2</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>key3</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>value3</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><call><name>stringFromKeyPath</name><argument_list>(<argument><expr><name>baseKeyPath</name></expr></argument>, <argument><expr><call><name>keyPathComponentForCount</name><argument_list>(<argument><expr><name>count</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><name>key1</name></expr></argument>, <argument><expr><name>value1</name></expr></argument>, <argument><expr><name>key2</name></expr></argument>, <argument><expr><name>value2</name></expr></argument>, <argument><expr><name>key3</name></expr></argument>, <argument><expr><name>value3</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Takes a variable length of {@link String} arguments, joins them together to form a single path, then
+   * looks up a string resource given that path. If the resource cannot be found, returns an empty string.
+   */</comment>
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>stringFromKeyPath</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name><modifier>...</modifier></type> <name>keyPathComponents</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>keyPath</name> <init>= <expr><call><name><name>TextUtils</name><operator>.</operator><name>join</name></name><argument_list>(<argument><expr><literal type="string">"_"</literal></expr></argument>, <argument><expr><name>keyPathComponents</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <try>try <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>resourceId</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>resources</name><operator>.</operator><name>getIdentifier</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><literal type="string">"string"</literal></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>packageName</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <return>return <expr><call><name><name>this</name><operator>.</operator><name>resources</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name>resourceId</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Resources</name><operator>.</operator><name>NotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><literal type="string">""</literal></expr>;</return>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>keyPathComponentForCount</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>count</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>count</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"zero"</literal></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><name>count</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"one"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>count</name> <operator>==</operator> <literal type="number">2</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"two"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>count</name> <operator>&gt;</operator> <literal type="number">2</literal> <operator>&amp;&amp;</operator> <name>count</name> <operator>&lt;=</operator> <literal type="number">5</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"few"</literal></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><name>count</name> <operator>&gt;</operator> <literal type="number">5</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="string">"many"</literal></expr>;</return>
+    }</block></then></if></elseif></if>
+
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * For a given string, replaces occurrences of each key with its corresponding value. In the string, keys are wrapped
+   * with `%{}`, e.g. `%{backers_count} backers`. In this instance, the substitutions hash might contain one entry with the key
+   * `backers_count` and value `2`.
+   */</comment>
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>replace</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>substitutions</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>StringBuilder</name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name>StringBuilder</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name> <range>: <expr><call><name><name>substitutions</name><operator>.</operator><name>keySet</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>builder</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">"|"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <expr_stmt><expr><call><name><name>builder</name>
+        <operator>.</operator><name>append</name></name><argument_list>(<argument><expr><literal type="string">"(%\\{"</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>append</name><argument_list>(<argument><expr><literal type="string">"\\})"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Pattern</name></type> <name>pattern</name> <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><call><name><name>builder</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Matcher</name></type> <name>matcher</name> <init>= <expr><call><name><name>pattern</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>string</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>StringBuffer</name></type> <name>buffer</name> <init>= <expr><operator>new</operator> <call><name>StringBuffer</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <while>while <condition>(<expr><call><name><name>matcher</name><operator>.</operator><name>find</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>key</name> <init>= <expr><call><name><name>NON_WORD_REGEXP</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><call><name><name>matcher</name><operator>.</operator><name>group</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>replaceAll</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>value</name> <init>= <expr><call><name><name>substitutions</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>replacement</name> <init>= <expr><call><name><name>Matcher</name><operator>.</operator><name>quoteReplacement</name></name><argument_list>(<argument><expr><ternary><condition><expr><name>value</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name>value</name></expr> </then><else>: <expr><literal type="string">""</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name><name>matcher</name><operator>.</operator><name>appendReplacement</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>, <argument><expr><name>replacement</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></while>
+    <expr_stmt><expr><call><name><name>matcher</name><operator>.</operator><name>appendTail</name></name><argument_list>(<argument><expr><name>buffer</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><call><name><name>buffer</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>Pattern</name></type> <name>NON_WORD_REGEXP</name> <init>= <expr><call><name><name>Pattern</name><operator>.</operator><name>compile</name></name><argument_list>(<argument><expr><literal type="string">"[^\\w]"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>

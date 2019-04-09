@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\StringUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Patterns</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>StringUtils</name> <block>{
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MINIMUM_PASSWORD_LENGTH</name> <init>= <expr><literal type="number">6</literal></expr></init></decl>;</decl_stmt>
+
+  <constructor><specifier>private</specifier> <name>StringUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isEmail</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CharSequence</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Patterns</name><operator>.</operator><name>EMAIL_ADDRESS</name><operator>.</operator><name>matcher</name></name><argument_list>(<argument><expr><name>str</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>matches</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isEmpty</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><name>str</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>str</name><operator>.</operator><name>trim</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>length</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isPresent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>!</operator><call><name>isEmpty</name><argument_list>(<argument><expr><name>str</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isValidPassword</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>!</operator><call><name>isEmpty</name><argument_list>(<argument><expr><name>str</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>str</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">5</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a string with only the first character capitalized.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>sentenceCase</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><call><name><name>str</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call> <operator>&lt;=</operator> <literal type="number">1</literal></expr>
+      ?</condition><then> <expr><call><name><name>str</name><operator>.</operator><name>toUpperCase</name></name><argument_list>(<argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>
+      </then><else>: <expr><call><name><name>str</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>toUpperCase</name><argument_list>(<argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>+</operator> <call><name><name>str</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>toLowerCase</name><argument_list>(<argument><expr><call><name><name>Locale</name><operator>.</operator><name>getDefault</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a string wrapped in parentheses.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>wrapInParentheses</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="string">"("</literal> <operator>+</operator> <name>str</name> <operator>+</operator> <literal type="string">")"</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

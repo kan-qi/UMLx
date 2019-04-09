@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\utils\RefTagUtilsTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSRobolectricTestCase</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name><operator>.</operator><name>ProjectFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>MockSharedPreferences</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RefTag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Test</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieManager</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieStore</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>HttpCookie</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>RefTagUtilsTest</name> <super><extends>extends <name>KSRobolectricTestCase</name></extends></super> <block>{
+  <decl_stmt><decl><type><specifier>final</specifier> <specifier>static</specifier> <name>SharedPreferences</name></type> <name>sharedPreferences</name> <init>= <expr><operator>new</operator> <call><name>MockSharedPreferences</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testCookieNameForProject</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"ref_"</literal> <operator>+</operator> <call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name><name>project</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>RefTagUtils</name><operator>.</operator><name>cookieNameForProject</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testCookieValueForRefTag</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>refTag</name> <init>= <expr><call><name><name>RefTag</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><literal type="string">"test"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"test%3F"</literal> <operator>+</operator> <call><name><name>SystemUtils</name><operator>.</operator><name>secondsSinceEpoch</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>RefTagUtils</name><operator>.</operator><name>cookieValueForRefTag</name></name><argument_list>(<argument><expr><name>refTag</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testStoredCookieRefTagForProject</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CookieManager</name></type> <name>cookieManager</name> <init>= <expr><operator>new</operator> <call><name>CookieManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CookieStore</name></type> <name>cookieStore</name> <init>= <expr><call><name><name>cookieManager</name><operator>.</operator><name>getCookieStore</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>refTag</name> <init>= <expr><call><name><name>RefTag</name><operator>.</operator><name>recommended</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// set the cookie and retrieve the ref tag</comment>
+    <expr_stmt><expr><call><name><name>cookieStore</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><operator>new</operator> <call><name>HttpCookie</name><argument_list>(<argument><expr><literal type="string">"ref_"</literal> <operator>+</operator> <call><name><name>project</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>refTag</name><operator>.</operator><name>tag</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"%3F"</literal> <operator>+</operator> <call><name><name>SystemUtils</name><operator>.</operator><name>secondsSinceEpoch</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>retrievedRefTag</name> <init>= <expr><call><name><name>RefTagUtils</name><operator>.</operator><name>storedCookieRefTagForProject</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>cookieManager</name></expr></argument>, <argument><expr><name>sharedPreferences</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>retrievedRefTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><name>refTag</name></expr></argument>, <argument><expr><name>retrievedRefTag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testBuildCookieForRefTagAndProject_WithWellFormedUrl</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>refTag</name> <init>= <expr><call><name><name>RefTag</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><call><name><name>RefTagUtils</name><operator>.</operator><name>buildCookieWithRefTagAndProject</name></name><argument_list>(<argument><expr><name>refTag</name></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><call><name><name>ProjectUtils</name><operator>.</operator><name>timeInSecondsUntilDeadline</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>longValue</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>cookie</name><operator>.</operator><name>getMaxAge</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"www.kickstarter.com"</literal></expr></argument>, <argument><expr><call><name><name>cookie</name><operator>.</operator><name>getDomain</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testBuildCookieForRefTagAndProject_WithMalformedUrl</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Project</name><operator>.</operator><name>Urls</name><operator>.</operator><name>Web</name></name></type> <name>webUrls</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>urls</name><argument_list>()</argument_list></call><operator>.</operator><call><name>web</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>project</name><argument_list>(<argument><expr><literal type="string">"such:\\bad^&lt;data"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Project</name><operator>.</operator><name>Urls</name></name></type> <name>urls</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>urls</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>web</name><argument_list>(<argument><expr><name>webUrls</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>urls</name><argument_list>(<argument><expr><name>urls</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>refTag</name> <init>= <expr><call><name><name>RefTag</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><call><name><name>RefTagUtils</name><operator>.</operator><name>buildCookieWithRefTagAndProject</name></name><argument_list>(<argument><expr><name>refTag</name></expr></argument>, <argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFindRefTagCookieForProject_WhenCookieExists</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CookieManager</name></type> <name>cookieManager</name> <init>= <expr><operator>new</operator> <call><name>CookieManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CookieStore</name></type> <name>cookieStore</name> <init>= <expr><call><name><name>cookieManager</name><operator>.</operator><name>getCookieStore</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>RefTag</name></type> <name>refTag</name> <init>= <expr><call><name><name>RefTag</name><operator>.</operator><name>recommended</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// set and retrieve the cookie</comment>
+    <expr_stmt><expr><call><name><name>cookieStore</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><operator>new</operator> <call><name>HttpCookie</name><argument_list>(<argument><expr><literal type="string">"ref_"</literal> <operator>+</operator> <call><name><name>project</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>refTag</name><operator>.</operator><name>tag</name></name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="string">"%3F"</literal> <operator>+</operator> <call><name><name>SystemUtils</name><operator>.</operator><name>secondsSinceEpoch</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><call><name><name>RefTagUtils</name><operator>.</operator><name>findRefTagCookieForProject</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>cookieManager</name></expr></argument>, <argument><expr><name>sharedPreferences</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><call><name><name>RefTagUtils</name><operator>.</operator><name>cookieNameForProject</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>cookie</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><call><name><name>RefTagUtils</name><operator>.</operator><name>cookieValueForRefTag</name></name><argument_list>(<argument><expr><name>refTag</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>cookie</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFindRefTagCookieForProject_WhenCookieDoesNotExist</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>CookieManager</name></type> <name>cookieManager</name> <init>= <expr><operator>new</operator> <call><name>CookieManager</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>project</name> <init>= <expr><call><name><name>ProjectFactory</name><operator>.</operator><name>project</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// retrieve the cookie</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpCookie</name></type> <name>cookie</name> <init>= <expr><call><name><name>RefTagUtils</name><operator>.</operator><name>findRefTagCookieForProject</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>cookieManager</name></expr></argument>, <argument><expr><name>sharedPreferences</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><name>cookie</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

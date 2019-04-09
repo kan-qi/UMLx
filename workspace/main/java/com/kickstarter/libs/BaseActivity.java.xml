@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\BaseActivity.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>IntentFilter</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>ConnectivityManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ApplicationComponent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>extensions</name><operator>.</operator><name>ActivityExtKt</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>RequiresActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BundleUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ConnectivityReceiver</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name><operator>.</operator><name>ActivityResult</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>ActivityEvent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>RxLifecycle</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>components</name><operator>.</operator><name>ActivityLifecycleProvider</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>AnimRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>CallSuper</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>VisibleForTesting</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>appcompat</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Subscription</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>android</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>AndroidSchedulers</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subscriptions</name><operator>.</operator><name>CompositeSubscription</name></name>;</import>
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name><name>BaseActivity</name><parameter_list>&lt;<parameter><name>ViewModelType</name> <extends>extends <name>ActivityViewModel</name></extends></parameter>&gt;</parameter_list></name> <super><extends>extends <name>AppCompatActivity</name></extends> <implements>implements <name>ActivityLifecycleProvider</name>,
+  <name>ActivityLifecycleType</name>, <name><name>ConnectivityReceiver</name><operator>.</operator><name>ConnectivityReceiverListener</name></name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>back</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>ActivityEvent</name></argument>&gt;</argument_list></name></type> <name>lifecycle</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>IntentFilter</name></type> <name>filter</name> <init>= <expr><operator>new</operator> <call><name>IntentFilter</name><argument_list>(<argument><expr><name><name>ConnectivityManager</name><operator>.</operator><name>CONNECTIVITY_ACTION</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>VIEW_MODEL_KEY</name> <init>= <expr><literal type="string">"viewModel"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CompositeSubscription</name></type> <name>subscriptions</name> <init>= <expr><operator>new</operator> <call><name>CompositeSubscription</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ConnectivityReceiver</name></type> <name>connectivityReceiver</name> <init>= <expr><operator>new</operator> <call><name>ConnectivityReceiver</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <type><name>ViewModelType</name></type> <name>viewModel</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Get viewModel.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>ViewModelType</name></type> <name>viewModel</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>viewModel</name></name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns an observable of the activity's lifecycle events.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>final</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>ActivityEvent</name></argument>&gt;</argument_list></name></type> <name>lifecycle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>asObservable</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Completes an observable when an {@link ActivityEvent} occurs in the activity's lifecycle.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>final</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></type> <name>bindUntilEvent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>ActivityEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>RxLifecycle</name><operator>.</operator><name>bindUntilActivityEvent</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Completes an observable when the lifecycle event opposing the current lifecyle event is emitted.
+   * For example, if a subscription is made during {@link ActivityEvent#CREATE}, the observable will be completed
+   * in {@link ActivityEvent#DESTROY}.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>final</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></type> <name>bindToLifecycle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>RxLifecycle</name><operator>.</operator><name>bindActivity</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Sends activity result data to the view model.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onActivityResult</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>requestCode</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onActivityResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>activityResult</name></name><argument_list>(<argument><expr><call><name><name>ActivityResult</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onCreate %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>CREATE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>assignViewModel</name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>intent</name></name><argument_list>(<argument><expr><call><name>getIntent</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called when an activity is set to `singleTop` and it is relaunched while at the top of the activity stack.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onNewIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onNewIntent</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>intent</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onStart</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onStart</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onStart %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>START</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>back</name>
+      <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>bindUntilEvent</name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>STOP</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>observeOn</name><argument_list>(<argument><expr><call><name><name>AndroidSchedulers</name><operator>.</operator><name>mainThread</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>goBack</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>ConnectivityReceiver</name><operator>.</operator><name>setConnectivityReceiverListener</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onResume %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>RESUME</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>assignViewModel</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>registerReceiver</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>connectivityReceiver</name></name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>filter</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>PAUSE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onPause %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>unregisterReceiver</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>connectivityReceiver</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onStop</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>STOP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onStop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onStop %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>DESTROY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onDestroy %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subscriptions</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>isFinishing</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ActivityViewModelManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>destroy</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @deprecated Use {@link #back()} instead.
+   *
+   *             In rare situations, onBackPressed can be triggered after {@link #onSaveInstanceState(Bundle)} has been called.
+   *             This causes an {@link IllegalStateException} in the fragment manager's `checkStateLoss` method, because the
+   *             UI state has changed after being saved. The sequence of events might look like this:
+   *
+   *             onSaveInstanceState -&gt; onStop -&gt; onBackPressed
+   *
+   *             To avoid that situation, we need to ignore calls to `onBackPressed` after the activity has been saved. Since
+   *             the activity is stopped after `onSaveInstanceState` is called, we can create an observable of back events,
+   *             and a subscription that calls super.onBackPressed() only when the activity has not been stopped.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <annotation>@<name>Deprecated</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBackPressed</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>back</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/** This is called when a user loses data or Wi-Fi connection.
+   * When the user loses connection we will show our network error Snackbar.
+   * We're also using (findViewById(android.R.id.content) to get the root view of our activity
+   * so whatever Activity the user navigates to while disconnected the error will display.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onNetworkConnectionChanged</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>isConnected</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><operator>!</operator><name>isConnected</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ActivityExtKt</name><operator>.</operator><name>showSnackbar</name></name><argument_list>(<argument><expr><call><name>findViewById</name><argument_list>(<argument><expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>content</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Youre_offline</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+  <comment type="block" format="javadoc">/**
+   * Call when the user wants triggers a back event, e.g. clicking back in a toolbar or pressing the device back button.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>back</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>back</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Override in subclasses for custom exit transitions. First item in pair is the enter animation,
+   * second item in pair is the exit animation.
+   */</comment>
+  <function><specifier>protected</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>exitTransition</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><literal type="null">null</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onSaveInstanceState</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Bundle</name></type> <name>outState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onSaveInstanceState</name></name><argument_list>(<argument><expr><name>outState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onSaveInstanceState %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Bundle</name></type> <name>viewModelEnvelope</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>ActivityViewModelManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>save</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name></expr></argument>, <argument><expr><name>viewModelEnvelope</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>outState</name><operator>.</operator><name>putBundle</name></name><argument_list>(<argument><expr><name>VIEW_MODEL_KEY</name></expr></argument>, <argument><expr><name>viewModelEnvelope</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>startActivityWithTransition</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>AnimRes</name></annotation> <name>int</name></type> <name>enterAnim</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>AnimRes</name></annotation> <name>int</name></type> <name>exitAnim</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>overridePendingTransition</name><argument_list>(<argument><expr><name>enterAnim</name></expr></argument>, <argument><expr><name>exitAnim</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the {@link KSApplication} instance.
+   */</comment>
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSApplication</name></type> <name>application</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name>getApplication</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Convenience method to return a Dagger component.
+   */</comment>
+  <function><specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>ApplicationComponent</name></type> <name>component</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>application</name><argument_list>()</argument_list></call><operator>.</operator><call><name>component</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns the application's {@link Environment}.
+   */</comment>
+  <function><annotation>@<name>VisibleForTesting</name><argument_list>(<argument><expr><name>otherwise</name> <operator>=</operator> <name><name>VisibleForTesting</name><operator>.</operator><name>PROTECTED</name></name></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Environment</name></type> <name>environment</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>environment</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * @deprecated Use {@link #bindToLifecycle()} or {@link #bindUntilEvent(ActivityEvent)} instead.
+   */</comment>
+  <function><annotation>@<name>Deprecated</name></annotation>
+  <specifier>protected</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>addSubscription</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Subscription</name></type> <name>subscription</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>subscriptions</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>subscription</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Triggers a back press with an optional transition.
+   */</comment>
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>goBack</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBackPressed</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>exitTransitions</name> <init>= <expr><call><name>exitTransition</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>exitTransitions</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>overridePendingTransition</name><argument_list>(<argument><expr><name><name>exitTransitions</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>exitTransitions</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>assignViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>viewModelEnvelope</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>RequiresActivityViewModel</name></type> <name>annotation</name> <init>= <expr><call><name>getClass</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAnnotation</name><argument_list>(<argument><expr><name><name>RequiresActivityViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Class</name><argument_list type="generic">&lt;<argument><name>ViewModelType</name></argument>&gt;</argument_list></name></type> <name>viewModelClass</name> <init>= <expr><ternary><condition><expr><name>annotation</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><operator>(</operator><name><name>Class</name><argument_list type="generic">&lt;<argument><name>ViewModelType</name></argument>&gt;</argument_list></name><operator>)</operator> <call><name><name>annotation</name><operator>.</operator><name>value</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>viewModelClass</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>=</operator> <call><name><name>ActivityViewModelManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>fetch</name><argument_list>(<argument><expr><name>this</name></expr></argument>,
+          <argument><expr><name>viewModelClass</name></expr></argument>,
+          <argument><expr><call><name><name>BundleUtils</name><operator>.</operator><name>maybeGetBundle</name></name><argument_list>(<argument><expr><name>viewModelEnvelope</name></expr></argument>, <argument><expr><name>VIEW_MODEL_KEY</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\issue\IssueBrowseActivity.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>ActionBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>widget</name><operator>.</operator><name>Toolbar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>Builder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>issue</name><operator>.</operator><name>IssueFilter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AvatarLoader</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TOP</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_SINGLE_TOP</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>EXTRA_ISSUE_FILTER</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>EXTRA_REPOSITORY</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Activity for browsing a list of issues scoped to a single {@link IssueFilter}
+ */</comment>
+<class><specifier>public</specifier> class <name>IssueBrowseActivity</name> <super><extends>extends <name>BaseActivity</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Create intent to browse the filtered issues
+     *
+     * @param filter
+     * @return intent
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Intent</name></type> <name>createIntent</name><parameter_list>(<parameter><decl><type><name>IssueFilter</name></type> <name>filter</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.issue.IssueBrowseActivity.createIntent(com.github.pockethub.android.core.issue.IssueFilter)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.content.Intent com.github.pockethub.android.ui.issue.IssueBrowseActivity.createIntent(com.github.pockethub.android.core.issue.IssueFilter)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>Builder</name><argument_list>(<argument><expr><literal type="string">"repo.issues.VIEW"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>repo</name><argument_list>(<argument><expr><call><name><name>filter</name><operator>.</operator><name>getRepository</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>add</name><argument_list>(<argument><expr><name>EXTRA_ISSUE_FILTER</name></expr></argument>, <argument><expr><name>filter</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>toIntent</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>Repository</name></type> <name>repo</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><annotation>@<name>Inject</name></annotation>
+    <specifier>protected</specifier> <type><name>AvatarLoader</name></type> <name>avatars</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueBrowseActivity.onCreate(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>setContentView</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_repo_issue_list</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>repo</name> <operator>=</operator> <call><name>getParcelableExtra</name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>ActionBar</name></type> <name>actionBar</name> <init>= <expr><call><name>getSupportActionBar</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>actionBar</name><operator>.</operator><name>setTitle</name></name><argument_list>(<argument><expr><call><name><name>repo</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>actionBar</name><operator>.</operator><name>setSubtitle</name></name><argument_list>(<argument><expr><call><name><name>repo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>login</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>actionBar</name><operator>.</operator><name>setDisplayHomeAsUpEnabled</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>avatars</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>actionBar</name></expr></argument>, <argument><expr><call><name><name>repo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueBrowseActivity.onCreate(android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.issue.IssueBrowseActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+            <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><call><name><name>FiltersViewActivity</name><operator>.</operator><name>createIntent</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>addFlags</name></name><argument_list>(<argument><expr><name>FLAG_ACTIVITY_CLEAR_TOP</name> <operator>|</operator> <name>FLAG_ACTIVITY_SINGLE_TOP</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.issue.IssueBrowseActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.issue.IssueBrowseActivity.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+}</block></class>
+</unit>

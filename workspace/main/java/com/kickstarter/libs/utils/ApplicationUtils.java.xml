@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\ApplicationUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>DiscoveryActivity</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ApplicationUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>ApplicationUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   *
+   * Starts the main activity at the top of a task stack, clearing all previous activities.
+   *
+   * `ACTION_MAIN` does not expect to receive any data in the intent, it should be the same intent as if a user had
+   * just launched the app.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>startNewDiscoveryActivity</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>DiscoveryActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>setAction</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_MAIN</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>setFlags</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_NEW_TASK</name></name> <operator>|</operator> <name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TASK</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Clears all activities from the task stack except discovery.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>resumeDiscoveryActivity</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>DiscoveryActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>setFlags</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TOP</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>context</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\views\IconTextView.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>TypedArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AttributeSet</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSApplication</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Font</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>appcompat</name><operator>.</operator><name>widget</name><operator>.</operator><name>AppCompatTextView</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>IconTextView</name> <super><extends>extends <name>AppCompatTextView</name></extends></super> <block>{
+  <decl_stmt><decl><annotation>@<name>Inject</name></annotation> <type><name>Font</name></type> <name>font</name></decl>;</decl_stmt>
+
+  <comment type="line">// Enum for the iconType XML parameter</comment>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>MATERIAL</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SS_KICKSTARTER</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>DEFAULT_ICON_TYPE</name> <init>= <expr><name>MATERIAL</name></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>iconType</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>IconTextView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IconTextView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <constructor><specifier>public</specifier> <name>IconTextView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyleAttr</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>initialize</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>attrs</name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>protected</specifier> <type><name>void</name></type> <name>initialize</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>AttributeSet</name></type> <name>attrs</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyleAttr</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>defStyleRes</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>TypedArray</name></type> <name>attributes</name> <init>= <expr><call><name><name>context</name><operator>.</operator><name>obtainStyledAttributes</name></name><argument_list>(<argument><expr><name>attrs</name></expr></argument>, <argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>IconTextView</name></name></expr></argument>, <argument><expr><name>defStyleAttr</name></expr></argument>, <argument><expr><name>defStyleRes</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>iconType</name></name> <operator>=</operator> <call><name><name>attributes</name><operator>.</operator><name>getInt</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>styleable</name><operator>.</operator><name>IconTextView_iconType</name></name></expr></argument>, <argument><expr><name>DEFAULT_ICON_TYPE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>attributes</name><operator>.</operator><name>recycle</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <type><name>void</name></type> <name>onFinishInflate</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onFinishInflate</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>isInEditMode</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <return>return;</return>
+    }</block></then></if>
+
+    <expr_stmt><expr><operator>(</operator><operator>(</operator><name>KSApplication</name><operator>)</operator> <call><name>getContext</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getApplicationContext</name><argument_list>()</argument_list></call><operator>)</operator><operator>.</operator><call><name>component</name><argument_list>()</argument_list></call><operator>.</operator><call><name>inject</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <switch>switch <condition>(<expr><name><name>this</name><operator>.</operator><name>iconType</name></name></expr>)</condition> <block>{
+      <case>case <expr><name>MATERIAL</name></expr>:</case>
+        <expr_stmt><expr><call><name>setTypeface</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>font</name><operator>.</operator><name>materialIconsTypeface</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name>SS_KICKSTARTER</name></expr>:</case>
+        <expr_stmt><expr><call><name>setTypeface</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>font</name><operator>.</operator><name>ssKickstarterTypeface</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+    }</block></switch>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\data\LoginReason.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name></name>;</package>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<enum><specifier>public</specifier> enum <name>LoginReason</name> <block>{
+  <decl><name>DEFAULT</name></decl>,
+  <decl><name>ACTIVITY_FEED</name></decl>,
+  <decl><name>CHANGE_PASSWORD</name></decl>,
+  <decl><name>COMMENT_FEED</name></decl>,
+  <decl><name>CREATE_PASSWORD</name></decl>,
+  <decl><name>BACK_PROJECT</name></decl>,
+  <decl><name>MESSAGE_CREATOR</name></decl>,
+  <decl><name>RESET_PASSWORD</name></decl>,
+  <decl><name>STAR_PROJECT</name></decl>;
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isDefaultFlow</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>this</name> <operator>==</operator> <name>DEFAULT</name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isContextualFlow</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>!</operator><call><name>isDefaultFlow</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Tracking string for Koala.
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>trackingString</name><parameter_list>()</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>this</name></expr>)</condition> <block>{
+      <case>case <expr><name>BACK_PROJECT</name></expr>:</case>
+        <return>return <expr><literal type="string">"pledge"</literal></expr>;</return>
+      <case>case <expr><name>MESSAGE_CREATOR</name></expr>:</case>
+        <return>return <expr><literal type="string">"new_message"</literal></expr>;</return>
+      <case>case <expr><name>STAR_PROJECT</name></expr>:</case>
+        <return>return <expr><literal type="string">"star"</literal></expr>;</return>
+      <default>default:</default>
+        <return>return <expr><literal type="string">"generic"</literal></expr>;</return>
+    }</block></switch>
+  }</block></function>
+}</block></enum>
+</unit>

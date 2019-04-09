@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\adapters\DiscoveryAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ActivitySampleFriendBackingViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ActivitySampleFriendFollowViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ActivitySampleProjectViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>DiscoveryOnboardingViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>EmptyViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>KSViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ProjectCardViewHolder</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>DiscoveryAdapter</name> <super><extends>extends <name>KSAdapter</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_ONBOARDING_VIEW</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_ACTIVITY_SAMPLE_VIEW</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>SECTION_PROJECT_CARD_VIEW</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <super><extends>extends <name><name>DiscoveryOnboardingViewHolder</name><operator>.</operator><name>Delegate</name></name>,
+    <name><name>ActivitySampleFriendFollowViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>ActivitySampleFriendBackingViewHolder</name><operator>.</operator><name>Delegate</name></name>,
+    <name><name>ActivitySampleProjectViewHolder</name><operator>.</operator><name>Delegate</name></name>, <name><name>ProjectCardViewHolder</name><operator>.</operator><name>Delegate</name></name></extends></super> <block>{}</block></interface>
+
+  <constructor><specifier>public</specifier> <name>DiscoveryAdapter</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_ONBOARDING_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_ACTIVITY_SAMPLE_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>insertSection</name><argument_list>(<argument><expr><name>SECTION_PROJECT_CARD_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takeActivity</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Activity</name></type> <name>activity</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>activity</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_ACTIVITY_SAMPLE_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_ACTIVITY_SAMPLE_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setShouldShowOnboardingView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>shouldShowOnboardingView</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>shouldShowOnboardingView</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_ONBOARDING_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_ONBOARDING_VIEW</name></expr></argument>, <argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>takeProjects</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>projects</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>setSection</name><argument_list>(<argument><expr><name>SECTION_PROJECT_CARD_VIEW</name></expr></argument>, <argument><expr><name>projects</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>LayoutRes</name></annotation> <type><name>int</name></type> <name>layout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>SECTION_ONBOARDING_VIEW</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_onboarding_view</name></name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>SECTION_ACTIVITY_SAMPLE_VIEW</name></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call> <operator>instanceof</operator> <name>Activity</name></expr>)</condition><then> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Activity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>Activity</name><operator>)</operator> <call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>activity</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_BACKING</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_sample_friend_backing_view</name></name></expr>;</return>
+        }</block></then> <elseif>else <if>if <condition>(<expr><call><name><name>activity</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>CATEGORY_FOLLOW</name></name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_sample_friend_follow_view</name></name></expr>;</return>
+        }</block></then></if></elseif> <else>else <block>{
+          <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_sample_project_view</name></name></expr>;</return>
+        }</block></else></if>
+      }</block></then></if>
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_view</name></name></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>project_card_view</name></name></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>viewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>layout</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>discovery_onboarding_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>DiscoveryOnboardingViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>project_card_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ProjectCardViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_sample_friend_backing_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ActivitySampleFriendBackingViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_sample_friend_follow_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ActivitySampleFriendFollowViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>activity_sample_project_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>ActivitySampleProjectViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>delegate</name></name></expr></argument>)</argument_list></call></expr>;</return>
+      <default>default:</default>
+        <return>return <expr><operator>new</operator> <call><name>EmptyViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></switch>
+  }</block></function>
+}</block></class>
+</unit>

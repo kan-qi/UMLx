@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\utils\I18nUtilsTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name><operator>.</operator><name>LocationFactory</name></name>;</import>
+
+<import>import <name><name>junit</name><operator>.</operator><name>framework</name><operator>.</operator><name>TestCase</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Locale</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>I18nUtilsTest</name> <super><extends>extends <name>TestCase</name></extends></super> <block>{
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testLanguage</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"en"</literal></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>US</name><operator>.</operator><name>getLanguage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"de"</literal></expr></argument>, <argument><expr><call><name><name>Locale</name><operator>.</operator><name>GERMANY</name><operator>.</operator><name>getLanguage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsCountryGermany</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>I18nUtils</name><operator>.</operator><name>isCountryGermany</name></name><argument_list>(<argument><expr><call><name><name>LocationFactory</name><operator>.</operator><name>unitedStates</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>country</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>I18nUtils</name><operator>.</operator><name>isCountryGermany</name></name><argument_list>(<argument><expr><call><name><name>LocationFactory</name><operator>.</operator><name>germany</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>country</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsCountryUS</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>I18nUtils</name><operator>.</operator><name>isCountryUS</name></name><argument_list>(<argument><expr><call><name><name>LocationFactory</name><operator>.</operator><name>unitedStates</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>country</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>I18nUtils</name><operator>.</operator><name>isCountryUS</name></name><argument_list>(<argument><expr><call><name><name>LocationFactory</name><operator>.</operator><name>germany</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>country</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

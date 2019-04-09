@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\models\Activity.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AutoGson</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Retention</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>annotation</name><operator>.</operator><name>RetentionPolicy</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>StringDef</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<class><annotation>@<name>AutoGson</name></annotation>
+<annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>Activity</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Category</name></annotation> <type><name>String</name></type> <name>category</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>DateTime</name></type> <name>createdAt</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>long</name></type> <name>id</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Project</name></type> <name>project</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Update</name></type> <name>update</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>DateTime</name></type> <name>updatedAt</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>User</name></type> <name>user</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>category</name><parameter_list>(<parameter><decl><type><annotation>@<name>Category</name></annotation> <name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>createdAt</name><parameter_list>(<parameter><decl><type><name>DateTime</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>id</name><parameter_list>(<parameter><decl><type><name>long</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>project</name><parameter_list>(<parameter><decl><type><name>Project</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>update</name><parameter_list>(<parameter><decl><type><name>Update</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>updatedAt</name><parameter_list>(<parameter><decl><type><name>DateTime</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>user</name><parameter_list>(<parameter><decl><type><name>User</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Activity</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_Activity</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_WATCH</name>               <init>= <expr><literal type="string">"watch"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_UPDATE</name>              <init>= <expr><literal type="string">"update"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_COMMENT_PROJECT</name>     <init>= <expr><literal type="string">"comment-project"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_BACKING</name>             <init>= <expr><literal type="string">"backing"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_COMMENT_POST</name>        <init>= <expr><literal type="string">"comment-post"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_CANCELLATION</name>        <init>= <expr><literal type="string">"cancellation"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_SUCCESS</name>             <init>= <expr><literal type="string">"success"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_SUSPENSION</name>          <init>= <expr><literal type="string">"suspension"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_LAUNCH</name>              <init>= <expr><literal type="string">"launch"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_FAILURE</name>             <init>= <expr><literal type="string">"failure"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_FUNDING</name>             <init>= <expr><literal type="string">"funding"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_BACKING_CANCELED</name>    <init>= <expr><literal type="string">"backing-canceled"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_BACKING_DROPPED</name>     <init>= <expr><literal type="string">"backing-dropped"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_BACKING_REWARD</name>      <init>= <expr><literal type="string">"backing-reward"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_BACKING_AMOUNT</name>      <init>= <expr><literal type="string">"backing-amount"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_COMMENT_PROPOSAL</name>    <init>= <expr><literal type="string">"comment-proposal"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>CATEGORY_FOLLOW</name>              <init>= <expr><literal type="string">"follow"</literal></expr></init></decl>;</decl_stmt>
+
+  <annotation_defn><annotation>@<name>Retention</name><argument_list>(<argument><expr><name><name>RetentionPolicy</name><operator>.</operator><name>SOURCE</name></name></expr></argument>)</argument_list></annotation>
+  <annotation>@<name>StringDef</name><argument_list>(<argument><expr><block>{<expr><name>CATEGORY_WATCH</name></expr>, <argument><expr><name>CATEGORY_UPDATE</name></expr></argument>, <argument><expr><name>CATEGORY_COMMENT_PROJECT</name></expr></argument>, <argument><expr><name>CATEGORY_BACKING</name></expr></argument>,
+    <argument><expr><name>CATEGORY_COMMENT_POST</name></expr></argument>, <argument><expr><name>CATEGORY_CANCELLATION</name></expr></argument>, <argument><expr><name>CATEGORY_SUCCESS</name></expr></argument>, <argument><expr><name>CATEGORY_SUSPENSION</name></expr></argument>, <argument><expr><name>CATEGORY_LAUNCH</name></expr></argument>,
+    <argument><expr><name>CATEGORY_FAILURE</name></expr></argument>, <argument><expr><name>CATEGORY_FUNDING</name></expr></argument>, <argument><expr><name>CATEGORY_BACKING_CANCELED</name></expr></argument>, <argument><expr><name>CATEGORY_BACKING_DROPPED</name></expr></argument>, <argument><expr><name>CATEGORY_BACKING_REWARD</name></expr></argument>,
+    <argument><expr><name>CATEGORY_BACKING_AMOUNT</name></expr></argument>, <argument><expr><name>CATEGORY_COMMENT_PROPOSAL</name></expr></argument>, <argument><expr><name>CATEGORY_FOLLOW</name></expr></argument>}</block></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> @interface <name>Category</name> <block>{}</block></annotation_defn>
+
+  <function><specifier>public</specifier> <type><name>String</name></type> <name>projectUpdateUrl</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><call><name>project</name><argument_list>()</argument_list></call><operator>.</operator><call><name>webProjectUrl</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>buildUpon</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>appendEncodedPath</name><argument_list>(<argument><expr><literal type="string">"posts"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>appendPath</name><argument_list>(<argument><expr><call><name><name>Long</name><operator>.</operator><name>toString</name></name><argument_list>(<argument><expr><call><name>update</name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\commit\DiffStyler.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>commit</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>TextUtils</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubFile</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collection</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Styler for the file diffs introduced in a commit
+ */</comment>
+<class><specifier>public</specifier> class <name>DiffStyler</name> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>diffs</name> <init>= <expr><operator>new</operator> <call><name><name>HashMap</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>markerColor</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>defaultColor</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create diff styler
+     *
+     * @param resources
+     */</comment>
+    <constructor><specifier>public</specifier> <name>DiffStyler</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Resources</name></type> <name>resources</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.commit.DiffStyler.DiffStyler(android.content.res.Resources)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>markerColor</name> <operator>=</operator> <call><name><name>resources</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>diff_marker_text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>defaultColor</name> <operator>=</operator> <call><name><name>resources</name><operator>.</operator><name>getColor</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>text</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.commit.DiffStyler.DiffStyler(android.content.res.Resources)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>private</specifier> <type><name>int</name></type> <name>nextLine</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>patch</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>start</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>length</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.commit.DiffStyler.nextLine(String,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>end</name> <init>= <expr><call><name><name>patch</name><operator>.</operator><name>indexOf</name></name><argument_list>(<argument><expr><literal type="char">'\n'</literal></expr></argument>, <argument><expr><name>start</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>end</name> <operator>!=</operator> <operator>-</operator><literal type="number">1</literal></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.commit.DiffStyler.nextLine(String,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>end</name></expr>;</return>}</block>
+        }</block></then> <else>else <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.commit.DiffStyler.nextLine(String,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>length</name></expr>;</return>}</block>
+        }</block></else></if>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Style view for line
+     *
+     * @param line
+     * @param view
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>updateColors</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>CharSequence</name></type> <name>line</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>TextView</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.DiffStyler.updateColors(CharSequence,android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>line</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setBackgroundResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>list_item_background</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>defaultColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.DiffStyler.updateColors(CharSequence,android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        }</block></then></if>
+
+        <switch>switch <condition>(<expr><call><name><name>line</name><operator>.</operator><name>charAt</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>)</condition> <block>{
+        <case>case <expr><literal type="char">'@'</literal></expr>:</case>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setBackgroundResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>diff_marker_background</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>markerColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.DiffStyler.updateColors(CharSequence,android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        <case>case <expr><literal type="char">'+'</literal></expr>:</case>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setBackgroundResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>diff_add_background</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>defaultColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.DiffStyler.updateColors(CharSequence,android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        <case>case <expr><literal type="char">'-'</literal></expr>:</case>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setBackgroundResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>diff_remove_background</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>defaultColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.commit.DiffStyler.updateColors(CharSequence,android.widget.TextView)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return;</return>}</block>
+        <default>default:</default>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setBackgroundResource</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>list_item_background</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>view</name><operator>.</operator><name>setTextColor</name></name><argument_list>(<argument><expr><name>defaultColor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></switch>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Set files to styler
+     *
+     * @param files
+     * @return this styler
+     */</comment>
+    <function><specifier>public</specifier> <type><name>DiffStyler</name></type> <name>setFiles</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>Collection</name><argument_list type="generic">&lt;<argument><name>GitHubFile</name></argument>&gt;</argument_list></name></type> <name>files</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.commit.DiffStyler com.github.pockethub.android.ui.commit.DiffStyler.setFiles(Collection&lt;GitHubFile&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>diffs</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <if>if <condition>(<expr><name>files</name> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name><name>files</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.commit.DiffStyler com.github.pockethub.android.ui.commit.DiffStyler.setFiles(Collection&lt;GitHubFile&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+        }</block></then></if>
+
+        <for>for <control>(<init><decl><type><name>GitHubFile</name></type> <name>file</name> <range>: <expr><name>files</name></expr></range></decl></init>)</control> <block>{
+            <decl_stmt><decl><type><name>String</name></type> <name>patch</name> <init>= <expr><call><name><name>file</name><operator>.</operator><name>patch</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>patch</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+                <continue>continue;</continue>
+            }</block></then></if>
+
+            <decl_stmt><decl><type><name>int</name></type> <name>start</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type> <name>length</name> <init>= <expr><call><name><name>patch</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name>int</name></type> <name>end</name> <init>= <expr><call><name>nextLine</name><argument_list>(<argument><expr><name>patch</name></expr></argument>, <argument><expr><name>start</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>lines</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <while>while <condition>(<expr><name>start</name> <operator>&lt;</operator> <name>length</name></expr>)</condition> <block>{
+                <expr_stmt><expr><call><name><name>lines</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>patch</name><operator>.</operator><name>substring</name></name><argument_list>(<argument><expr><name>start</name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><name>start</name> <operator>=</operator> <name>end</name> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+                <expr_stmt><expr><name>end</name> <operator>=</operator> <call><name>nextLine</name><argument_list>(<argument><expr><name>patch</name></expr></argument>, <argument><expr><name>start</name></expr></argument>, <argument><expr><name>length</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            }</block></while>
+            <expr_stmt><expr><call><name><name>diffs</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><call><name><name>file</name><operator>.</operator><name>filename</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>lines</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></for>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.commit.DiffStyler com.github.pockethub.android.ui.commit.DiffStyler.setFiles(Collection&lt;GitHubFile&gt;)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Get lines for file path
+     *
+     * @param file
+     * @return styled text
+     */</comment>
+    <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>get</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>String</name></type> <name>file</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;CharSequence&gt; com.github.pockethub.android.ui.commit.DiffStyler.get(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><if>if <condition>(<expr><call><name><name>TextUtils</name><operator>.</operator><name>isEmpty</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;CharSequence&gt; com.github.pockethub.android.ui.commit.DiffStyler.get(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr>;</return>}</block>
+        }</block></then></if>
+        <decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>CharSequence</name></argument>&gt;</argument_list></name></type> <name>lines</name> <init>= <expr><call><name><name>diffs</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"List&lt;CharSequence&gt; com.github.pockethub.android.ui.commit.DiffStyler.get(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><name>lines</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name>lines</name></expr> </then><else>: <expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

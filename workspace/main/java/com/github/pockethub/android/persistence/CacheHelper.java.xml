@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\persistence\CacheHelper.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>persistence</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>sqlite</name><operator>.</operator><name>SQLiteDatabase</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>database</name><operator>.</operator><name>sqlite</name><operator>.</operator><name>SQLiteOpenHelper</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Helper class to create &amp; upgrade database cache tables
+ */</comment>
+<class><specifier>public</specifier> class <name>CacheHelper</name> <super><extends>extends <name>SQLiteOpenHelper</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Version constant to increment when the database should be rebuilt
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>int</name></type> <name>VERSION</name> <init>= <expr><literal type="number">9</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Name of database file
+     */</comment>
+    <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>NAME</name> <init>= <expr><literal type="string">"cache.db"</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * @param context
+     */</comment>
+    <constructor><annotation>@<name>Inject</name></annotation>
+    <specifier>public</specifier> <name>CacheHelper</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>NAME</name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><name>VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.persistence.CacheHelper.CacheHelper(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.persistence.CacheHelper.CacheHelper(android.content.Context)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>SQLiteDatabase</name></type> <name>db</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.persistence.CacheHelper.onCreate(android.database.sqlite.SQLiteDatabase)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"CREATE TABLE orgs (id INTEGER PRIMARY KEY);"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, avatarurl TEXT);"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"CREATE TABLE repos (id INTEGER PRIMARY KEY, repoId INTEGER, orgId INTEGER, "</literal> <operator>+</operator>
+                <literal type="string">"name TEXT, ownerId INTEGER, private INTEGER, fork INTEGER, description TEXT, "</literal> <operator>+</operator>
+                <literal type="string">"forks INTEGER, watchers INTEGER, language TEXT, hasIssues INTEGER, "</literal> <operator>+</operator>
+                <literal type="string">"mirrorUrl TEXT, permissions_admin INTEGER, permissions_pull INTEGER, "</literal> <operator>+</operator>
+                <literal type="string">"permissions_push INTEGER);"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.persistence.CacheHelper.onCreate(android.database.sqlite.SQLiteDatabase)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onUpgrade</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>SQLiteDatabase</name></type> <name>db</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>oldVersion</name></decl></parameter>,
+            <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>newVersion</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.persistence.CacheHelper.onUpgrade(android.database.sqlite.SQLiteDatabase,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"DROP TABLE IF EXISTS orgs"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"DROP TABLE IF EXISTS users"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>db</name><operator>.</operator><name>execSQL</name></name><argument_list>(<argument><expr><literal type="string">"DROP TABLE IF EXISTS repos"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>onCreate</name><argument_list>(<argument><expr><name>db</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.persistence.CacheHelper.onUpgrade(android.database.sqlite.SQLiteDatabase,int,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

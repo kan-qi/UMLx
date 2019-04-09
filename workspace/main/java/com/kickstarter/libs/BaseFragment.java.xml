@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\BaseFragment.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>RequiresFragmentViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BundleUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>FragmentEvent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>RxLifecycle</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>components</name><operator>.</operator><name>FragmentLifecycleProvider</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>CallSuper</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>fragment</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> class <name><name>BaseFragment</name><parameter_list>&lt;<parameter><name>ViewModelType</name> <extends>extends <name>FragmentViewModel</name></extends></parameter>&gt;</parameter_list></name> <super><extends>extends <name>Fragment</name></extends> <implements>implements <name>FragmentLifecycleProvider</name>,
+  <name>FragmentLifecycleType</name></implements></super> <block>{
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>FragmentEvent</name></argument>&gt;</argument_list></name></type> <name>lifecycle</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>VIEW_MODEL_KEY</name> <init>= <expr><literal type="string">"FragmentViewModel"</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <type><name>ViewModelType</name></type> <name>viewModel</name></decl>;</decl_stmt>
+
+  <comment type="block" format="javadoc">/**
+   * Returns an observable of the fragment's lifecycle events.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>FragmentEvent</name></argument>&gt;</argument_list></name></type> <name>lifecycle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>asObservable</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Completes an observable when an {@link FragmentEvent} occurs in the fragment's lifecycle.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <annotation>@<name><name>NonNull</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></annotation> <type><name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></type> <name>bindUntilEvent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>FragmentEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>RxLifecycle</name><operator>.</operator><name>bindUntilFragmentEvent</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Completes an observable when the lifecycle event opposing the current lifecyle event is emitted.
+   * For example, if a subscription is made during {@link FragmentEvent#CREATE}, the observable will be completed
+   * in {@link FragmentEvent#DESTROY}.
+   */</comment>
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <annotation>@<name><name>NonNull</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></annotation> <type><name><name>Observable</name><operator>.</operator><name><name>Transformer</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>T</name></argument>&gt;</argument_list></name></name></type> <name>bindToLifecycle</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>RxLifecycle</name><operator>.</operator><name>bindFragment</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>lifecycle</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called before `onCreate`, when a fragment is attached to its context.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onAttach</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onAttach</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onAttach %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>ATTACH</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onCreate</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onCreate</name></name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onCreate %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>CREATE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>assignViewModel</name><argument_list>(<argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>arguments</name></name><argument_list>(<argument><expr><call><name>getArguments</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called when a fragment instantiates its user interface view, between `onCreate` and `onActivityCreated`.
+   * Can return null for non-graphical fragments.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>View</name></type> <name>onCreateView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>LayoutInflater</name></type> <name>inflater</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>ViewGroup</name></type> <name>container</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>View</name></type> <name>view</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>onCreateView</name></name><argument_list>(<argument><expr><name>inflater</name></expr></argument>, <argument><expr><name>container</name></expr></argument>, <argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onCreateView %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>CREATE_VIEW</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>view</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onStart</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onStart</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onStart %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>START</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onResume</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onResume %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>RESUME</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>assignViewModel</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>onResume</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onPause</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>PAUSE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onPause %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>onPause</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onStop</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>STOP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onStop</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onStop %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called when the view created by `onCreateView` has been detached from the fragment.
+   * The lifecycle subject must be pinged before it is destroyed by the fragment.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onDestroyView</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>DESTROY_VIEW</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroyView</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onDestroy</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>DESTROY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onDestroy %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>onDestroy</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Called after `onDestroy` when the fragment is no longer attached to its activity.
+   */</comment>
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onDetach</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onDetach %s"</literal></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onDetach</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><call><name>getActivity</name><argument_list>()</argument_list></call><operator>.</operator><call><name>isFinishing</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <comment type="line">// Order of the next two lines is important: the lifecycle should update before we</comment>
+        <comment type="line">// complete the view publish subject in the view model.</comment>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>lifecycle</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>FragmentEvent</name><operator>.</operator><name>DETACH</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewModel</name><operator>.</operator><name>onDetach</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>FragmentViewModelManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>destroy</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>CallSuper</name></annotation>
+  <annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onSaveInstanceState</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Bundle</name></type> <name>outState</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onSaveInstanceState</name></name><argument_list>(<argument><expr><name>outState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Bundle</name></type> <name>viewModelEnvelope</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>FragmentViewModelManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>save</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name></expr></argument>, <argument><expr><name>viewModelEnvelope</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>outState</name><operator>.</operator><name>putBundle</name></name><argument_list>(<argument><expr><name>VIEW_MODEL_KEY</name></expr></argument>, <argument><expr><name>viewModelEnvelope</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>private</specifier> <type><name>void</name></type> <name>assignViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>viewModelEnvelope</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>RequiresFragmentViewModel</name></type> <name>annotation</name> <init>= <expr><call><name>getClass</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getAnnotation</name><argument_list>(<argument><expr><name><name>RequiresFragmentViewModel</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Class</name><argument_list type="generic">&lt;<argument><name>ViewModelType</name></argument>&gt;</argument_list></name></type> <name>viewModelClass</name> <init>= <expr><ternary><condition><expr><name>annotation</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><operator>(</operator><name><name>Class</name><argument_list type="generic">&lt;<argument><name>ViewModelType</name></argument>&gt;</argument_list></name><operator>)</operator> <call><name><name>annotation</name><operator>.</operator><name>value</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>viewModelClass</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>viewModel</name></name> <operator>=</operator> <call><name><name>FragmentViewModelManager</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>fetch</name><argument_list>(<argument><expr><call><name>getContext</name><argument_list>()</argument_list></call></expr></argument>,
+          <argument><expr><name>viewModelClass</name></expr></argument>,
+          <argument><expr><call><name><name>BundleUtils</name><operator>.</operator><name>maybeGetBundle</name></name><argument_list>(<argument><expr><name>viewModelEnvelope</name></expr></argument>, <argument><expr><name>VIEW_MODEL_KEY</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+    }</block></then></if>
+  }</block></function>
+}</block></class>
+</unit>

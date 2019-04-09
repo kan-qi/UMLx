@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\androidTest\java\com\github\pockethub\android\tests\commit\CommitUtilsTest.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>tests</name><operator>.</operator><name>commit</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>test</name><operator>.</operator><name>AndroidTestCase</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Commit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubFile</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>commit</name><operator>.</operator><name>CommitUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>git</name><operator>.</operator><name>GitCommit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>git</name><operator>.</operator><name>GitUser</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Test of {@link CommitUtils}
+ */</comment>
+<class><specifier>public</specifier> class <name>CommitUtilsTest</name> <super><extends>extends <name>AndroidTestCase</name></extends></super> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Test commit SHA-1 abbreviation
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testAbbreviate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testAbbreviate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><operator>(</operator><name>GitCommit</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><operator>(</operator><name>Commit</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><operator>(</operator><name>String</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"abcdefghij"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><literal type="string">"abcdefghijk"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitCommit</name></type> <name>gitCommit</name> <init>= <expr><call><name><name>GitCommit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>sha</name><argument_list>(<argument><expr><literal type="string">"abc"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"abc"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><name>gitCommit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>Commit</name></type> <name>commit</name> <init>= <expr><call><name><name>Commit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>sha</name><argument_list>(<argument><expr><literal type="string">"abcd"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"abcd"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>abbreviate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testAbbreviate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test commit name parsing from path
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testGetName</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetName()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><operator>(</operator><name>String</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><operator>(</operator><name>GitHubFile</name><operator>)</operator> <literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"/"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><literal type="string">"/"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"b"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><literal type="string">"a/b"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>GitHubFile</name></type> <name>file</name> <init>= <expr><call><name><name>GitHubFile</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>filename</name><argument_list>(<argument><expr><literal type="string">"a/b/c"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"c"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getName</name></name><argument_list>(<argument><expr><name>file</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetName()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test commit SHA-1 evaluation
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testIsValidCommit</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testIsValidCommit()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>isValidCommit</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>isValidCommit</name></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>isValidCommit</name></name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertTrue</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>isValidCommit</name></name><argument_list>(<argument><expr><literal type="string">"bbbbb"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>isValidCommit</name></name><argument_list>(<argument><expr><literal type="string">"am"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertFalse</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>isValidCommit</name></name><argument_list>(<argument><expr><literal type="string">"xyz"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testIsValidCommit()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test parsing author from commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testGetAuthor</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetAuthor()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Commit</name></type> <name>commit</name> <init>= <expr><call><name><name>Commit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthor</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitCommit</name></type> <name>rawCommit</name> <init>= <expr><call><name><name>GitCommit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthor</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitUser</name></type> <name>user</name> <init>= <expr><call><name><name>GitUser</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>author</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthor</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>user</name> <operator>=</operator> <call><name><name>user</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"u1"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>author</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"u1"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthor</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetAuthor()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test parsing committer from commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testGetCommitter</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetCommitter()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Commit</name></type> <name>commit</name> <init>= <expr><call><name><name>Commit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitter</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitCommit</name></type> <name>rawCommit</name> <init>= <expr><call><name><name>GitCommit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitter</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitUser</name></type> <name>user</name> <init>= <expr><call><name><name>GitUser</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>committer</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitter</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>user</name> <operator>=</operator> <call><name><name>user</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"u1"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>committer</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"u1"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitter</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>user</name> <operator>=</operator> <call><name><name>user</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"u2"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>committer</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"u2"</literal></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitter</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetCommitter()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test parsing author date from commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testGetAuthorDate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetAuthorDate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Commit</name></type> <name>commit</name> <init>= <expr><call><name><name>Commit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthorDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitCommit</name></type> <name>rawCommit</name> <init>= <expr><call><name><name>GitCommit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthorDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitUser</name></type> <name>user</name> <init>= <expr><call><name><name>GitUser</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>author</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthorDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>user</name> <operator>=</operator> <call><name><name>user</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>date</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><literal type="number">12000</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>author</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><literal type="number">12000</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getAuthorDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetAuthorDate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Test parsing committer date from commit
+     */</comment>
+    <function><specifier>public</specifier> <type><name>void</name></type> <name>testGetCommitterDate</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetCommitterDate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Commit</name></type> <name>commit</name> <init>= <expr><call><name><name>Commit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitterDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitCommit</name></type> <name>rawCommit</name> <init>= <expr><call><name><name>GitCommit</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitterDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>GitUser</name></type> <name>user</name> <init>= <expr><call><name><name>GitUser</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>committer</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNull</name><argument_list>(<argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitterDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>user</name> <operator>=</operator> <call><name><name>user</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>date</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><literal type="number">12000</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>rawCommit</name> <operator>=</operator> <call><name><name>rawCommit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>committer</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>commit</name> <operator>=</operator> <call><name><name>commit</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>commit</name><argument_list>(<argument><expr><name>rawCommit</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>(<argument><expr><literal type="number">12000</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>CommitUtils</name><operator>.</operator><name>getCommitterDate</name></name><argument_list>(<argument><expr><name>commit</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.commit.CommitUtilsTest.testGetCommitterDate()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

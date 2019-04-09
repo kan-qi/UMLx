@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\DiscoveryUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Category</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>DiscoveryUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>DiscoveryUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Return the corresponding tab position for a given sort param.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>positionFromSort</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name><name>DiscoveryParams</name><operator>.</operator><name>Sort</name></name></type> <name>sort</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>sort</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></then></if>
+    <switch>switch <condition>(<expr><name>sort</name></expr>)</condition> <block>{
+      <case>case <expr><name>HOME</name></expr>:</case>
+        <return>return <expr><literal type="number">0</literal></expr>;</return>
+      <case>case <expr><name>POPULAR</name></expr>:</case>
+        <return>return <expr><literal type="number">1</literal></expr>;</return>
+      <case>case <expr><name>NEWEST</name></expr>:</case>
+        <return>return <expr><literal type="number">2</literal></expr>;</return>
+      <case>case <expr><name>ENDING_SOON</name></expr>:</case>
+        <return>return <expr><literal type="number">3</literal></expr>;</return>
+      <default>default:</default>
+        <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></switch>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Return the corresponding sort for a given tab position.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>DiscoveryParams</name><operator>.</operator><name>Sort</name></name></type> <name>sortFromPosition</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>Sort</name><operator>.</operator><name>values</name></name><argument_list>()</argument_list></call><index>[<expr><name>position</name></expr>]</index></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Given a list of projects and root categories this will determine if the first project is featured
+   * and is in need of its root category. If that is the case we will find its root and fill in that
+   * data and return a new list of projects.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>fillRootCategoryForFeaturedProjects</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projects</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Category</name></argument>&gt;</argument_list></name></type> <name>rootCategories</name></decl></parameter>)</parameter_list> <block>{
+
+    <comment type="line">// Guard against no projects</comment>
+    <if>if <condition>(<expr><call><name><name>projects</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>ListUtils</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>firstProject</name> <init>= <expr><call><name><name>projects</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Guard against bad category data on first project</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Category</name></type> <name>category</name> <init>= <expr><call><name><name>firstProject</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>category</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name>projects</name></expr>;</return>
+    }</block></then></if>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Long</name></type> <name>categoryParentId</name> <init>= <expr><call><name><name>category</name><operator>.</operator><name>parentId</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>categoryParentId</name> <operator>==</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><name>projects</name></expr>;</return>
+    }</block></then></if>
+
+    <comment type="line">// Guard against not needing to find the root category</comment>
+    <if>if <condition>(<expr><operator>!</operator><call><name>projectNeedsRootCategory</name><argument_list>(<argument><expr><name>firstProject</name></expr></argument>, <argument><expr><name>category</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><name>projects</name></expr>;</return>
+    }</block></then></if>
+
+    <comment type="line">// Find the root category for the featured project's category</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Category</name></type> <name>projectRootCategory</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>rootCategories</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>rootCategory</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>rootCategory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name>categoryParentId</name></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>toBlocking</name><argument_list>()</argument_list></call><operator>.</operator><call><name>single</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Sub in the found root category in our featured project.</comment>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Category</name></type> <name>newCategory</name> <init>= <expr><call><name><name>category</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>parent</name><argument_list>(<argument><expr><name>projectRootCategory</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Project</name></type> <name>newProject</name> <init>= <expr><call><name><name>firstProject</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name>newCategory</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>ListUtils</name><operator>.</operator><name>replaced</name></name><argument_list>(<argument><expr><name>projects</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>newProject</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines if the project and supplied require us to find the root category.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>projectNeedsRootCategory</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Project</name></type> <name>project</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Category</name></type> <name>category</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>!</operator><call><name><name>category</name><operator>.</operator><name>isRoot</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <call><name><name>category</name><operator>.</operator><name>parent</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>project</name><operator>.</operator><name>isFeaturedToday</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

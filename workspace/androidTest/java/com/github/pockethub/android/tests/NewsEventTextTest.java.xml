@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\androidTest\java\com\github\pockethub\android\tests\NewsEventTextTest.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>tests</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>test</name><operator>.</operator><name>InstrumentationTestCase</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>test</name><operator>.</operator><name>UiThreadTest</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>item</name><operator>.</operator><name>news</name><operator>.</operator><name>GistEventItem</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>item</name><operator>.</operator><name>news</name><operator>.</operator><name>NewsItem</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Gist</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubEvent</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>GitHubEventType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Issue</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>ReferenceType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Team</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>AvatarLoader</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>CommitCommentPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>CreatePayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>DeletePayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>FollowPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>GistPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>GitHubPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>IssueCommentPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>IssuesPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>MemberPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>PullRequestPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>PushPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>payload</name><operator>.</operator><name>TeamAddPayload</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>xwray</name><operator>.</operator><name>groupie</name><operator>.</operator><name>GroupAdapter</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Tests of the news text rendering
+ */</comment>
+<class><specifier>public</specifier> class <name>NewsEventTextTest</name> <super><extends>extends <name>InstrumentationTestCase</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>TextView</name></type> <name>text</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>User</name></type> <name>actor</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name><name>GitHubEvent</name><operator>.</operator><name>RepoIdentifier</name></name></type> <name>repo</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>AvatarLoader</name></type> <name>avatarLoader</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>LayoutInflater</name></type> <name>layoutInflater</name></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>void</name></type> <name>setUp</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.setUp()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>setUp</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>actor</name> <operator>=</operator> <call><name><name>User</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>login</name><argument_list>(<argument><expr><literal type="string">"user"</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>repo</name> <operator>=</operator> <call><name><name>GitHubEvent</name><operator>.</operator><name>RepoIdentifier</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>repoWithUserName</name><argument_list>(<argument><expr><literal type="string">"user/repo"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+        <decl_stmt><decl><type><name>Context</name></type> <name>context</name> <init>= <expr><call><name>getInstrumentation</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getTargetContext</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>avatarLoader</name> <operator>=</operator> <operator>new</operator> <call><name>AvatarLoader</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>layoutInflater</name> <operator>=</operator> <call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.setUp()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>GitHubEvent</name></type> <name>createEvent</name><parameter_list>(<parameter><decl><type><name>GitHubEventType</name></type> <name>type</name></decl></parameter>, <parameter><decl><type><name>GitHubPayload</name></type> <name>payload</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.GitHubEvent com.github.pockethub.android.tests.NewsEventTextTest.createEvent(com.meisolsson.githubsdk.model.GitHubEventType,com.meisolsson.githubsdk.model.payload.GitHubPayload)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.meisolsson.githubsdk.model.GitHubEvent com.github.pockethub.android.tests.NewsEventTextTest.createEvent(com.meisolsson.githubsdk.model.GitHubEventType,com.meisolsson.githubsdk.model.payload.GitHubPayload)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>GitHubEvent</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><literal type="string">"test"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>createdAt</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>type</name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>payload</name><argument_list>(<argument><expr><name>payload</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>actor</name><argument_list>(<argument><expr><name>actor</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>repo</name><argument_list>(<argument><expr><name>repo</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>verify</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>expected</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.verify(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>CharSequence</name></type> <name>actual</name> <init>= <expr><call><name><name>text</name><operator>.</operator><name>getText</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>actual</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><name>expected</name></expr></argument>, <argument><expr><call><name><name>actual</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.verify(String)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>private</specifier> <type><name>void</name></type> <name>updateView</name><parameter_list>(<parameter><decl><type><name>GitHubEvent</name></type> <name>event</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.updateView(com.meisolsson.githubsdk.model.GitHubEvent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>NewsItem</name></type> <name>item</name> <init>= <expr><call><name><name>NewsItem</name><operator>.</operator><name>createNewsItem</name></name><argument_list>(<argument><expr><name>avatarLoader</name></expr></argument>, <argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>View</name></type> <name>itemView</name> <init>= <expr><call><name><name>layoutInflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><call><name><name>item</name><operator>.</operator><name>getLayout</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name><name>NewsItem</name><operator>.</operator><name>ViewHolder</name></name></type> <name>viewHolder</name> <init>= <expr><call><name><name>item</name><operator>.</operator><name>createViewHolder</name></name><argument_list>(<argument><expr><name>itemView</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name>item</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>viewHolder</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><name>text</name> <operator>=</operator> <call><name><name>viewHolder</name><operator>.</operator><name>getEvent</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>assertNotNull</name><argument_list>(<argument><expr><name>text</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.updateView(com.meisolsson.githubsdk.model.GitHubEvent)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of commit comment event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testCommitCommentEvent</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testCommitCommentEvent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>CommitCommentEvent</name></name></expr></argument>,
+                <argument><expr><call><name><name>CommitCommentPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user commented on user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testCommitCommentEvent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of create event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testCreateRepositoryEvent</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testCreateRepositoryEvent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>CreatePayload</name></type> <name>payload</name> <init>= <expr><call><name><name>CreatePayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>refType</name><argument_list>(<argument><expr><name><name>ReferenceType</name><operator>.</operator><name>Repository</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>CreateEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user created repository repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testCreateRepositoryEvent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of create event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testCreateBranchEvent</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testCreateBranchEvent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>CreatePayload</name></type> <name>payload</name> <init>= <expr><call><name><name>CreatePayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>refType</name><argument_list>(<argument><expr><name><name>ReferenceType</name><operator>.</operator><name>Branch</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>ref</name><argument_list>(<argument><expr><literal type="string">"b1"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>CreateEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user created branch b1 at user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testCreateBranchEvent()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of delete event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testDelete</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testDelete()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>DeletePayload</name></type> <name>payload</name> <init>= <expr><call><name><name>DeletePayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>refType</name><argument_list>(<argument><expr><name><name>ReferenceType</name><operator>.</operator><name>Branch</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>ref</name><argument_list>(<argument><expr><literal type="string">"b1"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>DeleteEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user deleted branch b1 at user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testDelete()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of follow event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testFollow</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testFollow()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>User</name></type> <name>target</name> <init>= <expr><call><name><name>User</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>login</name><argument_list>(<argument><expr><literal type="string">"user2"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>FollowPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>FollowPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>target</name><argument_list>(<argument><expr><name>target</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>FollowEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user started following user2"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testFollow()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of Gist event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testGist</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testGist()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Gist</name></type> <name>gist</name> <init>= <expr><call><name><name>Gist</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><literal type="string">"1"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GistPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>GistPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>action</name><argument_list>(<argument><expr><name><name>GistPayload</name><operator>.</operator><name>Action</name><operator>.</operator><name>Created</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>gist</name><argument_list>(<argument><expr><name>gist</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>GistEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user created Gist 1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testGist()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of wiki event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testWiki</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testWiki()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>GollumEvent</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user updated the wiki in user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testWiki()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of issue comment event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testIssueComment</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testIssueComment()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Issue</name></type> <name>issue</name> <init>= <expr><call><name><name>Issue</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>number</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>IssueCommentPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>IssueCommentPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>issue</name><argument_list>(<argument><expr><name>issue</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>IssueCommentEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user commented on issue 5 on user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testIssueComment()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of issue event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testIssue</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testIssue()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Issue</name></type> <name>issue</name> <init>= <expr><call><name><name>Issue</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>number</name><argument_list>(<argument><expr><literal type="number">8</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>IssuesPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>IssuesPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>action</name><argument_list>(<argument><expr><name><name>IssuesPayload</name><operator>.</operator><name>Action</name><operator>.</operator><name>Closed</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>issue</name><argument_list>(<argument><expr><name>issue</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>IssuesEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user closed issue 8 on user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testIssue()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of member event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testAddMember</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testAddMember()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>User</name></type> <name>user</name> <init>= <expr><call><name><name>User</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>login</name><argument_list>(<argument><expr><literal type="string">"person"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>MemberPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>MemberPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>member</name><argument_list>(<argument><expr><name>user</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>MemberEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user added person as a collaborator to user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testAddMember()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of open sourced event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testOpenSourced</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testOpenSourced()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>PublicEvent</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user open sourced repository user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testOpenSourced()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of watch event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testWatch</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testWatch()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>WatchEvent</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user starred user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testWatch()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of pull request event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testPullRequest</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testPullRequest()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>PullRequestPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>PullRequestPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>number</name><argument_list>(<argument><expr><literal type="number">30</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>action</name><argument_list>(<argument><expr><name><name>PullRequestPayload</name><operator>.</operator><name>Action</name><operator>.</operator><name>Closed</name></name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>PullRequestEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user closed pull request 30 on user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testPullRequest()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of push event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testPush</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testPush()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>PushPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>PushPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>ref</name><argument_list>(<argument><expr><literal type="string">"refs/heads/master"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>commits</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyList</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>PushEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user pushed to master at user/repo"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testPush()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Verify text of push event
+     */</comment>
+    <function><annotation>@<name>UiThreadTest</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>testTeamAdd</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testTeamAdd()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Team</name></type> <name>team</name> <init>= <expr><call><name><name>Team</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"t1"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>Repository</name></type> <name>repo</name> <init>= <expr><call><name><name>Repository</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>name</name><argument_list>(<argument><expr><literal type="string">"r2"</literal></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>TeamAddPayload</name></type> <name>payload</name> <init>= <expr><call><name><name>TeamAddPayload</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+                <operator>.</operator><call><name>repository</name><argument_list>(<argument><expr><name>repo</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>team</name><argument_list>(<argument><expr><name>team</name></expr></argument>)</argument_list></call>
+                <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>GitHubEvent</name></type> <name>event</name> <init>= <expr><call><name>createEvent</name><argument_list>(<argument><expr><name><name>GitHubEventType</name><operator>.</operator><name>TeamAddEvent</name></name></expr></argument>, <argument><expr><name>payload</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>updateView</name><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name>verify</name><argument_list>(<argument><expr><literal type="string">"user added r2 to team t1"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.tests.NewsEventTextTest.testTeamAdd()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+}</block></class>
+</unit>

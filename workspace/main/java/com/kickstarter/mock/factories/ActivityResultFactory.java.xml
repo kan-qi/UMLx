@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\ActivityResultFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Activity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>android</name><operator>.</operator><name>gms</name><operator>.</operator><name>wallet</name><operator>.</operator><name>WalletConstants</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name><operator>.</operator><name>ActivityResult</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ActivityResultFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>ActivityResultFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>ActivityResult</name></type> <name>activityResult</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>ActivityResult</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>requestCode</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>resultCode</name><argument_list>(<argument><expr><name><name>Activity</name><operator>.</operator><name>RESULT_OK</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>ActivityResult</name></type> <name>androidPayErrorResult</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>activityResult</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>intent</name><argument_list>(<argument><expr><operator>new</operator> <call><name>Intent</name><argument_list>()</argument_list></call><operator>.</operator><call><name>putExtra</name><argument_list>(<argument><expr><name><name>WalletConstants</name><operator>.</operator><name>EXTRA_ERROR_CODE</name></name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\MessagesViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Either</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KoalaContext</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>IntegerUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ListUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>PairUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>StringUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Backing</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Message</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>MessageThread</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ErrorEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>MessageThreadEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>BackingActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>MessagesActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name><operator>.</operator><name>MessageSubject</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name><operator>.</operator><name>MessagesData</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Notification</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>combineLatestPair</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>errors</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>ignoreValues</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>neverError</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>takePairWhen</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>takeWhen</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>values</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>MessagesViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call with the app bar's vertical offset value. */</comment>
+    <function_decl><type><name>void</name></type> <name>appBarOffset</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>verticalOffset</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call with the app bar's total scroll range. */</comment>
+    <function_decl><type><name>void</name></type> <name>appBarTotalScrollRange</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>totalScrollRange</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the back or close button has been clicked. */</comment>
+    <function_decl><type><name>void</name></type> <name>backOrCloseButtonClicked</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the message edit text changes. */</comment>
+    <function_decl><type><name>void</name></type> <name>messageEditTextChanged</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>messageBody</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the message edit text is in focus. */</comment>
+    <function_decl><type><name>void</name></type> <name>messageEditTextIsFocused</name><parameter_list>(<parameter><decl><type><name>boolean</name></type> <name>isFocused</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the send message button has been clicked. */</comment>
+    <function_decl><type><name>void</name></type> <name>sendMessageButtonClicked</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the view pledge button is clicked. */</comment>
+    <function_decl><type><name>void</name></type> <name>viewPledgeButtonClicked</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the back button should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backButtonIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the backing and project to populate the backing info header. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>, <argument><name>Project</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>backingAndProject</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the backing info view should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backingInfoViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the close button should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>closeButtonIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the creator name to be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>creatorNameTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when we should navigate back. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>goBack</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine if the loading indicator should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>loadingIndicatorViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a string to display as the message edit text hint. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageEditTextHint</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when the edit text should request focus. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>messageEditTextShouldRequestFocus</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a list of messages to be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageList</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the project name to be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the project name to be displayed in the toolbar. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameToolbarTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the bottom padding for the recycler view. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>recyclerViewDefaultBottomPadding</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the initial bottom padding for the recycler view to account for the app bar scroll range. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>recyclerViewInitialBottomPadding</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when the RecyclerView should be scrolled to the bottom. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>scrollRecyclerViewToBottom</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the Send button should be enabled. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>sendMessageButtonIsEnabled</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a string to set the message edit text to. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>setMessageEditText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a string to display in the message error toast. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>showMessageErrorToast</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when we should start the {@link BackingActivity}. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startBackingActivity</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when the thread has been marked as read. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>successfullyMarkedAsRead</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine when the toolbar should be expanded. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>toolbarIsExpanded</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean that determines if the View pledge button should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>viewPledgeButtonIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>MessagesActivity</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ApiClientType</name></type> <name>client</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>apiClient</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>currentUser</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Either</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>, <argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Backing</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>configData</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block>{
+          <decl_stmt><decl><type><specifier>final</specifier> <name>MessageThread</name></type> <name>messageThread</name> <init>= <expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>MESSAGE_THREAD</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+          <return>return <expr><ternary><condition><expr><name>messageThread</name> <operator>!=</operator> <literal type="null">null</literal></expr>
+            ?</condition><then> <expr><operator>new</operator> <call><name><name>Either</name><operator>.</operator><name><name>Left</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>, <argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Backing</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></name><argument_list>(<argument><expr><name>messageThread</name></expr></argument>)</argument_list></call></expr>
+            </then><else>: <expr><operator>new</operator> <call><name><name>Either</name><operator>.</operator><name><name>Right</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>, <argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>Backing</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></name><argument_list>(
+              <argument><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PROJECT</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>BACKING</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>
+          )</argument_list></call></expr></else></ternary></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>KoalaContext</name><operator>.</operator><name>Message</name></name></argument>&gt;</argument_list></name></type> <name>koalaContext</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getSerializableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>KOALA_CONTEXT</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>KoalaContext</name><operator>.</operator><name>Message</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>&gt;</argument_list></name></type> <name>configBacking</name> <init>= <expr><call><name><name>configData</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Either</name><operator>::</operator><name>right</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>second</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></type> <name>configThread</name> <init>= <expr><call><name><name>configData</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Either</name><operator>::</operator><name>left</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Either</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>, <argument><name>MessageThread</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>backingOrThread</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(
+        <argument><expr><call><name><name>configBacking</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>backing</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name><name>Either</name><operator>.</operator><name><name>Left</name><argument_list type="generic">&lt;&gt;</argument_list></name></name><argument_list>(<argument><expr><name>backing</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>,
+        <argument><expr><call><name><name>configThread</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>thread</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>new</operator> <call><name><name>Either</name><operator>.</operator><name><name>Right</name><argument_list type="generic">&lt;&gt;</argument_list></name></name><argument_list>(<argument><expr><name>thread</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageIsSending</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messagesAreLoading</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name> <init>= <expr><call><name><name>configData</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>data</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>data</name><operator>.</operator><name>either</name></name><argument_list>(<argument><expr><name>MessageThread</name><operator>::</operator><name>project</name></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>projectAndBacking</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>projectAndBacking</name><operator>.</operator><name>first</name></name></expr></block></lambda></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThreadEnvelope</name></argument>&gt;</argument_list></name></type> <name>initialMessageThreadEnvelope</name> <init>= <expr><call><name><name>backingOrThread</name>
+        <operator>.</operator><name>switchMap</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>bOrT</name></decl></parameter></parameter_list> -&gt; <block>{
+          <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThreadEnvelope</name></argument>&gt;</argument_list></name></type> <name>response</name> <init>= <expr><call><name><name>bOrT</name><operator>.</operator><name>either</name></name><argument_list>(
+            <argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>fetchMessagesForBacking</name></expr></argument>,
+            <argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>fetchMessagesForThread</name></expr></argument>
+          )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+          <return>return <expr><call><name><name>response</name>
+            <operator>.</operator><name>doOnSubscribe</name></name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>messagesAreLoading</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>doAfterTerminate</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>messagesAreLoading</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>neverError</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr>;</return>
+        }</block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>loadingIndicatorViewIsGone</name></name> <operator>=</operator> <call><name><name>messagesAreLoading</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// If view model was not initialized with a MessageThread, participant is</comment>
+      <comment type="line">// the project creator.</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>participant</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><call><name><name>initialMessageThreadEnvelope</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThreadEnvelope</name><operator>::</operator><name>messageThread</name></expr></argument>)</argument_list></call></expr></argument>,
+        <argument><expr><name>project</name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>threadAndProject</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><ternary><condition><expr><name><name>threadAndProject</name><operator>.</operator><name>first</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>
+            ?</condition><then> <expr><call><name><name>threadAndProject</name><operator>.</operator><name>first</name><operator>.</operator><name>participant</name></name><argument_list>()</argument_list></call></expr>
+            </then><else>: <expr><call><name><name>threadAndProject</name><operator>.</operator><name>second</name><operator>.</operator><name>creator</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>
+        )</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>participant</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>User</name><operator>::</operator><name>name</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageEditTextHint</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessagesData</name></argument>&gt;</argument_list></name></type> <name>messagesData</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name>backingOrThread</name></expr></argument>,
+        <argument><expr><name>project</name></expr></argument>,
+        <argument><expr><name>participant</name></expr></argument>,
+        <argument><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>observable</name></name><argument_list>()</argument_list></call></expr></argument>,
+        <argument><expr><name>MessagesData</name><operator>::</operator><operator>new</operator></expr></argument>
+      )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageSubject</name></argument>&gt;</argument_list></name></type> <name>messageSubject</name> <init>= <expr><call><name><name>messagesData</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>data</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><call><name><name>data</name><operator>.</operator><name>getBackingOrThread</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>either</name><argument_list>(
+            <comment type="line">// Message subject is the project if the current user is the backer,</comment>
+            <comment type="line">// otherwise the current user is the creator and will send a message to the backing.</comment>
+            <argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>backing</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name><name>backing</name><operator>.</operator><name>backerId</name></name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>data</name><operator>.</operator><name>getCurrentUser</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call></expr>
+              ?</condition><then> <expr><operator>new</operator> <call><name><name>MessageSubject</name><operator>.</operator><name>Project</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>getProject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>
+              </then><else>: <expr><operator>new</operator> <call><name><name>MessageSubject</name><operator>.</operator><name>Backing</name></name><argument_list>(<argument><expr><name>backing</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></block></lambda></expr>,
+            <comment type="line">// If instantiated with a message thread the thread is the subject.</comment>
+            <expr><name><name>MessageSubject</name><operator>.</operator><name>MessageThread</name></name><operator>::</operator><operator>new</operator></expr></condition></ternary></expr></argument>
+          )</argument_list></call></expr></block></lambda></expr></argument>
+        )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Notification</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageNotification</name> <init>= <expr><call><name><name>messageSubject</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageEditTextChanged</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>sendMessageButtonClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>switchMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>messageSubjectAndBody</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>client</name><operator>.</operator><name>sendMessage</name></name><argument_list>(<argument><expr><name><name>messageSubjectAndBody</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>messageSubjectAndBody</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call>
+            <operator>.</operator><call><name>doOnSubscribe</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>messageIsSending</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>
+        )</argument_list></call>
+        <operator>.</operator><call><name>materialize</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></type> <name>messageSent</name> <init>= <expr><call><name><name>messageNotification</name><operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>values</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>ofType</name><argument_list>(<argument><expr><name><name>Message</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThreadEnvelope</name></argument>&gt;</argument_list></name></type> <name>sentMessageThreadEnvelope</name> <init>= <expr><call><name><name>backingOrThread</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name>messageSent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>switchMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>bOrT</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>bOrT</name><operator>.</operator><name>either</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>fetchMessagesForBacking</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>fetchMessagesForThread</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>neverError</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>MessageThreadEnvelope</name></argument>&gt;</argument_list></name></type> <name>messageThreadEnvelope</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(
+        <argument><expr><name>initialMessageThreadEnvelope</name></expr></argument>,
+        <argument><expr><name>sentMessageThreadEnvelope</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageHasBody</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>messageEditTextChanged</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>StringUtils</name><operator>::</operator><name>isPresent</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>messageThreadEnvelope</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThreadEnvelope</name><operator>::</operator><name>messageThread</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>switchMap</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>markAsRead</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>materialize</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>ignoreValues</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>successfullyMarkedAsRead</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>initialMessages</name> <init>= <expr><call><name><name>initialMessageThreadEnvelope</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThreadEnvelope</name><operator>::</operator><name>messages</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>newMessages</name> <init>= <expr><call><name><name>sentMessageThreadEnvelope</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThreadEnvelope</name><operator>::</operator><name>messages</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <comment type="line">// Concat distinct messages to initial message list. Return just the new messages if</comment>
+      <comment type="line">// initial list is null, i.e. a new message thread.</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>updatedMessages</name> <init>= <expr><call><name><name>initialMessages</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takePairWhen</name><argument_list>(<argument><expr><name>newMessages</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>mm</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><name><name>mm</name><operator>.</operator><name>first</name></name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name><name>mm</name><operator>.</operator><name>second</name></name></expr> </then><else>: <expr><call><name><name>ListUtils</name><operator>.</operator><name>concatDistinct</name></name><argument_list>(<argument><expr><name><name>mm</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>mm</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <comment type="line">// Load the initial messages once, subsequently load newer messages if any.</comment>
+      <expr_stmt><expr><call><name><name>initialMessages</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageList</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>updatedMessages</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageList</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>creator</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>creatorNameTextViewText</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>initialMessageThreadEnvelope</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>MessageThreadEnvelope</name><operator>::</operator><name>messages</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>ignoreValues</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageEditTextShouldRequestFocus</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>, <argument><name>Project</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>backingAndProject</name> <init>= <expr><call><name><name>messagesData</name>
+        <operator>.</operator><name>switchMap</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>data</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>backingAndProjectFromData</name><argument_list>(<argument><expr><name>data</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>client</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>backingAndProject</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>backingAndProject</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>backingAndProject</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>backingInfoViewIsGone</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>koalaContext</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>c</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>c</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>KoalaContext</name><operator>.</operator><name>Message</name><operator>.</operator><name>BACKER_MODAL</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>viewPledgeButtonIsGone</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>backButtonIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>viewPledgeButtonIsGone</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>closeButtonIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>backButtonIsGone</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>goBack</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>backOrCloseButtonClicked</name></name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectNameToolbarTextViewText</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>projectNameTextViewText</name></name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>scrollRecyclerViewToBottom</name></name> <operator>=</operator> <call><name><name>updatedMessages</name><operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>ignoreValues</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>sendMessageButtonIsEnabled</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(<argument><expr><name>messageHasBody</name></expr></argument>, <argument><expr><call><name><name>messageIsSending</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>setMessageEditText</name></name> <operator>=</operator> <call><name><name>messageSent</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><literal type="string">""</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>toolbarIsExpanded</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>messageList</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takePairWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageEditTextIsFocused</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>second</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>messageNotification</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>errors</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ErrorEnvelope</name><operator>::</operator><name>fromThrowable</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ErrorEnvelope</name><operator>::</operator><name>errorMessage</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>showMessageErrorToast</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>name</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>projectNameTextViewText</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(<argument><expr><name>messageThreadEnvelope</name></expr></argument>, <argument><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>observable</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>viewPledgeButtonClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>eu</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><ternary><condition><expr><call><name><name>eu</name><operator>.</operator><name>first</name><operator>.</operator><name>messageThread</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>project</name><argument_list>()</argument_list></call><operator>.</operator><call><name>isBacking</name><argument_list>()</argument_list></call></expr>
+            ?</condition><then> <expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><call><name><name>eu</name><operator>.</operator><name>first</name><operator>.</operator><name>messageThread</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>project</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>eu</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr>
+            </then><else>: <expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><call><name><name>eu</name><operator>.</operator><name>first</name><operator>.</operator><name>messageThread</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>project</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>eu</name><operator>.</operator><name>first</name><operator>.</operator><name>messageThread</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>participant</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>
+        )</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>startBackingActivity</name></name><operator>::</operator><name>onNext</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>project</name>
+        <operator>.</operator><name>take</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>koala</name></name><operator>::</operator><name>trackViewedMessageThread</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Set only the initial padding once to counteract the appbar offset.</comment>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recyclerViewInitialBottomPadding</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>appBarTotalScrollRange</name><operator>.</operator><name>take</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// Take only the first instance in which the offset changes.</comment>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>recyclerViewDefaultBottomPadding</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>appBarOffset</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>IntegerUtils</name><operator>::</operator><name>isNonZero</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>ignoreValues</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>koalaContext</name></expr></argument>, <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name>messageSent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>pc</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackSentMessage</name></name><argument_list>(<argument><expr><name><name>pc</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>pc</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>, <argument><name>Project</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>backingAndProjectFromData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>MessagesData</name></type> <name>data</name></decl></parameter>,
+      <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+
+      <return>return <expr><call><name><name>data</name><operator>.</operator><name>getBackingOrThread</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>either</name><argument_list>(
+        <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>backing</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>backing</name></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>getProject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>,
+        <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>thread</name></decl></parameter></parameter_list> -&gt; <block>{
+          <expr><name>final</name> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Notification</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name> <name>backingNotification</name> <operator>=</operator> <ternary><condition><expr><call><name><name>data</name><operator>.</operator><name>getProject</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>isBacking</name><argument_list>()</argument_list></call></expr>
+            ?</condition><then> <expr><call><name><name>client</name><operator>.</operator><name>fetchProjectBacking</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>getProject</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>getCurrentUser</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>materialize</name><argument_list>()</argument_list></call><operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr>
+            </then><else>: <expr><call><name><name>client</name><operator>.</operator><name>fetchProjectBacking</name></name><argument_list>(<argument><expr><call><name><name>data</name><operator>.</operator><name>getProject</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>getParticipant</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>materialize</name><argument_list>()</argument_list></call><operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr></else></ternary></expr></block></lambda></expr></argument>;
+
+          return <argument><expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(
+            <argument><expr><call><name><name>backingNotification</name><operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>errors</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><literal type="null">null</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>,
+            <argument><expr><call><name><name>backingNotification</name><operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>values</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>b</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><call><name><name>data</name><operator>.</operator><name>getProject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>
+          )</argument_list></call>
+            <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></argument>;</argument_list></call></expr></return>
+        }</block></function>
+      )</block>;</class>
+    }</block></interface>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>appBarOffset</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>appBarTotalScrollRange</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>backOrCloseButtonClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageEditTextChanged</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>messageEditTextIsFocused</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>sendMessageButtonClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>viewPledgeButtonClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backButtonIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>, <argument><name>Project</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>backingAndProject</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backingInfoViewIsGone</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>closeButtonIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>creatorNameTextViewText</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>goBack</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>loadingIndicatorViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageEditTextHint</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>messageEditTextShouldRequestFocus</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageList</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameTextViewText</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameToolbarTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>recyclerViewDefaultBottomPadding</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>recyclerViewInitialBottomPadding</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>scrollRecyclerViewToBottom</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>showMessageErrorToast</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>sendMessageButtonIsEnabled</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>setMessageEditText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startBackingActivity</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>successfullyMarkedAsRead</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>toolbarIsExpanded</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>viewPledgeButtonIsGone</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>appBarOffset</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>verticalOffset</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>appBarOffset</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>verticalOffset</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>appBarTotalScrollRange</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>totalScrollRange</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>appBarTotalScrollRange</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>totalScrollRange</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>backOrCloseButtonClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>backOrCloseButtonClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>messageEditTextChanged</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>messageBody</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>messageEditTextChanged</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>messageBody</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>messageEditTextIsFocused</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>isFocused</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>messageEditTextIsFocused</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name>isFocused</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>sendMessageButtonClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sendMessageButtonClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>viewPledgeButtonClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>viewPledgeButtonClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backButtonIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>backButtonIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Backing</name></argument>, <argument><name>Project</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>backingAndProject</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>backingAndProject</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backingInfoViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>backingInfoViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>closeButtonIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>closeButtonIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>goBack</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>goBack</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>loadingIndicatorViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>loadingIndicatorViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>messageEditTextHint</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageEditTextHint</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>messageEditTextShouldRequestFocus</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageEditTextShouldRequestFocus</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageList</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageList</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>creatorNameTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>creatorNameTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectNameTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectNameToolbarTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectNameToolbarTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>recyclerViewDefaultBottomPadding</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>recyclerViewDefaultBottomPadding</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>recyclerViewInitialBottomPadding</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>recyclerViewInitialBottomPadding</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>scrollRecyclerViewToBottom</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>scrollRecyclerViewToBottom</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>showMessageErrorToast</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>showMessageErrorToast</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>sendMessageButtonIsEnabled</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>sendMessageButtonIsEnabled</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>setMessageEditText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>setMessageEditText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>startBackingActivity</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>startBackingActivity</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>successfullyMarkedAsRead</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>successfullyMarkedAsRead</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>toolbarIsExpanded</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>toolbarIsExpanded</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>viewPledgeButtonIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>viewPledgeButtonIsGone</name></name></expr>;</return>
+    }</block></function>
+  }
+}
+</unit>

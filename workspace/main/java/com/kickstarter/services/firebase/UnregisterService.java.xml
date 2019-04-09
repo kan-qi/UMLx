@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\firebase\UnregisterService.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>firebase</name></name>;</package>
+
+
+<import>import <name><name>com</name><operator>.</operator><name>firebase</name><operator>.</operator><name>jobdispatcher</name><operator>.</operator><name>JobParameters</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>firebase</name><operator>.</operator><name>jobdispatcher</name><operator>.</operator><name>JobService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>firebase</name><operator>.</operator><name>iid</name><operator>.</operator><name>FirebaseInstanceId</name></name>;</import>
+
+<import>import <name><name>timber</name><operator>.</operator><name>log</name><operator>.</operator><name>Timber</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>UnregisterService</name> <super><extends>extends <name>JobService</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>UNREGISTER_SERVICE</name> <init>= <expr><literal type="string">"Unregister-service"</literal></expr></init></decl>;</decl_stmt>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onStartJob</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>JobParameters</name></type> <name>job</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"onStartJob"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>new</operator> <call><name>Thread</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> -&gt; <block>{
+      <try>try <block>{
+        <expr_stmt><expr><call><name><name>FirebaseInstanceId</name><operator>.</operator><name>getInstance</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>deleteInstanceId</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>d</name></name><argument_list>(<argument><expr><literal type="string">"Deleted token"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block> <catch>catch <parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>Timber</name><operator>.</operator><name>e</name></name><argument_list>(<argument><expr><literal type="string">"Failed to delete token: %s"</literal></expr></argument>, <argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></catch></try>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>boolean</name></type> <name>onStopJob</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>JobParameters</name></type> <name>job</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+  }</block></function>
+
+}</block></class>
+</unit>

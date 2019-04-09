@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\issue\IssueDashboardPagerFragment.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>MenuItem</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>MainActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>TabPagerFragment</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_CLEAR_TOP</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name><operator>.</operator><name>FLAG_ACTIVITY_SINGLE_TOP</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>view</name><operator>.</operator><name>OcticonTextView</name><operator>.</operator><name>ICON_ADD</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>view</name><operator>.</operator><name>OcticonTextView</name><operator>.</operator><name>ICON_BROADCAST</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>view</name><operator>.</operator><name>OcticonTextView</name><operator>.</operator><name>ICON_FOLLOW</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>view</name><operator>.</operator><name>OcticonTextView</name><operator>.</operator><name>ICON_WATCH</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Dashboard activity for issues
+ */</comment>
+<class><specifier>public</specifier> class <name>IssueDashboardPagerFragment</name> <super><extends>extends
+    <name><name>TabPagerFragment</name><argument_list type="generic">&lt;<argument><name>IssueDashboardPagerAdapter</name></argument>&gt;</argument_list></name></extends></super> <block>{
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>onViewCreated</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><annotation>@<name>Nullable</name></annotation> <name>Bundle</name></type> <name>savedInstanceState</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.onViewCreated(@NonNull View,@Nullable Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewCreated</name></name><argument_list>(<argument><expr><name>view</name></expr></argument>, <argument><expr><name>savedInstanceState</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>configureTabPager</name><argument_list>()</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.onViewCreated(@NonNull View,@Nullable Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>boolean</name></type> <name>onOptionsItemSelected</name><parameter_list>(<parameter><decl><type><name>MenuItem</name></type> <name>item</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+            <case>case <expr><name><name>android</name><operator>.</operator><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>home</name></name></expr>:</case>
+                <decl_stmt><decl><type><name>Intent</name></type> <name>intent</name> <init>= <expr><operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><call><name>getActivity</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>MainActivity</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+                <expr_stmt><expr><call><name><name>intent</name><operator>.</operator><name>addFlags</name></name><argument_list>(<argument><expr><name>FLAG_ACTIVITY_CLEAR_TOP</name> <operator>|</operator> <name>FLAG_ACTIVITY_SINGLE_TOP</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name>startActivity</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="boolean">true</literal></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"boolean com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.onOptionsItemSelected(android.view.MenuItem)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>onOptionsItemSelected</name></name><argument_list>(<argument><expr><name>item</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>IssueDashboardPagerAdapter</name></type> <name>createAdapter</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssueDashboardPagerAdapter com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.createAdapter()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssueDashboardPagerAdapter com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.createAdapter()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><operator>new</operator> <call><name>IssueDashboardPagerAdapter</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>protected</specifier> <type><name>String</name></type> <name>getIcon</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><switch>switch <condition>(<expr><name>position</name></expr>)</condition> <block>{
+            <case>case <expr><literal type="number">0</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>ICON_WATCH</name></expr>;</return>}</block>
+            <case>case <expr><literal type="number">1</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>ICON_FOLLOW</name></expr>;</return>}</block>
+            <case>case <expr><literal type="number">2</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>ICON_ADD</name></expr>;</return>}</block>
+            <case>case <expr><literal type="number">3</literal></expr>:</case>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">4</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>ICON_BROADCAST</name></expr>;</return>}</block>
+            <default>default:</default>
+                <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"String com.github.pockethub.android.ui.issue.IssueDashboardPagerFragment.getIcon(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>super</name><operator>.</operator><name>getIcon</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></switch>
+    }</block></function>
+}</block></class>
+</unit>

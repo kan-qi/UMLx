@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\internal\java\com\kickstarter\ApplicationComponent.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>FeatureFlagActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>InternalToolsActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name><operator>.</operator><name>DebugPushNotificationsView</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Singleton</name></name>;</import>
+
+<import>import <name><name>dagger</name><operator>.</operator><name>Component</name></name>;</import>
+
+<interface><annotation>@<name>Singleton</name></annotation>
+<annotation>@<name>Component</name><argument_list>(<argument><expr><name>modules</name> <operator>=</operator> <block>{<expr><name><name>InternalApplicationModule</name><operator>.</operator><name>class</name></name></expr>}</block></expr></argument>)</argument_list></annotation>
+<specifier>public</specifier> interface <name>ApplicationComponent</name> <super><extends>extends <name>ApplicationGraph</name></extends></super> <block>{
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>DebugPushNotificationsView</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>InternalToolsActivity</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>FeatureFlagActivity</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

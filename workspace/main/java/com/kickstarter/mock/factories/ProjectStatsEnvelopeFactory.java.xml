@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\ProjectStatsEnvelopeFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ReferrerType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>ProjectStatsEnvelope</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ProjectStatsEnvelopeFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>ProjectStatsEnvelopeFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>ProjectStatsEnvelope</name></type> <name>projectStatsEnvelope</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>ProjectStatsEnvelope</name><operator>.</operator><name>CumulativeStats</name></name></type> <name>cumulativeStats</name> <init>= <expr><call><name><name>CumulativeStatsFactory</name>
+      <operator>.</operator><name>cumulativeStats</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>ProjectStatsEnvelope</name><operator>.</operator><name>FundingDateStats</name></name></type> <name>fundingDateStats</name> <init>= <expr><call><name><name>FundingDateStatsFactory</name>
+      <operator>.</operator><name>fundingDateStats</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name></name></type> <name>referrerStats</name> <init>= <expr><call><name><name>ReferrerStatsFactory</name>
+      <operator>.</operator><name>referrerStats</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name></type> <name>referralAggregates</name> <init>= <expr><call><name><name>ReferralAggregateStatsFactory</name>
+      <operator>.</operator><name>referralAggregates</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>ProjectStatsEnvelope</name><operator>.</operator><name>RewardStats</name></name></type> <name>rewardStats</name> <init>= <expr><call><name><name>RewardStatsFactory</name>
+      <operator>.</operator><name>rewardStats</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>ProjectStatsEnvelope</name><operator>.</operator><name>VideoStats</name></name></type> <name>videoStats</name> <init>= <expr><call><name><name>VideoStatsFactory</name>
+      <operator>.</operator><name>videoStats</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>toBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>FundingDateStats</name></name></argument>&gt;</argument_list></name></type> <name>fundingDateStatsList</name> <init>= <expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>fundingDateStats</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>RewardStats</name></name></argument>&gt;</argument_list></name></type> <name>rewardStatsList</name> <init>= <expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>rewardStats</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name></name></argument>&gt;</argument_list></name></type> <name>referrerStatsList</name> <init>= <expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>referrerStats</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>cumulative</name><argument_list>(<argument><expr><name>cumulativeStats</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>fundingDistribution</name><argument_list>(<argument><expr><name>fundingDateStatsList</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>referralAggregates</name><argument_list>(<argument><expr><name>referralAggregates</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>referralDistribution</name><argument_list>(<argument><expr><name>referrerStatsList</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>rewardDistribution</name><argument_list>(<argument><expr><name>rewardStatsList</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>videoStats</name><argument_list>(<argument><expr><name>videoStats</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>CumulativeStatsFactory</name> <block>{
+    <constructor><specifier>private</specifier> <name>CumulativeStatsFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>CumulativeStats</name></name></type> <name>cumulativeStats</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>CumulativeStats</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>averagePledge</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>backersCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>goal</name><argument_list>(<argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>percentRaised</name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>pledged</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>FundingDateStatsFactory</name> <block>{
+    <constructor><specifier>private</specifier> <name>FundingDateStatsFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>FundingDateStats</name></name></type> <name>fundingDateStats</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>FundingDateStats</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>backersCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>cumulativePledged</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>cumulativeBackersCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>date</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>pledged</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>ReferralAggregateStatsFactory</name> <block>{
+    <constructor><specifier>private</specifier> <name>ReferralAggregateStatsFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name></name></type> <name>referralAggregates</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferralAggregateStats</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>custom</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>external</name><argument_list>(<argument><expr><literal type="number">15</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>internal</name><argument_list>(<argument><expr><literal type="number">20</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>ReferrerStatsFactory</name> <block>{
+    <constructor><specifier>private</specifier> <name>ReferrerStatsFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name></name></type> <name>referrerStats</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>ReferrerStats</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>backersCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>code</name><argument_list>(<argument><expr><literal type="string">"wots_this"</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>percentageOfDollars</name><argument_list>(<argument><expr><literal type="number">50</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>pledged</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>referrerName</name><argument_list>(<argument><expr><literal type="string">"Important Referrer"</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>referrerType</name><argument_list>(<argument><expr><call><name><name>ReferrerType</name><operator>.</operator><name>EXTERNAL</name><operator>.</operator><name>getReferrerType</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>RewardStatsFactory</name> <block>{
+    <constructor><specifier>private</specifier> <name>RewardStatsFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>RewardStats</name></name></type> <name>rewardStats</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>RewardStats</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>backersCount</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>rewardId</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>minimum</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>pledged</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <class><specifier>public</specifier> <specifier>static</specifier> <specifier>final</specifier> class <name>VideoStatsFactory</name> <block>{
+    <constructor><specifier>private</specifier> <name>VideoStatsFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>VideoStats</name></name></type> <name>videoStats</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name><name>ProjectStatsEnvelope</name><operator>.</operator><name>VideoStats</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>externalCompletions</name><argument_list>(<argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>externalStarts</name><argument_list>(<argument><expr><literal type="number">2000</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>internalCompletions</name><argument_list>(<argument><expr><literal type="number">500</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>internalStarts</name><argument_list>(<argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

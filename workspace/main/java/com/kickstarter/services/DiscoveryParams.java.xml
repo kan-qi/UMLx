@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\services\DiscoveryParams.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>annotation</name><operator>.</operator><name>SuppressLint</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSString</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AutoGson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Category</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Location</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>HashMap</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name><operator>.</operator><name>isFalse</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name><operator>.</operator><name>isTrue</name></name>;</import>
+
+<class><annotation>@<name>AutoGson</name></annotation>
+<annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>DiscoveryParams</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Integer</name></type> <name>backed</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Category</name></type> <name>category</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>categoryParam</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Location</name></type> <name>location</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>locationParam</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Integer</name></type> <name>page</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Integer</name></type> <name>perPage</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Integer</name></type> <name>pledged</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Boolean</name></type> <name>staffPicks</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Integer</name></type> <name>starred</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Integer</name></type> <name>social</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Sort</name></type> <name>sort</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Boolean</name></type> <name>recommended</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Project</name></type> <name>similarTo</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>State</name></type> <name>state</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>String</name></type> <name>term</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <enum><specifier>public</specifier> enum <name>Sort</name> <block>{
+    <decl><name>HOME</name></decl>, <decl><name>POPULAR</name></decl>, <decl><name>NEWEST</name></decl>, <decl><name>ENDING_SOON</name></decl>;
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>toString</name><parameter_list>()</parameter_list> <block>{
+      <switch>switch <condition>(<expr><name>this</name></expr>)</condition> <block>{
+        <case>case <expr><name>HOME</name></expr>:</case>
+          <return>return <expr><literal type="string">"home"</literal></expr>;</return>
+        <case>case <expr><name>POPULAR</name></expr>:</case>
+          <return>return <expr><literal type="string">"popularity"</literal></expr>;</return>
+        <case>case <expr><name>NEWEST</name></expr>:</case>
+          <return>return <expr><literal type="string">"newest"</literal></expr>;</return>
+        <case>case <expr><name>ENDING_SOON</name></expr>:</case>
+          <return>return <expr><literal type="string">"end_date"</literal></expr>;</return>
+      }</block></switch>
+      <return>return <expr><literal type="string">""</literal></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>Sort</name></type> <name>fromString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>)</parameter_list> <block>{
+      <switch>switch <condition>(<expr><name>string</name></expr>)</condition> <block>{
+        <case>case <expr><literal type="string">"home"</literal></expr>:</case>
+          <return>return <expr><name>HOME</name></expr>;</return>
+        <case>case <expr><literal type="string">"popularity"</literal></expr>:</case>
+          <return>return <expr><name>POPULAR</name></expr>;</return>
+        <case>case <expr><literal type="string">"newest"</literal></expr>:</case>
+          <return>return <expr><name>NEWEST</name></expr>;</return>
+        <case>case <expr><literal type="string">"end_date"</literal></expr>:</case>
+          <return>return <expr><name>ENDING_SOON</name></expr>;</return>
+      }</block></switch>
+      <return>return <expr><name>HOME</name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>refTagSuffix</name><parameter_list>()</parameter_list> <block>{
+      <switch>switch <condition>(<expr><name>this</name></expr>)</condition> <block>{
+        <case>case <expr><name>HOME</name></expr>:</case>
+          <return>return <expr><literal type="string">""</literal></expr>;</return>
+        <case>case <expr><name>POPULAR</name></expr>:</case>
+          <return>return <expr><literal type="string">"_popular"</literal></expr>;</return>
+        <case>case <expr><name>NEWEST</name></expr>:</case>
+          <return>return <expr><literal type="string">"_newest"</literal></expr>;</return>
+        <case>case <expr><name>ENDING_SOON</name></expr>:</case>
+          <return>return <expr><literal type="string">"_ending_soon"</literal></expr>;</return>
+        <default>default:</default>
+          <return>return <expr><literal type="string">""</literal></expr>;</return>
+      }</block></switch>
+    }</block></function>
+  }</block></enum>
+
+  <enum><annotation>@<name>SuppressLint</name><argument_list>(<argument><expr><literal type="string">"DefaultLocale"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> enum <name>State</name> <block>{
+    <decl><name>STARTED</name></decl>, <decl><name>SUBMITTED</name></decl>, <decl><name>LIVE</name></decl>, <decl><name>SUCCESSFUL</name></decl>, <decl><name>CANCELED</name></decl>, <decl><name>FAILED</name></decl>;
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>toString</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><call><name>name</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toLowerCase</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>State</name></type> <name>fromString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>string</name></decl></parameter>)</parameter_list> <block>{
+      <switch>switch <condition>(<expr><name>string</name></expr>)</condition> <block>{
+        <case>case <expr><literal type="string">"started"</literal></expr>:</case>
+          <return>return <expr><name>STARTED</name></expr>;</return>
+        <case>case <expr><literal type="string">"submitted"</literal></expr>:</case>
+          <return>return <expr><name>SUBMITTED</name></expr>;</return>
+        <case>case <expr><literal type="string">"live"</literal></expr>:</case>
+          <return>return <expr><name>LIVE</name></expr>;</return>
+        <case>case <expr><literal type="string">"successful"</literal></expr>:</case>
+          <return>return <expr><name>SUCCESSFUL</name></expr>;</return>
+        <case>case <expr><literal type="string">"canceled"</literal></expr>:</case>
+          <return>return <expr><name>CANCELED</name></expr>;</return>
+        <case>case <expr><literal type="string">"failed"</literal></expr>:</case>
+          <return>return <expr><name>FAILED</name></expr>;</return>
+      }</block></switch>
+
+      <return>return <expr><literal type="null">null</literal></expr>;</return>
+    }</block></function>
+  }</block></enum>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a {@link DiscoveryParams} constructed by parsing data out of the given {@link Uri}.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DiscoveryParams</name></type> <name>fromUri</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Uri</name></type> <name>uri</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><name>Builder</name></type> <name>builder</name> <init>= <expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverCategoriesPath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>categoryParam</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getLastPathSegment</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverPlacesPath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>locationParam</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getLastPathSegment</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"ending-soon"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name><name>Sort</name><operator>.</operator><name>ENDING_SOON</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"newest"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name><name>Sort</name><operator>.</operator><name>NEWEST</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>staffPicks</name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"popular"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name><name>Sort</name><operator>.</operator><name>POPULAR</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"recently-launched"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name><name>Sort</name><operator>.</operator><name>NEWEST</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"small-projects"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>pledged</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"social"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>social</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <if>if <condition>(<expr><call><name><name>KSUri</name><operator>.</operator><name>isDiscoverScopePath</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getPath</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="string">"successful"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><name><name>Sort</name><operator>.</operator><name>ENDING_SOON</name></name></expr></argument>)</argument_list></call><operator>.</operator><call><name>state</name><argument_list>(<argument><expr><name><name>State</name><operator>.</operator><name>SUCCESSFUL</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>backed</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toInteger</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"backed"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>backed</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>backed</name></name><argument_list>(<argument><expr><name>backed</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>categoryParam</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"category_id"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>categoryParam</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>categoryParam</name></name><argument_list>(<argument><expr><name>categoryParam</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>locationParam</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"woe_id"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>locationParam</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>locationParam</name></name><argument_list>(<argument><expr><name>locationParam</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>page</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toInteger</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"page"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>page</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>page</name></name><argument_list>(<argument><expr><name>page</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>perPage</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toInteger</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"per_page"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>perPage</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>perPage</name></name><argument_list>(<argument><expr><name>perPage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>pledged</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toInteger</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"pledged"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>pledged</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>pledged</name></name><argument_list>(<argument><expr><name>pledged</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Boolean</name></type> <name>recommended</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toBoolean</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"recommended"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>recommended</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>recommended</name></name><argument_list>(<argument><expr><name>recommended</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>social</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toInteger</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"social"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>social</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>social</name></name><argument_list>(<argument><expr><name>social</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Boolean</name></type> <name>staffPicks</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toBoolean</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"staff_picks"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>staffPicks</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>staffPicks</name></name><argument_list>(<argument><expr><name>staffPicks</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>sortParam</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"sort"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>sortParam</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><call><name><name>Sort</name><operator>.</operator><name>fromString</name></name><argument_list>(<argument><expr><name>sortParam</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>starred</name> <init>= <expr><call><name><name>ObjectUtils</name><operator>.</operator><name>toInteger</name></name><argument_list>(<argument><expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"starred"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>starred</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>starred</name></name><argument_list>(<argument><expr><name>starred</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>stateParam</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"state"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>stateParam</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>state</name></name><argument_list>(<argument><expr><call><name><name>State</name><operator>.</operator><name>fromString</name></name><argument_list>(<argument><expr><name>stateParam</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>term</name> <init>= <expr><call><name><name>uri</name><operator>.</operator><name>getQueryParameter</name></name><argument_list>(<argument><expr><literal type="string">"term"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>term</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>term</name></name><argument_list>(<argument><expr><name>term</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>backed</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>category</name><parameter_list>(<parameter><decl><type><name>Category</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>categoryParam</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>location</name><parameter_list>(<parameter><decl><type><name>Location</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>locationParam</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>page</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>perPage</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>pledged</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>sort</name><parameter_list>(<parameter><decl><type><name>Sort</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>staffPicks</name><parameter_list>(<parameter><decl><type><name>Boolean</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>starred</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>social</name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>recommended</name><parameter_list>(<parameter><decl><type><name>Boolean</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>similarTo</name><parameter_list>(<parameter><decl><type><name>Project</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>state</name><parameter_list>(<parameter><decl><type><name>State</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>term</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>DiscoveryParams</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/**
+     * Returns a builder containing the contents of this builder and `otherBuilder`. If a value for the same property
+     * exists in both builders, the returned builder will contain the value from `otherBuilder`.
+     */</comment>
+    <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name></type> <name>mergeWith</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Builder</name></type> <name>otherBuilder</name></decl></parameter>)</parameter_list> <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>DiscoveryParams</name></type> <name>other</name> <init>= <expr><call><name><name>otherBuilder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <decl_stmt><decl><type><name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name></type> <name>retVal</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>backed</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>backed</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>backed</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>category</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>category</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>categoryParam</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>categoryParam</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>categoryParam</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>location</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>location</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>location</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>page</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>page</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>page</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>perPage</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>perPage</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>perPage</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>pledged</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>pledged</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>pledged</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>social</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>social</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>social</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>staffPicks</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>staffPicks</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>staffPicks</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>starred</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>starred</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>starred</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>state</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>sort</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>sort</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>recommended</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>recommended</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>recommended</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>similarTo</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>similarTo</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>similarTo</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <if>if <condition>(<expr><call><name><name>other</name><operator>.</operator><name>term</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>retVal</name> <operator>=</operator> <call><name><name>retVal</name><operator>.</operator><name>term</name></name><argument_list>(<argument><expr><call><name><name>other</name><operator>.</operator><name>term</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <return>return <expr><name>retVal</name></expr>;</return>
+    }</block></function>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_DiscoveryParams</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>page</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>perPage</name><argument_list>(<argument><expr><literal type="number">15</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>DiscoveryParams</name></type> <name>nextPage</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>page</name> <init>= <expr><call><name>page</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><ternary><condition><expr><name>page</name> <operator>!=</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><call><name>toBuilder</name><argument_list>()</argument_list></call><operator>.</operator><call><name>page</name><argument_list>(<argument><expr><name>page</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><name>this</name></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>queryParams</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Collections</name><operator>.</operator><name>unmodifiableMap</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>HashMap</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{
+      <block>{
+        <if>if <condition>(<expr><call><name>backed</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"backed"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>backed</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>category</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"category_id"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>categoryParam</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"category_id"</literal></expr></argument>, <argument><expr><call><name>categoryParam</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>location</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"woe_id"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>location</name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>locationParam</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"woe_id"</literal></expr></argument>, <argument><expr><call><name>locationParam</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>page</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"page"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>page</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>perPage</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"per_page"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>perPage</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>pledged</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"pledged"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>pledged</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>recommended</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"recommended"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>recommended</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>similarTo</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"similar_to"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>similarTo</name><argument_list>()</argument_list></call><operator>.</operator><call><name>id</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>starred</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"starred"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>starred</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>social</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"social"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>social</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>Sort</name></type> <name>sort</name> <init>= <expr><call><name>sort</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>sort</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"sort"</literal></expr></argument>, <argument><expr><call><name><name>sort</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>staffPicks</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"staff_picks"</literal></expr></argument>, <argument><expr><call><name><name>String</name><operator>.</operator><name>valueOf</name></name><argument_list>(<argument><expr><call><name>staffPicks</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <decl_stmt><decl><type><specifier>final</specifier> <name>State</name></type> <name>state</name> <init>= <expr><call><name>state</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>state</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"state"</literal></expr></argument>, <argument><expr><call><name><name>state</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>term</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"q"</literal></expr></argument>, <argument><expr><call><name>term</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name>shouldIncludeFeatured</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+          <expr_stmt><expr><call><name>put</name><argument_list>(<argument><expr><literal type="string">"include_featured"</literal></expr></argument>, <argument><expr><literal type="string">"true"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+      }</block>
+    }</block></class></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines if the `include_featured` flag should be included in a discovery request so that we guarantee that the
+   * featured project for the category comes back.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>shouldIncludeFeatured</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>category</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>parent</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>page</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>page</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <operator>(</operator><call><name>sort</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name>sort</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>Sort</name><operator>.</operator><name>HOME</name></name><operator>)</operator></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>toString</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>queryParams</name><argument_list>()</argument_list></call><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>filterString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSString</name></type> <name>ksString</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>filterString</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>ksString</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines the correct string to display for a filter depending on where it is shown.
+   *
+   * @param context           context
+   * @param ksString          ksString for string formatting
+   * @param isToolbar         true if string is being displayed in the {@link com.kickstarter.ui.toolbars.DiscoveryToolbar}
+   * @param isParentFilter    true if string is being displayed as a {@link com.kickstarter.ui.viewholders.discoverydrawer.ParentFilterViewHolder}
+   *
+   * @return the appropriate filter string
+   */</comment>
+  <function><specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>String</name></type> <name>filterString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSString</name></type> <name>ksString</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>isToolbar</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>boolean</name></type> <name>isParentFilter</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>isTrue</name><argument_list>(<argument><expr><call><name>staffPicks</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Projects_We_Love</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>starred</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>starred</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Saved</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>backed</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>backed</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>discovery_backing</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>social</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>social</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <return>return <expr><ternary><condition><expr><name>isToolbar</name></expr> ?</condition><then> <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Following</name></name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Backed_by_people_you_follow</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>category</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><ternary><condition><expr><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>isRoot</name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>!</operator><name>isParentFilter</name> <operator>&amp;&amp;</operator> <operator>!</operator><name>isToolbar</name></expr>
+        ?</condition><then> <expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>All_category_name_Projects</name></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><literal type="string">"category_name"</literal></expr></argument>, <argument><expr><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>
+        </then><else>: <expr><call><name>category</name><argument_list>()</argument_list></call><operator>.</operator><call><name>name</name><argument_list>()</argument_list></call></expr></else></ternary></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>location</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <return>return <expr><call><name>location</name><argument_list>()</argument_list></call><operator>.</operator><call><name>displayableName</name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></then></if></elseif> <elseif>else <if>if <condition>(<expr><call><name>isTrue</name><argument_list>(<argument><expr><call><name>recommended</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <return>return <expr><ternary><condition><expr><name>isToolbar</name></expr> ?</condition><then> <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>Recommended</name></name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>discovery_recommended_for_you</name></name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+    }</block></then></if></elseif> <else>else <block>{
+      <return>return <expr><call><name><name>context</name><operator>.</operator><name>getString</name></name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>All_Projects</name></name></expr></argument>)</argument_list></call></expr>;</return>
+    }</block></else></if>
+  }</block></function>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>DiscoveryParams</name></type> <name>getDefaultParams</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>User</name></type> <name>user</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Builder</name></type> <name>builder</name> <init>= <expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>sort</name><argument_list>(<argument><expr><name><name>DiscoveryParams</name><operator>.</operator><name>Sort</name><operator>.</operator><name>HOME</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>user</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>isFalse</name><argument_list>(<argument><expr><call><name><name>user</name><operator>.</operator><name>optedOutOfRecommendations</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>recommended</name></name><argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>backed</name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+    <return>return <expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines if params are for All Projects, i.e. discovery without params.
+   * @return true if is All Projects.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isAllProjects</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>isFalse</name><argument_list>(<argument><expr><call><name>staffPicks</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><call><name>starred</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name>starred</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">1</literal><operator>)</operator> <operator>&amp;&amp;</operator> <operator>(</operator><call><name>backed</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name>backed</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">1</literal><operator>)</operator>
+      <operator>&amp;&amp;</operator> <operator>(</operator><call><name>social</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name>social</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">1</literal><operator>)</operator> <operator>&amp;&amp;</operator> <call><name>category</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>location</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>isFalse</name><argument_list>(<argument><expr><call><name>recommended</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Determines if params are for Saved Projects, i.e. discovery with starred params.
+   * @return true if is Saved Projects.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isSavedProjects</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>isTrue</name><argument_list>(<argument><expr><call><name>starred</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>starred</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name>isFalse</name><argument_list>(<argument><expr><call><name>staffPicks</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><call><name>backed</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name>backed</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">1</literal><operator>)</operator>
+      <operator>&amp;&amp;</operator> <operator>(</operator><call><name>social</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>||</operator> <call><name>social</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="number">1</literal><operator>)</operator> <operator>&amp;&amp;</operator> <call><name>category</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>location</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name>isFalse</name><argument_list>(<argument><expr><call><name>recommended</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>isCategorySet</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name>category</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\adapters\MessagesAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Message</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>KSViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>MessageCenterTimestampViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>MessageViewHolder</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>MessagesAdapter</name> <super><extends>extends <name>KSAdapter</name></extends></super> <block>{
+  <constructor><specifier>public</specifier> <name>MessagesAdapter</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>private</specifier> <type><name>int</name></type> <name>getLayoutId</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call> <operator>instanceof</operator> <name>DateTime</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>message_center_timestamp_layout</name></name></expr>;</return>
+    }</block></then> <elseif>else <if>if <condition>(<expr><call><name>objectFromSectionRow</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call> <operator>instanceof</operator> <name>Message</name></expr>)</condition><then> <block>{
+      <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>message_view</name></name></expr>;</return>
+    }</block></then></if></elseif></if>
+    <return>return <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>empty_view</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>messages</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Message</name></argument>&gt;</argument_list></name></type> <name>messages</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>clearSections</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Group messages by start of day.</comment>
+    <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><name>messages</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>groupBy</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>message</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>message</name><operator>.</operator><name>createdAt</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>withTimeAtStartOfDay</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>forEach</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>dateAndGroupedMessages</name></decl></parameter></parameter_list> -&gt; <block>{
+        <expr><call><name>addSection</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><call><name><name>dateAndGroupedMessages</name><operator>.</operator><name>getKey</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>;
+        <argument><expr><call><name><name>dateAndGroupedMessages</name>
+          <operator>.</operator><name>forEach</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>message</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>addSection</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>singletonList</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></argument>;</argument_list></call></expr></expr_stmt>
+      }</block></function>)</block>;</class>
+
+    <expr_stmt><expr><call><name>notifyDataSetChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }
+
+  @<function><type><name>Override</name>
+  <specifier>protected</specifier> <name>int</name></type> <name>layout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>getLayoutId</name><argument_list>(<argument><expr><name>sectionRow</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSViewHolder</name></type> <name>holder</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>&gt;</argument_list></name></type> <name>payloads</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onBindViewHolder</name></name><argument_list>(<argument><expr><name>holder</name></expr></argument>, <argument><expr><name>position</name></expr></argument>, <argument><expr><name>payloads</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <if>if <condition>(<expr><name>holder</name> <operator>instanceof</operator> <name>MessageViewHolder</name></expr>)</condition><then> <block>{
+      <comment type="line">// Let the MessageViewHolder know if it is the last position in the RecyclerView.</comment>
+      <expr_stmt><expr><operator>(</operator><operator>(</operator><name>MessageViewHolder</name><operator>)</operator> <name>holder</name><operator>)</operator><operator>.</operator><call><name>isLastPosition</name><argument_list>(<argument><expr><name>position</name> <operator>==</operator> <call><name>getItemCount</name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>protected</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>viewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <switch>switch <condition>(<expr><name>layout</name></expr>)</condition> <block>{
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>message_center_timestamp_layout</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>MessageCenterTimestampViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+      <case>case <expr><name><name>R</name><operator>.</operator><name>layout</name><operator>.</operator><name>message_view</name></name></expr>:</case>
+        <return>return <expr><operator>new</operator> <call><name>MessageViewHolder</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</return>
+      <default>default:</default>
+        <throw>throw <expr><operator>new</operator> <call><name>IllegalStateException</name><argument_list>(<argument><expr><literal type="string">"Invalid layout."</literal></expr></argument>)</argument_list></call></expr>;</throw>
+    }</block></switch>
+  }</block></function>
+}
+</unit>

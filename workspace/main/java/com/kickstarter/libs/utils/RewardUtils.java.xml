@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\utils\RewardUtils.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Reward</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>RewardsItem</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name><operator>.</operator><name>isTrue</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>RewardUtils</name> <block>{
+  <constructor><specifier>private</specifier> <name>RewardUtils</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward has backers, `false` otherwise.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>hasBackers</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>IntegerUtils</name><operator>.</operator><name>isNonZero</name></name><argument_list>(<argument><expr><call><name><name>reward</name><operator>.</operator><name>backersCount</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward has items, `false` otherwise.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isItemized</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>RewardsItem</name></argument>&gt;</argument_list></name></type> <name>rewardsItems</name> <init>= <expr><call><name><name>reward</name><operator>.</operator><name>rewardsItems</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><name>rewardsItems</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>rewardsItems</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward has a limit set, and the limit has not been reached, `false` otherwise.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isLimited</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>reward</name><operator>.</operator><name>limit</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <operator>!</operator><call><name>isLimitReached</name><argument_list>(<argument><expr><name>reward</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward's limit has been reached, `false` otherwise.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isLimitReached</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Integer</name></type> <name>remaining</name> <init>= <expr><call><name><name>reward</name><operator>.</operator><name>remaining</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>reward</name><operator>.</operator><name>limit</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal>
+      <operator>&amp;&amp;</operator> <name>remaining</name> <operator>!=</operator> <literal type="null">null</literal>
+      <operator>&amp;&amp;</operator> <name>remaining</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward is considered the 'non-reward' option, i.e. the reward is the option
+   * backers select when they want to pledge to a project without selecting a particular reward.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isNoReward</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>reward</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="number">0</literal></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward is a specific reward for a project, i.e. it is not the 'no-reward' option.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isReward</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>!</operator><call><name>isNoReward</name><argument_list>(<argument><expr><name>reward</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns `true` if the reward has shipping enabled, `false` otherwise.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>boolean</name></type> <name>isShippable</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Reward</name></type> <name>reward</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>isTrue</name><argument_list>(<argument><expr><call><name><name>reward</name><operator>.</operator><name>shippingEnabled</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

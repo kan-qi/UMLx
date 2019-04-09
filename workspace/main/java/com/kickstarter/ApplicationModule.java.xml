@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ApplicationModule.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>app</name><operator>.</operator><name>Application</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>SharedPreferences</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageInfo</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>pm</name><operator>.</operator><name>PackageManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>AssetManager</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>res</name><operator>.</operator><name>Resources</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>preference</name><operator>.</operator><name>PreferenceManager</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>apollographql</name><operator>.</operator><name>apollo</name><operator>.</operator><name>ApolloClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>FieldNamingPolicy</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>Gson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>GsonBuilder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>AndroidPayCapability</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ApiEndpoint</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>AutoParcelAdapterFactory</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Build</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>BuildCheck</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentConfig</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentConfigType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUser</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>DateTimeTypeConverter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>DeviceRegistrar</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>DeviceRegistrarType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>FeatureKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Font</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>InternalToolsType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSCurrency</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KSString</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Koala</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KoalaTrackingClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Logout</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>PushNotifications</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>graphql</name><operator>.</operator><name>DateAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>graphql</name><operator>.</operator><name>EmailAdapter</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>preferences</name><operator>.</operator><name>BooleanPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>preferences</name><operator>.</operator><name>BooleanPreferenceType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>preferences</name><operator>.</operator><name>IntPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>preferences</name><operator>.</operator><name>IntPreferenceType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>preferences</name><operator>.</operator><name>StringPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>preferences</name><operator>.</operator><name>StringPreferenceType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AccessTokenPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>ActivitySamplePreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>ApiRetrofit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AppRatingPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>ApplicationContext</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>ConfigPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>GamesNewsletterPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>HorizontalRewardsPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>KoalaEndpoint</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>KoalaRetrofit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>PackageNameString</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>UserPreference</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>WebEndpoint</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>WebRetrofit</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>PlayServicesCapability</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>Secrets</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>services</name><operator>.</operator><name>MockApiClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>services</name><operator>.</operator><name>MockApolloClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApolloClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSApolloClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KSWebViewClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KoalaService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>WebClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>WebClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>WebService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>interceptors</name><operator>.</operator><name>ApiRequestInterceptor</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>interceptors</name><operator>.</operator><name>GraphQLInterceptor</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>interceptors</name><operator>.</operator><name>KSRequestInterceptor</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>interceptors</name><operator>.</operator><name>WebRequestInterceptor</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>SharedPreferenceKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>stripe</name><operator>.</operator><name>android</name><operator>.</operator><name>Stripe</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>net</name><operator>.</operator><name>CookieManager</name></name>;</import>
+
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Singleton</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>Module</name></name>;</import>
+<import>import <name><name>dagger</name><operator>.</operator><name>Provides</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>CookieJar</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>JavaNetCookieJar</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>OkHttpClient</name></name>;</import>
+<import>import <name><name>okhttp3</name><operator>.</operator><name>logging</name><operator>.</operator><name>HttpLoggingInterceptor</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>Retrofit</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>adapter</name><operator>.</operator><name>rxjava</name><operator>.</operator><name>RxJavaCallAdapterFactory</name></name>;</import>
+<import>import <name><name>retrofit2</name><operator>.</operator><name>converter</name><operator>.</operator><name>gson</name><operator>.</operator><name>GsonConverterFactory</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Scheduler</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>schedulers</name><operator>.</operator><name>Schedulers</name></name>;</import>
+<import>import <name><name>type</name><operator>.</operator><name>CustomType</name></name>;</import>
+
+<class><annotation>@<name>Module</name></annotation>
+<specifier>public</specifier> <specifier>final</specifier> class <name>ApplicationModule</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Application</name></type> <name>application</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>ApplicationModule</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Application</name></type> <name>application</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>application</name></name> <operator>=</operator> <name>application</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Environment</name></type> <name>provideEnvironment</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <annotation>@<name>ActivitySamplePreference</name></annotation> <name>IntPreferenceType</name></type> <name>activitySamplePreference</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>apiClient</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApolloClientType</name></type> <name>apolloClient</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>BuildCheck</name></type> <name>buildCheck</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieManager</name></type> <name>cookieManager</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentConfigType</name></type> <name>currentConfig</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <annotation>@<name>HorizontalRewardsPreference</name></annotation> <name>BooleanPreferenceType</name></type> <name>horizontalRewards</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <annotation>@<name>AppRatingPreference</name></annotation> <name>BooleanPreferenceType</name></type> <name>hasSeenAppRatingPreference</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <annotation>@<name>GamesNewsletterPreference</name></annotation> <name>BooleanPreferenceType</name></type> <name>hasSeenGamesNewsletterPreference</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>InternalToolsType</name></type> <name>internalToolsType</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Koala</name></type> <name>koala</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSCurrency</name></type> <name>ksCurrency</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSString</name></type> <name>ksString</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Logout</name></type> <name>logout</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>PlayServicesCapability</name></type> <name>playServicesCapability</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Scheduler</name></type> <name>scheduler</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Stripe</name></type> <name>stripe</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebClientType</name></type> <name>webClient</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <annotation>@<name>WebEndpoint</name></annotation> <name>String</name></type> <name>webEndpoint</name></decl></parameter>)</parameter_list> <block>{
+
+    <return>return <expr><call><name><name>Environment</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>activitySamplePreference</name><argument_list>(<argument><expr><name>activitySamplePreference</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>androidPayCapability</name><argument_list>(<argument><expr><name>androidPayCapability</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>apiClient</name><argument_list>(<argument><expr><name>apiClient</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>apolloClient</name><argument_list>(<argument><expr><name>apolloClient</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>(<argument><expr><name>build</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>buildCheck</name><argument_list>(<argument><expr><name>buildCheck</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>cookieManager</name><argument_list>(<argument><expr><name>cookieManager</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currentConfig</name><argument_list>(<argument><expr><name>currentConfig</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>currentUser</name><argument_list>(<argument><expr><name>currentUser</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>enableHorizontalRewards</name><argument_list>(<argument><expr><name>horizontalRewards</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>gson</name><argument_list>(<argument><expr><name>gson</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>hasSeenAppRatingPreference</name><argument_list>(<argument><expr><name>hasSeenAppRatingPreference</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>hasSeenGamesNewsletterPreference</name><argument_list>(<argument><expr><name>hasSeenGamesNewsletterPreference</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>internalTools</name><argument_list>(<argument><expr><name>internalToolsType</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>koala</name><argument_list>(<argument><expr><name>koala</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>ksCurrency</name><argument_list>(<argument><expr><name>ksCurrency</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>ksString</name><argument_list>(<argument><expr><name>ksString</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>logout</name><argument_list>(<argument><expr><name>logout</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>playServicesCapability</name><argument_list>(<argument><expr><name>playServicesCapability</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>scheduler</name><argument_list>(<argument><expr><name>scheduler</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>sharedPreferences</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>stripe</name><argument_list>(<argument><expr><name>stripe</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>webClient</name><argument_list>(<argument><expr><name>webClient</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>webEndpoint</name><argument_list>(<argument><expr><name>webEndpoint</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>ApiClientType</name></type> <name>provideApiClientType</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiService</name></type> <name>apiService</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><name><name>Secrets</name><operator>.</operator><name>IS_OSS</name></name></expr> ?</condition><then> <expr><operator>new</operator> <call><name>MockApiClient</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><operator>new</operator> <call><name>ApiClient</name><argument_list>(<argument><expr><name>apiService</name></expr></argument>, <argument><expr><name>gson</name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>ApolloClient</name></type> <name>provideApolloClient</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>HttpLoggingInterceptor</name></type> <name>httpLoggingInterceptor</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>GraphQLInterceptor</name></type> <name>graphQLInterceptor</name></decl></parameter>, <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <annotation>@<name>WebEndpoint</name></annotation> <specifier>final</specifier> <name>String</name></type> <name>webEndpoint</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>OkHttpClient</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>OkHttpClient</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>addInterceptor</name><argument_list>(<argument><expr><name>graphQLInterceptor</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Only log in debug mode to avoid leaking sensitive information.</comment>
+    <if>if <condition>(<expr><call><name><name>build</name><operator>.</operator><name>isDebug</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>addInterceptor</name></name><argument_list>(<argument><expr><name>httpLoggingInterceptor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>OkHttpClient</name></type> <name>okHttpClient</name> <init>= <expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>ApolloClient</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>addCustomTypeAdapter</name><argument_list>(<argument><expr><name><name>CustomType</name><operator>.</operator><name>DATE</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>DateAdapter</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>addCustomTypeAdapter</name><argument_list>(<argument><expr><name><name>CustomType</name><operator>.</operator><name>EMAIL</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>EmailAdapter</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>serverUrl</name><argument_list>(<argument><expr><name>webEndpoint</name> <operator>+</operator> <literal type="string">"/graph"</literal></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>okHttpClient</name><argument_list>(<argument><expr><name>okHttpClient</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>ApolloClientType</name></type> <name>provideApolloClientType</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApolloClient</name></type> <name>apolloClient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><name><name>Secrets</name><operator>.</operator><name>IS_OSS</name></name></expr> ?</condition><then> <expr><operator>new</operator> <call><name>MockApolloClient</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><operator>new</operator> <call><name>KSApolloClient</name><argument_list>(<argument><expr><name>apolloClient</name></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>OkHttpClient</name></type> <name>provideOkHttpClient</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiRequestInterceptor</name></type> <name>apiRequestInterceptor</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieJar</name></type> <name>cookieJar</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>HttpLoggingInterceptor</name></type> <name>httpLoggingInterceptor</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSRequestInterceptor</name></type> <name>ksRequestInterceptor</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebRequestInterceptor</name></type> <name>webRequestInterceptor</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>OkHttpClient</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><operator>new</operator> <call><name><name>OkHttpClient</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Only log in debug mode to avoid leaking sensitive information.</comment>
+    <if>if <condition>(<expr><call><name><name>build</name><operator>.</operator><name>isDebug</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>builder</name><operator>.</operator><name>addInterceptor</name></name><argument_list>(<argument><expr><name>httpLoggingInterceptor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <return>return <expr><call><name><name>builder</name>
+      <operator>.</operator><name>addInterceptor</name></name><argument_list>(<argument><expr><name>apiRequestInterceptor</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>addInterceptor</name><argument_list>(<argument><expr><name>webRequestInterceptor</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>addInterceptor</name><argument_list>(<argument><expr><name>ksRequestInterceptor</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>cookieJar</name><argument_list>(<argument><expr><name>cookieJar</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>ApiRetrofit</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>Retrofit</name></type> <name>provideApiRetrofit</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiEndpoint</name></type> <name>apiEndpoint</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>okHttpClient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>createRetrofit</name><argument_list>(<argument><expr><call><name><name>apiEndpoint</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>gson</name></expr></argument>, <argument><expr><name>okHttpClient</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>KoalaRetrofit</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>Retrofit</name></type> <name>provideKoalaRetrofit</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <annotation>@<name>KoalaEndpoint</name></annotation> <specifier>final</specifier> <name>String</name></type> <name>koalaEndpoint</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>okHttpClient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>createRetrofit</name><argument_list>(<argument><expr><name>koalaEndpoint</name></expr></argument>, <argument><expr><name>gson</name></expr></argument>, <argument><expr><name>okHttpClient</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>ApiRequestInterceptor</name></type> <name>provideApiRequestInterceptor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>clientId</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiEndpoint</name></type> <name>endpoint</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>ApiRequestInterceptor</name><argument_list>(<argument><expr><name>clientId</name></expr></argument>, <argument><expr><name>currentUser</name></expr></argument>, <argument><expr><call><name><name>endpoint</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>GraphQLInterceptor</name></type> <name>provideGraphQLInterceptor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>GraphQLInterceptor</name><argument_list>(<argument><expr><name>currentUser</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>ApiService</name></type> <name>provideApiService</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApiRetrofit</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Retrofit</name></type> <name>retrofit</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>retrofit</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>ApiService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>KoalaService</name></type> <name>provideKoalaService</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>KoalaRetrofit</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Retrofit</name></type> <name>retrofit</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>retrofit</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>KoalaService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>String</name></type> <name>provideClientId</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiEndpoint</name></type> <name>apiEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><name>apiEndpoint</name> <operator>==</operator> <name><name>ApiEndpoint</name><operator>.</operator><name>PRODUCTION</name></name></expr>
+      ?</condition><then> <expr><name><name>Secrets</name><operator>.</operator><name>Api</name><operator>.</operator><name>Client</name><operator>.</operator><name>PRODUCTION</name></name></expr>
+      </then><else>: <expr><name><name>Secrets</name><operator>.</operator><name>Api</name><operator>.</operator><name>Client</name><operator>.</operator><name>STAGING</name></name></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>KSRequestInterceptor</name></type> <name>provideKSRequestInterceptor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>KSRequestInterceptor</name><argument_list>(<argument><expr><name>build</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>HttpLoggingInterceptor</name></type> <name>provideHttpLoggingInterceptor</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>HttpLoggingInterceptor</name></type> <name>interceptor</name> <init>= <expr><operator>new</operator> <call><name>HttpLoggingInterceptor</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>interceptor</name><operator>.</operator><name>setLevel</name></name><argument_list>(<argument><expr><name><name>HttpLoggingInterceptor</name><operator>.</operator><name>Level</name><operator>.</operator><name>HEADERS</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>interceptor</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>WebClientType</name></type> <name>provideWebClientType</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>WebService</name></type> <name>webService</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>WebClient</name><argument_list>(<argument><expr><name>webService</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>WebRetrofit</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>Retrofit</name></type> <name>provideWebRetrofit</name><parameter_list>(<parameter><decl><type><annotation>@<name>NonNull</name></annotation> <annotation>@<name>WebEndpoint</name></annotation> <specifier>final</specifier> <name>String</name></type> <name>webEndpoint</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>okHttpClient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>createRetrofit</name><argument_list>(<argument><expr><name>webEndpoint</name></expr></argument>, <argument><expr><name>gson</name></expr></argument>, <argument><expr><name>okHttpClient</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>WebRequestInterceptor</name></type> <name>provideWebRequestInterceptor</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>,
+    <parameter><decl><type><annotation>@<name>NonNull</name></annotation> <annotation>@<name>WebEndpoint</name></annotation> <specifier>final</specifier> <name>String</name></type> <name>endpoint</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>InternalToolsType</name></type> <name>internalTools</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>WebRequestInterceptor</name><argument_list>(<argument><expr><name>currentUser</name></expr></argument>, <argument><expr><name>endpoint</name></expr></argument>, <argument><expr><name>internalTools</name></expr></argument>, <argument><expr><name>build</name></expr></argument>, <argument><expr><name>androidPayCapability</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>WebService</name></type> <name>provideWebService</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>WebRetrofit</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Retrofit</name></type> <name>retrofit</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>retrofit</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name><name>WebService</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>Retrofit</name></type> <name>createRetrofit</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>baseUrl</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>okHttpClient</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>Retrofit</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>client</name><argument_list>(<argument><expr><name>okHttpClient</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>baseUrl</name><argument_list>(<argument><expr><name>baseUrl</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>addConverterFactory</name><argument_list>(<argument><expr><call><name><name>GsonConverterFactory</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><name>gson</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>addCallAdapterFactory</name><argument_list>(<argument><expr><call><name><name>RxJavaCallAdapterFactory</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>AccessTokenPreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>StringPreferenceType</name></type> <name>provideAccessTokenPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>StringPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>ACCESS_TOKEN</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>AndroidPayCapability</name></type> <name>provideAndroidPayCapability</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>PlayServicesCapability</name></type> <name>playServicesCapability</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>AndroidPayCapability</name><argument_list>(<argument><expr><name>playServicesCapability</name></expr></argument>, <argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>PlayServicesCapability</name></type> <name>providePlayServicesCapability</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>PlayServicesCapability</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>ConfigPreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>StringPreferenceType</name></type> <name>providesConfigPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>StringPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>CONFIG</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>ActivitySamplePreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>IntPreferenceType</name></type> <name>provideActivitySamplePreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>IntPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>LAST_SEEN_ACTIVITY_ID</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>AppRatingPreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>BooleanPreferenceType</name></type> <name>provideAppRatingPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>BooleanPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>HAS_SEEN_APP_RATING</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>HorizontalRewardsPreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>BooleanPreferenceType</name></type> <name>provideHorizontalRewardsPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>BooleanPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>FeatureKey</name><operator>.</operator><name>INTERNAL_HORIZONTAL_REWARDS</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <type><name>Application</name></type> <name>provideApplication</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>application</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Koala</name></type> <name>provideKoala</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AndroidPayCapability</name></type> <name>androidPayCapability</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Build</name></type> <name>build</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>Koala</name><argument_list>(<argument><expr><operator>new</operator> <call><name>KoalaTrackingClient</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>currentUser</name></expr></argument>, <argument><expr><name>androidPayCapability</name></expr></argument>, <argument><expr><name>build</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Scheduler</name></type> <name>provideScheduler</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>Schedulers</name><operator>.</operator><name>computation</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>ApplicationContext</name></annotation>
+  <type><name>Context</name></type> <name>provideApplicationContext</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>application</name></name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <type><name>AssetManager</name></type> <name>provideAssetManager</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>application</name><operator>.</operator><name>getAssets</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>Build</name></type> <name>provideBuild</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>PackageInfo</name></type> <name>packageInfo</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>Build</name><argument_list>(<argument><expr><name>packageInfo</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>CurrentConfigType</name></type> <name>provideCurrentConfig</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AssetManager</name></type> <name>assetManager</name></decl></parameter>,
+                                                <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>,
+                                                <parameter><decl><type><specifier>final</specifier> <annotation>@<name>ConfigPreference</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>StringPreferenceType</name></type> <name>configPreference</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>CurrentConfig</name><argument_list>(<argument><expr><name>assetManager</name></expr></argument>, <argument><expr><name>gson</name></expr></argument>, <argument><expr><name>configPreference</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>CookieJar</name></type> <name>provideCookieJar</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieManager</name></type> <name>cookieManager</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>JavaNetCookieJar</name><argument_list>(<argument><expr><name>cookieManager</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>CookieManager</name></type> <name>provideCookieManager</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>CookieManager</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>CurrentUserType</name></type> <name>provideCurrentUser</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>AccessTokenPreference</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>StringPreferenceType</name></type> <name>accessTokenPreference</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DeviceRegistrarType</name></type> <name>deviceRegistrar</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <annotation>@<name>UserPreference</name></annotation> <name>StringPreferenceType</name></type> <name>userPreference</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>CurrentUser</name><argument_list>(<argument><expr><name>accessTokenPreference</name></expr></argument>, <argument><expr><name>deviceRegistrar</name></expr></argument>, <argument><expr><name>gson</name></expr></argument>, <argument><expr><name>userPreference</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>DeviceRegistrarType</name></type> <name>provideDeviceRegistrar</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>PlayServicesCapability</name></type> <name>playServicesCapability</name></decl></parameter>,
+                                                    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>DeviceRegistrar</name><argument_list>(<argument><expr><name>playServicesCapability</name></expr></argument>, <argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>GamesNewsletterPreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>BooleanPreferenceType</name></type> <name>provideGamesNewsletterPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>BooleanPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>HAS_SEEN_GAMES_NEWSLETTER</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>WebEndpoint</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>String</name></type> <name>provideWebEndpoint</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiEndpoint</name></type> <name>apiEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><operator>(</operator><name>apiEndpoint</name> <operator>==</operator> <name><name>ApiEndpoint</name><operator>.</operator><name>PRODUCTION</name></name><operator>)</operator></expr> ?</condition><then>
+      <expr><literal type="string">"https://www.kickstarter.com"</literal></expr> </then><else>:
+      <expr><call><name><name>apiEndpoint</name><operator>.</operator><name>url</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>replaceAll</name><argument_list>(<argument><expr><literal type="string">"(?&lt;=\\Ahttps?:\\/\\/)api."</literal></expr></argument>, <argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>KoalaEndpoint</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>String</name></type> <name>provideKoalaEndpoint</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiEndpoint</name></type> <name>apiEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><ternary><condition><expr><operator>(</operator><name>apiEndpoint</name> <operator>==</operator> <name><name>ApiEndpoint</name><operator>.</operator><name>PRODUCTION</name></name><operator>)</operator></expr> ?</condition><then>
+      <expr><name><name>Secrets</name><operator>.</operator><name>KoalaEndpoint</name><operator>.</operator><name>PRODUCTION</name></name></expr> </then><else>:
+      <expr><name><name>Secrets</name><operator>.</operator><name>KoalaEndpoint</name><operator>.</operator><name>STAGING</name></name></expr></else></ternary></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Font</name></type> <name>provideFont</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>AssetManager</name></type> <name>assetManager</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>Font</name><argument_list>(<argument><expr><name>assetManager</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Gson</name></type> <name>provideGson</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>GsonBuilder</name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>setFieldNamingPolicy</name><argument_list>(<argument><expr><name><name>FieldNamingPolicy</name><operator>.</operator><name>LOWER_CASE_WITH_UNDERSCORES</name></name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>registerTypeAdapter</name><argument_list>(<argument><expr><name><name>DateTime</name><operator>.</operator><name>class</name></name></expr></argument>, <argument><expr><operator>new</operator> <call><name>DateTimeTypeConverter</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>registerTypeAdapterFactory</name><argument_list>(<argument><expr><operator>new</operator> <call><name>AutoParcelAdapterFactory</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>create</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>KSCurrency</name></type> <name>provideKSCurrency</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentConfigType</name></type> <name>currentConfig</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>KSCurrency</name><argument_list>(<argument><expr><name>currentConfig</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>KSString</name></type> <name>provideKSString</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>PackageNameString</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>packageName</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Resources</name></type> <name>resources</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>KSString</name><argument_list>(<argument><expr><name>packageName</name></expr></argument>, <argument><expr><name>resources</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <specifier>static</specifier> <type><name>KSWebViewClient</name></type> <name>provideKSWebViewClient</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>OkHttpClient</name></type> <name>okHttpClient</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>WebEndpoint</name></annotation> <name>String</name></type> <name>webEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>KSWebViewClient</name><argument_list>(<argument><expr><name>okHttpClient</name></expr></argument>, <argument><expr><name>webEndpoint</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Logout</name></type> <name>provideLogout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CookieManager</name></type> <name>cookieManager</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>CurrentUserType</name></type> <name>currentUser</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>Logout</name><argument_list>(<argument><expr><name>cookieManager</name></expr></argument>, <argument><expr><name>currentUser</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>PushNotifications</name></type> <name>providePushNotifications</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>PushNotifications</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>client</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>PackageInfo</name></type> <name>providePackageInfo</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Application</name></type> <name>application</name></decl></parameter>)</parameter_list> <block>{
+    <try>try <block>{
+      <return>return <expr><call><name><name>application</name><operator>.</operator><name>getPackageManager</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>getPackageInfo</name><argument_list>(<argument><expr><call><name><name>application</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><name><name>PackageManager</name><operator>.</operator><name>NameNotFoundException</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>printStackTrace</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>()</argument_list></call></expr>;</throw>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>PackageNameString</name></annotation>
+  <specifier>static</specifier> <type><name>String</name></type> <name>providePackageName</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Application</name></type> <name>application</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>application</name><operator>.</operator><name>getPackageName</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <specifier>static</specifier> <type><name>Resources</name></type> <name>provideResources</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>context</name><operator>.</operator><name>getResources</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <type><name>SharedPreferences</name></type> <name>provideSharedPreferences</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><call><name><name>PreferenceManager</name><operator>.</operator><name>getDefaultSharedPreferences</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>application</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <annotation>@<name>UserPreference</name></annotation>
+  <annotation>@<name>NonNull</name></annotation>
+  <specifier>static</specifier> <type><name>StringPreferenceType</name></type> <name>provideUserPreference</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SharedPreferences</name></type> <name>sharedPreferences</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name>StringPreference</name><argument_list>(<argument><expr><name>sharedPreferences</name></expr></argument>, <argument><expr><name><name>SharedPreferenceKey</name><operator>.</operator><name>USER</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Provides</name></annotation>
+  <annotation>@<name>Singleton</name></annotation>
+  <type><name>Stripe</name></type> <name>provideStripe</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>ApplicationContext</name></annotation> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiEndpoint</name></type> <name>apiEndpoint</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>stripePublishableKey</name> <init>= <expr><ternary><condition><expr><name>apiEndpoint</name> <operator>==</operator> <name><name>ApiEndpoint</name><operator>.</operator><name>PRODUCTION</name></name></expr>
+      ?</condition><then> <expr><name><name>Secrets</name><operator>.</operator><name>StripePublishableKey</name><operator>.</operator><name>PRODUCTION</name></name></expr>
+      </then><else>: <expr><name><name>Secrets</name><operator>.</operator><name>StripePublishableKey</name><operator>.</operator><name>STAGING</name></name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <return>return <expr><operator>new</operator> <call><name>Stripe</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>stripePublishableKey</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

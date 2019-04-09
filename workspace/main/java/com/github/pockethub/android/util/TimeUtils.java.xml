@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\util\TimeUtils.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>util</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>format</name><operator>.</operator><name>DateUtils</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Date</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>concurrent</name><operator>.</operator><name>TimeUnit</name></name>;</import>
+
+<import>import static <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>format</name><operator>.</operator><name>DateUtils</name><operator>.</operator><name>FORMAT_NUMERIC_DATE</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>format</name><operator>.</operator><name>DateUtils</name><operator>.</operator><name>FORMAT_SHOW_DATE</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>format</name><operator>.</operator><name>DateUtils</name><operator>.</operator><name>FORMAT_SHOW_YEAR</name></name>;</import>
+<import>import static <name><name>android</name><operator>.</operator><name>text</name><operator>.</operator><name>format</name><operator>.</operator><name>DateUtils</name><operator>.</operator><name>MINUTE_IN_MILLIS</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Utilities for dealing with dates and times
+ */</comment>
+<class><specifier>public</specifier> class <name>TimeUtils</name> <block>{
+
+    <comment type="block" format="javadoc">/**
+     * Get relative time for date
+     *
+     * @param date
+     * @return relative time
+     */</comment>
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>CharSequence</name></type> <name>getRelativeTime</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Date</name></type> <name>date</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.util.TimeUtils.getRelativeTime(java.util.Date)"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>long</name></type> <name>now</name> <init>= <expr><call><name><name>System</name><operator>.</operator><name>currentTimeMillis</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><call><name><name>Math</name><operator>.</operator><name>abs</name></name><argument_list>(<argument><expr><name>now</name> <operator>-</operator> <call><name><name>date</name><operator>.</operator><name>getTime</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>&gt;</operator> <call><name><name>TimeUnit</name><operator>.</operator><name>MINUTES</name><operator>.</operator><name>toMillis</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.util.TimeUtils.getRelativeTime(java.util.Date)"</literal></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>DateUtils</name><operator>.</operator><name>getRelativeTimeSpanString</name></name><argument_list>(<argument><expr><call><name><name>date</name><operator>.</operator><name>getTime</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>now</name></expr></argument>,
+                    <argument><expr><name>MINUTE_IN_MILLIS</name></expr></argument>, <argument><expr><name>FORMAT_SHOW_DATE</name> <operator>|</operator> <name>FORMAT_SHOW_YEAR</name>
+                            <operator>|</operator> <name>FORMAT_NUMERIC_DATE</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+        }</block></then> <else>else <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logStaticMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"CharSequence com.github.pockethub.android.util.TimeUtils.getRelativeTime(java.util.Date)"</literal></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><literal type="string">"just now"</literal></expr>;</return>}</block>
+        }</block></else></if>
+    }</block></function>
+}</block></class>
+</unit>

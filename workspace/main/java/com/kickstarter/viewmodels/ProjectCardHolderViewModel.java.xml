@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\ProjectCardHolderViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>BooleanUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>NumberUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ProgressBarUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ProjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Category</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>ProjectCardViewHolder</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>coalesce</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>combineLatestPair</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>ProjectCardHolderViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call to configure view model with a project and current discovery params. */</comment>
+    <function_decl><type><name>void</name></type> <name>configureWith</name><parameter_list>(<parameter><decl><type><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>projectAndDiscoveryParams</name></decl></parameter>)</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the project card has been clicked. */</comment>
+    <function_decl><type><name>void</name></type> <name>projectCardClicked</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits the project's number of backers. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>backersCountTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if backing view should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backingViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the a string representing how much time the project has remaining. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>deadlineCountdownText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if featured view should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>featuredViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits list of friends who have also backed this project. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>friendsForNamepile</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if second face in facepile should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendAvatar2IsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if third face in facepile should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendAvatar3IsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits URL string of first friend's avatar. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl1</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits URL string of second friend's avatar. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl2</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits URL string of third friend's avatar. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl3</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if project has a photo to display. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>imageIsInvisible</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if friends who have also backed should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendBackingViewIsHidden</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if successful funding state should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>fundingSuccessfulViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if unsuccessful funding state should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>fundingUnsuccessfulViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if metadata container should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>metadataViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits background drawable resource ID of metadata container. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>metadataViewGroupBackgroundDrawable</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits project to be used for calculating countdown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectForDeadlineCountdownDetail</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits percentage representing project funding. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>percentageFundedForProgressBar</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if funded progress bar should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>percentageFundedProgressBarIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits string representation of project funding percentage. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>percentageFundedTextViewText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits URL string of project cover photo. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>photoUrl</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits project name and blurb. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>nameAndBlurbText</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits when project card is clicked. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>notifyDelegateOfProjectClick</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits time project was canceled. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectCanceledAt</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if stats container should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectCardStatsViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits time project was unsuccessfully funded. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectFailedAt</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if state container should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectStateViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if project (sub)category tag should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectSubcategoryIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits project (sub)category. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectSubcategoryName</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits time project was successfully funded. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectSuccessfulAt</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits time project was suspended. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectSuspendedAt</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if project tags container should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectTagContainerIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if project we love tag container should be shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectWeLoveIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits project's root category. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>rootCategoryNameForFeatured</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if saved container should shown. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>savedViewGroupIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits to determine if padding should be added to top of view. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>setDefaultTopPadding</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>ProjectCardViewHolder</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectForDeadlineCountdownDetail</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>project</name></name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>backersCountTextViewText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>backersCount</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>NumberUtils</name><operator>::</operator><name>format</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>backingViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>ProjectUtils</name><operator>.</operator><name>metadataForProject</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call> <operator>!=</operator> <name><name>ProjectUtils</name><operator>.</operator><name>Metadata</name><operator>.</operator><name>BACKING</name></name></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>deadlineCountdownText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>ProjectUtils</name><operator>::</operator><name>deadlineCountdownValue</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>NumberUtils</name><operator>::</operator><name>format</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>featuredViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>ProjectUtils</name><operator>.</operator><name>metadataForProject</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call> <operator>!=</operator> <name><name>ProjectUtils</name><operator>.</operator><name>Metadata</name><operator>.</operator><name>CATEGORY_FEATURED</name></name></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendAvatarUrl1</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>isFriendBacking</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>friends</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>friends</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>avatar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>small</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendAvatarUrl2</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>isFriendBacking</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>friends</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>friends</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">1</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>friends</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>avatar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>small</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendAvatarUrl3</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>isFriendBacking</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>friends</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>friends</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">2</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>friends</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>avatar</name><argument_list>()</argument_list></call><operator>.</operator><call><name>small</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendAvatar2IsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>friends</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>friends</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>friends</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">1</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendAvatar3IsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>friends</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>friends</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name>friends</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>friends</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">2</literal></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendBackingViewIsHidden</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>isFriendBacking</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>friendsForNamepile</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>isFriendBacking</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>friends</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><operator>!</operator><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_CANCELED</name></name></expr></argument>)</argument_list></call>
+            <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_FAILED</name></name></expr></argument>)</argument_list></call>
+            <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_SUSPENDED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>fundingSuccessfulViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_SUCCESSFUL</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>imageIsInvisible</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>photo</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNull</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>metadataViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>ProjectUtils</name><operator>.</operator><name>metadataForProject</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>metadataViewGroupBackground</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>backingViewGroupIsGone</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>gone</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><name>gone</name></expr> ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>rect_white_grey_stroke</name></name></expr> </then><else>: <expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>rect_green_grey_stroke</name></name></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>nameAndBlurbText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>Pair</name><operator>.</operator><name>create</name></name><argument_list>(<argument><expr><call><name><name>p</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name><name>p</name><operator>.</operator><name>blurb</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>notifyDelegateOfProjectClick</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>takeWhen</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>projectCardClicked</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>percentageFundedForProgressBar</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><operator>(</operator><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_LIVE</name></name></expr></argument>)</argument_list></call> <operator>||</operator> <call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_SUCCESSFUL</name></name></expr></argument>)</argument_list></call><operator>)</operator></expr> ?</condition><then> <expr><call><name><name>p</name><operator>.</operator><name>percentageFunded</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="number">0.0f</literal></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>ProgressBarUtils</name><operator>::</operator><name>progress</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>percentageFundedProgressBarIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_CANCELED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>percentageFundedTextViewText</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>percentageFunded</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>NumberUtils</name><operator>::</operator><name>flooredPercentage</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>photoUrl</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name><name>p</name><operator>.</operator><name>photo</name></name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><literal type="null">null</literal></expr> </then><else>: <expr><call><name><name>p</name><operator>.</operator><name>photo</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>full</name><argument_list>()</argument_list></call></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectCanceledAt</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_CANCELED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>stateChangedAt</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectCardStatsViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><operator>!</operator><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_LIVE</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectFailedAt</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_FAILED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>stateChangedAt</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectStateViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>ProjectUtils</name><operator>::</operator><name>isCompleted</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Category</name></argument>&gt;</argument_list></name></type> <name>projectCategory</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>category</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectSubcategoryIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>discoveryParams</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>DiscoveryParams</name><operator>::</operator><name>category</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><name>projectCategory</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>this</name><operator>::</operator><name>areParamsAllOrSameCategoryAsProject</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectSubcategoryName</name></name> <operator>=</operator> <call><name><name>projectCategory</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Category</name><operator>::</operator><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectSuccessfulAt</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_SUCCESSFUL</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>stateChangedAt</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectSuspendedAt</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>p</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name><name>Project</name><operator>.</operator><name>STATE_SUSPENDED</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>stateChangedAt</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectWeLoveIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>staffPick</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>combineLatestPair</name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>discoveryParams</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>DiscoveryParams</name><operator>::</operator><name>staffPicks</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>coalesce</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>staffPickPair</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>staffPickPair</name><operator>.</operator><name>first</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><name><name>staffPickPair</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>BooleanUtils</name><operator>::</operator><name>negate</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>projectTagContainerIsGone</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>projectSubcategoryIsGone</name></name></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>projectWeLoveIsGone</name></name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>pair</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>pair</name><operator>.</operator><name>first</name></name> <operator>&amp;&amp;</operator> <name><name>pair</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>rootCategoryNameForFeatured</name></name> <operator>=</operator> <call><name><name>projectCategory</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>Category</name><operator>::</operator><name>root</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Category</name><operator>::</operator><name>name</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>savedViewGroupIsGone</name></name> <operator>=</operator> <call><name><name>this</name><operator>.</operator><name>project</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>ProjectUtils</name><operator>.</operator><name>metadataForProject</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>)</argument_list></call> <operator>!=</operator> <name><name>ProjectUtils</name><operator>.</operator><name>Metadata</name><operator>.</operator><name>SAVING</name></name></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>setDefaultTopPadding</name></name> <operator>=</operator> <name><name>this</name><operator>.</operator><name>metadataViewGroupIsGone</name></name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>private</specifier> <type><name>boolean</name></type> <name>areParamsAllOrSameCategoryAsProject</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Category</name></argument>, <argument><name>Category</name></argument>&gt;</argument_list></name></type> <name>categoryPair</name></decl></parameter>)</parameter_list> <block>{
+      <return>return <expr><ternary><condition><expr><call><name><name>ObjectUtils</name><operator>.</operator><name>isNotNull</name></name><argument_list>(<argument><expr><name><name>categoryPair</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><call><name><name>categoryPair</name><operator>.</operator><name>first</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call> <operator>==</operator> <call><name><name>categoryPair</name><operator>.</operator><name>second</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="boolean">false</literal></expr></else></ternary></expr>;</return>
+    }</block></function>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>discoveryParams</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>projectCardClicked</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>backersCountTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backingViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>deadlineCountdownText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>featuredViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendAvatar2IsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendAvatar3IsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl1</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl2</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl3</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendBackingViewIsHidden</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>friendsForNamepile</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>fundingSuccessfulViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>fundingUnsuccessfulViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>imageIsInvisible</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>metadataViewGroupBackground</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>metadataViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>nameAndBlurbText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>notifyDelegateOfProjectClick</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>percentageFundedForProgressBar</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>percentageFundedProgressBarIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>percentageFundedTextViewText</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>photoUrl</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectForDeadlineCountdownDetail</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectCardStatsViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectStateViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectCanceledAt</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectFailedAt</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectSubcategoryName</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectSubcategoryIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectSuccessfulAt</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectSuspendedAt</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectTagContainerIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectWeLoveIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>rootCategoryNameForFeatured</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>savedViewGroupIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>setDefaultTopPadding</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>configureWith</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>Pair</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>, <argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>projectAndDiscoveryParams</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>project</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>projectAndDiscoveryParams</name><operator>.</operator><name>first</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>discoveryParams</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><name><name>projectAndDiscoveryParams</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>projectCardClicked</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectCardClicked</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>backersCountTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>backersCountTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>backingViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>backingViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>deadlineCountdownText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>deadlineCountdownText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>featuredViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>featuredViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendAvatar2IsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendAvatar2IsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendAvatar3IsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendAvatar3IsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl1</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendAvatarUrl1</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl2</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendAvatarUrl2</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>friendAvatarUrl3</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendAvatarUrl3</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>friendBackingViewIsHidden</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendBackingViewIsHidden</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>friendsForNamepile</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>friendsForNamepile</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>fundingSuccessfulViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>fundingSuccessfulViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>fundingUnsuccessfulViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>imageIsInvisible</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>imageIsInvisible</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>metadataViewGroupBackgroundDrawable</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>metadataViewGroupBackground</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>metadataViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>metadataViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>Pair</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>nameAndBlurbText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>nameAndBlurbText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>notifyDelegateOfProjectClick</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>notifyDelegateOfProjectClick</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>percentageFundedForProgressBar</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>percentageFundedForProgressBar</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>percentageFundedProgressBarIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>percentageFundedProgressBarIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>percentageFundedTextViewText</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>percentageFundedTextViewText</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>photoUrl</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>photoUrl</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectCardStatsViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectCardStatsViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>projectForDeadlineCountdownDetail</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectForDeadlineCountdownDetail</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectStateViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectStateViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectSubcategoryIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectSubcategoryIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>projectSubcategoryName</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectSubcategoryName</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectCanceledAt</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectCanceledAt</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectFailedAt</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectFailedAt</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectSuccessfulAt</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectSuccessfulAt</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DateTime</name></argument>&gt;</argument_list></name></type> <name>projectSuspendedAt</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectSuspendedAt</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectTagContainerIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectTagContainerIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>projectWeLoveIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>projectWeLoveIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list></name></type> <name>rootCategoryNameForFeatured</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>rootCategoryNameForFeatured</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>setDefaultTopPadding</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>setDefaultTopPadding</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>savedViewGroupIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>savedViewGroupIsGone</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>

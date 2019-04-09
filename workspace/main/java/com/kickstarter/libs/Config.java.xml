@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\Config.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Parcelable</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>qualifiers</name><operator>.</operator><name>AutoGson</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Collections</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Map</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>auto</name><operator>.</operator><name>parcel</name><operator>.</operator><name>AutoParcel</name></name>;</import>
+
+<class><annotation>@<name>AutoGson</name></annotation>
+<annotation>@<name>AutoParcel</name></annotation>
+<specifier>public</specifier> <specifier>abstract</specifier> class <name>Config</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>countryCode</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <annotation>@<name>Nullable</name></annotation> <type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>features</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name>LaunchedCountry</name></argument>&gt;</argument_list></name></type> <name>launchedCountries</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>countryCode</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>features</name><parameter_list>(<parameter><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>launchedCountries</name><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>LaunchedCountry</name></argument>&gt;</argument_list></name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Config</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <class><annotation>@<name>AutoGson</name></annotation>
+  <annotation>@<name>AutoParcel</name></annotation>
+  <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>LaunchedCountry</name> <super><implements>implements <name>Parcelable</name></implements></super> <block>{
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>name</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencyCode</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>String</name></type> <name>currencySymbol</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Boolean</name></type> <name>trailingCode</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <class><annotation>@<name><name>AutoParcel</name><operator>.</operator><name>Builder</name></name></annotation>
+    <specifier>public</specifier> <specifier>abstract</specifier> <specifier>static</specifier> class <name>Builder</name> <block>{
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>name</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>currencyCode</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>currencySymbol</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>trailingCode</name><parameter_list>(<parameter><decl><type><name>Boolean</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+      <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>LaunchedCountry</name></type> <name>build</name><parameter_list>()</parameter_list>;</function_decl>
+    }</block></class>
+
+    <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_Config_LaunchedCountry</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></function>
+
+    <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></class>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name>Builder</name></type> <name>builder</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>AutoParcel_Config</name><operator>.</operator><name>Builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>features</name><argument_list>(<argument><expr><call><name><name>Collections</name><operator>.</operator><name>emptyMap</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>Builder</name></type> <name>toBuilder</name><parameter_list>()</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * A currency needs a code if its symbol is ambiguous, e.g. `$` is used for currencies such as USD, CAD, AUD.
+   */</comment>
+  <function><specifier>public</specifier> <type><name>boolean</name></type> <name>currencyNeedsCode</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>String</name></type> <name>currencySymbol</name></decl></parameter>)</parameter_list> <block>{
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name>LaunchedCountry</name></type> <name>country</name> <range>: <expr><call><name>launchedCountries</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{
+      <if>if <condition>(<expr><call><name><name>country</name><operator>.</operator><name>currencySymbol</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>equals</name><argument_list>(<argument><expr><name>currencySymbol</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><call><name><name>country</name><operator>.</operator><name>trailingCode</name></name><argument_list>()</argument_list></call></expr>;</return>
+      }</block></then></if>
+    }</block></for>
+
+    <comment type="line">// Unlaunched country, default to showing the code.</comment>
+    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

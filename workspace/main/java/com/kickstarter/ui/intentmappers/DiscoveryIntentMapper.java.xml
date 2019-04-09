@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\intentmappers\DiscoveryIntentMapper.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>intentmappers</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Category</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Location</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>DiscoveryParams</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>DiscoveryIntentMapper</name> <block>{
+  <constructor><specifier>private</specifier> <name>DiscoveryIntentMapper</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>params</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>paramsFromParcel</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name>paramsFromIntent</name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>paramsFromUri</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name><name>IntentMapper</name><operator>.</operator><name>uri</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>DiscoveryParams</name><operator>::</operator><name>fromUri</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>uri</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name>paramsFromUri</name><argument_list>(<argument><expr><name>uri</name></expr></argument>, <argument><expr><name>client</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(<argument><expr><name>paramsFromParcel</name></expr></argument>, <argument><expr><name>paramsFromUri</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>Nullable</name></annotation> <type><name>DiscoveryParams</name></type> <name>paramsFromIntent</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Intent</name></type> <name>intent</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>intent</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>DISCOVERY_PARAMS</name></name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Returns params where category and location params have been converted into {@link Category}
+   * and {@link Location} objects.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>DiscoveryParams</name></argument>&gt;</argument_list></name></type> <name>paramsFromUri</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DiscoveryParams</name></type> <name>params</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>Observable</name><operator>.</operator><name>zip</name></name><argument_list>(<argument><expr><call><name>paramBuilders</name><argument_list>(<argument><expr><name>params</name></expr></argument>, <argument><expr><name>client</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>builders</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name></type> <name>builder</name> <init>= <expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <for>for <control>(<init><decl><type><specifier>final</specifier> <name>Object</name></type> <name>object</name> <range>: <expr><name>builders</name></expr></range></decl></init>)</control> <block>{
+        <decl_stmt><decl><type><specifier>final</specifier> <name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name></type> <name>b</name> <init>= <expr><operator>(</operator><name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name><operator>)</operator> <name>object</name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><name>builder</name> <operator>=</operator> <call><name><name>builder</name><operator>.</operator><name>mergeWith</name></name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+
+      <return>return <expr><call><name><name>builder</name><operator>.</operator><name>build</name></name><argument_list>()</argument_list></call></expr>;</return>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Creates observables that will perform API requests to retrieve additional data needed to fill out
+   * a full discovery params object. For example, if `params` holds only a category slug and no actual
+   * category data, we will perform a request to get the full category from the API.
+   * @param params The discovery params that is potentially missing full data.
+   * @return A list of observables, each responsible for retrieving more data from the API. The
+   * observables emit *builders* of params, and hence can later be merged into a single params object.
+   */</comment>
+  <function><specifier>private</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>paramBuilders</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>DiscoveryParams</name></type> <name>params</name></decl></parameter>,
+    <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ApiClientType</name></type> <name>client</name></decl></parameter>)</parameter_list> <block>{
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>DiscoveryParams</name><operator>.</operator><name>Builder</name></name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>paramBuilders</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>categoryParam</name> <init>= <expr><call><name><name>params</name><operator>.</operator><name>categoryParam</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>categoryParam</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>paramBuilders</name><operator>.</operator><name>add</name></name><argument_list>(
+        <argument><expr><call><name><name>client</name>
+          <operator>.</operator><name>fetchCategory</name></name><argument_list>(<argument><expr><name>categoryParam</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>c</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>category</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>neverError</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>locationParam</name> <init>= <expr><call><name><name>params</name><operator>.</operator><name>locationParam</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>locationParam</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>paramBuilders</name><operator>.</operator><name>add</name></name><argument_list>(
+        <argument><expr><call><name><name>client</name>
+          <operator>.</operator><name>fetchLocation</name></name><argument_list>(<argument><expr><name>locationParam</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>l</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>DiscoveryParams</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>location</name><argument_list>(<argument><expr><name>l</name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name><name>Transformers</name><operator>.</operator><name>neverError</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>
+      )</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <expr_stmt><expr><call><name><name>paramBuilders</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><call><name><name>Observable</name><operator>.</operator><name>just</name></name><argument_list>(<argument><expr><call><name><name>params</name><operator>.</operator><name>toBuilder</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>paramBuilders</name></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

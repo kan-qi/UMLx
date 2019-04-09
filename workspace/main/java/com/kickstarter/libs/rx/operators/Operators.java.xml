@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\libs\rx\operators\Operators.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>operators</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>google</name><operator>.</operator><name>gson</name><operator>.</operator><name>Gson</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiException</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ResponseException</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Subscriber</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>Operators</name> <block>{
+  <constructor><specifier>private</specifier> <name>Operators</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <comment type="block" format="javadoc">/**
+   * When a response errors, send an {@link ApiException} or {@link ResponseException} to
+   * {@link Subscriber#onError}, otherwise send the response to {@link Subscriber#onNext}.
+   */</comment>
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name><name>NonNull</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></annotation> <type><name><name>ApiErrorOperator</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>apiError</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Gson</name></type> <name>gson</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><operator>new</operator> <call><name><name>ApiErrorOperator</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>gson</name></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

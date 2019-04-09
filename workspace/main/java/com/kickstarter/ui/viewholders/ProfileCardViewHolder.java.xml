@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\viewholders\ProfileCardViewHolder.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>drawable</name><operator>.</operator><name>Drawable</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ImageView</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>ProgressBar</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>TextView</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ProgressBarUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Photo</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>squareup</name><operator>.</operator><name>picasso</name><operator>.</operator><name>Picasso</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Nullable</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>Bind</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindDrawable</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>BindString</name></name>;</import>
+<import>import <name><name>butterknife</name><operator>.</operator><name>ButterKnife</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>ProfileCardViewHolder</name> <super><extends>extends <name>KSViewHolder</name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Delegate</name></type> <name>delegate</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>private</specifier> <type><name>Project</name></type> <name>project</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>funding_unsuccessful_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>fundingUnsuccessfulTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>percentage_funded</name></name></expr></argument>)</argument_list></annotation> <type><name>ProgressBar</name></type> <name>percentageFundedProgressBar</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>profile_card_image</name></name></expr></argument>)</argument_list></annotation> <type><name>ImageView</name></type> <name>profileCardImageView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>profile_card_name</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>profileCardNameTextView</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>project_state_view_group</name></name></expr></argument>)</argument_list></annotation> <type><name>ViewGroup</name></type> <name>projectStateViewGroup</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>Bind</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>successfully_funded_text_view</name></name></expr></argument>)</argument_list></annotation> <type><name>TextView</name></type> <name>successfullyFundedTextView</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindDrawable</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>drawable</name><operator>.</operator><name>gray_gradient</name></name></expr></argument>)</argument_list></annotation> <type><name>Drawable</name></type> <name>grayGradientDrawable</name></decl>;</decl_stmt>
+
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>profile_projects_status_successful</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>successfulString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>profile_projects_status_unsuccessful</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>unsuccessfulString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>profile_projects_status_canceled</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>cancelledString</name></decl>;</decl_stmt>
+  <decl_stmt><decl><specifier>protected</specifier> <annotation>@<name>BindString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>profile_projects_status_suspended</name></name></expr></argument>)</argument_list></annotation> <type><name>String</name></type> <name>suspendedString</name></decl>;</decl_stmt>
+
+  <interface><specifier>public</specifier> interface <name>Delegate</name> <block>{
+    <function_decl><type><name>void</name></type> <name>profileCardViewHolderClicked</name><parameter_list>(<parameter><decl><type><name>ProfileCardViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><name>Project</name></type> <name>project</name></decl></parameter>)</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <constructor><specifier>public</specifier> <name>ProfileCardViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Delegate</name></type> <name>delegate</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>delegate</name></name> <operator>=</operator> <name>delegate</name></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>ButterKnife</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>bindData</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>Nullable</name></annotation> <name>Object</name></type> <name>data</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>project</name></name> <operator>=</operator> <call><name><name>ObjectUtils</name><operator>.</operator><name>requireNonNull</name></name><argument_list>(<argument><expr><operator>(</operator><name>Project</name><operator>)</operator> <name>data</name></expr></argument>, <argument><expr><name><name>Project</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onBind</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Photo</name></type> <name>photo</name> <init>= <expr><call><name><name>this</name><operator>.</operator><name>project</name><operator>.</operator><name>photo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <if>if <condition>(<expr><name>photo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>profileCardImageView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>Picasso</name><operator>.</operator><name>with</name></name><argument_list>(<argument><expr><call><name>context</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>load</name><argument_list>(<argument><expr><call><name><name>photo</name><operator>.</operator><name>med</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>placeholder</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>grayGradientDrawable</name></name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>into</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>profileCardImageView</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then> <else>else <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>profileCardImageView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>INVISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></else></if>
+
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>profileCardNameTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>project</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>percentageFundedProgressBar</name><operator>.</operator><name>setProgress</name></name><argument_list>(<argument><expr><call><name><name>ProgressBarUtils</name><operator>.</operator><name>progress</name></name><argument_list>(<argument><expr><call><name><name>this</name><operator>.</operator><name>project</name><operator>.</operator><name>percentageFunded</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>setProjectStateView</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onClick</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>delegate</name><operator>.</operator><name>profileCardViewHolderClicked</name></name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>project</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>setProjectStateView</name><parameter_list>()</parameter_list> <block>{
+    <switch>switch<condition>(<expr><call><name><name>this</name><operator>.</operator><name>project</name><operator>.</operator><name>state</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+      <case>case <expr><name><name>Project</name><operator>.</operator><name>STATE_SUCCESSFUL</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>percentageFundedProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectStateViewGroup</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successfullyFundedTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successfullyFundedTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>successfulString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>Project</name><operator>.</operator><name>STATE_CANCELED</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>percentageFundedProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectStateViewGroup</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successfullyFundedTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>cancelledString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>Project</name><operator>.</operator><name>STATE_FAILED</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>percentageFundedProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectStateViewGroup</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successfullyFundedTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>unsuccessfulString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <case>case <expr><name><name>Project</name><operator>.</operator><name>STATE_SUSPENDED</name></name></expr>:</case>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>percentageFundedProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectStateViewGroup</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>successfullyFundedTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>fundingUnsuccessfulTextView</name><operator>.</operator><name>setText</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>suspendedString</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+      <default>default:</default>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>percentageFundedProgressBar</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>VISIBLE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>projectStateViewGroup</name><operator>.</operator><name>setVisibility</name></name><argument_list>(<argument><expr><name><name>View</name><operator>.</operator><name>GONE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break;</break>
+    }</block></switch>
+  }</block></function>
+}</block></class>
+</unit>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ApplicationGraph.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>KoalaTrackingClient</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ApplicationLifecycleUtil</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>KoalaBackgroundService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>firebase</name><operator>.</operator><name>MessageService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>firebase</name><operator>.</operator><name>RegisterService</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name><operator>.</operator><name>AppRatingDialog</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name><operator>.</operator><name>IconTextView</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name><operator>.</operator><name>KSWebView</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>ApplicationGraph</name> <block>{
+  <function_decl><type><name>Environment</name></type> <name>environment</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>ApplicationLifecycleUtil</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>AppRatingDialog</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>IconTextView</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>KoalaBackgroundService</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>KoalaTrackingClient</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>KSWebView</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>KSApplication</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>MessageService</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl><type><name>void</name></type> <name>inject</name><parameter_list>(<parameter><decl><type><name>RegisterService</name></type> <name>__</name></decl></parameter>)</parameter_list>;</function_decl>
+}</block></interface>
+</unit>

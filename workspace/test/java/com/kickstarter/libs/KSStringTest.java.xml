@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\test\java\com\kickstarter\libs\KSStringTest.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>KSRobolectricTestCase</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>junit</name><operator>.</operator><name>Test</name></name>;</import>
+<import>import <name><name>org</name><operator>.</operator><name>robolectric</name><operator>.</operator><name>annotation</name><operator>.</operator><name>Config</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>KSStringTest</name> <super><extends>extends <name>KSRobolectricTestCase</name></extends></super> <block>{
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_oneSubstitution</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"by %{name}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"by christopher"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><literal type="string">"name"</literal></expr></argument>, <argument><expr><literal type="string">"christopher"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_twoSubstitutions</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"%{remaining} of %{total}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"1 of 5"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>,
+      <argument><expr><literal type="string">"remaining"</literal></expr></argument>, <argument><expr><literal type="string">"1"</literal></expr></argument>,
+      <argument><expr><literal type="string">"total"</literal></expr></argument>, <argument><expr><literal type="string">"5"</literal></expr></argument>
+    )</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_threeSubstitutions</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"%{one}, %{two} and %{three}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"a, b and c"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>,
+      <argument><expr><literal type="string">"one"</literal></expr></argument>, <argument><expr><literal type="string">"a"</literal></expr></argument>,
+      <argument><expr><literal type="string">"two"</literal></expr></argument>, <argument><expr><literal type="string">"b"</literal></expr></argument>,
+      <argument><expr><literal type="string">"three"</literal></expr></argument>, <argument><expr><literal type="string">"c"</literal></expr></argument>
+    )</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_fourSubstitutions</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"%{one}, %{two}, %{three} and %{four}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"a, b, c and d"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>,
+      <argument><expr><literal type="string">"one"</literal></expr></argument>, <argument><expr><literal type="string">"a"</literal></expr></argument>,
+      <argument><expr><literal type="string">"two"</literal></expr></argument>, <argument><expr><literal type="string">"b"</literal></expr></argument>,
+      <argument><expr><literal type="string">"three"</literal></expr></argument>, <argument><expr><literal type="string">"c"</literal></expr></argument>,
+      <argument><expr><literal type="string">"four"</literal></expr></argument>, <argument><expr><literal type="string">"d"</literal></expr></argument>
+    )</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_replaceWithNullValue</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"search term: %{term}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"search term: "</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><literal type="string">"term"</literal></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_invalidKey</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"by %{name}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"by %{name}"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><literal type="string">"invalid_key"</literal></expr></argument>, <argument><expr><literal type="string">"foo"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Catch issue with regexp substitution where `$` needs to be escaped.
+   */</comment>
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_replaceWithValueContainingDollarSign</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"pledged of %{goal}"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"pledged of $100"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><literal type="string">"goal"</literal></expr></argument>, <argument><expr><literal type="string">"$100"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_replaceStringContainingHtml</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>string</name> <init>= <expr><literal type="string">"by &lt;u&gt;%{creator_name}&lt;/u&gt;"</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"by &lt;u&gt;Christopher&lt;/u&gt;"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>string</name></expr></argument>, <argument><expr><literal type="string">"creator_name"</literal></expr></argument>, <argument><expr><literal type="string">"Christopher"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_count</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>keyPath</name> <init>= <expr><literal type="string">"dates_time_days"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>KSString</name></type> <name>ksString</name> <init>= <expr><call><name>ksString</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"10 days"</literal></expr></argument>, <argument><expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><literal type="number">10</literal></expr></argument>, <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><literal type="string">"10"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"3 days"</literal></expr></argument>, <argument><expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>, <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><literal type="string">"3"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"1 day"</literal></expr></argument>, <argument><expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><literal type="string">"1"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"2 days"</literal></expr></argument>, <argument><expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><literal type="string">"2"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"0 days"</literal></expr></argument>, <argument><expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><literal type="string">"0"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_countWithNoResource</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>keyPath</name> <init>= <expr><literal type="string">"dates_time_days"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>KSString</name></type> <name>ksString</name> <init>= <expr><call><name>ksString</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>, <argument><expr><call><name><name>ksString</name><operator>.</operator><name>format</name></name><argument_list>(<argument><expr><name>keyPath</name></expr></argument>, <argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="string">"time_count"</literal></expr></argument>, <argument><expr><literal type="string">"-1"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Test</name></annotation>
+  <annotation>@<name>Config</name><argument_list>(<argument><expr><name>qualifiers</name><operator>=</operator><literal type="string">"de"</literal></expr></argument>)</argument_list></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>testFormat_german</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>assertEquals</name><argument_list>(<argument><expr><literal type="string">"von Kristof"</literal></expr></argument>, <argument><expr><call><name>ksString</name><argument_list>()</argument_list></call><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><call><name>application</name><argument_list>()</argument_list></call><operator>.</operator><call><name>getString</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>string</name><operator>.</operator><name>project_creator_by_creator</name></name></expr></argument>)</argument_list></call></expr></argument>,
+      <argument><expr><literal type="string">"creator_name"</literal></expr></argument>, <argument><expr><literal type="string">"Kristof"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></class>
+</unit>

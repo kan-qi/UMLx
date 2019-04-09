@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\adapters\KSAdapter.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>adapters</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>LayoutInflater</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>crashlytics</name><operator>.</operator><name>android</name><operator>.</operator><name>Crashlytics</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>BuildConfig</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ExceptionUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>viewholders</name><operator>.</operator><name>KSViewHolder</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>trello</name><operator>.</operator><name>rxlifecycle</name><operator>.</operator><name>ActivityEvent</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>ArrayList</name></name>;</import>
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>LayoutRes</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>androidx</name><operator>.</operator><name>recyclerview</name><operator>.</operator><name>widget</name><operator>.</operator><name>RecyclerView</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>abstract</specifier> class <name>KSAdapter</name> <super><extends>extends <name><name>RecyclerView</name><operator>.</operator><name><name>Adapter</name><argument_list type="generic">&lt;<argument><name>KSViewHolder</name></argument>&gt;</argument_list></name></name></extends></super> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>sections</name> <init>= <expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <function><specifier>public</specifier> <type><name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>Object</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>sections</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name><name>this</name><operator>.</operator><name>sections</name></name></expr>;</return>
+  }</block></function>
+
+  <function><specifier>public</specifier> <type><name>void</name></type> <name>clearSections</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sections</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>addSection</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>addSections</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>sections</name></decl></parameter>)</parameter_list> <block>{
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>section</name> <range>: <expr><name>sections</name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><call><name>addSection</name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+  }</block></function>
+
+  <function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>setSection</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>location</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sections</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name>location</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>insertSection</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>location</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>sections</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>location</name></expr></argument>, <argument><expr><operator>new</operator> <call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Fetch the layout id associated with a sectionRow.
+   */</comment>
+  <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <type><name>int</name></type> <name>layout</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <comment type="block" format="javadoc">/**
+   * Returns a new KSViewHolder given a layout and view.
+   */</comment>
+  <function_decl><specifier>protected</specifier> <specifier>abstract</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>viewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>view</name></decl></parameter>)</parameter_list>;</function_decl>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onViewDetachedFromWindow</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewDetachedFromWindow</name></name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// View holders are "stopped" when they are detached from the window for recycling</comment>
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>lifecycleEvent</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>STOP</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// View holders are "destroy" when they are detached from the window and no adapter is listening</comment>
+    <comment type="line">// to events, so ostensibly the view holder is being deallocated.</comment>
+    <if>if <condition>(<expr><operator>!</operator><call><name>hasObservers</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>lifecycleEvent</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>DESTROY</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>onViewAttachedToWindow</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSViewHolder</name></type> <name>holder</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>onViewAttachedToWindow</name></name><argument_list>(<argument><expr><name>holder</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// View holders are "started" when they are attached to the new window because this means</comment>
+    <comment type="line">// it has been recycled.</comment>
+    <expr_stmt><expr><call><name><name>holder</name><operator>.</operator><name>lifecycleEvent</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>START</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>KSViewHolder</name></type> <name>onCreateViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>layout</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>View</name></type> <name>view</name> <init>= <expr><call><name>inflateView</name><argument_list>(<argument><expr><name>viewGroup</name></expr></argument>, <argument><expr><name>layout</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>KSViewHolder</name></type> <name>viewHolder</name> <init>= <expr><call><name>viewHolder</name><argument_list>(<argument><expr><name>layout</name></expr></argument>, <argument><expr><name>view</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>lifecycleEvent</name></name><argument_list>(<argument><expr><name><name>ActivityEvent</name><operator>.</operator><name>CREATE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <return>return <expr><name>viewHolder</name></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>void</name></type> <name>onBindViewHolder</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>KSViewHolder</name></type> <name>viewHolder</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>Object</name></type> <name>data</name> <init>= <expr><call><name>objectFromPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <try>try <block>{
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>bindData</name></name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name><name>viewHolder</name><operator>.</operator><name>onBind</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block> <catch>catch <parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+      <if>if <condition>(<expr><name><name>BuildConfig</name><operator>.</operator><name>DEBUG</name></name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>ExceptionUtils</name><operator>.</operator><name>rethrowAsRuntimeException</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then> <else>else <block>{
+        <comment type="line">// TODO: alter the exception message to say we are just reporting it and it's not a real crash.</comment>
+        <expr_stmt><expr><call><name><name>Crashlytics</name><operator>.</operator><name>logException</name></name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></else></if>
+    }</block></catch></try>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>int</name></type> <name>getItemViewType</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>layout</name><argument_list>(<argument><expr><call><name>sectionRowFromPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <specifier>final</specifier> <type><name>int</name></type> <name>getItemCount</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>itemCount</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>section</name> <range>: <expr><name><name>this</name><operator>.</operator><name>sections</name></name></expr></range></decl></init>)</control> <block>{
+      <expr_stmt><expr><name>itemCount</name> <operator>+=</operator> <call><name><name>section</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <return>return <expr><name>itemCount</name></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Gets the data object associated with a sectionRow.
+   */</comment>
+  <function><specifier>protected</specifier> <type><name>Object</name></type> <name>objectFromSectionRow</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>SectionRow</name></type> <name>sectionRow</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name><name>this</name><operator>.</operator><name>sections</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><call><name><name>sectionRow</name><operator>.</operator><name>section</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><call><name><name>sectionRow</name><operator>.</operator><name>row</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>protected</specifier> <type><name>int</name></type> <name>sectionCount</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>section</name></decl></parameter>)</parameter_list> <block>{
+    <if>if <condition>(<expr><name>section</name> <operator>&gt;</operator> <call><name>sections</name><argument_list>()</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr>)</condition><then> <block>{
+      <return>return <expr><literal type="number">0</literal></expr>;</return>
+    }</block></then></if>
+    <return>return <expr><call><name>sections</name><argument_list>()</argument_list></call><operator>.</operator><call><name>get</name><argument_list>(<argument><expr><name>section</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>size</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * Gets the data object associated with a position.
+   */</comment>
+  <function><specifier>protected</specifier> <type><name>Object</name></type> <name>objectFromPosition</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <return>return <expr><call><name>objectFromSectionRow</name><argument_list>(<argument><expr><call><name>sectionRowFromPosition</name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>SectionRow</name></type> <name>sectionRowFromPosition</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>SectionRow</name></type> <name>sectionRow</name> <init>= <expr><operator>new</operator> <call><name>SectionRow</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>cursor</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <for>for <control>(<init><decl><type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>?</name></argument>&gt;</argument_list></name></type> <name>section</name> <range>: <expr><name><name>this</name><operator>.</operator><name>sections</name></name></expr></range></decl></init>)</control> <block>{
+      <for>for <control>(<init><decl><type><specifier>final</specifier> <name>Object</name></type> <name>__</name> <range>: <expr><name>section</name></expr></range></decl></init>)</control> <block>{
+        <if>if <condition>(<expr><name>cursor</name> <operator>==</operator> <name>position</name></expr>)</condition><then> <block>{
+          <return>return <expr><name>sectionRow</name></expr>;</return>
+        }</block></then></if>
+        <expr_stmt><expr><name>cursor</name><operator>++</operator></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>sectionRow</name><operator>.</operator><name>nextRow</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      }</block></for>
+      <expr_stmt><expr><call><name><name>sectionRow</name><operator>.</operator><name>nextSection</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    }</block></for>
+
+    <throw>throw <expr><operator>new</operator> <call><name>RuntimeException</name><argument_list>(<argument><expr><literal type="string">"Position "</literal> <operator>+</operator> <name>position</name> <operator>+</operator> <literal type="string">" not found in sections"</literal></expr></argument>)</argument_list></call></expr>;</throw>
+  }</block></function>
+
+  <function><specifier>private</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>View</name></type> <name>inflateView</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>ViewGroup</name></type> <name>viewGroup</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>LayoutRes</name></annotation> <name>int</name></type> <name>viewType</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>LayoutInflater</name></type> <name>layoutInflater</name> <init>= <expr><call><name><name>LayoutInflater</name><operator>.</operator><name>from</name></name><argument_list>(<argument><expr><call><name><name>viewGroup</name><operator>.</operator><name>getContext</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <return>return <expr><call><name><name>layoutInflater</name><operator>.</operator><name>inflate</name></name><argument_list>(<argument><expr><name>viewType</name></expr></argument>, <argument><expr><name>viewGroup</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</return>
+  }</block></function>
+
+  <comment type="block" format="javadoc">/**
+   * SectionRows allow RecyclerViews to be structured into sections of rows.
+   */</comment>
+  <class><specifier>protected</specifier> class <name>SectionRow</name> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>section</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>row</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>SectionRow</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>section</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>row</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <constructor><specifier>public</specifier> <name>SectionRow</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>section</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>int</name></type> <name>row</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>section</name></name> <operator>=</operator> <name>section</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>row</name></name> <operator>=</operator> <name>row</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>section</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>section</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>public</specifier> <type><name>int</name></type> <name>row</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>row</name></name></expr>;</return>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>nextRow</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>row</name></name><operator>++</operator></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><specifier>protected</specifier> <type><name>void</name></type> <name>nextSection</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>section</name></name><operator>++</operator></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>row</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+    }</block></function>
+  }</block></class>
+}</block></class>
+</unit>

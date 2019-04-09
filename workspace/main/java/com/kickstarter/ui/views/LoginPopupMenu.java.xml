@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\ui\views\LoginPopupMenu.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>views</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Context</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>content</name><operator>.</operator><name>Intent</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>net</name><operator>.</operator><name>Uri</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>View</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>widget</name><operator>.</operator><name>PopupMenu</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>BaseActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>Secrets</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>HelpActivity</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>LoginPopupMenu</name> <super><extends>extends <name>PopupMenu</name></extends></super> <block>{
+
+  <constructor><specifier>public</specifier> <name>LoginPopupMenu</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Context</name></type> <name>context</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>View</name></type> <name>anchor</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name>anchor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>getMenuInflater</name><argument_list>()</argument_list></call><operator>.</operator><call><name>inflate</name><argument_list>(<argument><expr><name><name>R</name><operator>.</operator><name>menu</name><operator>.</operator><name>login_help_menu</name></name></expr></argument>, <argument><expr><call><name>getMenu</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><specifier>final</specifier> <name>BaseActivity</name></type> <name>activity</name> <init>= <expr><operator>(</operator><name>BaseActivity</name><operator>)</operator> <name>context</name></expr></init></decl>;</decl_stmt>
+
+    <expr_stmt><expr><call><name>setOnMenuItemClickListener</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>item</name></decl></parameter></parameter_list> -&gt; <block>{
+      <decl_stmt><decl><type><specifier>final</specifier> <name>Intent</name></type> <name>intent</name></decl>;</decl_stmt>
+      <switch>switch <condition>(<expr><call><name><name>item</name><operator>.</operator><name>getItemId</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>terms</name></name></expr>:</case>
+          <expr_stmt><expr><name>intent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>HelpActivity</name><operator>.</operator><name>Terms</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>privacy_policy</name></name></expr>:</case>
+          <expr_stmt><expr><name>intent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>HelpActivity</name><operator>.</operator><name>Privacy</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>cookie_policy</name></name></expr>:</case>
+          <expr_stmt><expr><name>intent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name>context</name></expr></argument>, <argument><expr><name><name>HelpActivity</name><operator>.</operator><name>CookiePolicy</name><operator>.</operator><name>class</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+        <case>case <expr><name><name>R</name><operator>.</operator><name>id</name><operator>.</operator><name>help</name></name></expr>:</case>
+          <expr_stmt><expr><name>intent</name> <operator>=</operator> <operator>new</operator> <call><name>Intent</name><argument_list>(<argument><expr><name><name>Intent</name><operator>.</operator><name>ACTION_VIEW</name></name></expr></argument>, <argument><expr><call><name><name>Uri</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name><name>Secrets</name><operator>.</operator><name>HelpCenter</name><operator>.</operator><name>ENDPOINT</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <expr_stmt><expr><call><name><name>activity</name><operator>.</operator><name>startActivity</name></name><argument_list>(<argument><expr><name>intent</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+          <break>break;</break>
+      }</block></switch>
+      <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+    }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></constructor>
+}</block></class>
+</unit>

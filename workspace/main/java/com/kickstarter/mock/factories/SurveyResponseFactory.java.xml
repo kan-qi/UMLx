@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\mock\factories\SurveyResponseFactory.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>mock</name><operator>.</operator><name>factories</name></name>;</package>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>SurveyResponse</name></name>;</import>
+
+<import>import <name><name>org</name><operator>.</operator><name>joda</name><operator>.</operator><name>time</name><operator>.</operator><name>DateTime</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>SurveyResponseFactory</name> <block>{
+  <constructor><specifier>private</specifier> <name>SurveyResponseFactory</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+
+  <function><specifier>public</specifier> <specifier>static</specifier> <annotation>@<name>NonNull</name></annotation> <type><name>SurveyResponse</name></type> <name>surveyResponse</name><parameter_list>()</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>surveyUrl</name> <init>= <expr><literal type="string">"https://www.kickstarter.com/surveys/"</literal> <operator>+</operator> <call><name><name>IdFactory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>SurveyResponse</name><operator>.</operator><name>Urls</name><operator>.</operator><name>Web</name></name></type> <name>web</name> <init>= <expr><call><name><name>SurveyResponse</name><operator>.</operator><name>Urls</name><operator>.</operator><name>Web</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>survey</name><argument_list>(<argument><expr><name>surveyUrl</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><type><specifier>final</specifier> <name><name>SurveyResponse</name><operator>.</operator><name>Urls</name></name></type> <name>urlsEnvelope</name> <init>= <expr><call><name><name>SurveyResponse</name><operator>.</operator><name>Urls</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>web</name><argument_list>(<argument><expr><name>web</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><call><name><name>SurveyResponse</name><operator>.</operator><name>builder</name></name><argument_list>()</argument_list></call>
+      <operator>.</operator><call><name>answeredAt</name><argument_list>(<argument><expr><operator>new</operator> <call><name>DateTime</name><argument_list>()</argument_list></call><operator>.</operator><call><name>minusDays</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>id</name><argument_list>(<argument><expr><call><name><name>IdFactory</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>project</name><argument_list>(<argument><expr><call><name><name>ProjectFactory</name><operator>.</operator><name>allTheWayProject</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>urls</name><argument_list>(<argument><expr><name>urlsEnvelope</name></expr></argument>)</argument_list></call>
+      <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></expr>;</return>
+  }</block></function>
+}</block></class>
+</unit>

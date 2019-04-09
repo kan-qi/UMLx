@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\ui\issue\IssuesPagerAdapter.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>issue</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>os</name><operator>.</operator><name>Bundle</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v4</name><operator>.</operator><name>app</name><operator>.</operator><name>Fragment</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>support</name><operator>.</operator><name>v7</name><operator>.</operator><name>app</name><operator>.</operator><name>AppCompatActivity</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>SparseArray</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>view</name><operator>.</operator><name>ViewGroup</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Issue</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>Repository</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>issue</name><operator>.</operator><name>IssueStore</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>ui</name><operator>.</operator><name>FragmentStatePagerAdapter</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>Intents</name><operator>.</operator><name>*</name></name>;</import>
+
+
+<comment type="block" format="javadoc">/**
+ * Adapter to page through an {@link Issue} array
+ */</comment>
+<class><specifier>public</specifier> class <name>IssuesPagerAdapter</name> <super><extends>extends <name>FragmentStatePagerAdapter</name></extends></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Repository</name></type> <name>repo</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>Repository</name></argument>&gt;</argument_list></name></type> <name>repos</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>int</name><index>[]</index></name></type> <name>issues</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>SparseArray</name><argument_list type="generic">&lt;<argument><name>IssueFragment</name></argument>&gt;</argument_list></name></type> <name>fragments</name> <init>= <expr><operator>new</operator> <call><name><name>SparseArray</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>IssueStore</name></type> <name>store</name></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><name>boolean</name></type> <name>canWrite</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * @param activity
+     * @param repoIds
+     * @param issueNumbers
+     * @param issueStore
+     * @param canWrite
+     */</comment>
+    <constructor><specifier>public</specifier> <name>IssuesPagerAdapter</name><parameter_list>(<parameter><decl><type><name>AppCompatActivity</name></type> <name>activity</name></decl></parameter>,
+            <parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>Repository</name></argument>&gt;</argument_list></name></type> <name>repoIds</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type> <name>issueNumbers</name></decl></parameter>,
+            <parameter><decl><type><name>IssueStore</name></type> <name>issueStore</name></decl></parameter>, <parameter><decl><type><name>boolean</name></type> <name>canWrite</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssuesPagerAdapter.IssuesPagerAdapter(android.support.v7.app.AppCompatActivity,List&lt;Repository&gt;,[int,com.github.pockethub.android.core.issue.IssueStore,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>repos</name> <operator>=</operator> <name>repoIds</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>repo</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>issues</name> <operator>=</operator> <name>issueNumbers</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>store</name> <operator>=</operator> <name>issueStore</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>canWrite</name></name> <operator>=</operator> <name>canWrite</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssuesPagerAdapter.IssuesPagerAdapter(android.support.v7.app.AppCompatActivity,List&lt;Repository&gt;,[int,com.github.pockethub.android.core.issue.IssueStore,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <comment type="block" format="javadoc">/**
+     * @param activity
+     * @param repository
+     * @param issueNumbers
+     * @param canWrite
+     */</comment>
+    <constructor><specifier>public</specifier> <name>IssuesPagerAdapter</name><parameter_list>(<parameter><decl><type><name>AppCompatActivity</name></type> <name>activity</name></decl></parameter>,
+            <parameter><decl><type><name>Repository</name></type> <name>repository</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type> <name>issueNumbers</name></decl></parameter>,
+            <parameter><decl><type><name>boolean</name></type> <name>canWrite</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>activity</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssuesPagerAdapter.IssuesPagerAdapter(android.support.v7.app.AppCompatActivity,com.meisolsson.githubsdk.model.Repository,[int,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>repos</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>repo</name> <operator>=</operator> <name>repository</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>issues</name> <operator>=</operator> <name>issueNumbers</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>store</name> <operator>=</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>canWrite</name></name> <operator>=</operator> <name>canWrite</name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssuesPagerAdapter.IssuesPagerAdapter(android.support.v7.app.AppCompatActivity,com.meisolsson.githubsdk.model.Repository,[int,boolean)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Fragment</name></type> <name>getItem</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.issue.IssuesPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>IssueFragment</name></type> <name>fragment</name> <init>= <expr><operator>new</operator> <call><name>IssueFragment</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>Bundle</name></type> <name>args</name> <init>= <expr><operator>new</operator> <call><name>Bundle</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>repo</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY_NAME</name></expr></argument>, <argument><expr><call><name><name>repo</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>User</name></type> <name>owner</name> <init>= <expr><call><name><name>repo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY_OWNER</name></expr></argument>, <argument><expr><call><name><name>owner</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putParcelable</name></name><argument_list>(<argument><expr><name>EXTRA_USER</name></expr></argument>, <argument><expr><name>owner</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then> <else>else <block>{
+            <decl_stmt><decl><type><name>Repository</name></type> <name>repo</name> <init>= <expr><call><name><name>repos</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY_NAME</name></expr></argument>, <argument><expr><call><name><name>repo</name><operator>.</operator><name>name</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putString</name></name><argument_list>(<argument><expr><name>EXTRA_REPOSITORY_OWNER</name></expr></argument>, <argument><expr><call><name><name>repo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>login</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <decl_stmt><decl><type><name>Issue</name></type> <name>issue</name> <init>= <expr><call><name><name>store</name><operator>.</operator><name>getIssue</name></name><argument_list>(<argument><expr><name>repo</name></expr></argument>, <argument><expr><name><name>issues</name><index>[<expr><name>position</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <if>if <condition>(<expr><name>issue</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>issue</name><operator>.</operator><name>user</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                <decl_stmt><decl><type><name>Repository</name></type> <name>fullRepo</name> <init>= <expr><call><name><name>issue</name><operator>.</operator><name>repository</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+                <if>if <condition>(<expr><name>fullRepo</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <call><name><name>fullRepo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putParcelable</name></name><argument_list>(<argument><expr><name>EXTRA_USER</name></expr></argument>, <argument><expr><call><name><name>fullRepo</name><operator>.</operator><name>owner</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                }</block></then></if>
+            }</block></then></if>
+        }</block></else></if>
+        <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putInt</name></name><argument_list>(<argument><expr><name>EXTRA_ISSUE_NUMBER</name></expr></argument>, <argument><expr><name><name>issues</name><index>[<expr><name>position</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>args</name><operator>.</operator><name>putBoolean</name></name><argument_list>(<argument><expr><name>EXTRA_CAN_WRITE_REPO</name></expr></argument>, <argument><expr><name>canWrite</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>setArguments</name></name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"android.support.v4.app.Fragment com.github.pockethub.android.ui.issue.IssuesPagerAdapter.getItem(int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>fragment</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>destroyItem</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>object</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssuesPagerAdapter.destroyItem(android.view.ViewGroup,int,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>destroyItem</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name>position</name></expr></argument>, <argument><expr><name>object</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+        <expr_stmt><expr><call><name><name>fragments</name><operator>.</operator><name>remove</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"void com.github.pockethub.android.ui.issue.IssuesPagerAdapter.destroyItem(android.view.ViewGroup,int,Object)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>Object</name></type> <name>instantiateItem</name><parameter_list>(<parameter><decl><type><name>ViewGroup</name></type> <name>container</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"Object com.github.pockethub.android.ui.issue.IssuesPagerAdapter.instantiateItem(android.view.ViewGroup,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>Object</name></type> <name>fragment</name> <init>= <expr><call><name><name>super</name><operator>.</operator><name>instantiateItem</name></name><argument_list>(<argument><expr><name>container</name></expr></argument>, <argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>fragment</name> <operator>instanceof</operator> <name>IssueFragment</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>fragments</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>, <argument><expr><operator>(</operator><name>IssueFragment</name><operator>)</operator> <name>fragment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"Object com.github.pockethub.android.ui.issue.IssuesPagerAdapter.instantiateItem(android.view.ViewGroup,int)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>fragment</name></expr>;</return>}</block>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>getCount</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.issue.IssuesPagerAdapter.getCount()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.ui.issue.IssuesPagerAdapter.getCount()"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name><name>issues</name><operator>.</operator><name>length</name></name></expr>;</return>
+    }</block></function>
+
+    <comment type="block" format="javadoc">/**
+     * Deliver dialog result to fragment at given position
+     *
+     * @param position
+     * @param requestCode
+     * @param resultCode
+     * @param arguments
+     * @return this adapter
+     */</comment>
+    <function><specifier>public</specifier> <type><name>IssuesPagerAdapter</name></type> <name>onDialogResult</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>position</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>requestCode</name></decl></parameter>,
+            <parameter><decl><type><name>int</name></type> <name>resultCode</name></decl></parameter>, <parameter><decl><type><name>Bundle</name></type> <name>arguments</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssuesPagerAdapter com.github.pockethub.android.ui.issue.IssuesPagerAdapter.onDialogResult(int,int,int,android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><name>IssueFragment</name></type> <name>fragment</name> <init>= <expr><call><name><name>fragments</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>position</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+        <if>if <condition>(<expr><name>fragment</name> <operator>!=</operator> <literal type="null">null</literal></expr>)</condition><then> <block>{
+            <expr_stmt><expr><call><name><name>fragment</name><operator>.</operator><name>onDialogResult</name></name><argument_list>(<argument><expr><name>requestCode</name></expr></argument>, <argument><expr><name>resultCode</name></expr></argument>, <argument><expr><name>arguments</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        }</block></then></if>
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.ui.issue.IssuesPagerAdapter com.github.pockethub.android.ui.issue.IssuesPagerAdapter.onDialogResult(int,int,int,android.os.Bundle)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><name>this</name></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

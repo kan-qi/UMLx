@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\PocketHub\app\src\main\java\com\github\pockethub\android\core\user\UserComparator.java"><comment type="block">/*
+ * Copyright (c) 2015 PocketHub
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</comment>
+<package>package <name><name>com</name><operator>.</operator><name>github</name><operator>.</operator><name>pockethub</name><operator>.</operator><name>android</name><operator>.</operator><name>core</name><operator>.</operator><name>user</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>accounts</name><operator>.</operator><name>Account</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>meisolsson</name><operator>.</operator><name>githubsdk</name><operator>.</operator><name>model</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>javax</name><operator>.</operator><name>inject</name><operator>.</operator><name>Inject</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>Comparator</name></name>;</import>
+
+<import>import static <name><name>java</name><operator>.</operator><name>lang</name><operator>.</operator><name>String</name><operator>.</operator><name>CASE_INSENSITIVE_ORDER</name></name>;</import>
+
+<comment type="block" format="javadoc">/**
+ * Sorts users and orgs in alphabetical order with special handling to put
+ * currently authenticated user first.
+ */</comment>
+<class><specifier>public</specifier> class <name>UserComparator</name> <super><implements>implements <name><name>Comparator</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></implements></super> <block>{
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>String</name></type> <name>login</name></decl>;</decl_stmt>
+
+    <comment type="block" format="javadoc">/**
+     * Create comparator for given account
+     *
+     * @param account
+     */</comment>
+    <constructor><annotation>@<name>Inject</name></annotation>
+    <specifier>public</specifier> <name>UserComparator</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Account</name></type> <name>account</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.user.UserComparator.UserComparator(android.accounts.Account)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><expr_stmt><expr><name>login</name> <operator>=</operator> <name><name>account</name><operator>.</operator><name>name</name></name></expr>;</expr_stmt><expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"com.github.pockethub.android.core.user.UserComparator.UserComparator(android.accounts.Account)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>int</name></type> <name>compare</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>User</name></type> <name>lhs</name></decl></parameter>, <parameter><decl><type><specifier>final</specifier> <name>User</name></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{
+        <expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodEnter</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.core.user.UserComparator.compare(com.meisolsson.githubsdk.model.User,com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>lhsLogin</name> <init>= <expr><call><name><name>lhs</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>rhsLogin</name> <init>= <expr><call><name><name>rhs</name><operator>.</operator><name>login</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><call><name><name>lhsLogin</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>login</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.core.user.UserComparator.compare(com.meisolsson.githubsdk.model.User,com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><call><name><name>rhsLogin</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>login</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><operator>-</operator><literal type="number">1</literal></expr></else></ternary></expr>;</return>}</block>
+        }</block></then></if>
+
+        <if>if <condition>(<expr><call><name><name>rhsLogin</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>login</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+            <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.core.user.UserComparator.compare(com.meisolsson.githubsdk.model.User,com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><ternary><condition><expr><call><name><name>lhsLogin</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name>login</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><literal type="number">1</literal></expr></else></ternary></expr>;</return>}</block>
+        }</block></then></if>
+
+        <block>{<expr_stmt><expr><call><name><name>com</name><operator>.</operator><name>mijack</name><operator>.</operator><name>Xlog</name><operator>.</operator><name>logMethodExit</name></name><argument_list>(<argument><expr><literal type="string">"int com.github.pockethub.android.core.user.UserComparator.compare(com.meisolsson.githubsdk.model.User,com.meisolsson.githubsdk.model.User)"</literal></expr></argument>,<argument><expr><name>this</name></expr></argument>,<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><return>return <expr><call><name><name>CASE_INSENSITIVE_ORDER</name><operator>.</operator><name>compare</name></name><argument_list>(<argument><expr><name>lhsLogin</name></expr></argument>, <argument><expr><name>rhsLogin</name></expr></argument>)</argument_list></call></expr>;</return>}</block>
+    }</block></function>
+}</block></class>
+</unit>

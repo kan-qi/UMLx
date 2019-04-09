@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" language="Java" filename="D:\AndroidAnalysis\Instrumentation-apps\kickstarter\app\src\main\java\com\kickstarter\viewmodels\MessageThreadsViewModel.java"><package>package <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>viewmodels</name></name>;</package>
+
+<import>import <name><name>android</name><operator>.</operator><name>graphics</name><operator>.</operator><name>Typeface</name></name>;</import>
+<import>import <name><name>android</name><operator>.</operator><name>util</name><operator>.</operator><name>Pair</name></name>;</import>
+
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>R</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ActivityViewModel</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>ApiPaginator</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>CurrentUserType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>Environment</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>RefTag</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>IntegerUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>ObjectUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>PairUtils</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>MessageThread</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>Project</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>models</name><operator>.</operator><name>User</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>ApiClientType</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>services</name><operator>.</operator><name>apiresponses</name><operator>.</operator><name>MessageThreadsEnvelope</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>IntentKey</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>activities</name><operator>.</operator><name>MessageThreadsActivity</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>data</name><operator>.</operator><name>Mailbox</name></name>;</import>
+<import>import <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>ui</name><operator>.</operator><name>intentmappers</name><operator>.</operator><name>ProjectIntentMapper</name></name>;</import>
+
+<import>import <name><name>java</name><operator>.</operator><name>util</name><operator>.</operator><name>List</name></name>;</import>
+
+<import>import <name><name>androidx</name><operator>.</operator><name>annotation</name><operator>.</operator><name>NonNull</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>Observable</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>BehaviorSubject</name></name>;</import>
+<import>import <name><name>rx</name><operator>.</operator><name>subjects</name><operator>.</operator><name>PublishSubject</name></name>;</import>
+
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>ignoreValues</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>neverError</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>rx</name><operator>.</operator><name>transformers</name><operator>.</operator><name>Transformers</name><operator>.</operator><name>takeWhen</name></name>;</import>
+<import>import static <name><name>com</name><operator>.</operator><name>kickstarter</name><operator>.</operator><name>libs</name><operator>.</operator><name>utils</name><operator>.</operator><name>IntegerUtils</name><operator>.</operator><name>intValueOrZero</name></name>;</import>
+
+<interface><specifier>public</specifier> interface <name>MessageThreadsViewModel</name> <block>{
+
+  <interface>interface <name>Inputs</name> <block>{
+    <comment type="block" format="javadoc">/** Call when pagination should happen. */</comment>
+    <function_decl><type><name>void</name></type> <name>nextPage</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when onResume of the activity's lifecycle happens. */</comment>
+    <function_decl><type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Call when the swipe refresher is invoked. */</comment>
+    <function_decl><type><name>void</name></type> <name>swipeRefresh</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <interface>interface <name>Outputs</name> <block>{
+    <comment type="block" format="javadoc">/** Emits a boolean to determine if there are no messages. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasNoMessages</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine if there are no unread messages. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasNoUnreadMessages</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean indicating whether message threads are being fetched from the API. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isFetchingMessageThreads</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a list of message threads to be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageThreadList</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a color integer to set the unread count text view to. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewColorInt</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a typeface integer to set the unread count text view to. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewTypefaceInt</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits a boolean to determine if the unread count toolbar text view should be gone. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadCountToolbarTextViewIsGone</name><parameter_list>()</parameter_list>;</function_decl>
+
+    <comment type="block" format="javadoc">/** Emits the unread message count to be displayed. */</comment>
+    <function_decl><type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadMessagesCount</name><parameter_list>()</parameter_list>;</function_decl>
+  }</block></interface>
+
+  <class><specifier>final</specifier> class <name>ViewModel</name> <super><extends>extends <name><name>ActivityViewModel</name><argument_list type="generic">&lt;<argument><name>MessageThreadsActivity</name></argument>&gt;</argument_list></name></extends> <implements>implements <name>Inputs</name>, <name>Outputs</name></implements></super> <block>{
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>ApiClientType</name></type> <name>client</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>CurrentUserType</name></type> <name>currentUser</name></decl>;</decl_stmt>
+
+    <constructor><specifier>public</specifier> <name>ViewModel</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <annotation>@<name>NonNull</name></annotation> <name>Environment</name></type> <name>environment</name></decl></parameter>)</parameter_list> <block>{
+      <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>environment</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>client</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>apiClient</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name> <operator>=</operator> <call><name><name>environment</name><operator>.</operator><name>currentUser</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// NB: project from intent can be null.</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>initialProject</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>i</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>i</name><operator>.</operator><name>getParcelableExtra</name></name><argument_list>(<argument><expr><name><name>IntentKey</name><operator>.</operator><name>PROJECT</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>refreshUserOrProject</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>onResume</name></name></expr></argument>, <argument><expr><name><name>this</name><operator>.</operator><name>swipeRefresh</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>User</name></argument>&gt;</argument_list></name></type> <name>freshUser</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name>refreshUserOrProject</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>switchMap</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>__</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>client</name><operator>.</operator><name>fetchCurrentUser</name></name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>retry</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>neverError</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>freshUser</name><operator>.</operator><name>subscribe</name></name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>currentUser</name></name><operator>::</operator><name>refresh</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>project</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(
+        <argument><expr><name>initialProject</name></expr></argument>,
+        <argument><expr><call><name><name>initialProject</name>
+          <operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>takeWhen</name><argument_list>(<argument><expr><name>refreshUserOrProject</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>Project</name><operator>::</operator><name>param</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>switchMap</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>fetchProject</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>neverError</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>share</name><argument_list>()</argument_list></call></expr></argument>
+      )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <comment type="line">// Use project unread messages count if configured with a project,</comment>
+      <comment type="line">// in the case of a creator viewing their project's messages.</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadMessagesCount</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name>project</name></expr></argument>,
+        <argument><expr><call><name><name>this</name><operator>.</operator><name>currentUser</name><operator>.</operator><name>loggedInUser</name></name><argument_list>()</argument_list></call></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>projectAndUser</name></decl></parameter></parameter_list> -&gt;
+          <block type="pseudo"><expr><ternary><condition><expr><name><name>projectAndUser</name><operator>.</operator><name>first</name></name> <operator>!=</operator> <literal type="null">null</literal></expr>
+            ?</condition><then> <expr><call><name><name>projectAndUser</name><operator>.</operator><name>first</name><operator>.</operator><name>unreadMessagesCount</name></name><argument_list>()</argument_list></call></expr>
+            </then><else>: <expr><call><name><name>projectAndUser</name><operator>.</operator><name>second</name><operator>.</operator><name>unreadMessagesCount</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>
+        )</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <comment type="line">// todo: MessageSubject switch will also trigger refresh</comment>
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>refreshMessageThreads</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>merge</name></name><argument_list>(
+        <argument><expr><call><name><name>unreadMessagesCount</name><operator>.</operator><name>compose</name></name><argument_list>(<argument><expr><call><name>ignoreValues</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>swipeRefresh</name></name></expr></argument>
+      )</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>startOverWith</name> <init>= <expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(
+        <argument><expr><name>project</name></expr></argument>,
+        <argument><expr><name>refreshMessageThreads</name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><name>PairUtils</name><operator>::</operator><name>first</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>ApiPaginator</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>, <argument><name>MessageThreadsEnvelope</name></argument>, <argument><name>Project</name></argument>&gt;</argument_list></name></type> <name>paginator</name> <init>=
+        <expr><name><name>ApiPaginator</name><operator>.</operator></name>&lt;<name>MessageThread</name></expr></init></decl>, <decl><type ref="prev"/><name>MessageThreadsEnvelope</name></decl>, <decl><type ref="prev"/><name>Project</name>&gt;<name>builder</name><argument_list>()</argument_list>
+          .<name>nextPage</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>nextPage</name></name></expr></argument>)</argument_list>
+          .<name>startOverWith</name><argument_list>(<argument><expr><name>startOverWith</name></expr></argument>)</argument_list>
+          .<name>envelopeToListOfData</name><argument_list>(<argument><expr><name>MessageThreadsEnvelope</name><operator>::</operator><name>messageThreads</name></expr></argument>)</argument_list>
+          .<name>envelopeToMoreUrl</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>env</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>env</name><operator>.</operator><name>urls</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>api</name><argument_list>()</argument_list></call><operator>.</operator><call><name>moreMessageThreads</name><argument_list>()</argument_list></call></expr></block></lambda></expr></argument>)</argument_list>
+          <operator>.</operator><call><name>loadWithParams</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>p</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>client</name><operator>.</operator><name>fetchMessageThreads</name></name><argument_list>(<argument><expr><name>p</name></expr></argument>, <argument><expr><name><name>Mailbox</name><operator>.</operator><name>INBOX</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>loadWithPaginationPath</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>client</name></name><operator>::</operator><name>fetchMessageThreadsWithPaginationPath</name></expr></argument>)</argument_list></call>
+          <operator>.</operator><call><name>build</name><argument_list>()</argument_list></call></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>paginator</name><operator>.</operator><name>isFetching</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>isFetchingMessageThreads</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>paginator</name><operator>.</operator><name>paginatedData</name></name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>distinctUntilChanged</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>messageThreadList</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>unreadMessagesCount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>hasNoMessages</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>unreadMessagesCount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name>IntegerUtils</name><operator>::</operator><name>isZero</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>hasNoUnreadMessages</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>unreadMessagesCount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>count</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name>intValueOrZero</name><argument_list>(<argument><expr><name>count</name></expr></argument>)</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>ksr_text_green_700</name></name></expr> </then><else>: <expr><name><name>R</name><operator>.</operator><name>color</name><operator>.</operator><name>ksr_dark_grey_400</name></name></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewColorInt</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>unreadMessagesCount</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><ternary><condition><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>count</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><ternary><condition><expr><call><name>intValueOrZero</name><argument_list>(<argument><expr><name>count</name></expr></argument>)</argument_list></call> <operator>&gt;</operator> <literal type="number">0</literal></expr> ?</condition><then> <expr><name><name>Typeface</name><operator>.</operator><name>BOLD</name></name></expr> </then><else>: <expr><name><name>Typeface</name><operator>.</operator><name>NORMAL</name></name></expr></else></ternary></expr></block></lambda></expr></condition></ternary></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewTypefaceInt</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>unreadCountToolbarTextViewIsGone</name></name> <operator>=</operator> <call><name><name>Observable</name><operator>.</operator><name>zip</name></name><argument_list>(
+        <argument><expr><name><name>this</name><operator>.</operator><name>hasNoMessages</name></name></expr></argument>,
+        <argument><expr><name><name>this</name><operator>.</operator><name>hasNoUnreadMessages</name></name></expr></argument>,
+        <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>
+      )</argument_list></call>
+        <operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>noMessagesAndNoUnread</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><name><name>noMessagesAndNoUnread</name><operator>.</operator><name>first</name></name> <operator>||</operator> <name><name>noMessagesAndNoUnread</name><operator>.</operator><name>second</name></name></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name><name>unreadMessagesCount</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><name>ObjectUtils</name><operator>::</operator><name>isNotNull</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>filter</name><argument_list>(<argument><expr><name>IntegerUtils</name><operator>::</operator><name>isNonZero</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><name><name>this</name><operator>.</operator><name>unreadMessagesCount</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <decl_stmt><decl><type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>RefTag</name></argument>&gt;</argument_list></name></type> <name>refTag</name> <init>= <expr><call><name>intent</name><argument_list>()</argument_list></call>
+        <operator>.</operator><call><name>flatMap</name><argument_list>(<argument><expr><name>ProjectIntentMapper</name><operator>::</operator><name>refTag</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <expr_stmt><expr><call><name><name>Observable</name><operator>.</operator><name>combineLatest</name></name><argument_list>(<argument><expr><name>project</name></expr></argument>, <argument><expr><name>refTag</name></expr></argument>, <argument><expr><name>Pair</name><operator>::</operator><name>create</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>take</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>compose</name><argument_list>(<argument><expr><call><name>bindToLifecycle</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>subscribe</name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>projectAndRefTag</name></decl></parameter></parameter_list> -&gt; <block type="pseudo"><expr><call><name><name>this</name><operator>.</operator><name>koala</name><operator>.</operator><name>trackViewedMailbox</name></name><argument_list>(<argument><expr><name><name>Mailbox</name><operator>.</operator><name>INBOX</name></name></expr></argument>, <argument><expr><name><name>projectAndRefTag</name><operator>.</operator><name>first</name></name></expr></argument>, <argument><expr><name><name>projectAndRefTag</name><operator>.</operator><name>second</name></name></expr></argument>)</argument_list></call></expr></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></constructor>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>nextPage</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>onResume</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>PublishSubject</name><argument_list type="generic">&lt;<argument><name>Void</name></argument>&gt;</argument_list></name></type> <name>swipeRefresh</name> <init>= <expr><call><name><name>PublishSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasNoMessages</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasNoUnreadMessages</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isFetchingMessageThreads</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageThreadList</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewColorInt</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewTypefaceInt</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadCountToolbarTextViewIsGone</name></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name><name>BehaviorSubject</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadMessagesCount</name> <init>= <expr><call><name><name>BehaviorSubject</name><operator>.</operator><name>create</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Inputs</name></type> <name>inputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><specifier>public</specifier> <type><specifier>final</specifier> <name>Outputs</name></type> <name>outputs</name> <init>= <expr><name>this</name></expr></init></decl>;</decl_stmt>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>nextPage</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>nextPage</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>onResume</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>onResume</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <type><name>void</name></type> <name>swipeRefresh</name><parameter_list>()</parameter_list> <block>{
+      <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>swipeRefresh</name><operator>.</operator><name>onNext</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></function>
+
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasNoMessages</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>hasNoMessages</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>hasNoUnreadMessages</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>hasNoUnreadMessages</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>isFetchingMessageThreads</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>isFetchingMessageThreads</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name><name>List</name><argument_list type="generic">&lt;<argument><name>MessageThread</name></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>messageThreadList</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>messageThreadList</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewColorInt</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewColorInt</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadCountTextViewTypefaceInt</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadCountTextViewTypefaceInt</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Boolean</name></argument>&gt;</argument_list></name></type> <name>unreadCountToolbarTextViewIsGone</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadCountToolbarTextViewIsGone</name></name></expr>;</return>
+    }</block></function>
+    <function><annotation>@<name>Override</name></annotation> <specifier>public</specifier> <annotation>@<name>NonNull</name></annotation> <type><name><name>Observable</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>unreadMessagesCount</name><parameter_list>()</parameter_list> <block>{
+      <return>return <expr><name><name>this</name><operator>.</operator><name>unreadMessagesCount</name></name></expr>;</return>
+    }</block></function>
+  }</block></class>
+}</block></interface>
+</unit>
