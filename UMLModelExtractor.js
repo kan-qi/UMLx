@@ -23,7 +23,7 @@
 			var path = require('path');
 			var workDir = path.dirname(umlModelInfo.umlFilePath);
 			modelParser.extractUserSystermInteractionModel(modelString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
-				
+
 				if(!model){
 					return;
 				}
@@ -32,6 +32,11 @@
 				for(var i in model){
 					umlModelInfo[i] = model[i];
 				}
+
+				// a few facts about the model for debugging
+				var numUseCase = umlModelInfo.UseCases.length;
+				var numTransaction = 0;
+				var numDomainElements = umlModelInfo.DomainModel.Elements.length;
 				
 				// set up the domain model
 				var domainModel = umlModelInfo.DomainModel;
@@ -50,19 +55,35 @@
 
 									console.log("simple use case is drawn");
 								});
-								
+
+								numTransaction += useCase.Transactions.length;
 //								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
 //									console.log("paths are drawn");
 //								});
 				}
+
+
+				var debug = require("./utils/DebuggerOutput.js");
+				debug.writeJson2("modelStats", {
+				    numUseCase: numUseCase,
+				    numTransaction: numTransaction,
+				    numDomainElements: numDomainElements
+				}, umlModelInfo.OutputDir);
+
+				console.log({
+                            				    numUseCase: numUseCase,
+                            				    numTransaction: numTransaction,
+                            				    numDomainElements: numDomainElements
+                            				});
+//			    process.exit(0);
 			
 				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
 					console.log("domain model is drawn");
 				});
 
 
-				var debug = require("./utils/DebuggerOutput.js");
-				debug.writeJson2("constructed_usim_model", umlModelInfo, umlModelInfo.OutputDir);
+//				var debug = require("./utils/DebuggerOutput.js");
+//				debug.writeJson2("constructed_usim_model", umlModelInfo, umlModelInfo.OutputDir);
 
 				if(callbackfunc){
 					callbackfunc(umlModelInfo);

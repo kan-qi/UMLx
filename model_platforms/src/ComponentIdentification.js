@@ -39,7 +39,6 @@
     var FileManagerUtil = require("../../utils/FileManagerUtils.js");
     var stringSimilarity = require('string-similarity');
 
-
 	function identifyComponents(
 		callGraph, 
 		accessGraph, 
@@ -138,9 +137,9 @@
 		
 		rootClusterClass.depth = maxLevel+1;
 		
-//		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
+		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
 
-		var cutoffDepth = rootClusterClass.depth;
+//		var cutoffDepth = rootClusterClass.depth;
 
 		var currentLevel = [];
 		var currentLevelDepth = 0;

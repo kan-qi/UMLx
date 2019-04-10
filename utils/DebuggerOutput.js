@@ -4,18 +4,46 @@
 	var mkdirp = require('mkdirp');
 	var config = require("../config.js");
 	var FileManagerUtil = require("./FileManagerUtils.js");
+
+    var JSONStream = require( "JSONStream" );
 	
 //	var OutputDir = './debug';
 
 	function writeJson(token, message, callbackfunc){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		var OutputDir = "./debug";
-		mkdirp(OutputDir, function(err) { 
-		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
+		mkdirp(OutputDir, function(err) {
+		var strData = {}
+
+        try {
+		strData = JSON.stringify(message);
+		}
+        catch(error) {
+          console.error(error);
+          // expected output: ReferenceError: nonExistentFunction is not defined
+          // Note - error messages will vary depending on browser
+        }
+
+		fs.writeFile(OutputDir+'/'+token+'.json', strData, function(err){
 			if(err){
 				console.log(err);
 			}
 		});
+
+//		var transformStream = JSONStream.stringify();
+//        var outputStream = fs.createWriteStream(OutputDir+'/'+token+'.json');
+//        transformStream.pipe( outputStream );
+//        message.forEach(transformStream.write);
+//        transformStream.end();
+//
+//        outputStream.on(
+//            "finish",
+//            function handleFinish() {
+//                console.log("Done");
+//            }
+//        );
+
+
 		});
 	}
 	

@@ -147,7 +147,8 @@ public class UMLxAndroidToolKit {
                 c.setApplicationClass();
                 components.add(c);
                 for(String mtd : flowDroidCallbacks.get(cls)){
-                    SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
+//                    SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
+                    SootMethod entryPoint = c.getMethodUnsafe(mtd);
                     if(entryPoint == null){
                         continue;
                     }
