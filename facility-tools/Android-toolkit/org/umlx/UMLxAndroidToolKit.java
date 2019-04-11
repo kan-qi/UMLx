@@ -104,6 +104,9 @@ public class UMLxAndroidToolKit {
         if(Configs.appPkg.endsWith(".debug")){
             Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 6);
         }
+        if(Configs.appPkg.endsWith(".dev")){
+            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 4);
+        }
 
         File apkFile = new File(Configs.project);
         String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
@@ -182,7 +185,7 @@ public class UMLxAndroidToolKit {
 //                cs.setPhantomClass();
 //                continue;
 //            }
-            if (cs.getName().startsWith(Configs.appPkg)) {
+            if (cs.getName().startsWith(Configs.appPkg) || cs.getName().indexOf(Configs.appPkg) >= 0) {
                 cs.setApplicationClass();
                 DebugOutput.v().println("application classes: "+cs.getName());
             }

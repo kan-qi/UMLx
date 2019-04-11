@@ -929,12 +929,21 @@ public class CodeAnalysis {
 		for (SootClass c : Scene.v().getClasses()) {
 			ClassUnit classUnit = null;
 
-			if (Configs.isLibraryClass(c.getName()) || Configs.isGeneratedClass(c.getName()) || c.isPhantomClass()) {
-				c.setLibraryClass();
+//			if (Configs.isLibraryClass(c.getName()) || Configs.isGeneratedClass(c.getName()) || c.isPhantomClass()) {
+//				c.setLibraryClass();
+//				classUnit = new ClassUnit(c, false);
+//			}
+//			else {
+//				c.setApplicationClass();
+//				classUnit = new ClassUnit(c, true);
+//			}
+
+			if (!c.isApplicationClass()) {
+//				c.setLibraryClass();
 				classUnit = new ClassUnit(c, false);
 			}
 			else {
-				c.setApplicationClass();
+//				c.setApplicationClass();
 				classUnit = new ClassUnit(c, true);
 			}
 

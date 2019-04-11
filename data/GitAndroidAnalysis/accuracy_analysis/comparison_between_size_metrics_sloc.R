@@ -143,6 +143,10 @@ for(i in 1:nfold){
 	  IFPUG.pred <- c(IFPUG.pred, length(IFPUG.mre[IFPUG.mre<=0.01*j])/length(IFPUG.mre))
 	}
 	
+	print("other models should be added to compare")
+	#model = xxx_model_train(otherTrainData)
+	#model.predict = xxx_model_predict(otherTestData)
+	
 	#print("other test data");
 	#print(otherTestData);
 	print('cocomo apriori testing set predication')

@@ -175,15 +175,6 @@
 		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
-
-
-		dependencyGraphDrawer.drawClassDependencyGraph(result, outputDir);
-
-        dependencyGraphDrawer.drawClassDependencyGraphGroupedByCompositeClass(result, outputDir);
-
-        dependencyGraphDrawer.drawClassDependencyGraphGroupedByComponent(result, outputDir);
-
-        dependencyGraphDrawer.drawCompositeClassDependencyGraph(result, outputDir);
 		
 		return result;
 	}
