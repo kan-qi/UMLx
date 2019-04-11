@@ -52,7 +52,19 @@
 		if(!outputDir){
 			outputDir = "./data/OpenSource/debug";
 		}
-		fs.writeFileSync(outputDir+'/'+token+'.json', JSON.stringify(message));
+
+		var strData = {}
+
+		 try {
+        		strData = JSON.stringify(message);
+        		}
+                catch(error) {
+                  console.error(error);
+                  // expected output: ReferenceError: nonExistentFunction is not defined
+                  // Note - error messages will vary depending on browser
+                }
+
+		fs.writeFileSync(outputDir+'/'+token+'.json', strData);
 	}
 	
 	function writeJson3(token, message, outputDir){
@@ -61,10 +73,33 @@
 		if(!outputDir){
 			outputDir = "./data/OpenSource/debug";
 		}
+
+		var strData = {}
+
+        		 try {
+                		strData = JSON.stringify(message);
+                		}
+                        catch(error) {
+                          console.error(error);
+                          // expected output: ReferenceError: nonExistentFunction is not defined
+                          // Note - error messages will vary depending on browser
+                        }
 		
-		var duplicate = JSON.parse(JSON.stringify(message));
+		var duplicate = JSON.parse(strData);
 		deleteAttrRecur(duplicate, "attachment")
-		fs.writeFileSync(outputDir+'/'+token+'.json', JSON.stringify(duplicate));
+
+		var strData1 = {}
+
+                		 try {
+                        		strData = JSON.stringify(duplicate);
+                        		}
+                                catch(error) {
+                                  console.error(error);
+                                  // expected output: ReferenceError: nonExistentFunction is not defined
+                                  // Note - error messages will vary depending on browser
+                                }
+
+		fs.writeFileSync(outputDir+'/'+token+'.json', strData1);
 	}
 	
 	function writeTxt(token, message, callbackfunc){

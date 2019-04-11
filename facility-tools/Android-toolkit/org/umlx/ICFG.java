@@ -2,15 +2,17 @@ package org.umlx;
 
 import soot.SootMethod;
 import soot.Unit;
+import soot.jimple.infoflow.collect.ConcurrentHashSet;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ICFG implements Iterable<ICFG.CallEdge>{
-    protected Set<CallEdge> edges = new HashSet<CallEdge>();
+    protected Set<CallEdge> edges = new ConcurrentHashSet<CallEdge>();
     protected Map<SootMethod, Set<CallEdge>> srcMethodToEdges;
 
     public ICFG() {
-        this.srcMethodToEdges = new HashMap();
+        this.srcMethodToEdges = new ConcurrentHashMap();
     }
 
     public void addEdge(CallEdge edge){
@@ -145,6 +147,7 @@ public class ICFG implements Iterable<ICFG.CallEdge>{
         Unit srcUnit = null;
         SootMethod tgt = null;
         int order = -1;
+
         public CallEdge(SootMethod src, Unit srcUnit, SootMethod tgt, int order) {
             this.src = src;
             this.srcUnit = srcUnit;
