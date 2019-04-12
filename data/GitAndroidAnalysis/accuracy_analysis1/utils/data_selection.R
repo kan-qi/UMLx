@@ -1,5 +1,3 @@
-source("transaction_weights_calibration4.R")
-
 selectData <- function(dataPath, selector="default"){
   
 #dataPath <- "modelEvaluations-1-3.csv"

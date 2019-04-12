@@ -486,13 +486,17 @@
 		return classClusters;
 	}
 
-	function findAllClass(node) {
-		if (node.size == 1) {
+	function findAllClass(node, visitedNodes = new Set()) {
+	    if(visitedNodes.has(node)){
+	        return [];
+	    }
+		else if (node.size == 1) {
 			return [node.value];
 		}
 		else {
-			var left = findAllClass(node.left);
-			var right = findAllClass(node.right);
+		    visitedNodes.add(node);
+			var left = findAllClass(node.left, visitedNodes);
+			var right = findAllClass(node.right, visitedNodes);
 			var res = left.concat(right);
 			return res;
 		}

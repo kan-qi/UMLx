@@ -108,6 +108,10 @@ public class UMLxAndroidToolKit {
             Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 4);
         }
 
+        if(Configs.appPkg.endsWith(".amp_library")){
+            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 12);
+        }
+
         File apkFile = new File(Configs.project);
         String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
         if (!extension.equals(".apk") || !apkFile.exists()){
@@ -149,10 +153,10 @@ public class UMLxAndroidToolKit {
                 SootClass c = Scene.v().loadClass(cls, SootClass.BODIES);
                 c.setApplicationClass();
                 components.add(c);
-                for(String mtd : flowDroidCallbacks.get(cls)){
+                for(String mtd : flowDroidCallbacks.get(cls)) {
 //                    SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
                     SootMethod entryPoint = c.getMethodUnsafe(mtd);
-                    if(entryPoint == null){
+                    if (entryPoint == null) {
                         continue;
                     }
                     callbackMethodSigs.put(c, entryPoint);
@@ -189,10 +193,10 @@ public class UMLxAndroidToolKit {
                 cs.setApplicationClass();
                 DebugOutput.v().println("application classes: "+cs.getName());
             }
-//            else {
-//                cs.setLibraryClass();
-//                DebugOutput.v().println("library classes: "+cs.getName());
-//            }
+            else if(!cs.isInterface()){
+                cs.setLibraryClass();
+                DebugOutput.v().println("library classes: "+cs.getName());
+            }
 
             for (SootMethod mtd : cs.getMethods()) {
 

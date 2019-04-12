@@ -19,7 +19,6 @@
 	var jp = require('jsonpath');
 	var uuidV1 = require('uuid/v1');
 	var kdmModelUtils = require("./KDMModelUtils.js");
-	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
 	var FileManagerUtils = require("../../utils/FileManagerUtils.js");
 
 	function analyseCode(jsonString, outputDir) {

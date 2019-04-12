@@ -35,6 +35,8 @@
 	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
 
+	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
+
 	var responsePatternsFile = "response-patterns.txt";
 	
 	var modelDrawer = require("../../model_drawers/UserSystemInteractionModelDrawer.js");
