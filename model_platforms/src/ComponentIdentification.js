@@ -264,7 +264,7 @@
 		graph += 'imagepath = \"./\"}';
 		dottyUtil = require("../../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, path, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 		
 		return graph;
