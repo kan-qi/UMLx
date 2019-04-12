@@ -35,6 +35,8 @@
 	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
 
+	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
+
 	var responsePatternsFile = "response-patterns.txt";
 	
 	var modelDrawer = require("../../model_drawers/UserSystemInteractionModelDrawer.js");
@@ -225,7 +227,18 @@
 					
 				}
 
-				
+			console.log("the AllComponents is " + componentInfo);
+
+			dependencyGraphDrawer.drawClassDependencyGraph(codeAnalysisResults, Model.OutputDir);
+
+            dependencyGraphDrawer.drawClassDependencyGraphGroupedByCompositeClass(codeAnalysisResults, componentInfo, Model.OutputDir);
+
+            dependencyGraphDrawer.drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, componentInfo, Model.OutputDir);
+
+
+
+            dependencyGraphDrawer.drawCompositeClassDependencyGraph(codeAnalysisResults, Model.OutputDir);
+			
 	}
 
 	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodUnits){

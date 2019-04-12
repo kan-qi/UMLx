@@ -19,9 +19,6 @@
 	 * This method is used to draw different dependency graphs between different nodes.
 	 */
 
-
-
-
 		function drawClassDependencyGraph(codeAnalysisResults, outputDir){
 
 			var edgesComponent1 = codeAnalysisResults.accessGraph;
@@ -120,10 +117,7 @@
 		}
 
 
-
-
-
-		function drawClassDependencyGraphGroupedByCompositeClass(codeAnalysisResults, outputDir){
+		function drawClassDependencyGraphGroupedByCompositeClass(codeAnalysisResults, componentInfo, outputDir){
 
 			var edgesComponent1 = codeAnalysisResults.accessGraph;
 			var edgesComponent2 = codeAnalysisResults.callGraph;
@@ -219,105 +213,111 @@
 
         }
 
-        function drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, outputDir){
+        function drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, componentInfo, outputDir){
 
 
         	// Miss Component Information.
 
 
-   //      	var edgesComponent1 = codeAnalysisResults.accessGraph;
-			// var edgesComponent2 = codeAnalysisResults.callGraph;
-			// var edgesComponent3 = codeAnalysisResults.compositionGraph;
-			// var edgesComponent4 = codeAnalysisResults.extendsGraph;
-			// var edgesComponent5 = codeAnalysisResults.typeDependencyGraph;
+        	var edgesComponent1 = codeAnalysisResults.accessGraph;
+			var edgesComponent2 = codeAnalysisResults.callGraph;
+			var edgesComponent3 = codeAnalysisResults.compositionGraph;
+			var edgesComponent4 = codeAnalysisResults.extendsGraph;
+			var edgesComponent5 = codeAnalysisResults.typeDependencyGraph;
 
-			// var allComponents = codeAnalysisResults.typeDependencyGraph;
+			
 
-			//  nodeType1 = ", style=filled, fillcolor=grey";
-			//  nodeType2 = "";
-
-			//  var graph = "digraph graphname{";
-
-			 
-			//  var count = 0;
-			//  var myMap = new Map(); 
+			var allComponents = componentInfo.dicComponents;
 
 
-			//  graph += "edge [color=brown]";
 
-			//  list = [];
-			//  count += myMap.size;
-			//  edgeLabel = "access";
-			//  edgesComponent =  edgesComponent1["edges"];
-			//  graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+			 nodeType1 = ", style=filled, fillcolor=grey";
+			 nodeType2 = "";
+
+			 var graph = "digraph graphname{";
 
 			 
-			//  graph += "edge [color=black]";
-			//  list = [];
-			//  count += myMap.size;
-			//  edgeLabel = "call";
-			//  edgesComponent =  edgesComponent2["edges"];
-			//  graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
+			 var count = 0;
+			 var myMap = new Map(); 
+
+
+			 graph += "edge [color=brown]";
+
+			 list = [];
+			 count += myMap.size;
+			 edgeLabel = "access";
+			 edgesComponent =  edgesComponent1["edges"];
+			 graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+
+			 
+			 graph += "edge [color=black]";
+			 list = [];
+			 count += myMap.size;
+			 edgeLabel = "call";
+			 edgesComponent =  edgesComponent2["edges"];
+			 graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 			 
 
-			//  graph += "edge [color=yellow]";
-			//  list = [];
-			//  count += myMap.size;
-			//  edgeLabel = "composition";
-			//  edgesComponent =  edgesComponent3["edges"];
-			//  graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+			 graph += "edge [color=yellow]";
+			 list = [];
+			 count += myMap.size;
+			 edgeLabel = "composition";
+			 edgesComponent =  edgesComponent3["edges"];
+			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 			 
 			  
-			//  graph += "edge [color=green]";
-			//  list = [];
-			//  count += myMap.size;
-			//  edgeLabel = "extension";
-			//  edgesComponent =  edgesComponent4["edges"];
+			 graph += "edge [color=green]";
+			 list = [];
+			 count += myMap.size;
+			 edgeLabel = "extension";
+			 edgesComponent =  edgesComponent4["edges"];
 
-			//  graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
-			//  //graph = drawItems_UUID_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
-
-
-			//  graph += "edge [color=blue]";
-			//  list = [];
-			//  count += myMap.size;
-			//  edgeLabel = "type_dependency"; 
-			//  edgesComponent =  edgesComponent5["edgesLocal"];
-			//  graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
+			 graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+			 //graph = drawItems_UUID_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
 
-			//  graph += "edge [color=red]";
-			//  list = [];
-			//  count += myMap.size; 
-			//  edgeLabel = "type_dependency"; 
-			//  edgesComponent =  edgesComponent5["edgesParam"];
-			//  graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
+			 graph += "edge [color=blue]";
+			 list = [];
+			 count += myMap.size;
+			 edgeLabel = "type_dependency"; 
+			 edgesComponent =  edgesComponent5["edgesLocal"];
+			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
-			//  graph += "edge [color=pink]";
-			//  list = [];
-			//  count += myMap.size;
-			//  edgeLabel = "type_dependency"; 
-			//  edgesComponent =  edgesComponent5["edgesReturn"];
-			//  graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
-
-			//  graph +="}";
+			 graph += "edge [color=red]";
+			 list = [];
+			 count += myMap.size; 
+			 edgeLabel = "type_dependency"; 
+			 edgesComponent =  edgesComponent5["edgesParam"];
+			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
-			//   console.log("the test outputDir is" + outputDir);
+			 graph += "edge [color=pink]";
+			 list = [];
+			 count += myMap.size;
+			 edgeLabel = "type_dependency"; 
+			 edgesComponent =  edgesComponent5["edgesReturn"];
+			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
-			//   console.log("the dependency graph is " + graph);
+			 graph = drawItems_Components(graph, allComponents, myMap)
 
-			//  outputDir += "/ClassDependencyGraphGroupedByComponent.dotty";
+			 graph +="}";
 
-			//  dottyUtil.drawDottyGraph(graph, outputDir, function(){
 
-			//  	console.log("Here is just a test");
-			//  	console.log("the outputDir is" + outputDir);
+			 console.log("the test outputDir is" + outputDir);
+
+			 console.log("the dependency graph is " + graph);
+
+			 outputDir += "/ClassDependencyGraphGroupedByComponent.dotty";
+
+			 dottyUtil.drawDottyGraph(graph, outputDir, function(){
+
+			 	console.log("Here is just a test");
+			 	console.log("the outputDir is" + outputDir);
 			    
-			//  });
+			 });
 
-			//  return graph;
+			 return graph;
         }
 
 
@@ -486,6 +486,7 @@
 		}
 
 
+		
 		function drawItems_Components(graph, allComponents, myMap) {
 
 
@@ -498,18 +499,24 @@
 				var component = allComponents[Object.keys(allComponents)[i]]["classUnits"];
 				var name = allComponents[Object.keys(allComponents)[i]]["name"];
 
-				graph += "subgraph {";
+				name = name.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
+
+				graph += "subgraph cluster_level"+i+"{";
+
+				graph += "label =";
+				graph += name+ " ";
 
 				for(j = 0; j < component.length; j ++){
-					var UUID = component[i]["UUID"]
-					if(myMap.has(classUnits)){
-						graph + myMap.get(classUnits) + " ;";
+					var UUID = component[j]["UUID"];
+					if(myMap.has(UUID)){
+					
+						graph += myMap.get(UUID) + " ;";
 					}
 				}
 				graph += "}";
 			}
 
-			return graph
+			return graph;
 		}
 
 
