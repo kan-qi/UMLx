@@ -103,11 +103,11 @@ public class UMLxAndroidToolKit {
         Configs.appPkg = manifest.getPackageName();
 
         File apkFile = new File(Configs.project);
-        String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
-        if (!extension.equals(".apk") || !apkFile.exists()){
-            DebugOutput.v().println("apk-file not exists "+ apkFile.getName());
-            return;
-        }
+//        String e = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
+//        if (!extension.equals(".apk") || !apkFile.exists()){
+//            DebugOutput.v().println("apk-file not exists "+ apkFile.getName());
+//            return;
+//        }
 
         Configs.appName = apkFile.getName();
 

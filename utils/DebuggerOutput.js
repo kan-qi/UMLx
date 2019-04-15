@@ -21,6 +21,7 @@
 	
 	function writeJson2(token, message, outputDir){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+		return;
 		if(!outputDir){
 			outputDir = "./data/OpenSource/debug";
 		}
