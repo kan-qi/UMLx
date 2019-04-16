@@ -24,6 +24,27 @@ div.block.panel.panel-default
                     //- button.close(type='button', data-dismiss='modal', aria-label='Close')
                     //-   span(aria-hidden='true') ×
                   .modal-body(style = "height: 300px; overflow-y: auto;")
+                    #sec-4
+                      .panel-group
+                          .panel.panel-default
+                              .panel-heading 
+                                  h4.panel-title 
+                                      div.panel_words Select Estimator
+                                      div.panel_triangle_toggle
+                                          a(data-toggle='collapse', href='#collapse3')
+                                              //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                              span.glyphicon.glyphicon-triangle-left.collapseButtom3
+                              #collapse3.panel-collapse()
+                                .form-group(style = "margin-bottom: 0px;")
+                                  .panel-body
+                                      div(id="model-query-box" style = "margin-left: 30%;")
+                                          div.row-item(id='model-selector-box')
+                                            //- div.autocomplete(style="width:300px;")
+                                            //-   input#model.estimation-form-control.form-control(type="text", name='model', placeholder="Estimator")
+                                            select#model.estimation-form-control.form-control(name='model')
+                                                option#estimator1(value="eucp_lm") EUCP
+                                                option#estimator2(value="exucp_lm") EXUCP
+                                                option#estimator3(value="ducp_lm") DUCP
                     #sec-1
                       .panel-group
                           .panel.panel-default
@@ -216,25 +237,6 @@ div.block.panel.panel-default
                                               option 3
                                               option 4
                                               option 5
-                    #sec-4
-                      .panel-group
-                          .panel.panel-default
-                              .panel-heading 
-                                  h4.panel-title 
-                                      div.panel_words Select Estimator
-                                      div.panel_triangle_toggle
-                                          a(data-toggle='collapse', href='#collapse3')
-                                              //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
-                                              span.glyphicon.glyphicon-triangle-left.collapseButtom3
-                              #collapse3.panel-collapse()
-                                .form-group(style = "margin-bottom: 0px;")
-                                  .panel-body
-                                      div(id="model-query-box" style = "margin-left: 30%;")
-                                          div.row-item(id='model-selector-box')
-                                              select#model.estimation-form-control.form-control(name='model')
-                                                option#estimator1(value="eucp_lm") EUCP
-                                                option#estimator2(value="exucp_lm") EXUCP
-                                                option#estimator3(value="ducp_lm") DUCP
                   .modal-footer
                     button.btn.btn-primary.silver(type='button', data-dismiss='modal') Close
             // Submit button
