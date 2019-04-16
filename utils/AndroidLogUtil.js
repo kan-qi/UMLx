@@ -384,10 +384,14 @@
 		  //  	var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:./libs/*\" org.umlx.UMLxAndroidToolKit " 
 				// + apkFileName + "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
 				// + "\"/Users/diaozhuoran/Library/Android/sdk/platforms/\" \" /Users/diaozhuoran/desktop/DR2/UMLx323/UMLx/facility-tools/Android-toolkit/output\"";
-			var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit " 
-				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
-				+ "\"" + __dirname + "/../" + apkFileName + "\" "
-				+ "\"" + __dirname + "/../" + outputDir + "\""; 
+//			var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
+//				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
+//				+ "\"" + __dirname + "/../" + apkFileName + "\" "
+//				+ "\"" + __dirname + "/../" + outputDir + "\"";
+			var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
+                				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
+                				+ "\"" + apkFileName + "\" "
+                				+ "\"" + outputDir + "\"";
 			console.log(command);
 
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
