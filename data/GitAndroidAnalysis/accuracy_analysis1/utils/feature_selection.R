@@ -1,14 +1,5 @@
----
-title: "Report"
-author: "Kan Qi"
-output:
-  html_document:
-    df_print: paged
-  pdf_document: default
----
-
-feature_select_by_corr <- function(modelEvalFile)
-      
+feature_select_by_corr <- function(modelEvalFile){
+  
 data <- read.csv(modelEvalFile, stringsAsFactors= T)
 #summary(data)
 

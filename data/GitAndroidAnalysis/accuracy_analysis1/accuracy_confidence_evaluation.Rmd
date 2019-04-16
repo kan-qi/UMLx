@@ -5,11 +5,13 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+source("utils/feature_selection.R")
+source("utils/data_selection.R")
+source("utils/model_funcs.R")
+source("accuracy_confidence_evaluation.R")
 source("transaction_based_model.R")
 source("size_metric_based_models.R")
-source("utils/data_selection.R")
-source("accuracy_confidence_evaluation.R")
-source("utils/feature_selection.R")
 library(jsonlite)
 library(reshape)
 library(tidyverse)
@@ -22,11 +24,12 @@ require(MASS)
 ```
 Combined Data Effort Values
 ```{r descriptive statistics, fig.width=5,fig.height=2.5}
-dataSet <- selectData("modelEvaluations-1-3.csv")
+modelData <- selectData("dsets/modelEvaluations-1-3.csv")
 
-modelData <- dataSet[["modelData"]]
-combined <- dataSet[["combined"]]
-effort <- dataSet[["effort"]]
+#modelData <- dataset[["modelData"]]
+#combined <- dataset[["combined"]]
+#effort <- dataset[["effort"]]
+#transactionFiles <- dataset[["transactionFiles"]]
 
 ```
 
@@ -36,19 +39,31 @@ effort <- dataSet[["effort"]]
 
 ```{r swtiii, warning = FALSE}
 
-#train the size metric based models
-models <- size_metric_models()
+#options(show.error.locations = TRUE)
+#options(error=function()traceback(2))
+#initialize models for training, testing, and evaluation
+models = list()
+
+#first perform model search for the swtiii parameters
+SWTIIIresults <- performSearch(1, modelData, c("TL", "TD", "DETs"))
+#create an initialized model by selecting a candidate model
+SWTIIIModelSelector <- 1
+models$tt1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
+
+#initialize the size metric based models
+	  
+size_models <- size_metric_models()
+models = append(models, size_models)
 
 #load the machine learning based models
   
 ```
-comparison between SWTIII, UCP, COCOMO, a-priori COCOMO using cross-validation
+comparison between the candidate models SWTIII, UCP, COCOMO, a-priori COCOMO using cross-validation
 ```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
 #df <- read.csv("modelEvaluations-8-16-3.csv")
 
-benchmarkResults <- modelBenchmark(models, dataset)
+benchmarkResults <- modelBenchmark(models, modelData)
 
-cvResults <-benchmarkResults[["cvResults"]]
-print(cvResults)
+print(benchmarkResults)
 
 ```

@@ -1,5 +1,7 @@
 package org.umlx.utils;
 
+import org.umlx.DebugOutput;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +37,7 @@ class StreamGobbler extends Thread
 public class CommandLine {
     public static void run(String command) throws InterruptedException, IOException {
         System.out.println("running: "+command);
+        DebugOutput.v().println("running: "+command);
         final Process p = Runtime.getRuntime().exec(command);
 
 //        new Thread(new Runnable() {

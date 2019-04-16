@@ -1,5 +1,6 @@
 package org.umlx.utils;
 
+import org.umlx.DebugOutput;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -91,7 +92,6 @@ public class GatorConnector {
 
     }
 
-
     public MultiMap<String, String> run(String apkPath, String sdkDir, String outputDir, int sdkVer){
 
         MultiMap<String, String> handlers = new HashMultiMap<String, String>();
@@ -169,13 +169,14 @@ public class GatorConnector {
                 String viewName = eventHandler[2];
                 String activityName = eventHandler[3];
 
-                System.out.println("class name:"+className);
-                System.out.println("method name:"+methodName);
+                System.out.println("gator class name:"+className);
+                System.out.println("gator method name:"+methodName);
 
                 handlers.put(className, methodName);
 
             }
 
+//            System.exit(0);
         return handlers;
     }
 
@@ -216,11 +217,11 @@ public class GatorConnector {
         // Debug.v().println("parseGatorNode");
         // Debug.v().println(node.getNodeName());
 
-        if (node.getNodeName() == null || node.getNodeName().isEmpty()) {
+//        if (node.getNodeName() == null || node.getNodeName().isEmpty()) {
             // logger.warn("Encountered a null or empty node name in file %s, skipping
             // node...", layoutFile);
-            return;
-        }
+//            return;
+//        }
 
         String tname = node.getNodeName().trim();
         if (tname.equals("Activity") || tname.equals("Dialog")) {

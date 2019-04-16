@@ -104,6 +104,7 @@ public class UMLxAndroidToolKit {
         if(Configs.appPkg.endsWith(".debug")){
             Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 6);
         }
+
         if(Configs.appPkg.endsWith(".dev")){
             Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 4);
         }
@@ -145,7 +146,6 @@ public class UMLxAndroidToolKit {
         Scene.v().loadNecessaryClasses();
         Options.v().set_app(true);
 
-
         System.out.println("callbacks:");
 
         // Read callbacks from flowdroid
@@ -178,6 +178,15 @@ public class UMLxAndroidToolKit {
             }
         }
 
+        for(SootClass c : callbackMethodSigs.keySet()){
+            for(SootMethod method: callbackMethodSigs.get(c)) {
+//                GatorHandlersWriter.v().println("<" + c.getName() + ": " + method.getSignature()+">");
+                  GatorHandlersWriter.v().println(method.getSignature());
+            }
+        }
+
+
+
         createMainMethod();
 
         DebugOutput.v().println("classes and methods1:");
@@ -189,19 +198,24 @@ public class UMLxAndroidToolKit {
 //                cs.setPhantomClass();
 //                continue;
 //            }
+
+            if(cs.isPhantomClass()){
+                continue;
+            }
+
             if (cs.getName().startsWith(Configs.appPkg) || cs.getName().indexOf(Configs.appPkg) >= 0) {
                 cs.setApplicationClass();
                 DebugOutput.v().println("application classes: "+cs.getName());
             }
-            else if(!cs.isInterface()){
+            else {
                 cs.setLibraryClass();
                 DebugOutput.v().println("library classes: "+cs.getName());
             }
 
-            for (SootMethod mtd : cs.getMethods()) {
-
-                    DebugOutput.v().println("methods:"+mtd.getName());
-            }
+//            for (SootMethod mtd : cs.getMethods()) {
+//
+//                    DebugOutput.v().println("methods:"+mtd.getName());
+//            }
         }
 
 

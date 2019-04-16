@@ -1,16 +1,35 @@
-source("transaction_weights_calibration4.R")
+#source("transaction_weights_calibration4.R")
 
 #adding two additional models: sloc and ln_sloc models.
 
+mre <- function(x) abs(x[1] - x[2])/x[2]
+mmre <- function(mre) mean(mre)
+pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
+mdmre <- function(mre) median(model_eval_mre)
+mae<- function(x) sum(apply(x, 1, mre))/length(x)
+predR <- function(mre, predRange) {
+  eval_pred <- c()
+  
+  for(k in 1:predRange){
+    eval_pred <- c(eval_pred, length(mre[mre<=0.01*k])/length(mre))
+  }
+  
+  eval_pred
+}
 
 modelBenchmark <- function(models, dataset){
-  
-modelNames <- names(models)
 
-nfold = 5
-folds <- cut(seq(1,nrow(SWTIIIModelData)),breaks=nfold,labels=FALSE)
+#dataset = modelData
 
-nmodels <- length(models)
+nfold = 2
+
+folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
+
+modelNames = names(models)
+
+nmodels <- length(modelNames)
 
 accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
 
@@ -23,7 +42,7 @@ predRange <- 50
 model_accuracy_indice <- c()
 for(i in 1:length(modelNames)){
   modelName = modelNames[i]
-  model_accuracy_indice <- cbind(model_accuracy_indice, paste(moelName, accuracy_metrics, sep="_"));
+  model_accuracy_indice <- cbind(model_accuracy_indice, paste(modelName, accuracy_metrics, sep="_"));
 }
 
 foldResults <- matrix(nrow=nfold,ncol=nmodels*nmetrics)
@@ -36,44 +55,39 @@ for(i in 1:nfold){
 	#Segement your data by fold using the which() function
 	testIndexes <- which(folds==i,arr.ind=TRUE)
 	
-	testData <- SWTIIIModelData[testIndexes, ]
-	trainData <- SWTIIIModelData[-testIndexes, ]
+	testData <- dataset[testIndexes, ]
+	trainData <- dataset[-testIndexes, ]
 	
-	otherTestData <- otherSizeMetricsData[testIndexes, ]
-	otherTrainData <- otherSizeMetricsData[-testIndexes,]
-	
-	
+	eval_metrics = c()
+	eval_pred = c()
 	for(j in 1:nmodels){
-	  model <- models[[j]]
+	  modelName <- modelNames[j]
 	  
-	  model.eval.predict = cbind(predicted=predict(model, testData), actual=testData$Effort)
+	  model = fit(trainData, modelNames[j], models[[j]])
 	  
+	  model_eval_predict = data.frame(predicted = as.vector(m_predict(model, testData)), actual = testData$Effort)
 	  
-	  model.eval.mre = apply(model.eval.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	  eval_metric_results = list()
 	  
-	  model.eval.mmre = mean(model.eval.mre)
-	  model.eval.pred15 = length(model.eval.mre[model.eval.mre<=0.15])/length(model.eval.mre)
-	  model.eval.pred25 = length(model.eval.mre[model.eval.mre<=0.25])/length(model.eval.mre)
-	  model.eval.pred50 = length(model.eval.mre[model.eval.mre<=0.50])/length(model.eval.mre)
+	  model_eval_mre = apply(model_eval_predict, 1, mre)
+	  model_eval_mmre =mmre(model_eval_mre)
+	  model_eval_pred15 = pred15(model_eval_mre)
+	  model_eval_pred25 = pred25(model_eval_mre)
+	  model_eval_pred50 = pred50(model_eval_mre)
+	  model_eval_mdmre = mdmre(model_eval_mre)
+	  model_eval_mae = sum(apply(model_eval_predict, 1, mre))/length(model_eval_predict)
+	  eval_metrics <- c(
+	    model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
+	  )
 	  
-	  model.eval.mdmre = median(model.eval.mre)
-	  model.eval.mae = sum(apply(model.eval.predict, 1, function(x) abs(x[1] - x[2])))/length(model.eval.predict)
-	  
-	  model.eval.pred <- c()
-	  for(k in 1:predRange){
-	    model.eval.pred <- c(model.eval.pred, length(model.eval.mre[model.eval.mre<=0.01*k])/length(model.eval.mre))
-	  }
-	  
-	  foldResults[i,] <- cbin(foldResults[i,], c(
-	    model.eval.mmre,model.eval.pred15,model.eval.pred25,model.eval.pred50, model.eval.mdmre, model.eval.mae
-	  ))
-	  
-	  
-	  foldResults1[,,i] = cbind(foldResults1[,,i], model.eval.pred);
+	  eval_pred = predR(model_eval_mre, predRange)
 	}
+	
+	foldResults[i,] = eval_metrics
+	foldResults1[,,i] = eval_pred
 }
 
-cvResults <- lappy(foldResults, mean);
+cvResults <- apply(foldResults, 2, mean);
 
 names(cvResults) <- model_accuracy_indice
 
@@ -82,21 +96,19 @@ colnames(avgPreds) <- c("Pred",modelNames)
 for(i in 1:predRange)
 {
   
-	avgPreds[i,] <- c(i)
+	avgPreds[i,] <- c(i, rep(0, length(modelNames)))
 	
-	for(j in modelNames){
-	  
+	for(j in 1:length(modelNames)){
 	  model_fold_mean = mean(foldResults1[i,j,]);
+	  avgPreds[i,j+1] <- model_fold_mean
 	}
 	
-	avgPreds[i,] <- cbind(avgPreds[i,], model_fold_mean)
 }
 
 bootstrappingSE(dataset, models)
 
 ret <-list(cvResults = cvResults, avgPreds = avgPreds)
 }
-
 
 bootstrappingSE <- function(dataset, models){
 #bootstrapping the sample and run the run the output sample testing.

@@ -255,6 +255,75 @@ discretize <- function(shape, rate, n) {
 	#plot(fit.gamma)
 }
 
+classify1 <- function(data, cutPoints) {
+  # Classify data into different levels of complexity based on
+  # the quantile the data falls in.
+  #
+  # Args:
+  #   data: A dataframe of transactions to classfiy.
+  #   cutPoints: Matrix where each row is a vector of cut points. Each row
+  #     should be named according to the parameter they cut.
+  #
+  # Returns:
+  #   A vector that indicates how many data points fall into each bin.
+  #
+  # TODO: Develop a classification scheme for SWTIII (3 variables)
+  
+  #data <- fileData
+  
+  numVariables <- nrow(cutPoints)
+  numBins <- ncol(cutPoints) - 1
+  if(numVariables == 0){
+    result = c(0)
+    names(result) <- c("l1")
+    result["l1"] = nrow(data)
+    return(result)
+  }
+  else if (numVariables == 1) {
+    dataVec <- data[, rownames(cutPoints)]
+    #print(cutPoints[1, ])
+    classifications <- cut(dataVec, breaks = cutPoints[1, ], labels = FALSE)
+    #print(classifications)
+    result <- rep(0, numBins)
+    names(result) <- genColNames(nrow(cutPoints), numBins)
+    for (i in 1:numBins) {
+      result[paste("l", i, sep = "")] <- sum(classifications == i)
+    }
+    return(result)
+  }
+  else if (numVariables == 2) {
+    totalClassifications <- numBins + (numBins - 1)
+    result <- rep(0, totalClassifications)
+    names(result) <- genColNames(nrow(cutPoints), numBins)
+    for (i in 1:nrow(data)) {
+      classifications <- c()
+      for (p in rownames(cutPoints)) {
+        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
+        classifications <- c(classifications, parameterResult)
+      }
+      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1), sep = "")
+      result[combinedClass] <- result[combinedClass] + 1
+    }
+    return(result)
+  }
+  else {
+    totalClassifications <- numBins + (numBins - 1) + (numBins - 1)
+    result <- rep(0, totalClassifications)
+    names(result) <- genColNames(nrow(cutPoints), numBins)
+    for (i in 1:nrow(data)) {
+      classifications <- c()
+      for (p in rownames(cutPoints)) {
+        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
+        classifications <- c(classifications, parameterResult)
+      }
+      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1) + (classifications[3] - 1), sep = "")
+      result[combinedClass] <- result[combinedClass] + 1
+    }
+    return(result)
+  }
+}
+
+
 classify <- function(data, cutPoints) {
   # Classify data into different levels of complexity based on
   # the quantile the data falls in.
@@ -276,23 +345,12 @@ classify <- function(data, cutPoints) {
     result["l1"] = nrow(data)
     return(result)
   }
-  else if (numVariables == 1) {
-    dataVec <- data[, rownames(cutPoints)]
-    #print(cutPoints[1, ])
-    classifications <- cut(dataVec, breaks = cutPoints[1, ], labels = FALSE)
-    #print(classifications)
-    result <- rep(0, numBins)
-    names(result) <- genColNames(rownames(cutPoints), numBins)
-    for (i in 1:numBins) {
-      result[paste("l", i, sep = "")] <- sum(classifications == i)
-    }
-    return(result)
-  }
-  else if (numVariables == 2) {
-    totalClassifications <- numBins + (numBins - 1)
+  else{
+    totalClassifications <- numVariables*numBins - numVariables + 1
     result <- rep(0, totalClassifications)
-    names(result) <- genColNames(rownames(cutPoints), numBins)
-    for (i in 1:nrow(data)) {
+    names(result) <- genColNames(nrow(cutPoints), numBins)
+    if(nrow(data) > 0){
+      for (i in 1:nrow(data)) {
       classifications <- c()
       for (p in rownames(cutPoints)) {
         parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
@@ -300,21 +358,7 @@ classify <- function(data, cutPoints) {
       }
       combinedClass <- paste("l", classifications[1] + (classifications[2] - 1), sep = "")
       result[combinedClass] <- result[combinedClass] + 1
-    }
-    return(result)
-  }
-  else {
-    totalClassifications <- numBins + (numBins - 1) + (numBins - 1)
-    result <- rep(0, totalClassifications)
-    names(result) <- genColNames(rownames(cutPoints), numBins)
-    for (i in 1:nrow(data)) {
-      classifications <- c()
-      for (p in rownames(cutPoints)) {
-        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-        classifications <- c(classifications, parameterResult)
       }
-      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1) + (classifications[3] - 1), sep = "")
-      result[combinedClass] <- result[combinedClass] + 1
     }
     return(result)
   }
@@ -376,7 +420,7 @@ crossValidate <- function(data, k) {
 		# Normalize effort data
 		#trainData$Effort = trainData$Effort
 		levels = length(trainData) - 1
-		normFactor <- calNormFactor(trainData, levels)
+		normFactor <- calNormFactor(trainData)
 		#print(normFactor)
 		
 		#normalizedData <- regressionData[rownames(regressionData) != "Aggregate", ]
@@ -396,7 +440,7 @@ crossValidate <- function(data, k) {
 }
 
 crossValidate1 <- function(data, k){
-  #data = regressionData1;
+  #data = regressionData;
   #k = 5;
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
@@ -419,7 +463,7 @@ crossValidate1 <- function(data, k){
 }
 
 crossValidate2 <- function(data, k){
-  #data <- as.data.frame(transactionRegressionData1)
+  #data <- as.data.frame(transactionregressionData)
   #k <- 5
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
@@ -443,7 +487,7 @@ crossValidate2 <- function(data, k){
   
 }
 
-genColNames <- function(parameters, nBins) {
+genColNames <- function(nParams, nBins) {
   # Helper function that generates a vector strings representing all possible
   # classifications.
   #
@@ -453,13 +497,13 @@ genColNames <- function(parameters, nBins) {
   #
   # Returns:
   #   A vector of strings for all possible classifications.
-  if(length(parameters) == 0){
+  if(nParams == 0){
     return(paste("l", 1, sep=""))
   }
-  else if (length(parameters) == 1) {
+  else if (nParams == 1) {
     return(paste("l", 1:nBins, sep = ""))
   }
-  else if (length(parameters) == 2) {
+  else if (nParams == 2) {
     numLevels <- nBins + (nBins - 1)
     return(paste("l", 1:numLevels, sep = ""))
   }
@@ -712,7 +756,7 @@ proposalProbability <- function(x1, x2){
 
 run_metropolis_MCMC1 <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
   
-  #regressionData <- regressionData1
+  #regressionData <- regressionData
   #N <- 10000
   #priorB <- means
   #varianceMatrix <- covar
@@ -767,7 +811,7 @@ run_metropolis_MCMC1 <- function(regressionData, N, priorB, varianceMatrix, norm
 
 run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
   
-  #regressionData <- regressionData1
+  #regressionData <- regressionData
   #N <- 10000
   #priorB <- means
   #varianceMatrix <- covar
@@ -821,7 +865,7 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
 
 bayesfit3<-function(regressionData, N, B, varianceMatrix, normFactor, var){
   
-  #regressionData <- regressionData1
+  #regressionData <- regressionData
   #N <- 10000
   #B <- means
   #varianceMatrix <- covar
@@ -849,7 +893,7 @@ bayesfit3<-function(regressionData, N, B, varianceMatrix, normFactor, var){
   #plot(chain[-(1:burnIn),2], type = "l", xlab="True value = red line" , main = "Chain values of b", )
   #plot(chain[-(1:burnIn),3], type = "l", xlab="True value = red line" , main = "Chain values of sd", )
   
-  print(acceptance)
+  #print(acceptance)
   
   return(ret)
   
@@ -953,8 +997,7 @@ predict.blm <- function(model, newdata) {
   #print(mean(model[, col]))
   
   `%ni%` <- Negate(`%in%`)
-  #print(colnames(newdata))
-  #print(colnames(model))
+  
   newdata <- subset(newdata,select = colnames(newdata) %ni% c("Effort"))
 	ret <- apply(newdata, 1, function(x) {
 				effort <- 0
@@ -966,12 +1009,12 @@ predict.blm <- function(model, newdata) {
 	ret*mean(model[,"normFactor"])
 }
 
-calNormFactor <- function(regressionData, n){
+calNormFactor <- function(regressionData){
   #n <- length(levels)
   #if(n == 1){
   #  return(1)
   #}
-  nominalWeights <- genMeans(n)
+  nominalWeights <- genMeans(ncol(regressionData)-1)
   nominalWeights <- as.matrix(nominalWeights)
   #print(nominalWeights)
   transactionData <- as.matrix(regressionData[, !(colnames(regressionData) %in% c("Effort"))])
@@ -982,15 +1025,95 @@ calNormFactor <- function(regressionData, n){
   transactionRegressionData[, "transactionSum"] = transactionSum
   transactionRegressionData[, "Effort"] = regressionData[, "Effort"]
   
-  transactionRegressionData <- transactionRegressionData[rownames(regressionData) != "Aggregate", ]
-  
   summary <- summary(lm(Effort ~ . - 1, as.data.frame(transactionRegressionData)))
 
   normFactor <- c(mean = summary$coefficients["transactionSum","Estimate"], var=summary$coefficients["transactionSum","Std. Error"]^2)
   #regressionData[, "Effort"]/normFactor
 }
 
-performSearch <- function(n, effortData, combinedData, transactionFiles, parameters = c("TL", "TD", "DETs"), k = 5) {
+cachedTransactionFiles = list()
+readTransactionData <- function(filePath){
+  
+  if (!file.exists(filePath)) {
+    print("file doesn't exist")
+    if(is.null(cachedTransactionFiles[[filePath]])){
+      cachedTransactionFiles[[filePath]] <<- data.frame(TL = numeric(),
+                                                        TD = numeric(), 
+                                                        DETs = numeric())
+    }
+    cachedTransactionFiles[[filePath]]
+  } 
+  else if(!is.null(cachedTransactionFiles[[filePath]])){
+    cachedTransactionFiles[[filePath]]
+  }
+  else {
+  #filePath = "..\\..\\577 Projects\\12-22\\F13a_City_of_LosAngeles_Public_Safety_Applicant_Resource_Center_2018-11-22@1545546245122_analysis\\filteredTransactionEvaluation.csv"
+  fileData <- read.csv(filePath)
+  if(nrow(fileData) == 0){
+    fileData <- data.frame(TL = numeric(),
+               TD = numeric(), 
+               DETs = numeric())
+  }
+  else{
+  fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+  }
+  fileData <- na.omit(fileData)
+  cachedTransactionFiles[[filePath]] <<- fileData
+  fileData
+  }
+  
+}
+
+loadTransactionData <- function(modelData){
+
+  #projects <- rownames(effortData)
+  #combinedData <- combineData(transactionFiles)
+  
+  modelData$Project <- as.character(modelData$Project)
+  rownames(modelData) <- modelData$Project
+  
+  modelData$transaction_file <- as.character(modelData$transaction_file)
+  
+  effort <- subset(modelData, select=c("Effort"))
+  rownames(effort) <- modelData$Project
+  
+  projects <- rownames(modelData)
+  #print(projects)
+  
+  transactionFileList <- subset(modelData, select=c("transaction_file"))
+  rownames(transactionFileList) <- modelData$Project
+  
+  numOfTrans <- 0
+  transactionFiles <- list()
+  for (project in projects) {
+    #print(project)
+    filePath <- transactionFileList[project, "transaction_file"]
+    #print(filePath)
+    fileData <- readTransactionData(filePath)
+    #print(fileData)
+    
+    #if(nrow(fileData) < 1){
+    #  transactionFiles[[project]] <-list()
+    #  next
+    #}
+    
+    transactionFiles[[project]] <- fileData
+    numOfTrans = numOfTrans + nrow(fileData)
+  }
+  
+  
+  print(numOfTrans)
+  
+  combined <- combineData(transactionFiles)
+  
+  
+  #dataSet[["combined"]] <- combined
+  #dataSet[["transactionFiles"]] <- transactionFiles
+  
+  transactionData = list(combined=combined, transactionFiles = transactionFiles, effort = effort, projects=projects)
+}
+
+performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5) {
   # Performs search for the optimal number of bins and weights to apply to each
   # bin through linear regression.
   #
@@ -1007,15 +1130,22 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
   #   A list in which the ith index gives the results of the search for i bins.
   
   #n = 6
+  #dataset = modelData
+  #parameters = c("TL", "TD", "DETs")
+  
   #effortData = effort
   #transactionFiles = transactionFiles
-  #parameters = c("TL", "TD", "DETs")
   #combinedData <- combined
   #k = 5
   #i = 6
   
-  projects <- rownames(effortData)
-  #combinedData <- combineData(transactionFiles)
+  #load transaction data from the datasheet
+  transactionData <- loadTransactionData(dataset)
+  
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles = transactionData$transactionFiles
+  projects <- transactionData$projects
   
   distParams = list();
   distParams[['TL']] = list(shape=6.543586, rate=1.160249);
@@ -1025,95 +1155,88 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
 
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
+  
   if(length(parameters) == 0){
     n = 1
   }
+  
   searchResults <- list()
+  
   for (i in seq(1,n)) {
     cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
     rownames(cutPoints) <- parameters
     for (p in parameters) {
       #cutPoints[p, ] <- discretize(combinedData[, p], i)
-      
       cutPoints[p, ] <- discretize(distParams[[p]][['shape']], distParams[[p]][['rate']], i)
     }
-    #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
-    levels <- genColNames(parameters, i)
-    regressionData <- matrix(nrow = length(projects), ncol = length(levels) + 1)
-    rownames(regressionData) <- projects
-    colnames(regressionData) <- c(levels, "Effort")
     
-    for (project in projects) {
-    fileData <- transactionFiles[[project]]
-    if(length(fileData) < 1){
-      next
-    }
-    classifiedData <- classify(fileData, cutPoints)
-    regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
-    }
-  
-    regressionData <- na.omit(regressionData)
-    regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
-    regressionData <- as.data.frame(regressionData)
+    #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
+    levels <- genColNames(length(parameters), i)
+    
+    print(levels)
+    
+    #generate classified regression data
+    regressionData <- generateRegressionData(projects, cutPoints, effortData, transactionFiles)
     
     # the variance is actually not used.
-    normFactor <- calNormFactor(regressionData, length(levels))
+    normFactor <- calNormFactor(regressionData)
     print(normFactor)
-  
-    #normalizedData <- regressionData[rownames(regressionData) != "Aggregate", ]
-    #normalizedData$Effort <- normalizedData$Effort/normFactor
-    #bayesianModel <- bayesfit(lm(Effort ~ . - 1, normalizedData), 1000)
     
     means <- genMeans(length(levels))
-    #print(means)
     covar <- genVariance(means, 1/3)
     
-    regressionData1 <- regressionData[rownames(regressionData) != "Aggregate", ]
+    #regressionData <- regressionData[rownames(regressionData) != "Aggregate", ]
     
     #the bayesian model fit
     
-    bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
-    validationResults <- crossValidate(regressionData1, k)
+    paramVals <- bayesfit3(regressionData, 10000, means, covar, normFactor['mean'], normFactor['var'])
+    bayesianModel = list()
+    bayesianModel$weights = subset(paramVals, select = levels)
+    bayesianModel$normFactor = paramVals[,"normFactor"] 
+    bayesianModel$sd = paramVals[,"sd"] 
+    bayesianModel$cuts <- cutPoints
+    
+    #apply cross validation to understand the out-of-sample estimation accuracy
+    validationResults <- crossValidate(regressionData, k)
     
     #the regression model fit
-    regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData1));
-    print(regressionModel)
-    validationResults1 <- crossValidate1(regressionData1, k)
+    regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData));
+    #print(regressionModel)
+    validationResults1 <- crossValidate1(regressionData, k)
     
     #calculate the bayesian regression data
     nominalWeights <- as.matrix(means)
     #print(nominalWeights)
-    transactionData1 <- as.matrix(regressionData1[, !(colnames(regressionData) %in% c("Effort"))])
+    transactionData1 <- as.matrix(regressionData[, !(colnames(regressionData) %in% c("Effort"))])
     transactionSum1 <-  transactionData1 %*% nominalWeights 
-    transactionRegressionData1 <- matrix(nrow = nrow(regressionData1), ncol=2)
-    colnames(transactionRegressionData1) <- c("transactionSum", "Effort")
-    rownames(transactionRegressionData1) <- rownames(regressionData1)
-    transactionRegressionData1[, "transactionSum"] = transactionSum1
-    transactionRegressionData1[, "Effort"] = regressionData1[, "Effort"]
-    transactionRegressionData1 <- as.data.frame(transactionRegressionData1)
+    transactionregressionData <- matrix(nrow = nrow(regressionData), ncol=2)
+    colnames(transactionregressionData) <- c("transactionSum", "Effort")
+    rownames(transactionregressionData) <- rownames(regressionData)
+    transactionregressionData[, "transactionSum"] = transactionSum1
+    transactionregressionData[, "Effort"] = regressionData[, "Effort"]
+    transactionregressionData <- as.data.frame(transactionregressionData)
     
     #the prior model fit
-    priorModel <- lm(Effort ~ . - 1, transactionRegressionData1)
+    priorModel <- lm(Effort ~ . - 1, transactionregressionData)
     print(priorModel)
-    validationResults2 <- crossValidate2(transactionRegressionData1, k)
+    validationResults2 <- crossValidate2(transactionregressionData, k)
     
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
     
-    print(cutPoints)
+    #print(cutPoints)
     #print("cross validation")
     searchResults[[i]] <- list(
-                               numOfTrans = numOfTrans,
                                MSE = validationResults["MSE"], 
                                MMRE = validationResults["MMRE"], 
                                PRED = validationResults["PRED"],
-                               model = bayesianModel,
+                               bayesModel = bayesianModel,
                                priorModel = priorModel,
                                regressionModel = regressionModel,
                                priorModelAccuracyMeasure = validationResults2,
                                regressionModelAccuracyMeasure = validationResults1,
                                #modelAvg = lapply(bayesianModel, mean),
-                               data = regressionData,
-                               cuts = cutPoints)
+                               regressionData = regressionData
+                               )
   }
   searchResults
 }
@@ -1122,22 +1245,84 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
 #rownames(effort) <- effort$Project
 #SWTIresults <- performSearch(3, effort, c("TL"))
 
-estimateEffortWithTrainedModel <- function(data, trainedModel){
-  #data = fileData
-  #trainedModel = trainedModels[["TNModel"]]
+estimateEffortWithTrainedModel <- function(trainedModel, cuts, testdata){
   #trainedModelParameters <- readRDS(file="train_model_parameters.rds")
-  data <- subset(data, select = c("TL", "TD", "DETs"))
-  data <- data.frame(apply(data, 2, function(x) as.numeric(x)))
-  data <- na.omit(data)
   
-  if(nrow(data) < 1){
-    return(-1)
+  transactionData <- loadTransactionData(testData)
+  
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles = transactionData$transactionFiles
+  projects <- transactionData$projects
+  
+  #cuts = model$cuts
+  regressionData <- generateRegressionData(projects, cuts, effortData, transactionFiles)
+  
+  trainedModel = t(as.matrix(trainedModel))
+  
+  predicted <- predict.blm(trainedModel, newdata = regressionData)
+  predicted*trainedModel[,"normFactor"]
+}
+
+generateRegressionData <- function(projects, cutPoints, effortData, transactionFiles){
+  nParams =  nrow(cutPoints)
+  nBins =   ncol(cutPoints)-1
+  levels = genColNames(nParams, nBins)
+  #print(levels)
+  regressionData <- matrix(nrow = length(projects), ncol = length(levels) + 1)
+  rownames(regressionData) <- projects
+  colnames(regressionData) <- c(levels, "Effort")
+  for (project in projects) {
+    fileData <- transactionFiles[[project]]
+    classifiedData <- classify(fileData, cutPoints)
+    regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
   }
-  classifiedData <- classify(data, trainedModel$cuts)
-  levels <- names(classifiedData)
-  classifiedData <- matrix(classifiedData, nrow=1, ncol=length(classifiedData))
-  colnames(classifiedData) <- levels
-  predicted <- predict.blm(trainedModel$model, newdata = classifiedData)
-  predicted*trainedModel*trainedMOdel$normFactor
+  
+  regressionData <- na.omit(regressionData)
+  regressionData <- as.data.frame(regressionData)
+}
+
+m_fit.tt1 <- function(swtiii,dataset){
+  print("swtiii model training")
+  
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- transactionData$projects
+  
+  regressionData <- generateRegressionData(projects, swtiii$cuts, effortData, transactionFiles)
+  
+  normFactor <- calNormFactor(regressionData)
+  levels = ncol(regressionData) - 1
+  means <- genMeans(levels)
+  covar <- genVariance(means, 1)
+  paramVals <- bayesfit3(regressionData, 100000, means, covar, normFactor['mean'], normFactor['var'])
+  bayesianModel = list()
+  bayesianModel$paramVals <- paramVals
+  bayesianModel$cuts <- swtiii$cuts
+  
+  swtiii$cuts = NULL;
+  swtiii$m = bayesianModel;
+  swtiii
+}
+
+# for model testing
+m_predict.tt1 <- function(swtiii, testData){
+  print("swtiii predict function")
+  
+  #using the means for each esimulation results as the final estimates of the parameters
+  swtiii_model <- apply(swtiii$m$paramVals, 2, mean)
+  
+  estimateEffortWithTrainedModel(swtiii_model, swtiii$m$cuts, testData)
+}
+
+trainsaction_based_model <- function(analysisResults, modelSelector){
+  # for model training
+ 
+  modelParams = analysisResults[[modelSelector]][["bayesModel"]]
+  swtiiiParams = list(
+    cuts = modelParams$cuts
+  )
 }
 

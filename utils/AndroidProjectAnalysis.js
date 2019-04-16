@@ -304,7 +304,16 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+//var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+
+// or load the modelOutputDirs from the json file
+
+var modelOutputDirs = []
+for(var i in repo.projectList){
+    var projectInfo = repo.projectList[i]
+    modelOutputDirs.push(repo.projectList[i].path+"/"+repo.projectList[i].tag)
+}
+
 var transactionFiles = [];
 var filteredTransactionFiles = [];
 var modelEvaluationFiles = [];

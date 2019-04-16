@@ -43,8 +43,7 @@
 			//process the name
 			var packageName = referencedClassUnit.name.substring(0, referencedClassUnit.name.lastIndexOf('.'));
 			var className = referencedClassUnit.name.substring(referencedClassUnit.name.lastIndexOf('.')+1, referencedClassUnit.name.length);
-			
-			
+
 			var classUnit = {
 					UUID: referencedClassUnit.UUID,
 					name: className,
