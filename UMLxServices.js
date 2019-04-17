@@ -31,6 +31,8 @@ var currentModel = null;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
 
+global.__basedir = __dirname;
+
 /* output/ and uploads/ folders auto-creation */
 var checkDirExist = (folderpath) => {
 	const pathArr = folderpath.split('/');
