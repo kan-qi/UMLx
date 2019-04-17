@@ -1,45 +1,6 @@
----
-title: "Report"
-author: "Kan Qi"
-output:
-  html_document:
-    df_print: paged
-  pdf_document: default
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-source("data_selection.R")
-
-```
-
-Loading data form the csv file
-
-```{r}
-
-vars = feature_select_by_corr("modelEvaluations-1-3.csv")
-
-fit <- lm(Effort ~ .,data=vars)
-summary(fit)
-plot(fit)
-```
-
-
-```{r}
 library(glmnet)
 library(plotmo) # for plot_glmnet
-x_data <- data.matrix(data[ind_variables])
-y_data <- data.matrix(data[c("Effort")])
-lasso_lm <- glmnet(x = x_data, y = y_data, alpha = 1, standardize = T)
-print(lasso_lm$lambda)
-plot(lasso_lm)
- #for 10 biggest final features
-plot_glmnet(lasso_lm)                             # default colors
-#plot_glmnet(lasso_lm, label=10)
-```
 
-```{r}
 Lasso_range = function(x, y, k){
   # inputs:
       # x_matrix, a matrix containing independent variables
@@ -74,11 +35,9 @@ Lasso_range = function(x, y, k){
 }
 
 
-Lasso_range(x_data,y_data, 100)
+#Lasso_range(x_data,y_data, 100)
 
-```
-
-```{r}
+cv_lasso_model = function(x_data,y_data){
 set.seed(2)
 lambda_list <- Lasso_range(x_data,y_data,100)
 percent = 50
@@ -117,18 +76,40 @@ calcPRED <- function(testData,pred,percent){
  overall_mean_mmre[[iterator]] <- mean(as.numeric(mean_mmre))
  overall_mean_pred[[iterator]] <- mean(as.numeric(mean_pred))
  }
-```
 
-```{r}
 plot(log(lambda_list),overall_mean_mmre,xlab="log(Lambda)",ylab="MMRE")
 lines(log(lambda_list),overall_mean_mmre,xlim=range(log(lambda_list)), ylim=range(overall_mean_mmre), pch=16)
 
 plot(log(lambda_list),overall_mean_pred,xlab="log(Lambda)",ylab = "PRED")
 lines(log(lambda_list),overall_mean_pred,xlim=range(log(lambda_list)), ylim=range(overall_mean_pred), pch=16)
 
-plot(cvfit)
-```
-## Feature ranking
-```{r}
+}
 
-```
+#define the lasso model
+m_fit.lasso <- function(lasso,dataset){
+
+  x_data <- data.matrix(data[ind_variables])
+  y_data <- data.matrix(data[c("Effort")])
+  lasso_lm <- glmnet(x = x_data, y = y_data, alpha = 1, standardize = T)
+  print(lasso_lm$lambda)
+  plot(lasso_lm)
+  #for 10 biggest final features
+  plot_glmnet(lasso_lm)                             # default colors
+  #plot_glmnet(lasso_lm, label=10)
+  lasso$m = lasso_lm
+  lasso
+}
+
+m_predict.lasso <- function(lasso, testData){
+  pred <- predict(lasso$m,newx=testData,s=lasso$lambda)
+}
+
+lasso_model <- function(){
+  
+  models = list()
+  
+  models$lasso = list()
+  
+  models
+  
+}

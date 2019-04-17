@@ -92,9 +92,10 @@ size_metric_models <- function(){
   
   models = list()
   
-  print('ucp size metric based models')
+  #define the cocomo model
   
   models$ucp = list()
+  
   #define the cocomo model
   
   models$cocomo = list()
@@ -116,7 +117,6 @@ size_metric_models <- function(){
   models$mkii = list()
   
   #define the sloc model
-  
   
   models$sloc = list()
   

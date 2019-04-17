@@ -304,15 +304,15 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-//var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
 
 // or load the modelOutputDirs from the json file
 
-var modelOutputDirs = []
-for(var i in repo.projectList){
-    var projectInfo = repo.projectList[i]
-    modelOutputDirs.push(repo.projectList[i].path+"/"+repo.projectList[i].tag)
-}
+//var modelOutputDirs = []
+//for(var i in repo.projectList){
+//    var projectInfo = repo.projectList[i]
+//    modelOutputDirs.push(repo.projectList[i].path+"/"+repo.projectList[i].tag)
+//}
 
 var transactionFiles = [];
 var filteredTransactionFiles = [];
@@ -364,6 +364,7 @@ FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations
 
 var effortEstimationContents = FileManagerUtil.readJSONFilesSync(effortEstimationFiles);
 var effortEstimationConsolidation = "project, eucp, exucp, ducp";
+console.log(effortEstimationFiles)
 for(var i = 0 ; i < effortEstimationContents.length; i++){
 	     if(i%3 == 0){
 	        effortEstimationConsolidation += "\n"+modelOutputDirs[i/3]+",";
