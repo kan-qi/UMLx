@@ -636,7 +636,6 @@ prior <- function(sample, B, varianceMatrix, normFactor, var){
 
 ######## posterior function ################
 posterior <- function(sample, B, varianceMatrix, normFactor, var, x, y){
-  #print("hello2")
   return (likelihood(sample[names(B)], sample['normFactor'], sample['sd'], x, y) + prior(sample, B, varianceMatrix, normFactor, var))
 }
 
@@ -945,6 +944,7 @@ calNormFactor <- function(regressionData){
   #if(n == 1){
   #  return(1)
   #}
+  
   nominalWeights <- genMeans(ncol(regressionData)-1)
   nominalWeights <- as.matrix(nominalWeights)
   #print(nominalWeights)
@@ -1019,16 +1019,8 @@ loadTransactionData <- function(modelData){
   numOfTrans <- 0
   transactionFiles <- list()
   for (project in projects) {
-    #print(project)
     filePath <- transactionFileList[project, "transaction_file"]
-    #print(filePath)
     fileData <- readTransactionData(filePath)
-    #print(fileData)
-    
-    #if(nrow(fileData) < 1){
-    #  transactionFiles[[project]] <-list()
-    #  next
-    #}
     
     transactionFiles[[project]] <- fileData
     numOfTrans = numOfTrans + nrow(fileData)
@@ -1062,14 +1054,14 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   # Returns:
   #   A list in which the ith index gives the results of the search for i bins.
   
-  #n = 6
+  #n = 1
   #dataset = modelData
   #parameters = c("TL", "TD", "DETs")
+  #k = 5
   
   #effortData = effort
   #transactionFiles = transactionFiles
   #combinedData <- combined
-  #k = 5
   #i = 6
   
   #load transaction data from the datasheet
@@ -1078,7 +1070,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   effortData <- transactionData$effort
   combinedData <- transactionData$combined
   transactionFiles = transactionData$transactionFiles
-  #projects <- transactionData$projects
+  projects <- names(transactionData$transactionFiles)
   
   distParams = list();
   distParams[['TL']] = list(shape=6.543586, rate=1.160249);
@@ -1106,14 +1098,14 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
     levels <- genColNames(length(parameters), i)
     
-    print(levels)
+    #print(levels)
     
     #generate classified regression data
     regressionData <- generateRegressionData(projects, cutPoints, effortData, transactionFiles)
     
     # the variance is actually not used.
     normFactor <- calNormFactor(regressionData)
-    print(normFactor)
+    #print(normFactor)
     
     means <- genMeans(length(levels))
     covar <- genVariance(means, 1/3)
@@ -1151,7 +1143,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     
     #the prior model fit
     priorModel <- lm(Effort ~ . - 1, transactionregressionData)
-    print(priorModel)
+    #print(priorModel)
     validationResults2 <- crossValidate2(transactionregressionData, k)
     
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
@@ -1186,7 +1178,7 @@ estimateEffortWithTrainedModel <- function(trainedModel, cuts, testData){
   effortData <- transactionData$effort
   combinedData <- transactionData$combined
   transactionFiles = transactionData$transactionFiles
-  projects <- transactionData$projects
+  projects <- names(transactionData$transactionFiles)
   
   #cuts = model$m$cuts
   regressionData <- generateRegressionData(projects, cuts, effortData, transactionFiles)
@@ -1201,7 +1193,6 @@ generateRegressionData <- function(projects, cutPoints, effortData, transactionF
   nParams =  nrow(cutPoints)
   nBins =   ncol(cutPoints)-1
   levels = genColNames(nParams, nBins)
-  #print(levels)
   regressionData <- matrix(nrow = length(projects), ncol = length(levels) + 1)
   rownames(regressionData) <- projects
   colnames(regressionData) <- c(levels, "Effort")
@@ -1215,14 +1206,14 @@ generateRegressionData <- function(projects, cutPoints, effortData, transactionF
   regressionData <- as.data.frame(regressionData)
 }
 
-m_fit.tt1 <- function(swtiii,dataset){
+m_fit.tm1 <- function(swtiii,dataset){
   print("swtiii model training")
   
   transactionData <- loadTransactionData(dataset)
   effortData <- transactionData$effort
   combinedData <- transactionData$combined
   transactionFiles <- transactionData$transactionFiles
-  projects <- transactionData$projects
+  projects <- names(transactionData$transactionFiles)
   
   regressionData <- generateRegressionData(projects, swtiii$cuts, effortData, transactionFiles)
   
@@ -1241,7 +1232,7 @@ m_fit.tt1 <- function(swtiii,dataset){
 }
 
 # for model testing
-m_predict.tt1 <- function(swtiii, testData){
+m_predict.tm1 <- function(swtiii, testData){
   print("swtiii predict function")
   
   #using the means for each esimulation results as the final estimates of the parameters

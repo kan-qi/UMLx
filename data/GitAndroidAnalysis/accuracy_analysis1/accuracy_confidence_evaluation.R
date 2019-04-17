@@ -67,8 +67,6 @@ for(i in 1:nfold){
 	  
 	  predicted = m_predict(model, testData)
 	  #print(predicted)
-	  #predicted = as.vector(predicted)
-	  #names(predicted) <- testData$Project
 	  
 	  actual = testData$Effort
 	  names(actual) <- rownames(testData)
@@ -81,26 +79,39 @@ for(i in 1:nfold){
 	  eval_metric_results = list()
 	  
 	  model_eval_mre = apply(model_eval_predict, 1, mre)
-	  model_eval_mmre =mmre(model_eval_mre)
+	  
+	  
+	  #print(modelName)
+	  
+	  model_eval_mre <- na.omit(model_eval_mre)
+	  #print(model_eval_mre)
+	  
+	  model_eval_mmre = mmre(model_eval_mre)
 	  model_eval_pred15 = pred15(model_eval_mre)
 	  model_eval_pred25 = pred25(model_eval_mre)
 	  model_eval_pred50 = pred50(model_eval_mre)
 	  model_eval_mdmre = mdmre(model_eval_mre)
-	  model_eval_mae = sum(apply(model_eval_predict, 1, mre))/length(model_eval_predict)
+	  model_eval_mae = sum(model_eval_mre)/length(model_eval_predict)
 	  eval_metrics <- c(
-	    model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
+	    eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
 	  )
 	  
-	  eval_pred = predR(model_eval_mre, predRange)
+	  #print(eval_metrics)
+	  
+	  eval_pred = c(eval_pred, predR(model_eval_mre, predRange))
 	}
 	
 	foldResults[i,] = eval_metrics
 	foldResults1[,,i] = eval_pred
 }
 
+#print(foldResults)
+
 cvResults <- apply(foldResults, 2, mean);
 
 names(cvResults) <- model_accuracy_indice
+
+#print(cvResults)
 
 avgPreds <- matrix(nrow=predRange,ncol=nmodels+1)
 colnames(avgPreds) <- c("Pred",modelNames)

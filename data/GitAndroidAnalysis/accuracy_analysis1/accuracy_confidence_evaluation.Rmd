@@ -27,11 +27,6 @@ Combined Data Effort Values
 modelData <- selectData("dsets/modelEvaluations-1-3.csv")
 rownames(modelData) <- modelData$Project
 modelData$Project <- NULL
-#modelData <- dataset[["modelData"]]
-#combined <- dataset[["combined"]]
-#effort <- dataset[["effort"]]
-#transactionFiles <- dataset[["transactionFiles"]]
-
 ```
 
 #load the comparative models. Each model for comparison should include two functions for evaluateion:
@@ -40,31 +35,56 @@ modelData$Project <- NULL
 
 ```{r swtiii, warning = FALSE}
 
-#options(show.error.locations = TRUE)
-#options(error=function()traceback(2))
-#initialize models for training, testing, and evaluation
+#initialize models for training, testing, and evaluation. The models are put into a list with model names referencing a list of hyper-parameters, which will be passed to the model training function.
+
 models = list()
 
 #first perform model search for the swtiii parameters
 SWTIIIresults <- performSearch(1, modelData, c("TL", "TD", "DETs"))
-#create an initialized model by selecting a candidate model
+#intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
 SWTIIIModelSelector <- 1
-models$tt1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
+models$tm1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
 
 #initialize the size metric based models
-	  
 size_models <- size_metric_models()
 models = append(models, size_models)
 
 #load the machine learning based models
+#to create a model, following 3 steps:
+# 1.create the model training function by rewriting this following template function
+#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
+# 2.create the prediction function by rewriting this following template function
+#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
+# 3.add your model name into the "models"(above) variable for referencing
+#  models.MODEL_NAME <- list(params...)
+# examples can be found in the size_metric_based_models.R or transaction_based_model.R
   
 ```
 comparison between the candidate models SWTIII, UCP, COCOMO, a-priori COCOMO using cross-validation
 ```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
-#df <- read.csv("modelEvaluations-8-16-3.csv")
 
 benchmarkResults <- modelBenchmark(models, modelData)
 
-print(benchmarkResults)
+avgPreds <- benchmarkResults[["avgPreds"]]
+avgPreds <- data.frame(avgPreds)
+meltAvgPreds = melt(avgPreds, id.vars="Pred")
+colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
 
+print("melt avg preds info")
+ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
+				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+print("melt avg preds info as lines and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 ```
