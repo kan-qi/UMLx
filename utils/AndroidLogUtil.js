@@ -393,10 +393,14 @@
    //              				+ "\"" + __basedir+"/" + apkFileName + "\" "
    //              				+ "\"" + __basedir+"/" + outputDir + "\"";
 
-            var command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
-                      +"org.umlx.UMLxAndroidToolKit \""+apkFileName+"\""
-                      +" \""+outputDir+"\"";
-                      
+            // var command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
+            //           +"org.umlx.UMLxAndroidToolKit \""+apkFileName+"\""
+            //           +" \""+outputDir+"\"";
+
+            		var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
+                				+ "\"./" + apkFileName + "\" "
+                				+ "\"./" + outputDir + "\"";
+
 			console.log(command);
 
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
