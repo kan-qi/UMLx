@@ -7,7 +7,7 @@ mmre <- function(mre) mean(mre)
 pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
 pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
 pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
-mdmre <- function(mre) median(model_eval_mre)
+mdmre <- function(mre) median(mre)
 mae<- function(x) sum(apply(x, 1, mre))/length(x)
 predR <- function(mre, predRange) {
   eval_pred <- c()
@@ -65,7 +65,18 @@ for(i in 1:nfold){
 	  
 	  model = fit(trainData, modelNames[j], models[[j]])
 	  
-	  model_eval_predict = data.frame(predicted = as.vector(m_predict(model, testData)), actual = testData$Effort)
+	  predicted = m_predict(model, testData)
+	  #print(predicted)
+	  #predicted = as.vector(predicted)
+	  #names(predicted) <- testData$Project
+	  
+	  actual = testData$Effort
+	  names(actual) <- rownames(testData)
+	  #print(actual)
+	  
+	  intersectNames <- intersect(names(predicted), names(actual))
+	  
+	  model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames] )
 	  
 	  eval_metric_results = list()
 	  
@@ -108,6 +119,7 @@ for(i in 1:predRange)
 bootstrappingSE(dataset, models)
 
 ret <-list(cvResults = cvResults, avgPreds = avgPreds)
+
 }
 
 bootstrappingSE <- function(dataset, models){

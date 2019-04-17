@@ -25,7 +25,8 @@ require(MASS)
 Combined Data Effort Values
 ```{r descriptive statistics, fig.width=5,fig.height=2.5}
 modelData <- selectData("dsets/modelEvaluations-1-3.csv")
-
+rownames(modelData) <- modelData$Project
+modelData$Project <- NULL
 #modelData <- dataset[["modelData"]]
 #combined <- dataset[["combined"]]
 #effort <- dataset[["effort"]]

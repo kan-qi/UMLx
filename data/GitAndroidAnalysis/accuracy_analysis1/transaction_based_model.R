@@ -255,75 +255,6 @@ discretize <- function(shape, rate, n) {
 	#plot(fit.gamma)
 }
 
-classify1 <- function(data, cutPoints) {
-  # Classify data into different levels of complexity based on
-  # the quantile the data falls in.
-  #
-  # Args:
-  #   data: A dataframe of transactions to classfiy.
-  #   cutPoints: Matrix where each row is a vector of cut points. Each row
-  #     should be named according to the parameter they cut.
-  #
-  # Returns:
-  #   A vector that indicates how many data points fall into each bin.
-  #
-  # TODO: Develop a classification scheme for SWTIII (3 variables)
-  
-  #data <- fileData
-  
-  numVariables <- nrow(cutPoints)
-  numBins <- ncol(cutPoints) - 1
-  if(numVariables == 0){
-    result = c(0)
-    names(result) <- c("l1")
-    result["l1"] = nrow(data)
-    return(result)
-  }
-  else if (numVariables == 1) {
-    dataVec <- data[, rownames(cutPoints)]
-    #print(cutPoints[1, ])
-    classifications <- cut(dataVec, breaks = cutPoints[1, ], labels = FALSE)
-    #print(classifications)
-    result <- rep(0, numBins)
-    names(result) <- genColNames(nrow(cutPoints), numBins)
-    for (i in 1:numBins) {
-      result[paste("l", i, sep = "")] <- sum(classifications == i)
-    }
-    return(result)
-  }
-  else if (numVariables == 2) {
-    totalClassifications <- numBins + (numBins - 1)
-    result <- rep(0, totalClassifications)
-    names(result) <- genColNames(nrow(cutPoints), numBins)
-    for (i in 1:nrow(data)) {
-      classifications <- c()
-      for (p in rownames(cutPoints)) {
-        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-        classifications <- c(classifications, parameterResult)
-      }
-      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1), sep = "")
-      result[combinedClass] <- result[combinedClass] + 1
-    }
-    return(result)
-  }
-  else {
-    totalClassifications <- numBins + (numBins - 1) + (numBins - 1)
-    result <- rep(0, totalClassifications)
-    names(result) <- genColNames(nrow(cutPoints), numBins)
-    for (i in 1:nrow(data)) {
-      classifications <- c()
-      for (p in rownames(cutPoints)) {
-        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-        classifications <- c(classifications, parameterResult)
-      }
-      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1) + (classifications[3] - 1), sep = "")
-      result[combinedClass] <- result[combinedClass] + 1
-    }
-    return(result)
-  }
-}
-
-
 classify <- function(data, cutPoints) {
   # Classify data into different levels of complexity based on
   # the quantile the data falls in.
@@ -1069,19 +1000,21 @@ loadTransactionData <- function(modelData){
   #projects <- rownames(effortData)
   #combinedData <- combineData(transactionFiles)
   
-  modelData$Project <- as.character(modelData$Project)
-  rownames(modelData) <- modelData$Project
+  #modelData$Project <- as.character(modelData$Project)
+  #rownames(modelData) <- modelData$Project
   
   modelData$transaction_file <- as.character(modelData$transaction_file)
   
   effort <- subset(modelData, select=c("Effort"))
-  rownames(effort) <- modelData$Project
   
   projects <- rownames(modelData)
+  
+  rownames(effort) <- projects
+  
   #print(projects)
   
   transactionFileList <- subset(modelData, select=c("transaction_file"))
-  rownames(transactionFileList) <- modelData$Project
+  rownames(transactionFileList) <- projects
   
   numOfTrans <- 0
   transactionFiles <- list()
@@ -1145,7 +1078,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   effortData <- transactionData$effort
   combinedData <- transactionData$combined
   transactionFiles = transactionData$transactionFiles
-  projects <- transactionData$projects
+  #projects <- transactionData$projects
   
   distParams = list();
   distParams[['TL']] = list(shape=6.543586, rate=1.160249);
@@ -1245,7 +1178,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
 #rownames(effort) <- effort$Project
 #SWTIresults <- performSearch(3, effort, c("TL"))
 
-estimateEffortWithTrainedModel <- function(trainedModel, cuts, testdata){
+estimateEffortWithTrainedModel <- function(trainedModel, cuts, testData){
   #trainedModelParameters <- readRDS(file="train_model_parameters.rds")
   
   transactionData <- loadTransactionData(testData)
@@ -1255,7 +1188,7 @@ estimateEffortWithTrainedModel <- function(trainedModel, cuts, testdata){
   transactionFiles = transactionData$transactionFiles
   projects <- transactionData$projects
   
-  #cuts = model$cuts
+  #cuts = model$m$cuts
   regressionData <- generateRegressionData(projects, cuts, effortData, transactionFiles)
   
   trainedModel = t(as.matrix(trainedModel))
