@@ -39,7 +39,7 @@ modelData$Project <- NULL
 
 models = list()
 
-#first perform model search for the swtiii parameters
+#first perform model search for the swtiii hypter parameters, for example, the cut points.
 SWTIIIresults <- performSearch(1, modelData, c("TL", "TD", "DETs"))
 #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
 SWTIIIModelSelector <- 1
@@ -49,8 +49,8 @@ models$tm1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
 size_models <- size_metric_models()
 models = append(models, size_models)
 
-models$ucp = list()
-models$cocomo = list()
+#models$ucp = list()
+#models$cocomo = list()
 
 #load the machine learning based models
 #to create a model, following 3 steps:
@@ -63,7 +63,7 @@ models$cocomo = list()
 # examples can be found in the size_metric_based_models.R or transaction_based_model.R
   
 ```
-comparison between the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation
+comparison between the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
 
 benchmarkResults <- modelBenchmark(models, modelData)

@@ -140,7 +140,7 @@ for(i in 1:predRange)
 	
 }
 
-ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults, accuracy_metrics = accuracy_metrics)
+ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults)
 
 }
 
@@ -262,5 +262,5 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   colnames(bsEstimations) <- model_accuracy_indice
   rownames(bsEstimations) <- c('lower','mean','upper')
   
-  ret <- list(bsEstimations = bsEstimations, iterResults = iterResults, accuracy_metrics = accuracy_metrics)
+  ret <- list(bsEstimations = bsEstimations, iterResults = iterResults)
 }
