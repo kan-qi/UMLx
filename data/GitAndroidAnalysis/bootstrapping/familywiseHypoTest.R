@@ -1,4 +1,4 @@
-familywiseHypoTest <- function(iterationResults, metric_names, model_names){
+familywiseHypoTest <- function(iterationResults){
 
 #Args:
 #iterationResults: iteration results from CV or bootstrapping, a matrix of 54 columns (9 models * 6 metrics)
@@ -10,17 +10,9 @@ familywiseHypoTest <- function(iterationResults, metric_names, model_names){
 #        p_value: p value from t t_test
 #        BH_p_value: adjusted p value using BH method
 #        bonferroni_p_value: adjusted p value using Bonferroni method
-  
-#iterationResults = iterResults
 
-nmodels <- length(model_names)
-
-if(nmodels < 2){
-  print("At least two models should be provided for hypothesis test.")
-  return
-}
-
-nmetrics <- length(metric_names)
+nmodels <- 9
+nmetrics <- 6
 
 nhypo <- choose(nmodels,2) * nmetrics
 dfHypothesis <- matrix(nrow=nhypo,ncol=4)
@@ -28,26 +20,43 @@ colnames(dfHypothesis) <- c('model1','model2','metric','direction')
 dfPValue <- matrix(nrow=nhypo,ncol=5)
 colnames(dfPValue) <- c('model1_mean','model2_mean','p_value','BH_p_value','bonferroni_p_value')
 
-model_metric_name <- names(iterationResults)
+model_metric_name <- c(
+        'ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50', "ducp_mdmre", "ducp_mae",
+        'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50', "ucp_mdmre", "ucp_mae",
+        'cocomo_mmre','cocomo_pred15','cocomo_pred25','cocomo_pred50', "cocomo_mdmre", "cocomo_mae",
+        'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50', "cocomo_apriori_mdmre", "cocomo_apriori_mae",
+        'IFPUG_mmre','IFPUG_pred15','IFPUG_pred25','IFPUG_pred50', "IFPUG_mdmre", "IFPUG_mae",
+        'MKII_mmre','MKII_pred15','MKII_pred25','MKII_pred50', "MKII_mdmre", "MKII_mae",
+        'COSMIC_mmre','COSMIC_pred15','COSMIC_pred25','COSMIC_pred50', "COSMIC_mdmre", "COSMIC_mae",
+        'SLOC_mmre','SLOC_pred15','SLOC_pred25','SLOC_pred50', "SLOC_mdmre", "SLOC_mae",
+        'SLOC_LN_mmre','SLOC_LN_pred15','SLOC_LN_pred25','SLOC_LN_pred50', "SLOC_LN_mdmre", "SLOC_LN_mae")
 
-model_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    model_labels = c(model_labels, names(models)[i])
-  }
-}
+model_name <- c(
+        'ducp','ducp','ducp','ducp','ducp','ducp',
+        'ucp','ucp','ucp','ucp','ucp','ucp',
+        'cocomo','cocomo','cocomo','cocomo','cocomo','cocomo',
+        'cocomo_apriori','cocomo_apriori','cocomo_apriori','cocomo_apriori','cocomo_apriori','cocomo_apriori',
+        'IFPUG','IFPUG','IFPUG','IFPUG','IFPUG','IFPUG',
+        'MKII','MKII','MKII','MKII','MKII','MKII',
+        'COSMIC','COSMIC','COSMIC','COSMIC','COSMIC','COSMIC',
+        'SLOC','SLOC','SLOC','SLOC','SLOC','SLOC',
+        'SLOC_LN','SLOC_LN','SLOC_LN','SLOC_LN','SLOC_LN','SLOC_LN')
 
-metric_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    metric_labels = c(metric_labels, accuracy_metrics[j])
-  }
-}
+metric_name <- c('mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae",
+                 'mmre','pred15','pred25','pred50', "mdmre", "mae")
+
 
 singleHypoTest <- function(x,y){
 is_var_equal <- function(x,y){
     var_test = var.test(x,y)
-    if (var_test$p.value > 0.05){
+    if (z$p.value > 0.05){
         return(TRUE)
     }
     else {
@@ -62,12 +71,13 @@ p <- t_test$p.value
 return(p)
 }
 
+
 # for each accuracy metric, pair two models to construct hypothesis and run t test
 # total number of hypothesis = C(nmodels, 2) * nmetrics
 i <- 1
 while (i<=nhypo){
 for (j in 1:nmetrics){
-to_pair <- seq(from = j , to = j+nmodels*nmetrics ,by = nmetrics)
+to_pair <- seq(from = j , to = j+48 ,by = 6)
 #print(to_pair)
 for (k in 1:(nmodels-1)){
     for (l in (k+1):nmodels){
@@ -98,7 +108,7 @@ for (k in 1:(nmodels-1)){
                 direction <- '='
             }
 
-            dfHypothesis[i,] <- c(model_labels[id1], model_labels[id2], metric_labels[id1], direction)
+            dfHypothesis[i,] <- c(model_name[id1], model_name[id2], metric_name[id1], direction)
             dfPValue[i,1:3] <- c(mu_1, mu_2, p)
             
             i <- i+1

@@ -49,6 +49,9 @@ models$tm1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
 size_models <- size_metric_models()
 models = append(models, size_models)
 
+models$ucp = list()
+models$cocomo = list()
+
 #load the machine learning based models
 #to create a model, following 3 steps:
 # 1.create the model training function by rewriting this following template function
@@ -60,12 +63,16 @@ models = append(models, size_models)
 # examples can be found in the size_metric_based_models.R or transaction_based_model.R
   
 ```
-comparison between the candidate models SWTIII, UCP, COCOMO, a-priori COCOMO using cross-validation
+comparison between the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation
 ```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
 
 benchmarkResults <- modelBenchmark(models, modelData)
 
-avgPreds <- benchmarkResults[["avgPreds"]]
+model_names <- benchmarkResults$model_names
+accuracy_metrics <- benchmarkResults$accuracy_metrics
+#plot for the cross validation results
+cvResults <- benchmarkResults$cvResults
+avgPreds <- cvResults[["avgPreds"]]
 avgPreds <- data.frame(avgPreds)
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
@@ -87,4 +94,66 @@ ggplot(meltAvgPreds) + theme_bw() +
 		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+###plot for the bootstrapping results
+bsRet <- benchmarkResults$bsResults
+#bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
+bsEstimations <- bsRet[['bsEstimations']]
+iterResults <- bsRet[['iterResults']]
+
+#save as csv
+#write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
+#write.csv(iterResults, file='iterResults.csv', quote=F, row.names = F)
+
+#read from csv
+#bsEstimations <- read.csv('bsEstimations.csv')
+#rownames(bsEstimations) <- c('lower','mean','upper')
+#iterResults <- read.csv('iterResults.csv')
+
+# plot bootstrapping results
+
+model_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, names(models)[i])
+  }
+}
+
+metric_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
+
+df <- data.frame(t(bsEstimations))
+df$labels <- rownames(df)
+df$model_labels <- model_labels
+df$metric_labels <- metric_labels
+
+
+for (i in 1:length(metric_labels)){
+    g = metric_labels[i]
+    selectedData <- df[df$metric_labels == g,]
+    p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) + 
+    geom_crossbar(width = 0.5, position = "dodge") + 
+    #coord_flip() +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    xlab('model') +
+    ylab(g) +
+    ggtitle(g)
+    print(p)
+}
+
+# family-wise hypothesis test
+source('familywiseHypoTest.R')
+foldResults <- cvResults$foldResults
+sig_cv <- familywiseHypoTest(iterationResults=foldResults, accuracy_metrics, model_names)
+
+sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names)
+
+head(sig_cv)
+
+head(sig_bs)
+
 ```
