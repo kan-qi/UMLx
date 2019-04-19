@@ -10,13 +10,6 @@
 // });
 
 
-function estimator_selected(a, value){
-    $(a).addClass('button-clicked');
-    $(a).siblings().removeClass('button-clicked');
-    document.getElementById("model").selectedIndex = value;
-}
-
-
 $(document).on('change', ':file', function() {
     var input = $(this),
         numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -36,7 +29,6 @@ $(document).ready( function() {
         } else {
             if( log ) alert(log);
         }
-
     });
 });
 
@@ -2742,6 +2734,15 @@ $('#collapse2').on('shown.bs.collapse', function () {
 $('#collapse2').on('hidden.bs.collapse', function () {
     $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
 });
+
+$('#collapse3').on('shown.bs.collapse', function () {
+    $(".collapseButtom3").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse3').on('hidden.bs.collapse', function () {
+    $(".collapseButtom3").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
 
 var repoLink = "";
 // var repoLink = "public";
