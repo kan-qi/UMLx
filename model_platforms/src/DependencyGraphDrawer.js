@@ -17,7 +17,40 @@
 	
 	/*
 	 * This method is used to draw different dependency graphs between different nodes.
-	 */
+	 */	
+	 	function drawNode(id, label){
+		
+			return '"'+id+'"[label=<\
+				<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+				<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
+			 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
+			</TABLE>>];';
+		}
+
+
+		function processLabel(label){
+			if(!label){
+				return "undefined";
+			}
+			var terms = label.split(" ");
+			var reformattedLabel = "";
+			var lineNum = 3;
+			for(var i=0; i<terms.length; i++){
+				reformattedLabel += terms[i];
+				if(i%lineNum == 2 && i != terms.length-1){
+					reformattedLabel += "<BR/>";
+				}
+				else if(i != terms.length-1){
+					reformattedLabel += " ";
+				}
+			}
+			console.log("reformatted label");
+			console.log(reformattedLabel);
+			return reformattedLabel;
+		}
+
+
+
 
 		function drawClassDependencyGraph(codeAnalysisResults, outputDir){
 
@@ -27,9 +60,7 @@
 			var edgesComponent4 = codeAnalysisResults.extendsGraph;
 			var edgesComponent5 = codeAnalysisResults.typeDependencyGraph;
 
-
-
-			 nodeType1 = ", style=filled, fillcolor=grey";
+			 nodeType1 = "";
 			 nodeType2 = "";
 
 			 var graph = "digraph graphname{";
@@ -43,33 +74,41 @@
 
 			 list = [];
 			 count += myMap.size;
+			 //count = myMap.size;
 			 edgeLabel = "access";
 			 edgesComponent =  edgesComponent1["edges"];
 			 graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
-
-			 
+	 
 			 graph += "edge [color=black]";
 			 list = [];
 			 count += myMap.size;
+			 //count = myMap.size;
 			 edgeLabel = "call";
 			 edgesComponent =  edgesComponent2["edges"];
 			 graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
+
+			
 			 
 
 			 graph += "edge [color=yellow]";
 			 list = [];
 			 count += myMap.size;
+			 //count = myMap.size;
 			 edgeLabel = "composition";
 			 edgesComponent =  edgesComponent3["edges"];
 			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+
+			 
 			 
 			  
 			 graph += "edge [color=green]";
 			 list = [];
 			 count += myMap.size;
+			 //count = myMap.size;
+			 console.log("the map size is" + myMap.size);
+			 console.log("the count is" + count);
 			 edgeLabel = "extension";
 			 edgesComponent =  edgesComponent4["edges"];
-
 			 graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 			 //graph = drawItems_UUID_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
@@ -77,27 +116,43 @@
 			 graph += "edge [color=blue]";
 			 list = [];
 			 count += myMap.size;
+			 //count = myMap.size;
 			 edgeLabel = "type_dependency"; 
 			 edgesComponent =  edgesComponent5["edgesLocal"];
 			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
+	
+
 
 			 graph += "edge [color=red]";
 			 list = [];
-			 count += myMap.size; 
+			 count += myMap.size;
+			 //count = myMap.size; 
 			 edgeLabel = "type_dependency"; 
 			 edgesComponent =  edgesComponent5["edgesParam"];
 			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
+
+
 			 graph += "edge [color=pink]";
 			 list = [];
 			 count += myMap.size;
+			 //count = myMap.size;
 			 edgeLabel = "type_dependency"; 
 			 edgesComponent =  edgesComponent5["edgesReturn"];
 			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 			 graph +="}";
+
+			 console.log("*****************");
+			 console.log(myMap.size);
+			 var iterator1 = myMap.values();
+			 for(var zz = 0; zz < myMap.size; zz ++){
+			 	console.log(iterator1.next().value);
+			 }
+			 keys = Object.keys(myMap);
+			 console.log("*****************");
 
 
 			  console.log("the test outputDir is" + outputDir);
@@ -201,6 +256,8 @@
 
 			 outputDir += "/ClassDependencyGraphGroupedByCompositeClass.dotty";
 
+
+
 			 dottyUtil.drawDottyGraph(graph, outputDir, function(){
 
 			 	console.log("Here is just a test");
@@ -209,8 +266,6 @@
 			 });
 
 			 return graph;
-
-
         }
 
         function drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, componentInfo, outputDir){
@@ -231,7 +286,8 @@
 
 
 
-			 nodeType1 = ", style=filled, fillcolor=grey";
+			 //nodeType1 = ", style=filled, fillcolor=grey";
+			 nodeType1 = "";
 			 nodeType2 = "";
 
 			 var graph = "digraph graphname{";
@@ -291,6 +347,7 @@
 			 edgesComponent =  edgesComponent5["edgesParam"];
 			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
+			 
 
 			 graph += "edge [color=pink]";
 			 list = [];
@@ -299,14 +356,23 @@
 			 edgesComponent =  edgesComponent5["edgesReturn"];
 			 graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
+			 console.log("the length is " + myMap.size);
+			 var iterator1 = myMap.values();
+			 for(var zz = 0; zz < myMap.size; zz ++){
+			 	console.log(iterator1.next().value);
+			 }
+			 keys = Object.keys(myMap);
+			 console.log("the length is " + keys.length);
+
+			 for (var i = 0, keys = Object.keys(myMap), ii = keys.length; i < ii; i++) {
+				  console.log('key : ' + keys[i] + ' val : ' + myMap[keys[i]]);
+			 }
+
 			 graph = drawItems_Components(graph, allComponents, myMap)
 
 			 graph +="}";
 
-
-			 console.log("the test outputDir is" + outputDir);
-
-			 console.log("the dependency graph is " + graph);
+			 console.log("the dependencyGroupComponent graph is " + graph);
 
 			 outputDir += "/ClassDependencyGraphGroupedByComponent.dotty";
 
@@ -324,14 +390,13 @@
 
 		function drawCompositeClassDependencyGraph(codeAnalysisResults, outputDir){
 
-
 			var edgesComponent1 = codeAnalysisResults.accessGraph;
 			var edgesComponent2 = codeAnalysisResults.callGraph;
 			var edgesComponent3 = codeAnalysisResults.compositionGraph;
 			var edgesComponent4 = codeAnalysisResults.extendsGraph;
 			var edgesComponent5 = codeAnalysisResults.typeDependencyGraph;
 
-			 nodeType1 = ", style=filled, fillcolor=grey";
+			 nodeType1 = "";
 			 nodeType2 = "";
 
 			 var graph = "digraph graphname{";
@@ -437,8 +502,13 @@
 
 			    if(flag == true){
 			    	list.push({'start': startUUID, 'end': endUUID});
-			    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
+
+			     	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
 					+edgesComponent[i]['end']['component']['name']+ "\""+ nodeType +"]   "+startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
+
+					// graph += drawNode(startUUID, edgesComponent[i]['start']['component']['name'])+ "   " + 
+					// 		 drawNode(endUUID, edgesComponent[i]['end']['component']['name'])
+					// 		 startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
 			    }
 				
 			}
@@ -476,8 +546,14 @@
 
 			    if(flag == true){
 			    	list.push({'start': startUUID, 'end': endUUID});
+
+
 			    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
 					+edgesComponent[i]['end']['component']['name']+ "\""+ nodeType +"]   "+startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
+
+					// graph += drawNode(startUUID, edgesComponent[i]['start']['component']['name'])+ "   " + 
+					// 		 drawNode(endUUID, edgesComponent[i]['end']['component']['name'])
+					// 		 startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
 			    }
 				
 
@@ -489,10 +565,16 @@
 		
 		function drawItems_Components(graph, allComponents, myMap) {
 
+			 nodeType1 = "style=filled, fillcolor=grey";
+			 nodeType2 = "";
+
+
+			 var mySet = new Set();
 
 			var size = Object.keys(allComponents).length; 
 
 			var count = 0;
+
 
 			for(var i = 0; i < size; i ++){
 
@@ -509,8 +591,10 @@
 				for(j = 0; j < component.length; j ++){
 					var UUID = component[j]["UUID"];
 					if(myMap.has(UUID)){
-					
-						graph += myMap.get(UUID) + " ;";
+						graph += myMap.get(UUID) + "[style=filled, fillcolor=grey]" + ";";
+						//graph += myMap.get(UUID) + " ;";
+						mySet.add(myMap.get(UUID));
+						console.log("the number is" + myMap.get(UUID));
 					}
 				}
 				graph += "}";
@@ -522,6 +606,9 @@
 
 
 		function drawItems_Composist(graph, allComponents, myMap) {
+
+			nodeType1 = "style=filled, fillcolor=grey";
+			 nodeType2 = "";
 
 
 			var size = Object.keys(allComponents).length; 
@@ -544,7 +631,8 @@
 					var UUID = component[j];
 					console.log(UUID);
 					if(myMap.has(UUID)){
-						graph += myMap.get(UUID) + " ;";
+						graph += myMap.get(UUID) + "[style=filled, fillcolor=grey]" + ";";
+						//graph += myMap.get(UUID) + " ;";
 					}
 				}
 				graph += "}";
