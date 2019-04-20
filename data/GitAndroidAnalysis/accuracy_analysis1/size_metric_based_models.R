@@ -73,6 +73,9 @@ m_predict.sloc <- function(sloc, testData){
 
 #define the ln_sloc model
 m_fit.ln_sloc <- function(ln_sloc, dataset){
+  dataset <- dataset[dataset$KSLOC!=0 & dataset$Effort != 0,]
+  print(dataset$SLOC)
+  print(dataset$Effort)
   dataset$log_effort = log(dataset$Effort)
   dataset$log_sloc = log(dataset$KSLOC)
   ln_sloc$m = lm(log_effort~log_sloc, data=dataset)

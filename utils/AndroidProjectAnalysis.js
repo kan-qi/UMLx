@@ -19,6 +19,8 @@ var FileManagerUtil = require("./FileManagerUtils.js");
 var RScriptExec = require('./RScriptUtil.js');
 var LogFilter = require('./AndroidLogFilter.js');
 var config = require("../config.js");
+var stringSimilarity = require('string-similarity');
+
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
@@ -304,15 +306,24 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+//var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
 
 // or load the modelOutputDirs from the json file
 
-//var modelOutputDirs = []
-//for(var i in repo.projectList){
-//    var projectInfo = repo.projectList[i]
-//    modelOutputDirs.push(repo.projectList[i].path+"/"+repo.projectList[i].tag)
-//}
+var modelOutputDirs = []
+for(var i in repo.projectList){
+    var projectInfo = repo.projectList[i]
+    modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag)
+}
+
+var onlineProjectData = FileManagerUtil.loadCSVFileSync(repo.repoDir+"/project_list_online.csv", true);
+var onlineProjects = [];
+var onlineProjectsIndex = {};
+for(var i in onlineProjectData){
+    var onlineProject = onlineProjectData[i];
+    onlineProjects.push(onlineProject.Project);
+    onlineProjectsIndex[onlineProject.Project] = i;
+}
 
 var transactionFiles = [];
 var filteredTransactionFiles = [];
@@ -326,7 +337,7 @@ for(var i in modelOutputDirs){
   //code here using lines[i] which will give you each line
 	var modelOutputDir = modelOutputDirs[i];
 
-	if(modelOutputDir === ""){
+	if(modelOutputDir === "" || !FileManagerUtil.existsSync(modelOutputDir)){
 		continue;
 	}
 	
@@ -349,22 +360,48 @@ for(var i in modelEvaluationContents){
 	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
 	  if(i == 0){
 		  modelEvaluationConsolidation += modelEvaluationLines[0]+","+"transaction_file";
+	   if(onlineProjectData){
+	        for(var k in onlineProjectData[0]){
+                           modelEvaluationConsolidation += ","+k;
+            }
+      	}
 	  }
+
+
 		  for(var j = 1; j < modelEvaluationLines.length; j++){
 		  if(modelEvaluationLines[j] === ""){
 			  continue;
 		  }
 
 		  modelEvaluationConsolidation += "\n"+modelEvaluationLines[j]+","+filteredTransactionFiles[i];
-		  
+
+          if(onlineProjectData){
+		  var fields = modelEvaluationLines[j].split(",");
+		  if(fields){
+		    var project = fields[1].substring(0, fields[1].indexOf("_"));
+            var matchedOnlineProject = {};
+            if(onlineProjects.length>0){
+            		var matches = stringSimilarity.findBestMatch(project, onlineProjects);
+            		if(matches.bestMatch.rating > 0.5){
+            		matchedOnlineProject  =  onlineProjectData[onlineProjectsIndex[matches.bestMatch.target]];
+            		}
+            }
+
+            for(var k in matchedOnlineProject){
+                    modelEvaluationConsolidation += ",\""+ matchedOnlineProject[k]+"\"";
+            }
 		  }
+		  }
+
+		  }
+
+
 }
 	  
 FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations.csv", modelEvaluationConsolidation);
 
 var effortEstimationContents = FileManagerUtil.readJSONFilesSync(effortEstimationFiles);
 var effortEstimationConsolidation = "project, eucp, exucp, ducp";
-console.log(effortEstimationFiles)
 for(var i = 0 ; i < effortEstimationContents.length; i++){
 	     if(i%3 == 0){
 	        effortEstimationConsolidation += "\n"+modelOutputDirs[i/3]+",";
@@ -373,7 +410,9 @@ for(var i = 0 ; i < effortEstimationContents.length; i++){
 	         effortEstimationConsolidation += ",";
 	     }
 
+          if(effortEstimationContents[i]){
 		  effortEstimationConsolidation += effortEstimationContents[i].Effort;
+		  }
 }
 
 FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "estimationResults.csv", effortEstimationConsolidation);

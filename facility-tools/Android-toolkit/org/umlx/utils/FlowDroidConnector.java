@@ -51,7 +51,7 @@ public class FlowDroidConnector {
         String flowDroidCallbacksPath = outputDir+"/flowdroid-callbacks.json";
 
         String workDir = System.getProperty("user.dir");
-        String classPath = workDir+"/out/production/Android-toolkit:"+workDir+"/libs/*";
+        //String classPath = workDir+"/out/production/Android-toolkit:"+workDir+"/libs/*";
 
         try {
 //          org.umlx.utils.CommandLine.run("java -cp \"out/production/Android-toolkit;libs/*\" org.umlx.utils.FlowDroidConnector \""+project+"\" \""+sdkDir+"\" \""+outputDir+"\"");

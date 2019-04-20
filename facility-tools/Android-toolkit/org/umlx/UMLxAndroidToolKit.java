@@ -101,16 +101,22 @@ public class UMLxAndroidToolKit {
 
         Configs.sdkVer = manifest.targetSdkVersion();
         Configs.appPkg = manifest.getPackageName();
-        if(Configs.appPkg.endsWith(".debug")){
-            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 6);
-        }
+//        if(Configs.appPkg.endsWith(".debug")){
+//            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 6);
+//        }
+//
+//        if(Configs.appPkg.endsWith(".dev")){
+//            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 4);
+//        }
+//
+//        if(Configs.appPkg.endsWith(".amp_library")){
+//            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 12);
+//        }
 
-        if(Configs.appPkg.endsWith(".dev")){
-            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 4);
-        }
-
-        if(Configs.appPkg.endsWith(".amp_library")){
-            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 12);
+        for(String packageSuffix : Configs.excludingSuffice){
+            if(Configs.appPkg.endsWith(packageSuffix)){
+            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - packageSuffix.length());
+            }
         }
 
         File apkFile = new File(Configs.project);

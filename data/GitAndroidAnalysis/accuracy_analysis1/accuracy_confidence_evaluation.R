@@ -73,17 +73,18 @@ for(i in 1:nfold){
 	
 	eval_metrics = c()
 	eval_pred = c()
+	print(i)
 	for(j in 1:nmodels){
 	  modelName <- modelNames[j]
+	  
+	  print(modelName)
 	  
 	  model = fit(trainData, modelNames[j], models[[j]])
 	  
 	  predicted = m_predict(model, testData)
-	  #print(predicted)
 	  
 	  actual = testData$Effort
 	  names(actual) <- rownames(testData)
-	  #print(actual)
 	  
 	  intersectNames <- intersect(names(predicted), names(actual))
 	  
@@ -92,9 +93,6 @@ for(i in 1:nfold){
 	  eval_metric_results = list()
 	  
 	  model_eval_mre = apply(model_eval_predict, 1, mre)
-	  
-	  
-	  #print(modelName)
 	  
 	  model_eval_mre <- na.omit(model_eval_mre)
 	  #print(model_eval_mre)
@@ -152,7 +150,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   # create 10000 samples of size 50
   N <- nrow(dataset)
   #niters <- 10
-  sample_size <- 50
+  sample_size <- as.integer(0.83*N)
   
   niters <- 10000
   
@@ -166,7 +164,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   
   nmodels <- length(modelNames)
   
-  accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
+  accuracy_metrics <- c('mmre','pred15','pred25','pred50', 'mdmre', 'mae')
   
   nmetrics <- length(accuracy_metrics)
   
@@ -191,7 +189,8 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   for (i in 1:niters){
     sampleIndexes <- sample(1:N, size=sample_size)
     # train:test = 40:10
-    trainIndexes <- sample(sampleIndexes, size=40)
+    train_data_size = as.integer(0.8*sample_size)
+    trainIndexes <- sample(sampleIndexes, size=train_data_size)
     
     trainData <- dataset[trainIndexes, ]
     testData <- dataset[-trainIndexes, ]

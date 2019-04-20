@@ -37,16 +37,6 @@ combineData <- function(transactionFiles) {
 	# Returns:
 	#   A data frame containing all the data in all the files.
 	data <- NULL
-#	for(i in 1: nrow(transactionFiles)) {
-#	  filepath <- transactionFiles[i,]
-#		  if (is.null(data)) {
-#			  data <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
-#		  }
-#		  else {
-#			  new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
-#			  data <- rbind(data, new)
-#		  }
-#	}
 	
   	for(i in 1:length(transactionFiles)) {
   	  transactionFile <- transactionFiles[[i]]
@@ -973,20 +963,29 @@ readTransactionData <- function(filePath){
                                                         DETs = numeric())
     }
     cachedTransactionFiles[[filePath]]
-  } 
+  }
   else if(!is.null(cachedTransactionFiles[[filePath]])){
     cachedTransactionFiles[[filePath]]
   }
   else {
-  #filePath = "..\\..\\577 Projects\\12-22\\F13a_City_of_LosAngeles_Public_Safety_Applicant_Resource_Center_2018-11-22@1545546245122_analysis\\filteredTransactionEvaluation.csv"
-  fileData <- read.csv(filePath)
-  if(nrow(fileData) == 0){
+  #filePath = "D:\\AndroidAnalysis\\GatorAnalysisResults\\ClusteringAnalysis-20190418T224936Z-006\\ClusteringAnalysis\\Timber_S1W1L1\\filteredTransactionEvaluation.csv"
+  
+  fileData = NULL
+  tryCatch(fileData <- read.csv(filePath),  error=function(e) fileData = NULL)
+  if(nrow(fileData) == 0 || is.null(fileData)){
     fileData <- data.frame(TL = numeric(),
                TD = numeric(), 
                DETs = numeric())
   }
   else{
-  fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+  if(nrow(fileData) == 1){
+    fileData = apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x))
+    fileData = t(fileData)
+  }
+  else{
+    fileData = apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x))
+  }
+  fileData <- as.data.frame(fileData)
   }
   fileData <- na.omit(fileData)
   cachedTransactionFiles[[filePath]] <<- fileData
@@ -1021,16 +1020,15 @@ loadTransactionData <- function(modelData){
   for (project in projects) {
     filePath <- transactionFileList[project, "transaction_file"]
     fileData <- readTransactionData(filePath)
-    
     transactionFiles[[project]] <- fileData
     numOfTrans = numOfTrans + nrow(fileData)
   }
   
+  cachedTransactionFiles <<- list()
   
   print(numOfTrans)
   
   combined <- combineData(transactionFiles)
-  
   
   #dataSet[["combined"]] <- combined
   #dataSet[["transactionFiles"]] <- transactionFiles
