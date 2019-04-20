@@ -13,13 +13,15 @@
 var path = require('path');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
-var exec = require('child_process').exec;
+var execSync = require('child_process').execSync;
 var AndroidLogUtil = require("./AndroidLogUtil.js");
-var FileManagerUtil = require("./FileManagerUtils.js");
+var FileManagerUtils = require("./FileManagerUtils.js");
 var RScriptExec = require('./RScriptUtil.js');
 var LogFilter = require('./AndroidLogFilter.js');
 var config = require("../config.js");
 var stringSimilarity = require('string-similarity');
+
+var exec = require('child_process').exec;
 
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
@@ -52,33 +54,36 @@ function analyseAndroidApks(projectList, reportDir){
 	
 }
 
-function analyseAndroidProject(projectList, reportDir){
+function analyseAndroidProjectsByPromise(repoInfo){
+    var projectList = repoInfo.projectList;
+    var reportDir = repoInfo.reportDir;
+    var repoDir = repoInfo.repoDir;
 	var reportPath = reportDir + pathSeparator + "analysis-results-folders.txt";
 	global.debugCache = new Object();
-	
+
 	  //use promise to construct the repo objects
     function analyseProject(projectXMI, project, reportDir){
         return new Promise((resolve, reject) => {
-        	
+
         var projectName = project.tag;
         if(!projectName){
         		projectName = ""
         }
-        	
+
    		 let date = new Date();
    	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
    	     analysisDate = analysisDate+"@"+Date.now();
-   	   
+
    	     projectName = projectName + "_"+analysisDate;
-        	
+
 					var outputDir = reportDir + pathSeparator + projectName + "_analysis";
-					
+
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
-        	
+
         	console.log(inputFile);
-        	
-        	mkdirp(outputDir, function(err) { 
+
+        	mkdirp(outputDir, function(err) {
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
         		console.log(inputFile+" doesn't exist.");
@@ -93,31 +98,31 @@ function analyseAndroidProject(projectList, reportDir){
             		return;
         		}
         		console.log("finished sr analysis");
-        		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
+        		FileManagerUtils.appendFile(reportPath, model.OutputDir+"\n", function(message){
             		console.log('analysis finished!');
             		console.log(message);
             		resolve();
         		})
-        		  
+
         	}, project);
-        	
+
         	}
       	  });
         	});
-        	
+
         });
     }
-    
+
     return Promise.all(projectList.map(project=>{
         return analyseProject(project.path + pathSeparator + project.modelFile, project, reportDir);
 
-    
+
     })).then(
         function(){
 			console.log("=============Cache==============");
 			var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 			for (var key in global.debugCache) {
-				mkdirp(OutputDir, function(err) { 
+				mkdirp(OutputDir, function(err) {
 					fs.writeFile(key, global.debugCache[key], function(err){
 						if(err){
 							console.log(err);
@@ -137,7 +142,31 @@ function analyseAndroidProject(projectList, reportDir){
     ).catch(function(err){
         console.log(err);
     });
-	
+
+}
+
+function analyseAndroidProjectsByShellBatch(repoInfo){
+	    var projectList = repoInfo.projectList;
+        var reportDir = repoInfo.reportDir;
+        var repoDir = repoInfo.repoDir;
+
+    for(var i in projectList){
+        var projectInfo = projectList[i];
+            var executionInfo = {
+                reportDir: repoInfo.reportDir,
+                repoDir: repoInfo.repoDir,
+                projectList: [projectInfo]
+            }
+
+            var executionInfoPath = "./debug/executionInfo.json";
+            FileManagerUtils.writeFileSync(executionInfoPath, JSON.stringify(executionInfo));
+
+            //to generate svg file.
+            var command = 'node --max_old_space_size=10240 "./utils/AndroidProjectAnalysis.js" --analyse-android-projects "'+executionInfoPath+'"';
+
+            var child = execSync(command, {stdio: 'inherit'});
+
+    }
 }
 
 function scanRepo(repoListPath, repoRecordPath){
@@ -225,7 +254,7 @@ function generateSlocReport(repoListPath, repoRecordPath){
 var functionSelection = process.argv[2];
 var repoDesPath = process.argv[3];
 
-var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath).trim());
+var repo = JSON.parse(FileManagerUtils.readFileSync(repoDesPath).trim());
 
 //1. create a list of projects:
  		
@@ -240,7 +269,7 @@ if(functionSelection === "--scan-repo"){
 	
 	mkdirp(repoRecordPath, function(err) {
 		  var repoListPath = repoRecordPath + pathSeparator + "repositories.txt";
-		  FileManagerUtil.writeFileSync(repoListPath, projectPaths);
+		  FileManagerUtils.writeFileSync(repoListPath, projectPaths);
 		  scanRepo(repoListPath, repoRecordPath);
 	});
 }
@@ -280,7 +309,12 @@ else if(functionSelection === "--analyse-android-apks"){
 }
 else if(functionSelection === "--analyse-android-projects"){
 	
-analyseAndroidProject(repo.projectList, repo.reportDir);
+analyseAndroidProjectsByPromise(repo)
+
+}
+else if(functionSelection === "--analyse-android-projects-shell-batch"){
+
+analyseAndroidProjectsByShellBatch(repo)
 
 }
 else if(functionSelection === "--filter-logs"){
@@ -306,7 +340,7 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-//var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+//var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
 
 // or load the modelOutputDirs from the json file
 
@@ -316,7 +350,7 @@ for(var i in repo.projectList){
     modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag)
 }
 
-var onlineProjectData = FileManagerUtil.loadCSVFileSync(repo.repoDir+"/project_list_online.csv", true);
+var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_online.csv", true);
 var onlineProjects = [];
 var onlineProjectsIndex = {};
 for(var i in onlineProjectData){
@@ -337,7 +371,7 @@ for(var i in modelOutputDirs){
   //code here using lines[i] which will give you each line
 	var modelOutputDir = modelOutputDirs[i];
 
-	if(modelOutputDir === "" || !FileManagerUtil.existsSync(modelOutputDir)){
+	if(modelOutputDir === "" || !FileManagerUtils.existsSync(modelOutputDir)){
 		continue;
 	}
 	
@@ -354,7 +388,7 @@ for(var i in modelOutputDirs){
 }
 
 
-var modelEvaluationContents = FileManagerUtil.readFilesSync(modelEvaluationFiles);
+var modelEvaluationContents = FileManagerUtils.readFilesSync(modelEvaluationFiles);
 var modelEvaluationConsolidation = "";
 for(var i in modelEvaluationContents){
 	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
@@ -398,9 +432,9 @@ for(var i in modelEvaluationContents){
 
 }
 	  
-FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations.csv", modelEvaluationConsolidation);
+FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations.csv", modelEvaluationConsolidation);
 
-var effortEstimationContents = FileManagerUtil.readJSONFilesSync(effortEstimationFiles);
+var effortEstimationContents = FileManagerUtils.readJSONFilesSync(effortEstimationFiles);
 var effortEstimationConsolidation = "project, eucp, exucp, ducp";
 for(var i = 0 ; i < effortEstimationContents.length; i++){
 	     if(i%3 == 0){
@@ -415,10 +449,10 @@ for(var i = 0 ; i < effortEstimationContents.length; i++){
 		  }
 }
 
-FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "estimationResults.csv", effortEstimationConsolidation);
+FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "estimationResults.csv", effortEstimationConsolidation);
 
 
-var transactionEvaluationContents = FileManagerUtil.readFilesSync(transactionFiles);
+var transactionEvaluationContents = FileManagerUtils.readFilesSync(transactionFiles);
 var transactionEvaluationConsolidation = "";
 
 //console.log(transactionEvaluationContents);
@@ -456,9 +490,9 @@ for(var i in transactionEvaluationContents){
 		  }
 	  
 	  var transactionFilePath = transactionFiles[i];
-	  FileManagerUtil.writeFileSync(filteredTransactionFiles[i],  filteredTransactionEvaluationStr);
+	  FileManagerUtils.writeFileSync(filteredTransactionFiles[i],  filteredTransactionEvaluationStr);
 }
 
-FileManagerUtil.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
+FileManagerUtils.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
 
 }
