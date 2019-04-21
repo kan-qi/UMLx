@@ -414,9 +414,17 @@
 //           +"org.umlx.UMLxAndroidToolKit \""+apkFilePath+"\""
 //           +" \""+outputDir+"\"";
 
-           var command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
+           var command = "";
+           if(project.package){
+           command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
+                      +"org.umlx.UMLxAndroidToolKit \""+apkFilePath+"\""
+                      +" \""+outputDir+"\" "+"\""+project.package+"\"";
+           }
+           else{
+           command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
                       +"org.umlx.UMLxAndroidToolKit \""+apkFilePath+"\""
                       +" \""+outputDir+"\"";
+           }
 		   
 //		 	console.log(outputDir);
 //		   	console.log(command);

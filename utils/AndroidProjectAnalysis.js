@@ -31,9 +31,12 @@ var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 var pathSeparator = "/";
 
 
-function analyseAndroidApks(projectList, reportDir){
+function analyseAndroidApks(repoInfo){
 	console.log("analyse android apks");
-	
+	    var projectList = repoInfo.projectList;
+        var reportDir = repoInfo.reportDir;
+        var repoDir = repoInfo.repoDir;
+
     	let final = [];
 
     	function apkAnalysisList(projectList) {
@@ -142,10 +145,9 @@ function analyseAndroidProjectsByPromise(repoInfo){
     ).catch(function(err){
         console.log(err);
     });
-
 }
 
-function analyseAndroidProjectsByShellBatch(repoInfo){
+function analyseAndroidProjectsShellBatch(repoInfo){
 	    var projectList = repoInfo.projectList;
         var reportDir = repoInfo.reportDir;
         var repoDir = repoInfo.repoDir;
@@ -163,6 +165,30 @@ function analyseAndroidProjectsByShellBatch(repoInfo){
 
             //to generate svg file.
             var command = 'node --max_old_space_size=10240 "./utils/AndroidProjectAnalysis.js" --analyse-android-projects "'+executionInfoPath+'"';
+
+            var child = execSync(command, {stdio: 'inherit'});
+
+    }
+}
+
+function analyseAndroidApksShellBatch(repoInfo){
+	    var projectList = repoInfo.projectList;
+        var reportDir = repoInfo.reportDir;
+        var repoDir = repoInfo.repoDir;
+
+    for(var i in projectList){
+        var projectInfo = projectList[i];
+            var executionInfo = {
+                reportDir: repoInfo.reportDir,
+                repoDir: repoInfo.repoDir,
+                projectList: [projectInfo]
+            }
+
+            var executionInfoPath = "./debug/executionInfo.json";
+            FileManagerUtils.writeFileSync(executionInfoPath, JSON.stringify(executionInfo));
+
+            //to generate svg file.
+            var command = 'node --max_old_space_size=10240 "./utils/AndroidProjectAnalysis.js" --analyse-android-apks "'+executionInfoPath+'"';
 
             var child = execSync(command, {stdio: 'inherit'});
 
@@ -304,7 +330,12 @@ else if(functionSelection === "--calculate-cocomo-estimation-result"){
 }
 else if(functionSelection === "--analyse-android-apks"){
 	
-	analyseAndroidApks(repo.projectList, repo.reportDir);
+	analyseAndroidApks(repo);
+
+}
+else if(functionSelection === "--analyse-android-apks-shell-batch"){
+
+	analyseAndroidApksShellBatch(repo);
 
 }
 else if(functionSelection === "--analyse-android-projects"){
@@ -314,7 +345,7 @@ analyseAndroidProjectsByPromise(repo)
 }
 else if(functionSelection === "--analyse-android-projects-shell-batch"){
 
-analyseAndroidProjectsByShellBatch(repo)
+analyseAndroidProjectsShellBatch(repo)
 
 }
 else if(functionSelection === "--filter-logs"){
@@ -340,15 +371,15 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-//var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
-
+var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+console.log(modelOutputDirs)
 // or load the modelOutputDirs from the json file
 
-var modelOutputDirs = []
-for(var i in repo.projectList){
-    var projectInfo = repo.projectList[i]
-    modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag)
-}
+//var modelOutputDirs = []
+//for(var i in repo.projectList){
+//    var projectInfo = repo.projectList[i]
+//    modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag)
+//}
 
 var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_online.csv", true);
 var onlineProjects = [];

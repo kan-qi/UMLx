@@ -52,7 +52,7 @@ public class UMLxAndroidToolKit {
     }
 
     private static void printUsage(){
-        System.out.println("Incorrect arguments: [0] = apk-file-path, [1] = output-dir");
+        System.out.println("Incorrect arguments: [0] = apk-file-path, [1] = output-dir, [2] = package");
     }
 
     public static void main(String[] args){
@@ -80,6 +80,10 @@ public class UMLxAndroidToolKit {
 //      Configs.sdkDir = args[1];
         Configs.outputDir = args[1];
 
+        if(args.length > 2){
+            Configs.appPkg = args[2];
+        }
+
 
 //        org.umlx.Configs.project = "/mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk";
 //        org.umlx.Configs.sdkDir = "/mnt/f/D/Android_SDK/platforms";
@@ -95,29 +99,24 @@ public class UMLxAndroidToolKit {
         }
 
         if(manifest == null){
-            System.out.println("issues with parsing sdk");
+            System.out.println("issue with parsing manifest file from sdk");
             return;
         }
 
         Configs.sdkVer = manifest.targetSdkVersion();
-        Configs.appPkg = manifest.getPackageName();
-//        if(Configs.appPkg.endsWith(".debug")){
-//            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 6);
-//        }
-//
-//        if(Configs.appPkg.endsWith(".dev")){
-//            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 4);
-//        }
-//
-//        if(Configs.appPkg.endsWith(".amp_library")){
-//            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - 12);
-//        }
 
-        for(String packageSuffix : Configs.excludingSuffice){
-            if(Configs.appPkg.endsWith(packageSuffix)){
-            Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - packageSuffix.length());
+        if(Configs.appPkg == null) {
+            Configs.appPkg = manifest.getPackageName();
+            System.out.println("Parsing package name from manifest.");
+            for (String packageSuffix : Configs.excludingSuffice) {
+                if (Configs.appPkg.endsWith(packageSuffix)) {
+                    Configs.appPkg = Configs.appPkg.substring(0, Configs.appPkg.length() - packageSuffix.length());
+                }
             }
         }
+
+
+        System.out.println(Configs.appPkg);
 
         File apkFile = new File(Configs.project);
         String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
