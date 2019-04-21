@@ -610,9 +610,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
-	console.log("poilkj");
 	var uploadedFile = req.files['uml_file'][0];
-    if (uploadedFile.mimetype == "text/xml") { // xml file
+    if (uploadedFile.mimetype == "text/xml" || path.extname(uploadedFile.originalname) == ".apk") { // xml file or apk file
         var projectInfo = {};
 		projectInfo.distributedSystem = req.body['distributed_system'];
 		projectInfo.responseTime = req.body['response_time'];
@@ -667,6 +666,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
 			modelInfo.projectInfo = projectInfo;
+
+			if (path.extname(uploadedFile.originalname) == ".apk") {
+				modelInfo['apkFile'] = true;
+			}
 	//		console.log('updated model info');
 	//		console.log(modelInfo);
 			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
@@ -675,6 +678,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 					res.end("error");
 					return;
 				}
+				modelInfo.Name = umlModelName
 				console.log("model is extracted");
 				umlEvaluator.evaluateModel(modelInfo, function(){
 					console.log("model analysis complete");
@@ -705,23 +709,6 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 			});
 		});
-    }
-    else if (path.extname(uploadedFile.originalname) == ".apk") { // apk file
-        console.l("apk file found => go to UMLxAndroidAnalyzer.js");
-        androidAnalyzer.analyseAPKGator(
-            uploadedFile.path, 
-            (result, model) => {
-                if (result != true) {
-                	res.send("failed");
-                	console.l("Android APK Analysis failed");
-                }
-                else {
-                	console.l("Android APK Analysis succeed");
-                	res.render('estimationResultPaneSimplified', {estimationResults:model.eucp_lm, modelInfo: model});
-                	//res.send("success");
-                }
-            }
-        );
     }
 });
 
