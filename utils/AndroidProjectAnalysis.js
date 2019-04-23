@@ -371,17 +371,18 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
-console.log(modelOutputDirs)
+//var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+//console.log(modelOutputDirs)
 // or load the modelOutputDirs from the json file
 
-//var modelOutputDirs = []
-//for(var i in repo.projectList){
-//    var projectInfo = repo.projectList[i]
-//    modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag)
-//}
+var modelOutputDirs = []
+for(var i in repo.projectList){
+    var projectInfo = repo.projectList[i];
+    //modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag);
+    modelOutputDirs.push(projectInfo.path+"_"+projectInfo.clusterConfig);
+}
 
-var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_online.csv", true);
+var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_22.csv", true);
 var onlineProjects = [];
 var onlineProjectsIndex = {};
 for(var i in onlineProjectData){
@@ -421,6 +422,8 @@ for(var i in modelOutputDirs){
 
 var modelEvaluationContents = FileManagerUtils.readFilesSync(modelEvaluationFiles);
 var modelEvaluationConsolidation = "";
+var matchedProjectIndex = new Set();
+console.log("matched projects:")
 for(var i in modelEvaluationContents){
 	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
 	  if(i == 0){
@@ -433,23 +436,24 @@ for(var i in modelEvaluationContents){
 	  }
 
 
+          var matchedOnlineProject = {};
 		  for(var j = 1; j < modelEvaluationLines.length; j++){
 		  if(modelEvaluationLines[j] === ""){
 			  continue;
 		  }
 
 		  modelEvaluationConsolidation += "\n"+modelEvaluationLines[j]+","+filteredTransactionFiles[i];
-
           if(onlineProjectData){
 		  var fields = modelEvaluationLines[j].split(",");
 		  if(fields){
-		    var project = fields[1].substring(0, fields[1].indexOf("_"));
-            var matchedOnlineProject = {};
+		    var project = fields[1].substring(0, fields[1].lastIndexOf("_"));
             if(onlineProjects.length>0){
             		var matches = stringSimilarity.findBestMatch(project, onlineProjects);
-            		if(matches.bestMatch.rating > 0.5){
+//            		if(matches.bestMatch.rating > 0.5){
             		matchedOnlineProject  =  onlineProjectData[onlineProjectsIndex[matches.bestMatch.target]];
-            		}
+            		matchedProjectIndex.add(onlineProjectsIndex[matches.bestMatch.target]);
+//            		}
+                    console.log(project+" matched: "+matches.bestMatch.target)
             }
 
             for(var k in matchedOnlineProject){
@@ -459,8 +463,6 @@ for(var i in modelEvaluationContents){
 		  }
 
 		  }
-
-
 }
 	  
 FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations.csv", modelEvaluationConsolidation);
@@ -525,5 +527,15 @@ for(var i in transactionEvaluationContents){
 }
 
 FileManagerUtils.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
+
+
+		  console.log("unmatched projects.");
+		  console.log(matchedProjectIndex);
+		  for(var i in onlineProjects){
+		    if(matchedProjectIndex.has(i)){
+		        continue;
+		    }
+		    console.log(onlineProjects[i]);
+		  }
 
 }

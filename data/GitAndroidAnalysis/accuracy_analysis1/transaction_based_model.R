@@ -956,6 +956,7 @@ cachedTransactionFiles = list()
 readTransactionData <- function(filePath){
   
   if (!file.exists(filePath)) {
+    print(filePath)
     print("file doesn't exist")
     if(is.null(cachedTransactionFiles[[filePath]])){
       cachedTransactionFiles[[filePath]] <<- data.frame(TL = numeric(),
