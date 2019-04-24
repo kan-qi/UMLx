@@ -25,9 +25,9 @@ modelBenchmark <- function(models, dataset){
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
   
   cvResults <- cv(models, dataset, accuracy_metrics)
-  bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
+  #bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(cvResults = cvResults, 
-             bsResults = bsResults,
+             #bsResults = bsResults,
              model_names = names(models),
              accuracy_metrics = accuracy_metrics
              )
@@ -152,7 +152,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   #niters <- 10
   sample_size <- as.integer(0.83*N)
   
-  niters <- 10000
+  niters <- 100
   
   confidence_interval <- 0.83
   
@@ -263,3 +263,4 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   
   ret <- list(bsEstimations = bsEstimations, iterResults = iterResults)
 }
+

@@ -1,11 +1,14 @@
 
 #define the ucp model
 m_fit.ucp <- function(ucp,dataset){
+  print("ucp fit")
   ucp$m = lm(Effort~UCP, data=dataset)
   ucp
 }
 
 m_predict.ucp <- function(ucp, testData){
+  print("ucp predict")
+  print(testData$Effort)
   predict(ucp$m, testData)
 }
 

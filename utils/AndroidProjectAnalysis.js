@@ -391,6 +391,16 @@ for(var i in onlineProjectData){
     onlineProjectsIndex[onlineProject.Project] = i;
 }
 
+
+var useCaseProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/UseCaseAnalysisResults.csv", true);
+var useCaseProjects = [];
+var useCaseProjectsIndex = {};
+for(var i in useCaseProjectData){
+    var useCaseProject = useCaseProjectData[i];
+    useCaseProjects.push(useCaseProject.Project);
+    useCaseProjectsIndex[useCaseProject.Project] = i;
+}
+
 var transactionFiles = [];
 var filteredTransactionFiles = [];
 var modelEvaluationFiles = [];
@@ -423,6 +433,7 @@ for(var i in modelOutputDirs){
 var modelEvaluationContents = FileManagerUtils.readFilesSync(modelEvaluationFiles);
 var modelEvaluationConsolidation = "";
 var matchedProjectIndex = new Set();
+var matchedCseCaseProjectIndex = new Set();
 console.log("matched projects:")
 for(var i in modelEvaluationContents){
 	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
@@ -433,6 +444,12 @@ for(var i in modelEvaluationContents){
                            modelEvaluationConsolidation += ","+k;
             }
       	}
+
+      	 if(useCaseProjectData){
+        	        for(var k in useCaseProjectData[0]){
+                                   modelEvaluationConsolidation += ","+k;
+                    }
+              	}
 	  }
 
 
@@ -453,11 +470,23 @@ for(var i in modelEvaluationContents){
             		matchedOnlineProject  =  onlineProjectData[onlineProjectsIndex[matches.bestMatch.target]];
             		matchedProjectIndex.add(onlineProjectsIndex[matches.bestMatch.target]);
 //            		}
-                    console.log(project+" matched: "+matches.bestMatch.target)
+                    console.log(project+" matched: "+matches.bestMatch.target);
+
+                    //matches for the use case analysis data
+                    var useCaseProjMatches = stringSimilarity.findBestMatch(project, useCaseProjects);
+                    //            		if(useCaseProjMatches.bestMatch.rating > 0.5){
+                                		matchedCseCaseProject  =  useCaseProjectData[useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]];
+                                		matchedCseCaseProjectIndex.add(useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]);
+                    //            		}
+                                        console.log(project+" matched: "+useCaseProjMatches.bestMatch.target)
             }
 
             for(var k in matchedOnlineProject){
                     modelEvaluationConsolidation += ",\""+ matchedOnlineProject[k]+"\"";
+            }
+
+            for(var k in matchedCseCaseProject){
+                                modelEvaluationConsolidation += ",\""+ matchedCseCaseProject[k]+"\"";
             }
 		  }
 		  }
@@ -528,8 +557,7 @@ for(var i in transactionEvaluationContents){
 
 FileManagerUtils.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
 
-
-		  console.log("unmatched projects.");
+		  console.log("unmatched online projects.");
 		  console.log(matchedProjectIndex);
 		  for(var i in onlineProjects){
 		    if(matchedProjectIndex.has(i)){
@@ -537,5 +565,14 @@ FileManagerUtils.writeFileSync(repo.repoDir + pathSeparator + "transactionEvalua
 		    }
 		    console.log(onlineProjects[i]);
 		  }
+
+		  console.log("unmatched use case projects.");
+          		  console.log(matchedCseCaseProjectIndex);
+          		  for(var i in useCaseProjects){
+          		    if(matchedCseCaseProjectIndex.has(i)){
+          		        continue;
+          		    }
+          		    console.log(useCaseProjects[i]);
+          		  }
 
 }

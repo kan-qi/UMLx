@@ -713,8 +713,13 @@ run_metropolis_MCMC1 <- function(regressionData, N, priorB, varianceMatrix, norm
     #the better way of calculating the acceptance rate
     
     probab = exp(update - postP)
+    print("posterior prob:")
+    print(probab)
     
-    if (runif(1) < probab){
+    if(!is.numeric(probab)){
+      chain[i+1, ] = chain[i, ]
+    }
+    else if (runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
       #acceptance = c(acceptance, "accept")
@@ -768,8 +773,10 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
     #print(probab)
     #the better way of calculating the acceptance rate
     
+    print("posterior prob1:")
+    print(probab)
     
-    if (runif(1) < probab){
+    if(is.na(probab) == FALSE & runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
       #acceptance = c(acceptance, "accept")
@@ -1233,6 +1240,7 @@ m_fit.tm1 <- function(swtiii,dataset){
 # for model testing
 m_predict.tm1 <- function(swtiii, testData){
   print("swtiii predict function")
+  print(testData)
   
   #using the means for each esimulation results as the final estimates of the parameters
   swtiii_model <- apply(swtiii$m$paramVals, 2, mean)
