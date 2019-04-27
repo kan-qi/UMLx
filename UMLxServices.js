@@ -1031,9 +1031,6 @@ app.get('/surveyAnalytics', function (req, res){
     // res.sendStatus(200);
 });
 
-
-
-
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
     const worker = fork('./UMLxAnalyzeWorker.js',

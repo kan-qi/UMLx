@@ -328,6 +328,110 @@ else if(functionSelection === "--calculate-cocomo-estimation-result"){
 	});
 	
 }
+else if(functionSelection === "--parse-effort-and-active-personnel"){
+effortRecords = [
+  "EasySoundRecorder.txt",
+  "MLManager.txt",
+  "PhotoAffix.txt",
+  "MovieGuide.txt",
+  "MinimalToDo.txt",
+  "AnotherMonitor.txt",
+  "InstaMaterial.txt",
+  "OmniNotes.txt",
+  "ClipStack.txt",
+  "AntennaPod.txt",
+  "archi.txt",
+  "bitcoin-wallet.txt",
+  "ExoPlayer.txt",
+  "gnucash-android.txt",
+  "iosched.txt",
+  "k-9.txt",
+  "kickmaterial.txt",
+  "NewPipe.txt",
+  "Pedometer.txt",
+  "Phonograph.txt",
+  "pixel-dungeon.txt",
+  "plaid.txt",
+  "qksms.txt",
+  "Shuttle.txt",
+  "Telecine.txt",
+  "turbo-editor.txt",
+  "vlc.txt",
+  "wally.txt",
+  "WordPress-Android.txt",
+  "superCleanMaster.txt",
+  "kickstarter.txt",
+  "FastHub.txt",
+  "materialistic.txt",
+  "owncloud.txt",
+  "santa-tracker.txt",
+  "2048.txt",
+  "Telegram.txt",
+  "Signal.txt",
+  "Mindorks.txt",
+  "shadowsocks.txt",
+  "wikimedia.txt",
+  "SeeWeather.txt",
+  "astrid.txt",
+  "PocketHub.txt",
+  "todotxt.txt",
+  "prey.txt",
+  "iFixit.txt",
+  "manmal.txt",
+  "gauges.txt",
+  "cgeo.txt",
+  "reddit.txt",
+  "AmazeFileManager.txt",
+  "LeafPic.txt",
+  "SimpleCalendar.txt",
+  "AnExplorer.txt",
+  "Timber.txt",
+  "CoCoin.txt",
+  "TravelMate.txt",
+  "KISS.txt",
+  "Android-CleanArchitecture.txt",
+  "DuckDuckGo.txt",
+  "Osmand.txt",
+  "muzei.txt",
+  "dashclock.txt",
+  "Swiftnotes.txt",
+  "mirakel-android.txt",
+  "MaterialAudiobookPlayer.txt",
+  "Kindle.txt"
+  ]
+
+  var dirPath = "/mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/repo_analysis"
+  var filePaths = []
+    for(var i in effortRecords){
+    	 filePaths.push(dirPath+"/"+effortRecords[i]);
+    }
+  var activePersonnel = "project, activePersonnel";
+  var fileContents = FileManagerUtils.readFilesSync(filePaths);
+
+  for(var i in fileContents){
+    var lines = fileContents[i].split(/\r?\n/g);
+    var triggerTimes = 0;
+    var added = false;
+    for(var j in lines){
+        var line = lines[j]
+        if(triggerTimes == 0){
+            if(line === "[1] \"active personnel\""){
+                triggerTimes ++;
+                console.log("trigger times:"+effortRecords[i])
+            }
+        }
+        else if(triggerTimes == 1){
+            activePersonnel += "\n"+effortRecords[i].replace(".txt", "")+","+line.replace(/\[1\]\s/g, "");
+            added = true;
+            break;
+        }
+    }
+    if(!added){
+    activePersonnel += "\n"+effortRecords[i].replace(".txt", "")+","+"no found";
+    }
+  }
+	FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "effortRecords.csv",activePersonnel);
+}
 else if(functionSelection === "--analyse-android-apks"){
 	
 	analyseAndroidApks(repo);
@@ -382,7 +486,7 @@ for(var i in repo.projectList){
     modelOutputDirs.push(projectInfo.path+"_"+projectInfo.clusterConfig);
 }
 
-var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_22.csv", true);
+var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
 var onlineProjects = [];
 var onlineProjectsIndex = {};
 for(var i in onlineProjectData){

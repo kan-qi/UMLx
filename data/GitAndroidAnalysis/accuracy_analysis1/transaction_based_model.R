@@ -1032,8 +1032,6 @@ loadTransactionData <- function(modelData){
     numOfTrans = numOfTrans + nrow(fileData)
   }
   
-  cachedTransactionFiles <<- list()
-  
   print(numOfTrans)
   
   combined <- combineData(transactionFiles)
@@ -1083,7 +1081,6 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
   distParams[['DETs']] = list(shape=1.6647412, rate=0.1691911);
   
-
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
   
