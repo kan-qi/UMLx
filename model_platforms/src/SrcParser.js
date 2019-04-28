@@ -235,9 +235,10 @@
 
             dependencyGraphDrawer.drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, componentInfo, Model.OutputDir);
 
-
-
             dependencyGraphDrawer.drawCompositeClassDependencyGraph(codeAnalysisResults, Model.OutputDir);
+
+            dependencyGraphDrawer.drawCompositeClassDependencyGraphByComponent(codeAnalysisResults, componentInfo, Model.OutputDir);
+
 			
 	}
 
