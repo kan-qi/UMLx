@@ -12,6 +12,7 @@ source("utils/model_funcs.R")
 source("accuracy_confidence_evaluation.R")
 source("transaction_based_model.R")
 source("size_metric_based_models.R")
+source("neuralnet_model_1.R")
 library(jsonlite)
 library(reshape)
 library(tidyverse)
@@ -24,15 +25,23 @@ require(MASS)
 ```
 Combined Data Effort Values
 ```{r descriptive statistics, fig.width=5,fig.height=2.5}
+#The previous dataset
 #modelData <- selectData("dsets/modelEvaluations-1-3.csv")
-modelData <- selectData("dsets/android_dataset_4_23.csv")
+#The current dataset
+modelData <- selectData("dsets/android_dataset_4_26.csv")
 rownames(modelData) <- modelData$Project
 modelData$Project <- NULL
 ```
 
 #load the comparative models. Each model for comparison should include two functions for evaluateion:
-#1. model_train(dataset)
-#2. model_predict(dataset)
+#1. m_fit(params, trainSet)
+# params: a list of hyper parameters
+# trainSet: the training dataset
+#2. m_predict(model, testSet)
+# model: the trained model
+# testSet: the testing Set
+
+# After create the two functions, register your model into the "models" list, as shown beblow, with a list of hyper-parameters indexed with the model name.
 
 ```{r swtiii, warning = FALSE}
 
@@ -40,15 +49,20 @@ modelData$Project <- NULL
 
 models = list()
 
-#first perform model search for the swtiii hypter parameters, for example, the cut points.
-SWTIIIresults <- performSearch(1, modelData, c("TL", "TD", "DETs"))
+#first perform model search for the swtiii hypter parameters, for example, the gamma distribution fitting parameters and the cut points.
+#cachedTransactionFiles = list()
+##SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
 #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
-SWTIIIModelSelector <- 1
-models$tm1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
+##SWTIIIModelSelector <- 4
+#register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
+##models$tm1 = trainsaction_based_model(SWTIIIresults, SWTIIIModelSelector)
 
 #initialize the size metric based models
-size_models <- size_metric_models()
-models = append(models, size_models)
+##size_models <- size_metric_models()
+#register the list of the size metric based models. 
+##models = append(models, size_models)
+
+##models$neuralnet = neuralnet_model()
 
 #models$ucp = list()
 #models$cocomo = list()
@@ -60,7 +74,7 @@ models = append(models, size_models)
 # 2.create the prediction function by rewriting this following template function
 #  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
 # 3.add your model name into the "models"(above) variable for referencing
-#  models.MODEL_NAME <- list(params...)
+#  models.MODEL_NAME <- list(hyper-params...)
 # examples can be found in the size_metric_based_models.R or transaction_based_model.R
   
 ```

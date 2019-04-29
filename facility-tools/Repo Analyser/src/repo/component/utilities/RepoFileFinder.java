@@ -113,16 +113,18 @@ public class RepoFileFinder {
 	}
 	
 	private String getRepoDirNameByPath(String repoPath){
-		 String repoDirName = repoPath.replaceAll("[:\\s\\\\]", "_");
+		 String repoDirName = repoPath.replaceAll("[/\\:\\s\\\\]", "_");
 			int startPoint = repoDirName.length() - 24 > 0? repoDirName.length() - 24 : 0;
 			repoDirName = repoDirName.substring(startPoint, repoDirName.length());
 			return repoDirName;
 	}
 
 	public Map<String, String> findFiles(List<String> repoPaths) throws IOException{
+		//System.out.println("Hello");
 		Map<String, String> fileLists = new HashMap<String, String>();
 		for(String repoPath : repoPaths){
 		String repoDirName = this.getRepoDirNameByPath(repoPath);
+		//System.out.println(repoDirName);
 		File repoDir = new File(outputDirPath+"\\"+repoDirName);
 		if(!repoDir.exists() || ! repoDir.isDirectory() ){
 			repoDir.mkdir();
