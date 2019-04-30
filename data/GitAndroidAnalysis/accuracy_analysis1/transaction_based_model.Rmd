@@ -455,6 +455,19 @@ ggplot(meltAvgPreds_DUCP_UCP_FP) + theme_bw() +
 save the parameters to file
 ```{r save parameters, warning = FALSE}
 
+# draw the postrior distributions of the parameters
+ # run metropolis-hasting algorithm to simulate the posterior probability
+  #
+  # Args:
+  #   regressionData: the classified transactions
+  #   N: the number of runs of simulation
+  #   priorB: the prior expected value of weights
+  #   varianceMatrix: the variance matrix for the weights
+  #   effortAdj: the prior effort adjustment factor
+  #
+  # Returns:
+  #   the simulated posterior joint distribution of the parameters
+
 #source("transaction_weights_calibration3.R")
 trainedModels = list()
 trainedModels[["SWTIIIModel"]] = SWTIIIresults[[SWTIIIModelSelector]]

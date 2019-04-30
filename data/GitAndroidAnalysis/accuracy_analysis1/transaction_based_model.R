@@ -1,13 +1,13 @@
 # This script performs search for the optimal model in predicting effort from
 # software size. The measure of software size used is the sum of weighted
 # transactions calculated in the following manner:
-# 1. Discretize the transaction data based on quantiles of a normal distribution
+# 1. Discretize the transaction data based on quantiles of gamma distributions
 #    obtained from aggregate data.
 # 2. Classify each transaction based on the quantiles it falls in.
 # 3. Count the number of points that fall into each quantile and apply weights.
 # 4. Sum all the weights.
 # This script determines the optimal number of bins and the weights to apply
-# using Bayesian linear regression and k-fold cross validation.
+# using matropolis-hasting algorithm to simulate posterior distributions and k-fold cross validation.
 #
 # Usage:
 #   1. Put all the transaction analytics files into a folder.
@@ -36,6 +36,7 @@ combineData <- function(transactionFiles) {
 	#
 	# Returns:
 	#   A data frame containing all the data in all the files.
+  
 	data <- NULL
 	
   	for(i in 1:length(transactionFiles)) {
@@ -44,21 +45,25 @@ combineData <- function(transactionFiles) {
   	    data <- transactionFile
   	  }
   	  else {
-  	    #new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
   	    data <- rbind(data, transactionFile)
   	  }
   	}
 	
 	data <- data.frame(apply(data, 2, function(x) as.numeric(x)))
 	data <- na.omit(data)
-	#data <- data[!is.na(data$TL), ]
-	#data <- data[!is.na(data$TD), ]
-	#data <- data[!is.na(data$DETs), ]
 	data
 }
 
 
 empiricalStats <- function(data){
+  # summarize the distribution parameters 
+  #
+  # Args:
+  #   data: a data set for the empirical distribution.
+  #
+  # Returns:
+  #   the parameters of the empirical distribution.
+  
   c(m = mean(data),
   s = sd(data),
   v = var(data),
@@ -67,44 +72,28 @@ empiricalStats <- function(data){
 }
 
 parametricKStest <- function(dist){
-  
-  #dist <- combined[, "TD"]
-  #dist <- combined[, "TL"]
-  #dist <- combined[, "DETs"]
+  # perform parametric kermogorov smirnov test for goodness of fit of gamma distribution. 
+  #
+  # Args:
+  #   dist: an empirical distribution to perform goodness of fit test
+  #
+  # Returns:
+  #   the p-value of k-s test
   
   tableValues <- table(dist)
   
-  #reduce sizes for fitting with gamma curve
-  #print(as.integer(tableValues/10))
-  
-  #dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
   dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
   
   #fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
   fit.gamma <- fitdist(dist, distr = "gamma")
-  plot(fit.gamma)
-  
-  fit.weibull <- fitdist(dist, "weibull")
-  plot(fit.weibull)
-  
-  fit.lognormal <- fitdist(dist, "lnorm")
-  plot(fit.lognormal)
+  #fit.weibull <- fitdist(dist, "weibull")
+  #fit.lognormal <- fitdist(dist, "lnorm")
   
   # Check result
   shape = coefficients(fit.gamma)["shape"]
   rate = coefficients(fit.gamma)["rate"]
   
-  print(coefficients(fit.gamma))
-  
-  # testing the goodness of fit.
-  #num_of_samples = length(dist)
-  #y <- rgamma(num_of_samples, shape = shape, rate = rate)
-  #result = ks.test(dist, y)
-  
   ksResult <- ks.test(dist, "pgamma", shape, rate)
-  
-  print("gamma goodness of fit")
-  print(ksResult)
   ks = ksResult[['statistic']]
   
   # iterate 10000 samples for ks-statistics
@@ -141,7 +130,6 @@ parametricKStest <- function(dist){
 
 chisqTest <- function(dist){
   dist <- combined[, "TD"]
-  
   
   tableValues <- table(dist)
   dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
@@ -204,7 +192,6 @@ classify <- function(data, cutPoints) {
   # Returns:
   #   A vector that indicates how many data points fall into each bin.
   #
-  # TODO: Develop a classification scheme for SWTIII (3 variables)
   
   numVariables <- nrow(cutPoints)
   numBins <- ncol(cutPoints) - 1
@@ -271,6 +258,8 @@ crossValidate <- function(data, k, fit_func, predict_func){
   # Args:
   #   data: the data to perform cross-validation with
   #   k: number of folds to use
+  #    fit_func: the fit function based on the datasets
+  #    predict_func: the predict function for unseen cases
   #
   # Returns:
   #   A vector of mean MSE, MMRE, PRED(0.25) for all folds.
@@ -278,8 +267,6 @@ crossValidate <- function(data, k, fit_func, predict_func){
   #data <- regressionData
   #k <- 5
   
-  #data = regressionData;
-  #k = 5;
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
   foldMMRE <- vector(length = k)
@@ -335,11 +322,11 @@ genMeans <- function(n) {
   #
   # Returns:
   #   A vector of the first n Fibonnaci numbers
+  
   if (n <= 2) {
     return(c(l1 = 1, l2 = 2)[1:n])
   }
   else {
-    #ret <- c(1, 1)
     ret <- c(1, 2)
     while (length(ret) != n) {
       nextFib <- ret[length(ret)] + ret[length(ret) - 1]
@@ -361,6 +348,7 @@ genVariance <- function(mu, varFactor) {
   #
   # Returns:
   #   Covariance matrix for the Gaussian prior
+  
   ret <- matrix(rep(0, length(mu)^2), nrow = length(mu), ncol = length(mu))
   rownames(ret) <- names(mu)
   colnames(ret) <- names(mu)
@@ -381,67 +369,81 @@ genVariance <- function(mu, varFactor) {
 
 ######## likelihood function ################
 likelihood <- function(B, effortAdj, sd, x, y){
+  # Calcuate the likelihood of the weights and effort adjustment factor with respect to the data set (x,y)
+  #
+  # Args:
+  #   B: the weights
+  #   effortAdj: the effort adjustment factor
+  #
+  # Returns:
+  #   the likelihood of B and effortAdj
+  
   #x = regressionData[ , !(names(regressionData) %in% c("Effort"))]
   #y = regressionData[,c("Effort")]
   #B = means
-  #print(as.matrix(x))
-  #print(t(as.matrix(B)))
-  #print(x)
   
-  #print(B)
-  #print(x)
   pred = effortAdj*(as.matrix(x)%*%as.matrix(B))
   
   singlelikelihoods = dnorm(y, pred, sd, log = T)
   sumll = sum(singlelikelihoods)
-  #print("sumll")
-  #print(sumll)
+  
   return(sumll)   
 }
 
 ######## prior function ################
 prior <- function(sample, B, varianceMatrix, effortAdj, var){
+  # Calcuate the prior probability of the weights and effort adjustment factor
+  #
+  # Args:
+  #   sample: the sampled weights and effort adjustment factor
+  #   B: the expected values for the weights
+  #   varianceMatrix: the variance matrix for the weights
+  #   effortAdj: the expected value for effort adjustment factor
+  #   var: the variance of the effort adjustment factor
+  #
+  # Returns:
+  #   the prior probability of the weights and effort adjustment factor
   
   prior <- rep(0, 3)
   names(prior) <- c("effortAdj", "priorB", "sd")
-  #prior['effortAdj'] = dnorm(sample["effortAdj"], effortAdj, sd=sqrt(var), log=T)
-  prior['effortAdj'] = dunif(sample["effortAdj"], min=0, max=2000, log = T)
-  #print(prior)
-  #print(sample)
-  #print("norm factor prior prob")
-  #print(prior['effortAdj'])
   
-  #B = c(1, 3)
-  #names(B) = c("l1", "l2")
-  #sample = c(5, 6)
-  #names(sample) = names(B)
-  #varianceMatrix <- matrix(rep(0, length(B)^2), nrow = length(B), ncol = length(B))
-  #varianceMatrix[1, 1] = 0.5
-  #varianceMatrix[2, 2] = 0.8
+  #the prior probability of effort adjustment factor under uniform distribution
+  #prior['effortAdj'] = dnorm(sample["effortAdj"], effortAdj, sd=sqrt(var), log=T)
+  prior['effortAdj'] = dunif(sample["effortAdj"], min=0, max=20000, log = T)
+  
+  #the prior probability of weights under multi-variate norm distribution
   prior["priorB"] <- dmvnorm(sample[names(B)], B, varianceMatrix, log=T)
-  #print("b prior prob")
-  #print(prior[names(B)])
-  #prior['sd'] <- dinvgamma(sample["sd"], 0.1, 0.1, log=T)
-  #prior['sd'] <- dunif(sample["sd"], min=0, max=30, log = T)
+  
   #Jeffrey's prior
   prior['sd'] <- log(1/sample['sd'])
+  #prior['sd'] <- dinvgamma(sample["sd"], 0.1, 0.1, log=T)
+  #prior['sd'] <- dunif(sample["sd"], min=0, max=30, log = T)
   
   jointPrior <- (prior['effortAdj']+prior['priorB']+prior['sd'])
   names(jointPrior) <- NULL
-  
-  #print("join prior")
-  #print(sample)
-  #print(prior)
   
   return(jointPrior)
 }
 
 ######## posterior function ################
 posterior <- function(sample, B, varianceMatrix, effortAdj, var, x, y){
+  # Calcuate the posterior probability of the weights and effort adjustment factor
+  #
+  # Args:
+  #   sample: the sampled weights and effort adjustment factor
+  #   B: the expected values for the weights
+  #   varianceMatrix: the variance matrix for the weights
+  #   effortAdj: the expected value for effort adjustment factor
+  #   var: the variance of the effort adjustment factor
+  #
+  # Returns:
+  #   the posterior probability of the weights and effort adjustment factor based on their likelihood and prior probability.
+  
   #sample = proposal
   #B = priorB
   #x = regressionData[ , !(colnames(regressionData) %in% c("Effort"))]
   #y = regressionData[,c("Effort")]
+  
   priorb = prior(sample, B, varianceMatrix, effortAdj, var)
   likeh = likelihood(sample[names(B)], sample['effortAdj'], sample['sd'], x, y)
   return  (likeh + priorb)
@@ -450,18 +452,27 @@ posterior <- function(sample, B, varianceMatrix, effortAdj, var, x, y){
 ######## Metropolis algorithm ################
 
 proposalfunction <- function(B, effortAdj, sd){
+  # propose a random move based on previous state under certain probabilities
+  #
+  # Args:
+  #   B: the previous weights
+  #   effortAdj: the previous effort adjustment factor
+  #   sd: the previous standard deviation of the residual
+  #
+  # Returns:
+  #   the next random state
+  
   #sd <- 10
   sample <- rep(0, 2*length(B)+2)
   names(sample) <- c(names(B), paste(names(B), "sigma", sep="_"), "effortAdj", "sd")
   
   sigma <- c(0.1)
   if(length(B)>1){
-  for (i in 2:length(B)) {
-    sigma <- c(sigma, 1/5* (abs(B[i] - B[i - 1]))+0.1)
+    for (i in 2:length(B)) {
+      sigma <- c(sigma, 1/5* (abs(B[i] - B[i - 1]))+0.1)
+    }
   }
-  }
-  #print(sigma)
-  #sigma <- rep(0.1, length(B))
+  
   sample[names(B)] <- rnorm(length(B),mean = B, sd = sigma)
   sample["effortAdj"] <- rnorm(1, effortAdj, 0.1)
   sample['sd'] <- rnorm(1, sd, 3)
@@ -470,20 +481,20 @@ proposalfunction <- function(B, effortAdj, sd){
 }
 
 proposalProbability <- function(x1, x2){
+  # calculate the proposal probability
   #
-  # return the proposal probability g(x1|x2)
+  # Args:
+  #   x1: the current state
+  #   x2: the proposed state
   #
+  # Returns:
+  #   the proposal probability g(x1|x2)
+  
   #x1 = chain[1,]
   #x2 = proposal
   
   levels <- paste("l", seq(1:((length(x1)-2)/2)), sep="");
   
-  #print(levels)
-  #print(x1)
-  #print(x2)
-  #print(x1[levels])
-  #print(x2[levels])
-  #print(x2[paste(levels, "sigma", sep="_")])
   probB <- sum(dnorm(x1[levels],mean = x2[levels], sd = x2[paste(levels, "sigma", sep="_")], log = T))
   probeffortAdj <- dnorm(x1["effortAdj"], x2["effortAdj"], 0.1, log=T)
   probSD <- dnorm(x1["sd"], x2["sd"], log=T)
@@ -492,6 +503,17 @@ proposalProbability <- function(x1, x2){
 }
 
 run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, effortAdj){
+  # run metropolis-hasting algorithm to simulate the posterior probability
+  #
+  # Args:
+  #   regressionData: the classified transactions
+  #   N: the number of runs of simulation
+  #   priorB: the prior expected value of weights
+  #   varianceMatrix: the variance matrix for the weights
+  #   effortAdj: the prior effort adjustment factor
+  #
+  # Returns:
+  #   the simulated posterior joint distribution of the parameters
   
   #regressionData <- regressionData
   #N <- 10000
@@ -499,8 +521,6 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, effor
   #varianceMatrix <- covar
   
   chain = matrix(nrow=N+1, ncol=2*length(priorB)+2)
-  
-  #print(paste(names(priorB), "sigma", sep="_"))
   
   colnames(chain) <- c(names(priorB), paste(names(priorB), "sigma", sep="_"), "effortAdj", "sd")
   
@@ -515,8 +535,7 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, effor
     }
   }
   chain[1, paste(names(priorB), "sigma", sep="_")] = sigma
-  #probabs <- c()
-  #acceptance <- c()
+  
   for (i in 1:N){
     proposal = proposalfunction(chain[i,names(priorB)], chain[i,"effortAdj"], chain[i, "sd"])
     #proposal = sample
@@ -524,13 +543,9 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, effor
     update <- posterior(proposal, priorB, varianceMatrix, effortAdj['mean'], effortAdj['var'], regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
     postP <- posterior(chain[i,], priorB, varianceMatrix, effortAdj['mean'], effortAdj['var'], regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
     probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - postP - proposalProbability(proposal, chain[i, ]))))
-    #probabs = c(probabs, probab)
-    #print(probab)
     #the better way of calculating the acceptance rate
     
-    print("posterior prob1:")
-    print(postP)
-    
+    #acceptance = c()
     if(is.na(probab) == FALSE & runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
@@ -546,6 +561,15 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, effor
 }
 
 bayesfit<-function(regressionData, N = 1000, burnIn = 500){
+  # apply metropolis hastings algorithm to simulate the posterior distributions of the parameters
+  #
+  # Args:
+  #   regressionData: the classified transactions
+  #   N: the number of runs of simulation
+  #   burnIn: the first number of iterations which are regarded as burn-in
+  #
+  # Returns:
+  #   the simulated posterior distributions of the parameters
   
   #regressionData <- regressionData
   #N <- 1000
@@ -566,19 +590,6 @@ bayesfit<-function(regressionData, N = 1000, burnIn = 500){
   ret <- data.frame(chain[-(1:burnIn), names(B)], chain[-(1:burnIn),"effortAdj"], chain[-(1:burnIn),"sd"])
   colnames(ret) <- c(names(B), "effortAdj", "sd")
   
-  #par(mfrow = c(2,3))
-  #hist(chain[-(1:burnIn),1],nclass=30, , main="Posterior of a", xlab="True value = red line" )
-  #abline(v = mean(chain[-(1:burnIn),1]))
-  #hist(chain[-(1:burnIn),2],nclass=30, main="Posterior of b", xlab="True value = red line")
-  #abline(v = mean(chain[-(1:burnIn),2]))
-  #hist(chain[-(1:burnIn),3],nclass=30, main="Posterior of sd", xlab="True value = red line")
-  #abline(v = mean(chain[-(1:burnIn),3]) )
-  #plot(chain[-(1:burnIn),1], type = "l", xlab="True value = red line" , main = "Chain values of a", )
-  #plot(chain[-(1:burnIn),2], type = "l", xlab="True value = red line" , main = "Chain values of b", )
-  #plot(chain[-(1:burnIn),3], type = "l", xlab="True value = red line" , main = "Chain values of sd", )
-  
-  #print(acceptance)
-  
   return(ret)
   
 }
@@ -590,7 +601,8 @@ Bayes.sum<-function(x) {
 	#   x: a column of the data frame returned by the bayesfit() function
 	#
 	# Returns:
-	#   A vector containing the summary 
+	#   A vector containing the summary
+  
 	c("mean"=mean(x),
 			"se"=sd(x),
 			"t"=mean(x)/sd(x),
@@ -630,6 +642,13 @@ predict.blm <- function(model, newdata) {
 }
 
 calEffortAdj <- function(regressionData){
+  # calcuate an approximation of effort adjustment factor based on classified transactions
+  #
+  # Args:
+  #   regressionData: the classified transaction and effort data
+  #
+  # Returns:
+  #   an approximation of effort adjustment factor based on linear regression with prior weights
   
   summary <- summary(priorFit(regressionData))
   print(summary)
@@ -638,9 +657,15 @@ calEffortAdj <- function(regressionData){
 }
 
 priorFit <- function(regressionData){
-  nominalWeights <- genMeans(ncol(regressionData)-1)
-  nominalWeights <- as.matrix(nominalWeights)
-  #print(nominalWeights)
+  # fit a linear model using the same of weighted transaction. The weights are prior weights.
+  #
+  # Args:
+  #   regressionData: the classified transaction and effort data
+  #
+  # Returns:
+  #   the fitted linear model using the prior weights
+  
+  nominalWeights <- as.matrix(genMeans(ncol(regressionData)-1))
   transactionData <- as.matrix(regressionData[, !(colnames(regressionData) %in% c("Effort"))])
   transactionSum <-  transactionData %*% nominalWeights 
   transactionRegressionData <- matrix(nrow = nrow(regressionData), ncol=2)
@@ -654,6 +679,13 @@ priorFit <- function(regressionData){
 
 cachedTransactionFiles = list()
 readTransactionData <- function(filePath){
+  # read the transaction data from the file.The transaction data are cached in cachedTransactionFiles for better performance in cross-validation and boostrapping process.
+  #
+  # Args:
+  #   regressionData: the classified transaction and effort data
+  #
+  # Returns:
+  #   the fitted linear model using the prior weights
   
   if (!file.exists(filePath)) {
     print(filePath)
@@ -696,6 +728,13 @@ readTransactionData <- function(filePath){
 }
 
 loadTransactionData <- function(modelData){
+  # load the transaction data from the transaction file paths column of model data
+  #
+  # Args:
+  #   modelData: the model data with various fields to describe a project and a colum to reference the associated transaction data
+  #
+  # Returns:
+  #   the transaction data for each project
   
   modelData$transaction_file <- as.character(modelData$transaction_file)
   
@@ -721,14 +760,22 @@ loadTransactionData <- function(modelData){
   
   combined <- combineData(transactionFiles)
   
-  #dataSet[["combined"]] <- combined
-  #dataSet[["transactionFiles"]] <- transactionFiles
-  
   transactionData = list(combined=combined, transactionFiles = transactionFiles, effort = effort, projects=projects)
 }
 
 
 generateRegressionData <- function(projects, cutPoints, effortData, transactionFiles){
+  # classified the transactions into different levels of complexity for regression analysis
+  #
+  # Args:
+  #   projects: the projects
+  #   cutPoints: the cut points that define the classification of the transactions.
+  #   effortData: the effort for the projects
+  #   transactionFiles: the tranaction records for the projects
+  #
+  # Returns:
+  #   the numbers of transactions for different complexity levels and project effort.
+  
   nParams =  nrow(cutPoints)
   nBins =   ncol(cutPoints)-1
   levels = genColNames(nParams, nBins)
@@ -836,6 +883,16 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
 #SWTIresults <- performSearch(3, effort, c("TL"))
 
 predict.swt <- function(trainedModel, testData){
+  # predict the effort based on a data point
+  #
+  # Args:
+  #   trainedModel: the trained transaction-based model
+  #   testData: the data point used to predict project effort
+  #
+  # Returns:
+  #   the estimated project effort
+  
+  
   #trainedModelParameters <- readRDS(file="train_model_parameters.rds")
   
   transactionData <- loadTransactionData(testData)
@@ -853,6 +910,15 @@ predict.swt <- function(trainedModel, testData){
 }
 
 m_fit.tm1 <- function(swtiii,dataset){
+  # the model fitting function which would be repeated called during the cross validation and bootstrapping function
+  #
+  # Args:
+  #   swtiii: a list of cut points, which are the hyper parameters of the transaction-based model.
+  #   dataset: the dataset based on which the model is fitted
+  #
+  # Returns:
+  #   the fitted transaction-based model
+  
   print("swtiii model training")
   #swtiii <- models$tm1
   #dataset <- modelData
@@ -876,19 +942,28 @@ m_fit.tm1 <- function(swtiii,dataset){
 
 # for model testing
 m_predict.tm1 <- function(swtiii, testData){
+  # the model fitting function which would be repeated called during the cross validation and bootstrapping function
+  #
+  # Args:
+  #   swtiii: a list of cut points, which are the hyper parameters of the transaction-based model.
+  #   dataset: the dataset based on which the model is fitted
+  #
+  # Returns:
+  #   the fitted transaction-based model
+  
   print("swtiii predict function")
-  #print(swtiii)
-  #testData <- modelData
-  #using the means for each esimulation results as the final estimates of the parameters
-  #No need for calculating mean here: swtiii_model <- apply(swtiii$m$paramVals, 2, mean)
   
   predict.swt(swtiii$m, testData)
 }
 
-trainsaction_based_model <- function(analysisResults, modelSelector){
-  # for model training
+trainsaction_based_model <- function(modelData){
+  # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
+  #cachedTransactionFiles = list()
+  SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  SWTIIIModelSelector <- 4
  
-  modelParams = analysisResults[[modelSelector]][["bayesModel"]]
+  modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
   swtiiiParams = list(
     cuts = modelParams$cuts
   )
