@@ -346,11 +346,11 @@ function predict_project_effort_func(show_loading_screen = true) {
         document.getElementById("loadingScreen").classList.remove("hidden");
     }
 
-
+    
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
-        url: "predictProjectEffort",
+        url: "uploadUMLFile",
         cache: false,
         processData: false, // Don't process the files
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request

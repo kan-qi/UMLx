@@ -694,7 +694,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	                    console.log(estimationResults);
 
 	                    modelInfo[estimationModel] = estimationResults;
-	                    modelInfo.repo_id = repoInfo._id;
+						modelInfo.repo_id = repoInfo._id;
 
 	                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
@@ -709,7 +709,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 			});
 		});
-    }
+	}
 });
 
 // console.l = console.log;
@@ -1019,8 +1019,8 @@ app.get('/surveyAnalytics', function (req, res){
 
 
 
-app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
-    { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
+app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { name: 'uml_other', maxCount: 1 },
+    { name: 'uml_model_name', maxCount: 1 }, { name: 'uml_model_type', maxCount: 1 }, { name: 'repo_id', maxCount: 1 }]), function (req, res) {
     const worker = fork('./UMLxAnalyzeWorker.js',
 		[],
         {

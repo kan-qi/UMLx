@@ -20,7 +20,6 @@
 	
 	
 	function extractModelInfo(umlModelInfo, callbackfunc){
-		console.log(callbackfunc);
 		var constructModel = null;
         if(umlModelInfo.apkFile){
         	constructModel = function(modelParser, modelString, umlModelInfo, callback){
