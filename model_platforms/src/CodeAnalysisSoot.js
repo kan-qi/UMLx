@@ -389,10 +389,7 @@
 					name: attrUnit.name +":attrDependency",
 					UUID: attrUnit.UUID,
 					attr: attrUnit,
-					component: {
-						name: classUnit.name,
-						classUnit: classUnit.UUID
-					},
+					component: classUnit,
 				}
 				nodesAttrByID[startNode.UUID] = startNode;
 			}
@@ -402,10 +399,7 @@
 			if(!endNode){
 			endNode = {
 					name: targetClassUnit.name,
-					component: {
-						name: targetClassUnit.name,
-						classUnit: targetClassUnit.UUID
-					},
+					component: targetClassUnit,
 					UUID: targetClassUnit.UUID
 			}
 			nodesAttrByID[endNode.UUID] = endNode;
@@ -419,10 +413,7 @@
 					name: attrUnit.name +":attrDependency",
 					UUID: attrUnit.UUID,
 					attr: attrUnit,
-					component: {
-						name: compositeClassUnit.name,
-						compositeClassUnit: compositeClassUnit.UUID
-					}
+					component: compositeClassUnit
 				}
 				nodesAttrCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 			}
@@ -432,10 +423,7 @@
 				endNodeComposite = {
 					name: targetCompositeClassUnit.UUID,
 					UUID: targetCompositeClassUnit.name,
-					component: {
-						name: targetCompositeClassUnit.name,
-						compositeClassUnit: targetCompositeClassUnit.UUID
-					}
+					component: targetCompositeClassUnit
 				}
 				nodesAttrCompositeByID[targetCompositeClassUnit.UUID] = endNodeComposite;
 			}
@@ -608,10 +596,7 @@
 							name: methodUnit.signature.name +":returnDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: {
-								name: classUnit.name,
-								classUnit: classUnit.UUID
-							}
+							component: classUnit
 						}
 						nodeReturnByID[startNode.UUID] = startNode;
 					}
@@ -621,10 +606,7 @@
 					if(!endNode){
 					endNode = {
 							name: targetClassUnit.name,
-							component: {
-								name: targetClassUnit.name,
-								classUnit: targetClassUnit.UUID
-							},
+							component: targetClassUnit,
 							UUID: targetClassUnit.UUID
 					}
 					nodeReturnByID[endNode.UUID] = endNode;
@@ -638,10 +620,7 @@
 							name: methodUnit.signature.name +":returnDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: {
-								name: compositeClassUnit.name,
-								compositeClassUnit: compositeClassUnit.UUID
-							}
+							component: compositeClassUnit
 						}
 						nodesReturnCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 					}
@@ -651,10 +630,7 @@
 						endNodeComposite = {
 							name: targetCompositeClassUnit.UUID,
 							UUID: targetCompositeClassUnit.name,
-							component: {
-								name: targetCompositeClassUnit.name,
-								compositeClassUnit: targetCompositeClassUnit.UUID
-							}
+							component: targetCompositeClassUnit
 						}
 						nodesReturnCompositeByID[endNodeComposite.UUID] = endNodeComposite;
 					}
@@ -677,10 +653,7 @@
 							name: methodUnit.signature.name +":paramDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: {
-								name: classUnit.name,
-								classUnit: classUnit.UUID
-							}
+							component: classUnit
 						}
 						nodesParamByID[startNode.UUID] = startNode;
 					}
@@ -689,10 +662,7 @@
 					if(!endNode){
 					endNode = {
 							name: targetClassUnit.name,
-							component: {
-								name: targetClassUnit.name,
-								classUnit: targetClassUnit.UUID
-							},
+							component: targetClassUnit,
 							UUID: targetClassUnit.UUID
 					}
 					nodesParamByID[endNode.UUID] = endNode;
@@ -707,10 +677,7 @@
 							name: methodUnit.signature.name +":paramDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: {
-								name: compositeClassUnit.name,
-								compositeClassUnit: compositeClassUnit.UUID
-							}
+							component: compositeClassUnit
 						}
 						nodesParamCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 					}
@@ -720,10 +687,7 @@
 						endNodeComposite = {
 							name: targetCompositeClassUnit.UUID,
 							UUID: targetCompositeClassUnit.name,
-							component: {
-								name: targetCompositeClassUnit.name,
-								compositeClassUnit: targetCompositeClassUnit.UUID
-							}
+							component: targetCompositeClassUnit
 						}
 						nodesParamCompositeByID[endNodeComposite.UUID] = endNodeComposite;
 					}
@@ -746,10 +710,7 @@
 							name: methodUnit.signature.name +":localDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: {
-								name: classUnit.name,
-								classUnit: classUnit.UUID
-							}
+							component: classUnit
 						}
 						nodesLocalByID[startNode.UUID] = startNode;
 					}
@@ -760,10 +721,7 @@
 					if(!endNode){
 					endNode = {
 							name: targetClassUnit.name,
-							component: {
-								name: targetClassUnit.name,
-								classUnit: targetClassUnit.UUID
-							},
+							component: targetClassUnit,
 							UUID: targetClassUnit.UUID
 					}
 					nodesLocalByID[endNode.UUID] = endNode;
@@ -778,10 +736,7 @@
 							name: methodUnit.signature.name +":localDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: {
-								name: compositeClassUnit.name,
-								compositeClassUnit: compositeClassUnit.UUID
-							}
+							component: compositeClassUnit
 						}
 						nodesLocalCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 					}
@@ -791,10 +746,7 @@
 						endNodeComposite = {
 							name: targetCompositeClassUnit.name,
 							UUID: targetCompositeClassUnit.UUID,
-							component: {
-								name: targetCompositeClassUnit.name,
-								compositeClassUnit: targetCompositeClassUnit.UUID
-							}
+							component: targetClassUnit
 						}
 						nodesLocalCompositeByID[endNodeComposite.UUID] = endNodeComposite;
 					}

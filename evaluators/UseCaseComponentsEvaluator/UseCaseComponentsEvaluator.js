@@ -38,7 +38,7 @@
  * Methods per class (MPC)
  * Number of children (NOC)
  * Depth in Inheritance tree (DIT)
- * Method size (LOC)
+ * Method size (LOC) // no need
  * Coupling Between Objects (CBO)
  * Number of instance variables per class (NIV)
  * Number of unique messages sent (NUM)
@@ -67,7 +67,6 @@
 	var useCaseComponentsProcessor = require('./UseCaseComponentsProcessor.js');
 
 	function toDomainModelEvaluationHeader() {
-//		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 
 		return "Attribute_Num," +
 			"Operation_Num," +
@@ -79,8 +78,8 @@
 			"Depth_Inheritance_Tree," +
 			"para_num,usage_num," +
 			"real_num,assoc_num," +
-			"externaloper_num," +
-			"objectdata_num," +
+			"external_oper_num," +
+			"data_object_num," +
 			"avg_operation," +
 			"avg_attribute," +
 			"avg_parameter," +
@@ -88,8 +87,7 @@
 			"avg_real," +
 			"avg_assoc," +
 			"avg_instVar," +
-			"weightedoper_num," +
-			"method_size";
+			"weighted_oper_num";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
@@ -104,7 +102,7 @@
         + domainModelInfo["ComponentAnalytics"].DepthInheritanceTree + ","
         + domainModelInfo["ComponentAnalytics"].ParameterNum + ","
 		+ domainModelInfo["ComponentAnalytics"].UsageNum + ","
-		+ domainModelInfo["ComponentAnalytics"].RealNum + ","
+	    + domainModelInfo["ComponentAnalytics"].RealNum + ","
 		+ domainModelInfo["ComponentAnalytics"].AssocNum + ","
 		+ domainModelInfo["ComponentAnalytics"].ExternalOperNum + ","
 		+ domainModelInfo["ComponentAnalytics"].ObjectDataNum + ","
@@ -115,8 +113,7 @@
 		+ domainModelInfo["ComponentAnalytics"].AvgReal + ","
 		+ domainModelInfo["ComponentAnalytics"].AvgAssoc + ","
 		+ domainModelInfo["ComponentAnalytics"].AvgInstVar + ","
-		+ domainModelInfo["ComponentAnalytics"].WeightedOperNum + ","
-		+ domainModelInfo["ComponentAnalytics"].MethodSize;
+		+ domainModelInfo["ComponentAnalytics"].WeightedOperNum;
 	}
 
 	// to output the header for data for the use cases.
@@ -153,11 +150,12 @@
 				// element analytics
 				var totalDegree = 0;
 				var activityNum = 0;
-				var actorNum = 0;
-				var boundaryNum = 0;
-				var controlNum = 0;
-				var entityNum = 0;
-				var componentNum = 0;
+
+				var actors = new Set();
+				var boundaryElements = new Set();
+				var controlElements = new Set();
+				var entityElements = new Set();
+				var componentElements = new Set();
 				
 //				var transactionNum = 0;
 
@@ -171,32 +169,55 @@
 						
 						var type = component.Type;
 						if (type === "actor") {
-							actorNum++;
+//							actorNum++;
+                                if(!actors.has(component)){
+                                        actors.add(component);
+                                }
 						} else if (type === "boundary") {
-							boundaryNum++;
+//							boundaryNum++;
+                                if(!boundaryElements.has(component)){
+                                        boundaryElements.add(component);
+                                }
 						} else if (type === "control") {
-							controlNum++;
+//							controlNum++;
+                                if(!controlElements.has(component)){
+                                       controlElements.add(component);
+                                }
 						} else if (type === "entity") {
-							entityNum++;
+//							entityNum++;
+                                if(!entityElements.has(component)){
+                                       entityElements.add(component);
+                                  }
 						}
-						
-						componentNum++;
+
+						 if(!componentElements.has(component)){
+                                componentElements.add(component);
+                          }
+
+//						componentNum++;
 					}
 
 					activityNum++;
 				}
 				
-				for(var j in useCase.Actors){
-					actorNum++;
-				}
+//				for(var j in useCase.Actors){
+//					actorNum++;
+//				}
 
 				useCase["ComponentAnalytics"].TotalDegree = totalDegree;
-				useCase["ComponentAnalytics"].ActorNum = actorNum;
-				useCase["ComponentAnalytics"].BoundaryNum = boundaryNum;
-				useCase["ComponentAnalytics"].ControlNum = controlNum;
-				useCase["ComponentAnalytics"].EntityNum = entityNum;
+				// these numbers are different from the numbers for the entire model
+				useCase["ComponentAnalytics"].Actors = actors;
+                useCase["ComponentAnalytics"].BoundaryElements = boundaryElements;
+                useCase["ComponentAnalytics"].ControlElements = controlElements;
+                useCase["ComponentAnalytics"].EntityElements = entityElements;
+                useCase["ComponentAnalytics"].ComponentElements = componentElements;
+
+				useCase["ComponentAnalytics"].ActorNum = useCase["ComponentAnalytics"].Actors.size;
+				useCase["ComponentAnalytics"].BoundaryNum = useCase["ComponentAnalytics"].BoundaryElements.size;
+				useCase["ComponentAnalytics"].ControlNum = useCase["ComponentAnalytics"].ControlElements.size;
+				useCase["ComponentAnalytics"].EntityNum = useCase["ComponentAnalytics"].EntityElements.size;
 				useCase["ComponentAnalytics"].ActivityNum = activityNum;
-				useCase["ComponentAnalytics"].ComponentNum = componentNum;
+				useCase["ComponentAnalytics"].ComponentNum = useCase["ComponentAnalytics"].ComponentElements.size;
 				useCase["ComponentAnalytics"].TranNum = useCase.Transactions.length;
 
 		if (callbackfunc) {
@@ -275,11 +296,14 @@
 				AvgAssoc: 0,
 				AvgInstVar: 0,
 				WeightedOperNum: 0,
-				MethodSize: 0,
 				InstanceVarNum: 0,
 				EntityAnalyticsFileName : 'entityAnalytics.csv',
 				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
-				OperationAnalyticsFileName : 'operationAnalytics.csv'
+				OperationAnalyticsFileName : 'operationAnalytics.csv',
+                ComponentNum : 0,
+                BoundaryNum : 0,
+                ControlNum : 0,
+                EntityNum : 0
 	        }
 
 			var attributeNum = 0;
@@ -296,8 +320,13 @@
             var parameterNum = 0;
 			var instanceVarNum = 0;
 			var externalOperNum = 0;
-			var objectdataNum = 0;
+			var dataObjectNum = 0;
 			var weightedOperNum = 0;
+
+             var boundaryNum = 0;
+             var controlNum = 0;
+             var entityNum = 0;
+             var componentNum = 0;
 			
 			var totalNumberOfChildrenClass = 0;
 
@@ -316,7 +345,7 @@
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
                                 attributeNum_cls++;
-                                if ( attribute['isStatic'] == "false"){
+                                if ( !attribute['isStatic']){
 									instanceVarNum_cls++;
 								}
                             }
@@ -324,7 +353,7 @@
                             for ( var j in element.Operations) {
                                 var operation = element.Operations[j];
                                 operationNum_cls++;
-                                if (operation['Visibility'] == "public"){
+                                if (operation['visibility'] == "public"){
 									externalOperNum_cls++;
 								}
 								for ( var k in operation.Parameters){
@@ -333,13 +362,24 @@
 								}
 							
 					               var w = 0.3;
-					               weightedOperNum_cls = w*1;
+					               weightedOperNum_cls += w*1;
                             }
                             
                             
                             if(element.Attributes.length>0 && element.Operations.length==0){
-								objectdataNum++;
+								dataObjectNum++;
 							}
+
+                            var type = element.Type;
+							if (type === "boundary") {
+                            			boundaryNum++;
+                            	} else if (type === "control") {
+                            			controlNum++;
+                            	} else if (type === "entity") {
+                            			entityNum++;
+                            }
+
+                            componentNum++;
                             
                             
                 element.attributeNum = attributeNum_cls;
@@ -350,7 +390,6 @@
                 element.weightedOperNum = weightedOperNum_cls;
                             
                // determine the inheritance relationships
-                            
                var derivedClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
                element.numberOfDerivedClasses = derivedClasses.length;
                element.numberOfChildren = element.numberOfDerivedClasses;
@@ -430,10 +469,6 @@
 				var usage = domainModelInfo.Usages[i];
 					usageNum++;
 			}
-			for ( var i in domainModelInfo.Realizations) {
-				var realization = domainModelInfo.Realizations[i];
-					realNum++;
-			}
 			for ( var i in domainModelInfo.Associations) {
 				var association = domainModelInfo.Associations[i];
 					assocNum++;
@@ -442,6 +477,7 @@
 			for(var i in domainModelInfo.Generalizations){
 				var generalization = domainModelInfo.Generalizations[i];
 					generalNum++;
+					realNum++; //realization and generalization are regarded as the same.
 			}
 
 //			diagram["ComponentAnalytics"] = {};
@@ -457,7 +493,7 @@
             domainModelInfo["ComponentAnalytics"].NumberOfInheritanceRelationships = numberOfInheritanceRelationships;
             domainModelInfo["ComponentAnalytics"].WeightedOperNum =  weightedOperNum;
 
-            domainModelInfo["ComponentAnalytics"].ObjectDataNum = objectdataNum;
+            domainModelInfo["ComponentAnalytics"].ObjectDataNum = dataObjectNum;
 			domainModelInfo["ComponentAnalytics"].ParameterNum = parameterNum;
 			domainModelInfo["ComponentAnalytics"].ExternalOperNum = externalOperNum;
 			domainModelInfo["ComponentAnalytics"].AvgInstVar = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : instanceVarNum / domainModelInfo["ComponentAnalytics"].ClassNum;
@@ -472,6 +508,10 @@
 			domainModelInfo["ComponentAnalytics"].AvgReal = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].RealNum / domainModelInfo["ComponentAnalytics"].ClassNum;
 			domainModelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AssocNum / domainModelInfo["ComponentAnalytics"].ClassNum;
 
+            domainModelInfo["ComponentAnalytics"].EntityNum = entityNum;
+			domainModelInfo["ComponentAnalytics"].ControlNum = controlNum;
+			domainModelInfo["ComponentAnalytics"].BoundaryNum = boundaryNum;
+			domainModelInfo["ComponentAnalytics"].ComponentNum = componentNum;
 
 		if (callbackfunc) {
 
@@ -552,8 +592,8 @@
 				"usage_num," +
 				"real_num," +
 				"assoc_num," +
-				"externaloper_num," +
-				"objectdata_num," +
+				"external_oper_num," +
+				"data_object_num," +
 				"avg_operation," +
 				"avg_attribute," +
 				"avg_parameter," +
@@ -561,8 +601,7 @@
 				"avg_real," +
 				"avg_assoc," +
 				"avg_instVar," +
-				"weightedoper_num," +
-				"method_size";
+				"weighted_oper_num";;
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -598,18 +637,13 @@
 				+ modelInfo["ComponentAnalytics"].AvgReal + ","
 				+ modelInfo["ComponentAnalytics"].AvgAssoc + ","
 				+ modelInfo["ComponentAnalytics"].AvgInstVar + ","
-				+ modelInfo["ComponentAnalytics"].WeightedOperNum + ","
-				+ modelInfo["ComponentAnalytics"].MethodSize;
+				+ modelInfo["ComponentAnalytics"].WeightedOperNum;
 				//added metrics for the domain model
 	}
 
 	function evaluateModel(modelInfo, callbackfunc) {
 
 		modelInfo["ComponentAnalytics"] = {
-//				DiagramNum : 0,
-				AttributeNum : 0,
-				OperationNum : 0,
-				// EntityNum : 0,
 				ActivityNum : 0,
 				TranNum : 0,
 				UseCaseNum : 0,
@@ -641,7 +675,6 @@
 				AvgAssoc : 0,
 				AvgInstVar : 0,
 				WeightedOperNum : 0,
-				MethodSize : 0,
 				EntityAnalyticsFileName : "entityAnalytics.csv",
 				AttributeAnalyticsFileName : "attributeAnalytics.csv",
 				OperationAnalyticsFileName : "operationAnalytics.csv",
@@ -651,6 +684,7 @@
 		
 //		var totalTransactionLength = 0;
 		var totalActorNum = 0;
+		var actors = new Set();
 		
 		for ( var i in modelInfo.UseCases) {
 			var useCase = modelInfo.UseCases[i];
@@ -659,23 +693,32 @@
 			modelInfo["ComponentAnalytics"].TranNum += useCase["ComponentAnalytics"].TranNum;
 			modelInfo["ComponentAnalytics"].UseCaseNum++;
 
-			modelInfo["ComponentAnalytics"].ActorNum += useCase["ComponentAnalytics"].ActorNum;
-			modelInfo["ComponentAnalytics"].BoundaryNum += useCase["ComponentAnalytics"].BoundaryNum;
-			modelInfo["ComponentAnalytics"].ControlNum += useCase["ComponentAnalytics"].ControlNum;
-			modelInfo["ComponentAnalytics"].EntityNum += useCase["ComponentAnalytics"].EntityNum;
-			modelInfo["ComponentAnalytics"].ControlNum += useCase["ComponentAnalytics"].ControlNum;
-			modelInfo["ComponentAnalytics"].ComponentNum += useCase["ComponentAnalytics"].ComponentNum;
 			modelInfo["ComponentAnalytics"].ActivityNum += useCase["ComponentAnalytics"].ActivityNum;
 
 			//need to recalculate here.
 			modelInfo["ComponentAnalytics"].RoleNum += useCase["ComponentAnalytics"].RoleNum;
-			
-			totalActorNum += useCase["ComponentAnalytics"].ActorNum;
+
+
+			for(var i in useCase["ComponentAnalytics"].actors){
+			        if(!actors.has(useCase["ComponentAnalytics"].Actors[i])){
+			            actors.add(useCase["ComponentAnalytics"].Actors[i])
+			        }
 			}
+			}
+
 			
 			modelInfo["ComponentAnalytics"].UseCaseNum++;
 		}
 
+        modelInfo["ComponentAnalytics"].Actors = actors;
+		if(modelInfo["ComponentAnalytics"].Actors.size == 0){
+		    totalActorNum = 1;
+		}
+		else {
+		    totalActorNum = modelInfo["ComponentAnalytics"].Actors.size
+		}
+
+        modelInfo["ComponentAnalytics"].ActorNum = totalActorNum;
 		modelInfo["ComponentAnalytics"].AvgActorNum = modelInfo["ComponentAnalytics"].ActivtyNum == 0 ? 0 : totalActorNum / modelInfo["ComponentAnalytics"].UseCaseNum;
 
 		// analyse domain model
@@ -685,9 +728,6 @@
 		if(domainModelInfo && domainModelInfo["ComponentAnalytics"]){
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum;
-		// modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].ClassNum;
-		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
-		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum
 		modelInfo["ComponentAnalytics"].ClassNum  = domainModelInfo["ComponentAnalytics"].ClassNum;
         modelInfo["ComponentAnalytics"].TopLevelClasses = domainModelInfo["ComponentAnalytics"].TopLevelClasses;
         modelInfo["ComponentAnalytics"].AverageDepthInheritanceTree = domainModelInfo["ComponentAnalytics"].AverageDepthInheritanceTree;
@@ -708,7 +748,13 @@
 		modelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].AvgAssoc;
 		modelInfo["ComponentAnalytics"].AvgInstVar = domainModelInfo["ComponentAnalytics"].AvgInstVar;
 		modelInfo["ComponentAnalytics"].WeightedOperNum = domainModelInfo["ComponentAnalytics"].WeightedOperNum;
-		modelInfo["ComponentAnalytics"].MethodSize = domainModelInfo["ComponentAnalytics"].MethodSize;
+
+
+        modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].EntityNum;
+		modelInfo["ComponentAnalytics"].ControlNum = domainModelInfo["ComponentAnalytics"].ControlNum;
+		modelInfo["ComponentAnalytics"].BoundaryNum = domainModelInfo["ComponentAnalytics"].BoundaryNum;
+		modelInfo["ComponentAnalytics"].ComponentNum = domainModelInfo["ComponentAnalytics"].ComponentNum;
+
 		}
 
 		if (callbackfunc) {

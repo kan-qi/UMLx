@@ -160,13 +160,18 @@ function analyseAndroidProjectsShellBatch(repoInfo){
                 projectList: [projectInfo]
             }
 
-            var executionInfoPath = "./debug/executionInfo.json";
+            var executionInfoPath = "./debug/executionInfo_"+i+".json";
             FileManagerUtils.writeFileSync(executionInfoPath, JSON.stringify(executionInfo));
 
             //to generate svg file.
             var command = 'node --max_old_space_size=10240 "./utils/AndroidProjectAnalysis.js" --analyse-android-projects "'+executionInfoPath+'"';
 
+            try{
             var child = execSync(command, {stdio: 'inherit'});
+            }
+            catch(e){
+                console.log(e)
+            }
 
     }
 }
@@ -328,6 +333,39 @@ else if(functionSelection === "--calculate-cocomo-estimation-result"){
 	});
 	
 }
+else if(functionSelection === "--fix-android-analysis-reference"){
+    var androidAnalysisPaths = [];
+	var androidAnalysisReadPaths = [];
+	var androidAnalysisWritePaths = [];
+	for(var i in repo.projectList){
+	    androidAnalysisPaths.push(repo.projectList[i].path);
+		androidAnalysisReadPaths.push(repo.projectList[i].path+"/android-analysis-output.json");
+		androidAnalysisWritePaths.push(repo.projectList[i].path+"/android-analysis-output1.json");
+	}
+    androidAnalysisResults = FileManagerUtils.readJSONFilesSync(androidAnalysisReadPaths);
+
+	for(var i in androidAnalysisResults){
+	    androidAnalysisResult = androidAnalysisResults[i];
+	    if(!androidAnalysisResult){
+	        continue;
+	    }
+    androidAnalysisResult.typeDependencyGraph=androidAnalysisPaths[i]+"/typedependencygraph.json"
+    androidAnalysisResult.callGraph=androidAnalysisPaths[i]+"/callgraph.json"
+    androidAnalysisResult.accessGraph=androidAnalysisPaths[i]+"/accessgraph.json"
+    androidAnalysisResult.extendsGraph=androidAnalysisPaths[i]+"/extendsgraph.json"
+    androidAnalysisResult.compositionGraph=androidAnalysisPaths[i]+"/compositiongraph.json"
+
+    if(!FileManagerUtils.existsSync(androidAnalysisPaths[i]+"/soot-cfg-2.json")){
+            androidAnalysisResult.cfg= androidAnalysisPaths[i]+"/soot-cfg-2.json"
+    }
+    else{
+             androidAnalysisResult.cfg= androidAnalysisPaths[i]+"/soot-cfg-1.json"
+    }
+	}
+    FileManagerUtils.writeJSONFilesSync(androidAnalysisWritePaths, androidAnalysisResults);
+
+
+}
 else if(functionSelection === "--parse-effort-and-active-personnel"){
 effortRecords = [
   "EasySoundRecorder.txt",
@@ -476,15 +514,16 @@ else if(functionSelection === "--filter-logs"){
 else if(functionSelection === "--generate-repo-analysis-report"){
 
 //var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "files.txt").split(/\r?\n/g);
 //console.log(modelOutputDirs)
 // or load the modelOutputDirs from the json file
 
-var modelOutputDirs = []
-for(var i in repo.projectList){
-    var projectInfo = repo.projectList[i];
-    //modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag);
-    modelOutputDirs.push(projectInfo.path+"_"+projectInfo.clusterConfig);
-}
+//var modelOutputDirs = []
+//for(var i in repo.projectList){
+//    var projectInfo = repo.projectList[i];
+//    //modelOutputDirs.push(repo.repoDir+"/"+repo.projectList[i].tag);
+//    modelOutputDirs.push(projectInfo.path+"_"+projectInfo.clusterConfig);
+//}
 
 var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
 var onlineProjects = [];
@@ -517,7 +556,7 @@ for(var i in modelOutputDirs){
   //code here using lines[i] which will give you each line
 	var modelOutputDir = modelOutputDirs[i];
 
-	if(modelOutputDir === "" || !FileManagerUtils.existsSync(modelOutputDir)){
+	if(modelOutputDir === "" || !FileManagerUtils.existsSync(modelOutputDir)||!FileManagerUtils.isDirSync(modelOutputDir)){
 		continue;
 	}
 	

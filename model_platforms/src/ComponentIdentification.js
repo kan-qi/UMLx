@@ -142,7 +142,6 @@
             cutoffDepth = 10
         }
 
-        cutoffDepth = 2
 //		var cutoffDepth = rootClusterClass.depth;
 
 		var currentLevel = [];

@@ -30,6 +30,10 @@
           }
 	 }
 
+	 function isDirSync(filePath){
+	   return fs.lstatSync(filePath).isDirectory();
+	 }
+
 	 function existsSync(filePath){
 			return fs.existsSync(filePath);
 	 }
@@ -60,7 +64,7 @@
      		 var path = filePaths[i];
      		 if( fs.existsSync(path) ) {
      			 var fileContent = fs.readFileSync(path, 'utf8');
-     			 fileContents.push(JSON.parse(fileContent));
+     			 fileContents.push(JSON.parse(fileContent.trim()));
      		 }
      		 else{
      			 fileContents.push(null);
@@ -69,6 +73,13 @@
 
      		 return fileContents;
       }
+
+      function writeJSONFilesSync(filePaths, fileContents){
+
+                  		 for(var i in filePaths){
+                  		  fs.writeFileSync(filePaths[i], JSON.stringify(fileContents[i]));
+                  		 }
+      	 }
 	 
 	 function readFileSync(filePath){
 		 if( fs.existsSync(filePath) ) {
@@ -201,7 +212,7 @@
 		},
 		readJSONSync: function(filePath){
 			var str = fs.readFileSync(filePath, 'utf-8');
-				 var obj = JSON.parse(str);
+				 var obj = JSON.parse(str.trim());
 				  return obj
 		},
 		writeFiles: function(dir, files, callbackfunc){
@@ -254,6 +265,8 @@
 			appendFile: appendFile,
 			existsSync: existsSync,
 			mkDirSync: mkDirSync,
-			readJSONFilesSync: readJSONFilesSync
+			readJSONFilesSync: readJSONFilesSync,
+			isDirSync: isDirSync,
+			writeJSONFilesSync: writeJSONFilesSync
 	}
 }())
