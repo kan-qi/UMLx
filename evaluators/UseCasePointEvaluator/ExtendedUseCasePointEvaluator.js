@@ -15,7 +15,6 @@
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('../../utils/RScriptUtil.js');
-	var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
 	
 	// this json object should be copied from the trained model from transaction analysis
 	var transactionWeightingSchema = {

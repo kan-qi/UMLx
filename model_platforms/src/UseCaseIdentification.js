@@ -9,12 +9,11 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	var util = require('util');
-    const uuidv4 = require('uuid/v4');
+    const uuidV4 = require('uuid/v4');
     var FileManagerUtil = require("../../utils/FileManagerUtils.js");
     var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 
 	var kdmModelDrawer = require("./KDMModelDrawer.js");
-
 
 // should directly analysis the inter-component control flow on top of the soot-cfg.
 
@@ -134,11 +133,27 @@
 		var transactions = [];
 
         		var methodSequenceProfile = [];
-
+                // each method sequence is defined as a transaction and each transaction has a stimulus
         		for(var i in methodSequences){
         			var methodSequence = methodSequences[i];
-        			var preActivity = null;
-        			var preDomainElement = null;
+
+                    //create a stimulus node for the response node.
+                    stimulus = {
+                            Name: uuidV4()+"_stm",
+                                                                                                                     					_id: uuidV4(),
+                                                                                                                     					Type: "activity",
+                                                                                                                     					Stimulus: true,
+                                                                                                                     					OutScope: true,
+                                                                                                                     					Group: "User",
+                                                                                                                     					Component: {
+                                                                                                                     					  type: "actor",
+                                                                                                                                                            						    _id: uuidV4()
+                                                                                                                     					}
+                                                                                                                     			}
+
+
+        			var preActivity = stimulus;
+        			var preDomainElement = stimulus.Component;
 
         			var methodSequenceP = {};
 
@@ -146,6 +161,8 @@
         			Nodes: [],
         			OutScope: false
         			};
+
+        			transaction.Nodes.push(stimulus);
 
         			for(var j in methodSequence){
         				var action = methodSequence[j].action;
@@ -186,33 +203,35 @@
         				continue;
         				}
 
-                        if(!preActivity){
-                                    var activityID = "a"+targetMethodUnit['UUID'].replace(/\-/g, "_");
-
-                                                            var activity = activitiesByID[activityID];
-                                                            if(!activity){
-                                                            	activity = {
-                                                            					Name: targetComponent.name+"_"+targetMethodUnit.signature.name,
-                                                            					_id: activityID,
-                                                            					Type: "activity",
-                                                            					isResponse: action === "response" ? true : false,
-                                    //                        					Stimulus: node.type === "stimulus" ? true: false,
-                                                            					OutScope: false,
-                                                            					Group: "System",
-                                                            					Component: domainElement
-                                                            			}
-
-                                                            			activitiesByID[activity._id] = activity;
-                                                            }
-                        			activities.push(activity);
-
-        				            transaction.Nodes.push(activity);
-
-        				            preActivity = activity;
-        				            preDomainElement = domainElement;
-
-                        }
-        				else if(preActivity && preDomainElement != domainElement){
+//                        if(!preActivity){
+//                                    var activityID = "a"+targetMethodUnit['UUID'].replace(/\-/g, "_");
+//
+//                                                            var activity = activitiesByID[activityID];
+//                                                            if(!activity){
+//                                                            	activity = {
+//                                                            					Name: targetComponent.name+"_"+targetMethodUnit.signature.name,
+//                                                            					_id: activityID,
+//                                                            					Type: "activity",
+//                                                            					isResponse: action === "response" ? true : false,
+//                                    //                        					Stimulus: node.type === "stimulus" ? true: false,
+//                                                            					OutScope: false,
+//                                                            					Group: "System",
+//                                                            					Component: domainElement
+//                                                            			}
+//
+//                                                            			activitiesByID[activity._id] = activity;
+//
+//                        			                                    activities.push(activity);
+//                                                            }
+//
+//        				            transaction.Nodes.push(activity);
+//
+//        				            preActivity = activity;
+//        				            preDomainElement = domainElement;
+//
+//                        }
+//        				else if(preActivity && preDomainElement != domainElement){
+                        if(preDomainElement != domainElement){
                         			 var activityID = "a"+targetMethodUnit['UUID'].replace(/\-/g, "_");
 
                                                                                                 var activity = activitiesByID[activityID];
@@ -230,7 +249,7 @@
 
                                                                                                 			activitiesByID[activity._id] = activity;
                                                                                                 }
-                                                            			activities.push(activity);
+                                   activities.push(activity);
 
         				           transaction.Nodes.push(activity);
         				           precedenceRelations.push({start: preActivity, end: activity});
@@ -501,15 +520,15 @@
 				var activitiesByID = {}
 				var precedenceRelations = [];
 
-
 				for(var j in useCaseRecord.transactions){
 					var transaction = useCaseRecord.transactions[j];
 					var prevNode = null;
 					for(var k in transaction.Nodes){
 						var node = transaction.Nodes[k];
-
+                        if(activitiesByID[node._id]){
 						activities.push(node);
 						activitiesByID[node._id] = node;
+						}
 						if(prevNode){
 							precedenceRelations.push({start: prevNode, end: node});
 						}

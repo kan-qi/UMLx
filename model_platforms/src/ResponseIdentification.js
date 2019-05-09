@@ -135,7 +135,7 @@
 		for(var i in dicClassUnits){
 			var classUnit = dicClassUnits[i];
 
-			console.log(classUnit);
+			//console.log(classUnit);
 			
 			for(var j in classUnit.methodUnits){
 				
