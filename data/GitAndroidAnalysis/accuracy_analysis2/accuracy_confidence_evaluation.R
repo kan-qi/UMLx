@@ -8,7 +8,7 @@ pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
 pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
 pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
 mdmre <- function(mre) median(mre)
-mae<- function(x) sum(apply(x, 1, mre))/length(x)
+mae<- function(x) sum(apply(x, 1, function(x) abs(x[1] - x[2])))/length(x)
 predR <- function(mre, predRange) {
   eval_pred <- c()
   
