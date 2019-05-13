@@ -1,0 +1,71 @@
+---
+title: "Stepwise linear model report"
+author: "XXX"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("utils/feature_selection.R")
+source("utils/data_selection.R")
+source("utils/model_funcs.R")
+source("accuracy_confidence_evaluation.R")
+source("transaction_based_model.R")
+source("size_metric_based_models.R")
+source("neuralnet_model_1.R")
+library(jsonlite)
+library(reshape)
+library(tidyverse)
+library(fitdistrplus)
+library(egg)
+library(gridExtra)
+library(plyr)
+require(MASS)
+#source("stepwise_linear_model.R")
+```
+cv k=5
+```{r}
+#read csv data
+  modelData <- selectData("dsets/modelEvaluations-1-3.csv")
+#set k=5
+  k= 5
+  rownames(modelData) <- modelData$Project
+  c1 <- colnames(modelData[3:139])
+  #move unwanted and columns with constant value
+  c1 <- c1[-c(5,9,18,19,20,21,25,33,36,38,50,51,52,53,54,55,56,60,61,70,75,79,80,81,83,84,85,89,90,91,92,102,103.106,107,112,114,120,124,125,128,129,130,131,134,135,136,137)]
+  str_frm <- paste("Effort ~ ",paste(c1, collapse="+"),sep = "")
+  str_frm <- gsub("[\r\n]", "", str_frm)
+  frm <- as.formula(str_frm)
+  #set folds
+  folds <- cut(seq(1, nrow(modelData)), breaks = k, labels = FALSE)
+  foldMSE <- vector(length = k)
+  foldMMRE <- vector(length = k)
+  foldPRED <- vector(length = k)
+  #cross validation
+  for (i in 1:k) {
+    testIndexes <- which(folds == i, arr.ind = TRUE)
+    testData <- modelData[testIndexes, ]
+    trainData <- modelData[-testIndexes, ]
+    # Normalize effort data
+    #trainData$Effort = trainData$Effort
+    trainData$Effor <- subset(trainData, select=c("Effort"))
+    full.model <- lm(frm, data=trainData)
+    step.model <- stepAIC(full.model, direction = "both", trace = FALSE)
+    print(step.model)
+    levels = length(trainData) - 1
+   # normFactor <- calNormFactor(trainData)
+  
+    predicted <- predict(step.model, testData)  
+    foldMSE[i] <- mean((predicted - testData$Effort)^2)
+    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+  }
+  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+```
+see res
+```{r}
+print(results)
+```

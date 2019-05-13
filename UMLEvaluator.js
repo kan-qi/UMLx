@@ -29,10 +29,10 @@
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
+//	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
 	var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
 	var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
-	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
+//	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
 
 	var userStoryEvaluator = require('./evaluators/StoryPointEvaluator/UserStoryEvaluator.js');
@@ -43,8 +43,8 @@
 			transactionEvaluator,
 			functionPointEvaluator,
 			modelVersionEvaluator,
-			projectTypeEvaluator,
-			cocomoCalculator,
+//			projectTypeEvaluator,
+//			cocomoCalculator,
 			useCasePointEvaluator,
 			extendedUseCasePointEvaluator,
 			UMLSizeMetricEvaluator,

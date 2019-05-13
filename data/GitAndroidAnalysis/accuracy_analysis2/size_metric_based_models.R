@@ -13,20 +13,15 @@ m_predict.ucp <- function(ucp, testData){
 }
 
 #define the cocomo model
-#the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
-m_fit.cocomo <- function(cocomo,dataset){
-  print("cocomo fit")
-  dataset$log_effort = log(data$Effort)
-  dataset$log_sloc = log(data$SLOC)
-  cocomo$m = lm(log_effort~log_sloc, data=dataset)
-  cocomo
-}
+#m_fit.cocomo <- function(cocomo,dataset){
+#  print("cocomo fit")
+#  cocomo
+#}
 
-m_predict.cocomo <- function(cocomo, testData){
-  print("cocomo predict")
-  predicted = exp(predict(cocomo$m, log(testData$SlOC)))
-  predicted
-}
+#m_predict.cocomo <- function(cocomo, testData){
+#  print("cocomo predict")
+#  predicted$cocomo_estimate
+#}
 
 #define the fp model
 m_fit.fp <- function(fp,dataset){
@@ -71,7 +66,7 @@ m_predict.mkii <- function(mkii, testData){
 
 #define the sloc model
 m_fit.sloc <- function(sloc,dataset){
-  sloc$m = lm(Effort~KSLOC, data=dataset)
+  sloc$m = lm(Effort~SLOC, data=dataset)
   sloc
 }
 
@@ -80,12 +75,11 @@ m_predict.sloc <- function(sloc, testData){
 }
 
 #define the ln_sloc model
+#the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
 m_fit.ln_sloc <- function(ln_sloc, dataset){
-  dataset <- dataset[dataset$KSLOC!=0 & dataset$Effort != 0,]
-  print(dataset$SLOC)
-  print(dataset$Effort)
+  dataset <- dataset[dataset$SLOC!=0 & dataset$Effort != 0,]
   dataset$log_effort = log(dataset$Effort)
-  dataset$log_sloc = log(dataset$KSLOC)
+  dataset$log_sloc = log(dataset$SLOC)
   ln_sloc$m = lm(log_effort~log_sloc, data=dataset)
   ln_sloc
 }
@@ -93,7 +87,7 @@ m_fit.ln_sloc <- function(ln_sloc, dataset){
 m_predict.ln_sloc <- function(ln_sloc, testData){
   a = summary(ln_sloc$m)$coefficients[1,1]
   b = summary(ln_sloc$m)$coefficients[2,1]
-  predicted=testData$KSLOC^b+exp(a)
+  predicted=testData$SLOC^b+exp(a)
   names(predicted) = rownames(testData)
   predicted
 }
@@ -109,7 +103,7 @@ size_metric_models <- function(){
   
   #define the cocomo model
   
-  models$cocomo = list()
+  #models$cocomo = list()
   
   #define the fp model
   

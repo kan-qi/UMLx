@@ -12,8 +12,7 @@ modelData <- selectBySLOC2ndQ25(modelData)
 #dataSet <- list()
 #dataSet[["modelData"]] <- modelData
 #dataSet
-
-modelData
+modelData = subset(modelData, Effort != 0)
 }
 
 selectBySLOC2ndQ25 <- function(modelData){

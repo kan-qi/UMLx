@@ -8,7 +8,7 @@ pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
 pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
 pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
 mdmre <- function(mre) median(mre)
-mae<- function(x) sum(apply(x, 1, mre))/length(x)
+mae<- function(x) sum(apply(x, 1, function(x) abs(x[1] - x[2])))/length(x)
 predR <- function(mre, predRange) {
   eval_pred <- c()
   
@@ -25,9 +25,9 @@ modelBenchmark <- function(models, dataset){
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
   
   cvResults <- cv(models, dataset, accuracy_metrics)
-  #bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
+  bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(cvResults = cvResults, 
-             #bsResults = bsResults,
+             bsResults = bsResults,
              model_names = names(models),
              accuracy_metrics = accuracy_metrics
              )
@@ -89,7 +89,6 @@ for(i in 1:nfold){
 	  intersectNames <- intersect(names(predicted), names(actual))
 	  
 	  model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames] )
-	  
 	  eval_metric_results = list()
 	  
 	  model_eval_mre = apply(model_eval_predict, 1, mre)
