@@ -163,39 +163,40 @@
 					var activity = useCase.Activities[j]; // tag: elements
 //					var components = diagram.allocate(Activity);
 					// if it is mvc decomposed. we are able to understand the boundry, control, and entity.
-					if(activity.Component){
-						var component = activity.Component;
-						totalDegree += component.InboundNumber;
-						
-						var type = component.Type;
-						if (type === "actor") {
-//							actorNum++;
-                                if(!actors.has(component)){
-                                        actors.add(component);
-                                }
-						} else if (type === "boundary") {
-//							boundaryNum++;
-                                if(!boundaryElements.has(component)){
-                                        boundaryElements.add(component);
-                                }
-						} else if (type === "control") {
-//							controlNum++;
-                                if(!controlElements.has(component)){
-                                       controlElements.add(component);
-                                }
-						} else if (type === "entity") {
-//							entityNum++;
-                                if(!entityElements.has(component)){
-                                       entityElements.add(component);
-                                  }
-						}
 
-						 if(!componentElements.has(component)){
-                                componentElements.add(component);
-                          }
+						if(activity.Component){
+                    						var component = activity.Component;
+                    						totalDegree += component.InboundNumber;
 
-//						componentNum++;
-					}
+                    						var type = component.Type;
+                    						if (type === "actor") {
+                    //							actorNum++;
+                                                    if(!actors.has(component)){
+                                                            actors.add(component);
+                                                    }
+                    						} else if (type === "boundary") {
+                    //							boundaryNum++;
+                                                    if(!boundaryElements.has(component)){
+                                                            boundaryElements.add(component);
+                                                    }
+                    						} else if (type === "control") {
+                    //							controlNum++;
+                                                    if(!controlElements.has(component)){
+                                                           controlElements.add(component);
+                                                    }
+                    						} else if (type === "entity") {
+                    //							entityNum++;
+                                                    if(!entityElements.has(component)){
+                                                           entityElements.add(component);
+                                                      }
+                    						}
+
+                    						 if(!componentElements.has(component)){
+                                                    componentElements.add(component);
+                                              }
+
+                    //						componentNum++;
+                    					}
 
 					activityNum++;
 				}
@@ -225,8 +226,8 @@
 		useCase["ComponentAnalytics"].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 		useCase["ComponentAnalytics"].ElementAnalyticsFileName = "elementAnalytics.csv";
 
-		console.log("test use case element analytics");
-		console.log(useCase);
+//		console.log("test use case element analytics");
+//		console.log(useCase);
 		dumpUseCaseElementsInfo(useCase, function(err, res){
 
 				if(err){
@@ -341,6 +342,7 @@
                             var externalOperNum_cls = 0;
                             var parameterNum_cls = 0;
                             var weightedOperNum_cls = 0;
+                            var numberOfCalls = 0;
                             
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
@@ -363,12 +365,13 @@
 							
 					               var w = 0.3;
 					               weightedOperNum_cls += w*1;
+					               numberOfCalls += operation.numberOfCalls;
                             }
                             
                             
-                            if(element.Attributes.length>0 && element.Operations.length==0){
-								dataObjectNum++;
-							}
+//                            if(element.Attributes.length>0 && element.Operations.length==0){
+//								dataObjectNum++;
+//							}
 
                             var type = element.Type;
 							if (type === "boundary") {
@@ -377,6 +380,7 @@
                             			controlNum++;
                             	} else if (type === "entity") {
                             			entityNum++;
+                            			dataObjectNum++;
                             }
 
                             componentNum++;
@@ -388,6 +392,7 @@
                 element.externalOperNum = externalOperNum_cls;
                 element.parameterNum = parameterNum_cls;
                 element.weightedOperNum = weightedOperNum_cls;
+                element.numberOfCalls = numberOfCalls;
                             
                // determine the inheritance relationships
                var derivedClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);

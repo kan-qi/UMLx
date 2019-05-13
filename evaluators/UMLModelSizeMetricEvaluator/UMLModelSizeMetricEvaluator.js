@@ -81,7 +81,8 @@
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
 	function toModelEvaluationHeader() {
-		return "NOET,NOAAE,NORT,NEM,NSR,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,EIF,ILF,DET,FTR,NT,NOC,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOMPC,NPPM,NMT";
+//		return "NOET,NOAAE,NORT,NEM,NSR,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,EIF,ILF,DET,FTR,NT,NOC,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOMPC,NPPM,NMT";
+	    return "NOET,NOAAE,NORT,NEM,NSR,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,NT,NOC,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOMPC,NPPM,NMT";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -109,11 +110,11 @@
 		        + modelInfo["SizeMetricAnalytics"].ANWMC + "," //Average number of weighted methods per classes
 		        + modelInfo["SizeMetricAnalytics"].ADIT + "," //Average depth of inheritance tree 
 		        + modelInfo["SizeMetricAnalytics"].NOCPBC + "," //Average number of children per base class
-	   // Albrecht [3]
-		        + modelInfo["SizeMetricAnalytics"].EIF + "," //External interface files
-		        + modelInfo["SizeMetricAnalytics"].ILF + "," //Internal logic files
-		        + modelInfo["SizeMetricAnalytics"].DET + "," //Data element types 
-		        + modelInfo["SizeMetricAnalytics"].FTR + "," //File type referenced
+//	   // Albrecht [3]
+//		        + modelInfo["SizeMetricAnalytics"].EIF + "," //External interface files
+//		        + modelInfo["SizeMetricAnalytics"].ILF + "," //Internal logic files
+//		        + modelInfo["SizeMetricAnalytics"].DET + "," //Data element types
+//		        + modelInfo["SizeMetricAnalytics"].FTR + "," //File type referenced
 	  // Karner [4]
 		        + modelInfo["SizeMetricAnalytics"].NT + "," //Number of Transactions
 		        + modelInfo["SizeMetricAnalytics"].NOC + "," //Number of use cases
@@ -296,7 +297,7 @@
 				element.DIT = element.depthInheritanceTree; //Depth in inheritance tree
 				element.CBO = element.couplingBetweenObjects; //Coupling between objects
 				
-				element.NUMS = 0; //Number of unique messages sent
+				element.NUMS = element.numberOfCalls; //Number of unique messages sent
 				element.NCI = element.numberOfClassesInherited; //Number of classes inherited
 				element.NCIF = element.numberOfClassesInheritedFrom; //Number of classes inherited from
 				// should be applied to individual classes
@@ -398,11 +399,11 @@
 		        ANWMC:0, //Average number of weighted methods per classes
 		        ADIT:0, //Average depth of inheritance tree 
 		        NOCPBC:0, //Average number of children per base class
-	   // Albrecht [3]
-		        EIF:0, //External interface files
-		        ILF:0, //Internal logic files
-		        DET:0, //Data element types 
-		        FTR:0, //File type referenced
+//	   // Albrecht [3]
+//		        EIF:0, //External interface files
+//		        ILF:0, //Internal logic files
+//		        DET:0, //Data element types
+//		        FTR:0, //File type referenced
 	  // Karner [4]
 		        NT:0, //Number of Transactions
 		        NOC:0, //Number of use cases

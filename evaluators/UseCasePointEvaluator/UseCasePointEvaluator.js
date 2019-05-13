@@ -100,7 +100,7 @@
 		modelInfo['UseCasePointData'] = {
 				EF : 1,
 				TCF : 1,
-				UAW : 0,
+				UAW : 1,
 				Effort : 0,
 				Effort_Norm_UCP : 0,
 				Effort_Norm_COCOMO : 0
@@ -159,7 +159,17 @@
 		}
 		// //change this later
 		// modelInfo['UseCasePointData'].EF = 1;
-		
+
+		//evaluate UAW
+       for(var i in modelInfo["ComponentAnalytics"].Actors){
+        var actor =  modelInfo["ComponentAnalytics"].Actors[i];
+        if(actor.OpType = "ext_service"){
+            modelInfo['UseCasePointData'].UAW += 2;
+        }
+        else{
+             modelInfo['UseCasePointData'].UAW += 1;
+        }
+       }
 		
 		var simpleUC = 0;
 		var averageUC = 0;
