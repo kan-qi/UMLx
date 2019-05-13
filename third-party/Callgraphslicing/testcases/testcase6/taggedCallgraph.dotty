@@ -1,0 +1,40 @@
+digraph g {"LapkDBHelper.js/removeAppInfo/apkDBHelper.js@3818" [color=black]
+"LapkDBHelper.js/insertVersionInfo/apkDBHelper.js@5439" [color=black]
+"LapkDBHelper.js/insertVersionInfo" [color=green, shape=box]
+"Lmysql.js/query" [color=green, shape=box]
+"LFakeRoot" [color=green, shape=box]
+"LapkDBHelper.js/getAppInfoList" [color=green, shape=box]
+"LapkDBHelper.js/getAppBriefInfo/apkDBHelper.js@4726" [color=black]
+"LapkDBHelper.js" [color=green, shape=box]
+"LapkDBHelper.js/addAppInfo" [color=black]
+"LObject" [color=black]
+"Lindex.js" [color=green, shape=box]
+"LapkDBHelper.js/getAppInfoList/apkDBHelper.js@4379" [color=black]
+"LapkDBHelper.js/removeVersionInfo" [color=green, shape=box]
+"LapkDBHelper.js/updateVersion" [color=black]
+"LapkDBHelper.js/removeAppInfo" [color=green, shape=box]
+"LapkDBHelper.js/removeVersionInfo/apkDBHelper.js@3523" [color=black]
+"Lmysql.js/createConnection" [color=green, shape=box]
+"LapkDBHelper.js/getAppBriefInfo" [color=green, shape=box]
+"LFakeRoot"->"LapkDBHelper.js"
+"LFakeRoot"->"Lindex.js"
+"Lindex.js"->"LapkDBHelper.js/insertVersionInfo"
+"Lindex.js"->"LapkDBHelper.js/getAppBriefInfo"
+"Lindex.js"->"LapkDBHelper.js/getAppInfoList"
+"Lindex.js"->"LapkDBHelper.js/removeAppInfo"
+"Lindex.js"->"LapkDBHelper.js/removeVersionInfo"
+"Lindex.js"->"LapkDBHelper.js/addAppInfo"
+"Lindex.js"->"LapkDBHelper.js/updateVersion"
+"LapkDBHelper.js/removeVersionInfo"->"Lmysql.js/query"
+"Lmysql.js/query"->"LapkDBHelper.js/removeVersionInfo/apkDBHelper.js@3523"
+"LapkDBHelper.js/removeAppInfo"->"Lmysql.js/query"
+"Lmysql.js/query"->"LapkDBHelper.js/removeAppInfo/apkDBHelper.js@3818"
+"LapkDBHelper.js/getAppInfoList"->"Lmysql.js/query"
+"Lmysql.js/query"->"LapkDBHelper.js/getAppInfoList/apkDBHelper.js@4379"
+"LapkDBHelper.js/getAppBriefInfo"->"Lmysql.js/query"
+"Lmysql.js/query"->"LapkDBHelper.js/getAppBriefInfo/apkDBHelper.js@4726"
+"LapkDBHelper.js/insertVersionInfo"->"Lmysql.js/query"
+"Lmysql.js/query"->"LapkDBHelper.js/insertVersionInfo/apkDBHelper.js@5439"
+"LapkDBHelper.js"->"LObject"
+"LapkDBHelper.js"->"Lmysql.js/createConnection"
+}

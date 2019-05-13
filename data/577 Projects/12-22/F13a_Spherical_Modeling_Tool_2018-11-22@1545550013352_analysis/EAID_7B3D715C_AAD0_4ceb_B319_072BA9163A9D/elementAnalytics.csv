@@ -1,0 +1,12 @@
+id,element,useCase,type,component
+1,User:"start a new sphere" page,Set sphere title,boundary,EditSphereView
+2,User:"create sectors and nodes" page,Set sphere title,control,CreateSphereView
+3,User:"open or create sphere" page,Set sphere title,control,CreateSphereView
+4,update title of the sphere to database:"create sectors and nodes" page,Set sphere title,control,CreateSphereView
+5,"open or create sphere" page:update title of the sphere to database,Set sphere title,control,DatabaseAdapter
+6,display "open or create sphere" page:"open or create sphere" page,Set sphere title,control,CreateSphereView
+7,"start a new sphere" page:display "open or create sphere" page,Set sphere title,control,CreateSphereView
+8,update title of the sphere to database:sphere,Set sphere title,entity,SphereModel
+9,stl#User:"start a new sphere" page,Set sphere title,Stimulus,undefined
+10,stl#User:"create sectors and nodes" page,Set sphere title,Stimulus,undefined
+11,stl#User:"open or create sphere" page,Set sphere title,Stimulus,undefined

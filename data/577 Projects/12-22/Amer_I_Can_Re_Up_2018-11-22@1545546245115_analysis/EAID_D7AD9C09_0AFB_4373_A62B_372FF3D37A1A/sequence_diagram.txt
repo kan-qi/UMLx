@@ -1,0 +1,60 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "User Profile" as 19
+participant "Goals" as 29
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: clicksonaddsgoalstohisprofilebutton()
+activate 19
+
+19 -> 29: addthegoalstothedatabase()
+activate 29
+
+29 -> 19: displaythegoalsonthemember��sprofilepage()
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+19 -> 19: clicksonaddsgoalstohisprofilebutton()
+19 -> 29: addthegoalstothedatabase()
+29 -> 29: goalsdb()
+deactivate 29
+
+deactivate 19
+
+User -> 29: Addgoalpage()
+activate 29
+
+29 -> 29: Addgoalinformation()
+29 -> 09: Showconfirmationpage()
+activate 09
+
+09 -> 29: Addgoalpage()
+29 -> 29: Addgoalinformation()
+deactivate 29
+
+09 -> 29: Goaldb()
+activate 29
+
+deactivate 29
+
+09 -> 09: Homepage()
+deactivate 09
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

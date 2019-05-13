@@ -1,0 +1,20 @@
+id,element,useCase,type,component
+1,User:Homepage,take scenario pre-assignment,boundary,webpage
+2,User:clicks continue button,take scenario pre-assignment,control,clicksnext
+3,User:Click Continue button,take scenario pre-assignment,boundary,Application Server Component
+4,User:User reads scenario description	,take scenario pre-assignment,boundary,User interface component
+5,User:clicks on radio buttons of answers,take scenario pre-assignment,control,clicksnext
+6,Answers from page stored as cookie:loads next scenario,take scenario pre-assignment,control,clicksnext
+7,System loads and displays first scenario:Answers from page stored as cookie,take scenario pre-assignment,control,storesanswersindatabase
+8,Click Continue button:Answers from page stored as cookie,take scenario pre-assignment,control,storesanswersindatabase
+9,displays thank you message :Homepage,take scenario pre-assignment,boundary,webpage
+10,clicks on radio buttons of answers:System loads and displays first scenario,take scenario pre-assignment,control,System Boundary
+11,User reads scenario description	:System loads and displays first scenario,take scenario pre-assignment,control,System Boundary
+12,clicks continue button:System loads and displays first scenario,take scenario pre-assignment,control,System Boundary
+13,stores answers in database:displays thank you message ,take scenario pre-assignment,control,displaysthankyoumessage
+14,loads next scenario:stores answers in database,take scenario pre-assignment,control,storesanswersindatabase
+15,stl#User:Homepage,take scenario pre-assignment,Stimulus,undefined
+16,stl#User:clicks continue button,take scenario pre-assignment,Stimulus,undefined
+17,stl#User:Click Continue button,take scenario pre-assignment,Stimulus,undefined
+18,stl#User:User reads scenario description	,take scenario pre-assignment,Stimulus,undefined
+19,stl#User:clicks on radio buttons of answers,take scenario pre-assignment,Stimulus,undefined

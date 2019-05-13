@@ -1,0 +1,43 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor contractor
+participant "querycrawlinglistofplayers" as 09
+
+contractor -> 09: playerdetailpage()
+activate 09
+
+09 -> 09: saveplayer()
+09 -> 09: player()
+deactivate 09
+
+contractor -> 09: allplayerslist()
+activate 09
+
+09 -> 09: queryplayerinfo()
+09 -> 09: player()
+deactivate 09
+
+09 -> 09: playerdetailpage()
+activate 09
+
+09 -> 09: saveplayer()
+deactivate 09
+
+contractor -> 09: playerstab()
+activate 09
+
+09 -> 09: querycrawlinglistofplayers()
+09 -> 09: allplayerslist()
+09 -> 09: queryplayerinfo()
+deactivate 09
+
+09 -> 09: player()
+activate 09
+
+deactivate 09
+
+@enduml

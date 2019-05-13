@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Recommendation Letter" as 09
+participant "Message" as 19
+participant "Signinform" as 49
+
+User -> 09: listofrandomrecommendations()
+activate 09
+
+deactivate 09
+
+User -> 19: sortedlistofmessagesbysimilarity()
+activate 19
+
+deactivate 19
+
+User -> 19: homepagelink()
+activate 19
+
+19 -> 09: retrieverecommendations()
+activate 09
+
+09 -> 49: algorithmforsimilarity()
+activate 49
+
+49 -> 19: sortedlistofmessagesbysimilarity()
+deactivate 19
+
+deactivate 49
+
+09 -> 09: recommendations()
+deactivate 09
+
+09 -> 09: shufflesrecommendations()
+activate 09
+
+09 -> 09: listofrandomrecommendations()
+deactivate 09
+
+@enduml

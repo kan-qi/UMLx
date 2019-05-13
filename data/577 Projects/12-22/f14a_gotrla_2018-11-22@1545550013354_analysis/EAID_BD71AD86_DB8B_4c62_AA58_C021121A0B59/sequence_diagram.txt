@@ -1,0 +1,90 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor Staff
+participant "Girl Attendance" as 09
+participant "Dataexportsuccessmessage" as 29
+participant "csvfiles" as 129
+participant "Team Information" as 139
+
+Admin -> 09: Typesofattendance()
+activate 09
+
+09 -> 129: exportdatatocsvfile()
+activate 129
+
+129 -> 139: Selectfilelocationtosave()
+activate 139
+
+139 -> 29: Dataexportsuccessmessage()
+activate 29
+
+deactivate 29
+
+139 -> 129: csvfiles()
+deactivate 129
+
+deactivate 139
+
+deactivate 09
+
+Admin -> 09: Attendancepage()
+activate 09
+
+09 -> 09: displaytypeofattendanceforexport()
+09 -> 09: Typesofattendance()
+09 -> 129: exportdatatocsvfile()
+activate 129
+
+deactivate 129
+
+deactivate 09
+
+09 -> 09: attendance()
+activate 09
+
+deactivate 09
+
+Admin -> 29: Dataexportsuccessmessage()
+activate 29
+
+deactivate 29
+
+Admin -> 09: Selectattendancebutton()
+activate 09
+
+09 -> 09: Displayattendancepage()
+09 -> 09: Attendancepage()
+09 -> 09: displaytypeofattendanceforexport()
+deactivate 09
+
+09 -> 09: attendance()
+activate 09
+
+deactivate 09
+
+Staff -> 29: Dataexportsuccessmessage()
+activate 29
+
+deactivate 29
+
+Staff -> 09: Typesofattendance()
+activate 09
+
+09 -> 129: exportdatatocsvfile()
+activate 129
+
+deactivate 129
+
+deactivate 09
+
+Staff -> 09: Attendancepage()
+activate 09
+
+09 -> 09: displaytypeofattendanceforexport()
+deactivate 09
+
+@enduml

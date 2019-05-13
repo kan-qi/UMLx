@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#guests:RSVP form page->guests:RSVP form page,reply to invitation,CTRL,2,0,4,1,8
+2,stl#guests:error message->guests:error message,reply to invitation,CTRL;EXTCLL;INT,2,0,2,1,4
+3,stl#guests:RSVP link->guests:RSVP link->RSVP link:Redirect to RSVP form page->Redirect to RSVP form page:Save RSVP into db->Save RSVP into db:invitation info,reply to invitation,TRAN_NA,5,2,2.5,4,12.5
+4,stl#guests:RSVP link->guests:RSVP link->RSVP link:Redirect to RSVP form page->Redirect to RSVP form page:Save RSVP into db->Save RSVP into db:error message,reply to invitation,TRAN_NA,5,2,2.75,4,13.75
+5,stl#guests:RSVP link->guests:RSVP link->RSVP link:Redirect to RSVP form page->Redirect to RSVP form page:RSVP form page,reply to invitation,CTRL,4,2,4,3,16

@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Savesindatabase" as 59
+participant "Job Candidate Profile" as 69
+
+User -> 09: Logoutpage()
+activate 09
+
+09 -> 69: Validateusenameandpassword()
+activate 69
+
+69 -> 59: Endsession()
+activate 59
+
+59 -> 09: Confirmationpage()
+09 -> 09: Homepage()
+deactivate 09
+
+09 -> 09: Logoutpage()
+activate 09
+
+09 -> 69: Validateusenameandpassword()
+deactivate 69
+
+deactivate 09
+
+deactivate 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

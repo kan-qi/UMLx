@@ -1,0 +1,22 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Student
+participant "Image Gallery Page" as 09
+
+Student -> 09: imagegallerypage()
+activate 09
+
+deactivate 09
+
+Student -> 09: theimagegallerylinkonthehomepage()
+activate 09
+
+09 -> 09: Displayimagegallerypage()
+09 -> 09: imagegallerypage()
+deactivate 09
+
+@enduml

@@ -1,0 +1,10 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Administrator:case created success message->Administrator:case created success message,Create a youth user,2,0,1,0,0
+2,stl#Administrator:generate a random password->Administrator:generate a random password->generate a random password:email password->email password:Email protocol,Create a youth user,4,0,3,0,0
+3,stl#Administrator:unauthorized error message->Administrator:unauthorized error message,Create a youth user,2,0,0,1,0
+4,stl#Administrator:username and received password input->Administrator:username and received password input->username and received password input:insert username and received password into DB->insert username and received password into DB:User,Create a youth user,4,0,2,1,0
+5,stl#Administrator:username and received password input->Administrator:username and received password input->username and received password input:insert username and received password into DB->insert username and received password into DB:create a case for the user->create a case for the user:Case,Create a youth user,5,0,3,1,0
+6,stl#Administrator:username and received password input->Administrator:username and received password input->username and received password input:insert username and received password into DB->insert username and received password into DB:create a case for the user->create a case for the user:case created success message,Create a youth user,5,0,4,0,0
+7,stl#Administrator:Create user button->Administrator:Create user button->Create user button:validate role of user->validate role of user:generate a random password->generate a random password:email password->email password:Email protocol,Create a youth user,6,0,4,1,0
+8,stl#Administrator:Create user button->Administrator:Create user button->Create user button:validate role of user->validate role of user:role,Create a youth user,4,0,1,2,0
+9,stl#Administrator:Create user button->Administrator:Create user button->Create user button:validate role of user->validate role of user:unauthorized error message,Create a youth user,4,0,1,2,0

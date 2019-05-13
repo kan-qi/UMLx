@@ -1,0 +1,174 @@
+path,pattern
+
+App user login
+receive response->Registered user alert->Query for first time users->Account collection->,partially matched operational pattern
+receive response->display failure message->,partially matched operational pattern
+receive response->Query for first time users->Account collection->,partially matched operational pattern
+App user->Signup Screen->check first time user->Video record screen->,validation or interface management
+App user->Signup Screen->check first time user->Query for first time users->Account collection->,data management
+App user->Registered user popup->Registered user alert->Query for first time users->Account collection->,data management
+App user->display failure message->,partially matched operational pattern
+
+Capture Frame from Video and get  LP number
+confirm LP#->Capture frame from video and extract LP#->Extract LP#->emergency alert->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Display video with media controls->video->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Display video with media controls->Display emergency alert web form->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Describe LP# in editable field->emergency alert->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Zoom and crop functionality->Display cropped image->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Zoom and crop functionality->emergency alert->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Displlay captured frame->,partially matched operational pattern
+confirm LP#->Capture frame from video and extract LP#->Cancel report->Email client->,partially matched operational pattern
+confirm LP#->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Extract LP#->emergency alert->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Display video with media controls->video->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Display video with media controls->Display emergency alert web form->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Describe LP# in editable field->emergency alert->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Zoom and crop functionality->Display cropped image->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Zoom and crop functionality->emergency alert->return LP# and image->Video->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Displlay captured frame->,partially matched operational pattern
+confirm LP#->Finish->Capture frame from video and extract LP#->Cancel report->Email client->,partially matched operational pattern
+confirm LP#->Finish->Video->,partially matched operational pattern
+Report Poster->Capture frame from video and extract LP#->Extract LP#->emergency alert->return LP# and image->Video->,data management
+Report Poster->Capture frame from video and extract LP#->Display video with media controls->video->,data management
+Report Poster->Capture frame from video and extract LP#->Display video with media controls->Display emergency alert web form->,partially matched operational pattern
+Report Poster->Capture frame from video and extract LP#->Describe LP# in editable field->emergency alert->return LP# and image->Video->,data management
+Report Poster->Capture frame from video and extract LP#->Zoom and crop functionality->Display cropped image->,partially matched operational pattern
+Report Poster->Capture frame from video and extract LP#->Zoom and crop functionality->emergency alert->return LP# and image->Video->,data management
+Report Poster->Capture frame from video and extract LP#->Displlay captured frame->,partially matched operational pattern
+Report Poster->Capture frame from video and extract LP#->Cancel report->Email client->,validation or interface management
+Report Poster->Bad driver reporting screen->Display video with media controls->video->,data management
+Report Poster->Bad driver reporting screen->Display video with media controls->Display emergency alert web form->,partially matched operational pattern
+
+Extract License Plat Number from Video
+
+Extract Metrics on Number of hits
+
+Generate Usage-based bill
+
+Independent Review of Bad Driver Report
+Independent Reviewer->Invalid user popup->Invalid user alert->Query for valid users->,partially matched operational pattern
+Independent Reviewer->Invalid user popup->Display alert->Query for potential duplicates->Query for valid users->,partially matched operational pattern
+Independent Reviewer->Invalid user popup->Display alert->Query for potential duplicates->Bad driver database->,data management
+Independent Reviewer->Duplicate popup->Display alert->Query for potential duplicates->Query for valid users->,partially matched operational pattern
+Independent Reviewer->Duplicate popup->Display alert->Query for potential duplicates->Bad driver database->,data management
+Independent Reviewer->unauthoried access popup->privileges alert->Query for valid users->,partially matched operational pattern
+Independent Reviewer->Login screen->Get next report->Bad driver report->Get next report->Review Queue->Generate review queue->Bad driver database->,data management
+Independent Reviewer->Login screen->Get next report->Query for potential duplicates->Query for valid users->,partially matched operational pattern
+Independent Reviewer->Login screen->Get next report->Query for potential duplicates->Bad driver database->,data management
+
+Post Bad Driver Report to Insurance DB
+describe incident (category security etc)->Bad Dirver Report->Review Report->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->Cancel report->Bad Dirver Report->Review Report->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->Display video->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->Capture Image->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->Post report->check if all details are filled?->Display error message from empty fields->Enter License Plate# Screen->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->Post report->check if all details are filled?->Bad Dirver Report->Review Report->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->Display in non-editable fields->get date time and location of incident from video metadata->Video->Display video->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->,partially matched operational pattern
+describe incident (category security etc)->Enter License Plate# Screen->describe vechle(license  # model/make etc)->Bad Dirver Report->Review Report->,partially matched operational pattern
+Post report->,partially matched operational pattern
+Report Poster->Enter License Plate# Screen->Cancel report->Bad Dirver Report->Review Report->,data management
+Report Poster->Enter License Plate# Screen->Display video->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->,validation or interface management
+Report Poster->Enter License Plate# Screen->Capture Image->,partially matched operational pattern
+Report Poster->Enter License Plate# Screen->Post report->check if all details are filled?->Display error message from empty fields->Enter License Plate# Screen->,validation or interface management
+Report Poster->Enter License Plate# Screen->Post report->check if all details are filled?->Bad Dirver Report->Review Report->,data management
+Report Poster->Enter License Plate# Screen->Display in non-editable fields->get date time and location of incident from video metadata->Video->Display video->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->,data management
+Report Poster->Enter License Plate# Screen->describe vechle(license  # model/make etc)->Bad Dirver Report->Review Report->,data management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->Cancel report->Bad Dirver Report->Review Report->,validation or interface management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->Display video->List of reports screen->,validation or interface management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->Capture Image->,validation or interface management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->Post report->check if all details are filled?->Display error message from empty fields->,validation or interface management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->Post report->check if all details are filled?->Bad Dirver Report->Review Report->,validation or interface management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->Display in non-editable fields->get date time and location of incident from video metadata->Video->Display video->List of reports screen->,validation or interface management
+Report Poster->List of reports screen->Display error message from empty fields->Enter License Plate# Screen->describe vechle(license  # model/make etc)->Bad Dirver Report->Review Report->,validation or interface management
+Report Poster->Review Report->,partially matched operational pattern
+
+Query bad driver reporting DB
+License lace # database associated with Bad Drivers->Query for report by license plate #->List of reports screen->Select Report->Display Report->Bad Dirver Report->Review Report->,partially matched operational pattern
+License lace # database associated with Bad Drivers->Query for report by license plate #->List of reports screen->Select Report->Display Report->Bad Dirver Report->Bad Driver Database->,partially matched operational pattern
+Insurance Agent->List of reports screen->Select Report->Display Report->Bad Dirver Report->Review Report->,data management
+Insurance Agent->List of reports screen->Select Report->Display Report->Bad Dirver Report->Bad Driver Database->,data management
+Insurance Agent->Enter License Plate# Screen->Query for report by license plate #->List of reports screen->Select Report->Display Report->Bad Dirver Report->Review Report->,validation or interface management
+Insurance Agent->Enter License Plate# Screen->Query for report by license plate #->List of reports screen->Select Report->Display Report->Bad Dirver Report->Bad Driver Database->,validation or interface management
+Insurance Agent->Review Report->,partially matched operational pattern
+
+Recording video clips in a circular buffer
+Driver->Recording screen->Recording video clips->Receive report bad driver command->Fetch two most recent video clips->Circular Buffer->,data management
+Driver->Recording screen->Recording video clips->Receive report bad driver command->Fetch two most recent video clips->Recording paused->Recording video clips->,partially matched operational pattern
+Driver->Recording screen->Recording video clips->Bad driver reports->,validation or interface management
+
+Recording video of bad driving event
+License lace # database associated with Bad Drivers->Recording video clips->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Upload video clips->Recording video clips->,partially matched operational pattern
+License lace # database associated with Bad Drivers->Recording video clips->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Review Report->,partially matched operational pattern
+License lace # database associated with Bad Drivers->Recording video clips->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Bad Driver Database->,partially matched operational pattern
+License lace # database associated with Bad Drivers->Recording video clips->Stop Recording and store file->Fetch two most  recent video clips->Upload video clips->Recording video clips->,partially matched operational pattern
+License lace # database associated with Bad Drivers->Recording video clips->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Review Report->,partially matched operational pattern
+License lace # database associated with Bad Drivers->Recording video clips->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Bad Driver Database->,partially matched operational pattern
+Insurance Agent->Recording screen->Recording video clips->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Upload video clips->Recording video clips->,validation or interface management
+Insurance Agent->Recording screen->Recording video clips->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Review Report->,validation or interface management
+Insurance Agent->Recording screen->Recording video clips->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Bad Driver Database->,validation or interface management
+Insurance Agent->Recording screen->Recording video clips->Stop Recording and store file->Fetch two most  recent video clips->Upload video clips->Recording video clips->,partially matched operational pattern
+Insurance Agent->Recording screen->Recording video clips->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Review Report->,data management
+Insurance Agent->Recording screen->Recording video clips->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Bad Driver Database->,data management
+Insurance Agent->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Upload video clips->Recording video clips->List of reports screen->,validation or interface management
+Insurance Agent->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Upload video clips->Recording video clips->Stop Recording and store file->,partially matched operational pattern
+Insurance Agent->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Review Report->,data management
+Insurance Agent->List of reports screen->Stop Recording and store file->Fetch two most  recent video clips->Circular buffer->Bad Driver Database->,data management
+Insurance Agent->Review Report->,partially matched operational pattern
+
+Resolve Potential Duplicates
+Independent reviewer->Registered user popup->Registered user alert->Get potential duplicate reports->Bad driver database->,data management
+Independent reviewer->Resolve duplicate screen->display 2 reports->Bad driver reports->,validation or interface management
+Independent reviewer->Resolve duplicate screen->display 2 reports->Get potential duplicate reports->Bad driver database->,data management
+
+Reviewer/Agent Login
+Review/Agent->Invalid user popup->Invalid user alert->Query for valid users->Account collection->,data management
+Review/Agent->Invalid user popup->check blank fields->Validate user->Query for valid users->Account collection->,data management
+Review/Agent->Login screen->check blank fields->Validate user->Query for valid users->Account collection->,data management
+Review/Agent->unauthoried access popup->privileges alert->Query for valid users->Account collection->,data management
+Review/Agent->Blank fields popup->check blank fields->Validate user->Query for valid users->Account collection->,data management
+
+Send Drunk Driver Alert
+fill video metadata in non-editable fields->get time date location from video metadata->Video->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Record hazardous videos and Call 911->Display emergency alert web form->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Cancel report->Email client->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Enter name and phone number->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Describe incident->Video->Record hazardous videos and Call 911->Display emergency alert web form->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Describe incident->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+fill video metadata in non-editable fields->Enter License Plate# Screen->Post report->get time date location from video metadata->Video->,partially matched operational pattern
+Upload the video->Video->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Record hazardous videos and Call 911->Display emergency alert web form->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Cancel report->Email client->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Enter name and phone number->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Describe incident->Video->Record hazardous videos and Call 911->Display emergency alert web form->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Describe incident->emergency alert->get time date location from video metadata->Video->,partially matched operational pattern
+Upload the video->Enter License Plate# Screen->Post report->get time date location from video metadata->Video->,partially matched operational pattern
+Report Poster->Bad driver reporting screen->Record hazardous videos and Call 911->Display emergency alert web form->,partially matched operational pattern
+Report Poster->Enter License Plate# Screen->Record hazardous videos and Call 911->Display emergency alert web form->,partially matched operational pattern
+Report Poster->Enter License Plate# Screen->Cancel report->Email client->,validation or interface management
+Report Poster->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video->,data management
+Report Poster->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video->,data management
+Report Poster->Enter License Plate# Screen->Enter name and phone number->emergency alert->get time date location from video metadata->Video->,data management
+Report Poster->Enter License Plate# Screen->Describe incident->Video->Record hazardous videos and Call 911->Display emergency alert web form->,data management
+Report Poster->Enter License Plate# Screen->Describe incident->emergency alert->get time date location from video metadata->Video->,data management
+Report Poster->Enter License Plate# Screen->Post report->get time date location from video metadata->Video->,data management
+
+Upload video clip to bad driver recording DB
+receive response->receive file at node.js->Video->,partially matched operational pattern
+receive response->display success message->,partially matched operational pattern
+receive response->display failure message->,partially matched operational pattern
+Blank fields popup->display success message->,partially matched operational pattern
+App user->Bad driver reporting screen->display success message->,partially matched operational pattern
+App user->Mobile app->send request with video file->receive file at node.js->Video->,data management
+App user->display failure message->,partially matched operational pattern
+App user->display success message->,partially matched operational pattern
+App user->Email client->display failure message->,partially matched operational pattern
+
+View video clips
+Driver->display failure message->,partially matched operational pattern
+Driver->View Review Screen->Display Thumbnails->Click on thumbnails->display failure message->,partially matched operational pattern
+Driver->View Review Screen->Display Thumbnails->Click on thumbnails->Display video clips->View Review Screen->,validation or interface management
+Driver->View Review Screen->Display Thumbnails->Retrieve recorded videos->Circular Buffer->,data management

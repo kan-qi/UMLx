@@ -1,0 +1,30 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Owner
+participant "Tour" as 09
+
+Owner -> 09: Listoftours()
+activate 09
+
+09 -> 09: deletetour()
+09 -> 09: tours()
+deactivate 09
+
+09 -> 09: retrievetours()
+activate 09
+
+09 -> 09: Listoftours()
+09 -> 09: deletetour()
+deactivate 09
+
+09 -> 09: retrievetours()
+activate 09
+
+09 -> 09: tours()
+deactivate 09
+
+@enduml

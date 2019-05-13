@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Emptycompletemessage" as 09
+participant "Page" as 19
+
+User -> 09: Updateerrormessage()
+activate 09
+
+deactivate 09
+
+User -> 19: pageedittextfieldandupdatebutton()
+activate 19
+
+19 -> 19: Updatepage()
+19 -> 19: Page()
+deactivate 19
+
+19 -> 09: Updateerrormessage()
+activate 09
+
+deactivate 09
+
+19 -> 09: Updatemessage()
+activate 09
+
+deactivate 09
+
+User -> 19: PageSelector()
+activate 19
+
+19 -> 19: Loadpagetoedit()
+19 -> 19: pageedittextfieldandupdatebutton()
+19 -> 19: Updatepage()
+deactivate 19
+
+User -> 09: Updatemessage()
+activate 09
+
+deactivate 09
+
+@enduml

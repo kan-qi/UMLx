@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Product Configuration" as 29
+participant "User Account" as 39
+participant "Web based product configurator and data service system" as 49
+
+User -> 09: Updatecontentpage()
+activate 09
+
+09 -> 49: Choosecontenttoupdate()
+activate 49
+
+49 -> 29: Confirmationpage()
+activate 29
+
+29 -> 09: Homepage()
+deactivate 09
+
+29 -> 09: Updatecontentpage()
+activate 09
+
+09 -> 49: Choosecontenttoupdate()
+49 -> 39: contentdb()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+deactivate 09
+
+deactivate 29
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "successmessage" as 09
+participant "Activityinputpage" as 19
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: Activityinputpage()
+activate 19
+
+19 -> 19: addactivityintodb()
+19 -> 19: activity()
+deactivate 19
+
+19 -> 19: activityalreadyexists()
+activate 19
+
+deactivate 19
+
+19 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: activityalreadyexists()
+activate 19
+
+deactivate 19
+
+@enduml

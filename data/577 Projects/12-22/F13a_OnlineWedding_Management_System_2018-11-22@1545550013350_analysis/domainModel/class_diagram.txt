@@ -1,0 +1,411 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Bride {
+- b_id:EAJava_int
+- b_firstname:EAJava_varchar
+- b_middlename:EAJava_varchar
+- b_lastname:EAJava_varchar
+- b_fathers_name:EAJava_varchar
+- b_mothers_name:EAJava_varchar
+~ Bride()
+}
+
+class Couple {
+- couple_id:EAJava_int
+~ design_invite()
+~ save_invite()
+~ update_guest_list()
+~ send_invite()
+~ view_guestList()
+~ takeSurvey()
+~ parseuploadedfile()
+~ filedb()
+~ RedirecttocoupleswebsitewitheventdetailsandRSVPform()
+}
+
+class Draggable {
+- draggable_id:EAJava_int
+- c_id:EAJava_int
+- id:EAJava_varchar
+- position_top:EAJava_double
+- position_left:EAJava_double
+- all_positions:EAJava_varchar
+~ Draggable()
+}
+
+class Event {
+- e_id:EAJava_int
+- venue_name:EAJava_varchar
+- venue_address:EAJava_varchar
+- event_name:EAJava_varchar
+- date:EAJava_date
+- venue_phone:EAJava_varchar
+- attire:EAJava_varchar
+- c_id:EAJava_int
+~ Event()
+~ Requirementspage()
+~ Saveallpoisitionsandcotnent()
+~ SaveRSVPintodb()
+~ eventdetailsandRSVP()
+}
+
+class Groom {
+- g_id:EAJava_int
+- g_firstname:EAJava_varchar
+- g_middlename:EAJava_varchar
+- g_lastname:EAJava_varchar
+- g_fathers_name:EAJava_varchar
+- g_mothers_name:EAJava_varchar
+~ Groom()
+~ backgroundinfo()
+}
+
+class Guest {
+- guest_id:EAJava_int
+- c_id:EAJava_int
+- email:EAJava_varchar
+- firstname:EAJava_varchar
+- lastname:EAJava_varchar
+~ rsvp()
+~ emptylistmessage()
+~ guestlistpage()
+~ guestinfo()
+}
+
+class User {
+- user_id:EAJava_int
+~ User()
+}
+
+class UserSpecificContent {
+- user_image_id:EAJava_int
+- name:EAJava_varchar
+- path:EAJava_varchar
+- c_id:EAJava_int
+~ UserSpecificContent()
+~ Positionsandcontentinfo()
+~ entercredentialspage()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+~ savebackgroundintodb()
+}
+
+class weddingwebsiteisdisplayed {
+~ weddingwebsiteisdisplayed()
+~ websitelinkinemail()
+}
+
+class successmessage {
+~ successmessage(EAJava_int guest_idEAJava_int c_idEAJava_varchar emailEAJava_varchar firstname):EAJava_varchar
+~ emptylistmessage()
+~ accountalreadyexistsmessage()
+~ Errormessageforwrongcredentials()
+~ errormessagenoinvitessendmessaage()
+~ confirmationmessage()
+~ deleteerrormessage()
+}
+
+class invitationlink {
+~ invitationlink(EAJava_int guest_idEAJava_int c_idEAJava_varchar emailEAJava_varchar firstname):EAJava_varchar
+~ sendregistrationlinktouser()
+~ selectsinvitationbackgroundpage()
+~ confirmationpage()
+~ sendinvitesbutton()
+~ saveinformationintodatabase()
+~ downloadabletemplatepageforfillingdata()
+}
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Event .. Bride
+
+Couple <|-- Bride
+
+Couple <|-- Groom
+
+User <|-- Guest
+
+User <|-- Couple
+
+@enduml

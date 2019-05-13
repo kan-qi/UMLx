@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "Reservation" as 09
+participant "ReservationController" as 19
+
+user -> 09: Reservationrequestslist()
+activate 09
+
+09 -> 19: Displaysconfirmationmessage()
+activate 19
+
+19 -> 19: Confirmationmessage()
+deactivate 19
+
+deactivate 09
+
+user -> 19: Viewunconfirmedreservationrequestsbutton()
+activate 19
+
+19 -> 19: retrievealistofunconfirmedreservations()
+19 -> 09: Reservationrequestslist()
+activate 09
+
+09 -> 19: Displaysconfirmationmessage()
+deactivate 19
+
+deactivate 09
+
+19 -> 09: reservationinfo()
+activate 09
+
+deactivate 09
+
+user -> 19: Confirmationmessage()
+activate 19
+
+deactivate 19
+
+@enduml

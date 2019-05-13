@@ -1,0 +1,85 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:not available error message->User:not available error message,Add to cart,2,0,1,0,0
+2,stl#User:add to cart button->User:add to cart button->add to cart button:check db if available->check db if available:add to cart->add to cart:cart,Add to cart,5,0,4,0,0
+3,stl#User:add to cart button->User:add to cart button->add to cart button:check db if available->check db if available:product,Add to cart,4,0,3,0,0
+4,stl#User:add to cart button->User:add to cart button->add to cart button:check db if available->check db if available:not available error message,Add to cart,4,0,3,0,0
+5,stl#User:error message for empty input->User:error message for empty input,Create profile,2,0,1,0,0
+6,stl#User:successful information for creation->User:successful information for creation,Create profile,2,0,1,0,0
+7,stl#User:existing profile error message->User:existing profile error message,Create profile,2,0,1,0,0
+8,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:error message for empty input,Create profile,4,0,3,0,0
+9,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:existing profile error message,Create profile,4,0,3,0,0
+10,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:send information in db->send information in db:user info,Create profile,5,0,3,1,0
+11,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:successful information for creation,Create profile,4,0,3,0,0
+12,stl#User:login page->User:login page->login page:pre-check if input is empty->pre-check if input is empty:error message for empty input,Login,4,1,2,0,0
+13,stl#User:login page->User:login page->login page:pre-check if input is empty->pre-check if input is empty:invalid input error message,Login,4,2,1,0,0
+14,stl#User:login page->User:login page->login page:pre-check if input is empty->pre-check if input is empty:query authentication info->query authentication info:user info,Login,5,1,2,1,0
+15,stl#User:invalid input error message->User:invalid input error message,Login,2,1,0,0,0
+16,stl#User:error message for empty input->User:error message for empty input,Login,2,0,1,0,0
+17,stl#User:logout button->User:logout button->logout button:clear session->clear session:Session,Logout,4,0,3,0,0
+18,stl#User:logout button->User:logout button->logout button:clear session->clear session:error message for empty input,Logout,4,0,3,0,0
+19,stl#User:logout button->User:logout button->logout button:clear session->clear session:invalid input error message,Logout,4,1,2,0,0
+20,stl#User:logout button->User:logout button->logout button:clear session->clear session:query authentication info->query authentication info:Session,Logout,5,0,4,0,0
+21,stl#User:invalid input error message->User:invalid input error message,Logout,2,1,0,0,0
+22,stl#User:error message for empty input->User:error message for empty input,Logout,2,0,1,0,0
+23,stl#florist:exceeded limit error message->florist:exceeded limit error message,Manage Catalog,2,1,0,0,0
+24,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:exceeded limit error message,Manage Catalog,4,2,1,0,0
+25,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:information is invalid,Manage Catalog,4,1,2,0,0
+26,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:save uploaded information to db->save uploaded information to db:category,Manage Catalog,5,1,3,0,0
+27,stl#florist:information is invalid->florist:information is invalid,Manage Catalog,2,0,1,0,0
+28,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display profile edit page,Manage Profile,3,1,1,0,0
+29,stl#User:existing profile error message->User:existing profile error message,Manage Profile,2,0,1,0,0
+30,stl#User:successful change message->User:successful change message,Manage Profile,2,1,0,0,0
+31,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:invalid information error message,Manage Profile,4,0,3,0,0
+32,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:update profile entry->update profile entry:successful change message,Manage Profile,5,1,3,0,0
+33,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:update profile entry->update profile entry:user info,Manage Profile,5,0,3,1,0
+34,stl#User:invalid information error message->User:invalid information error message,Manage Profile,2,0,1,0,0
+35,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:missing information for payment message,Place Order,4,1,2,0,0
+36,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:verify payment information->verify payment information:thirdpart payment system,Place Order,5,0,3,0,1
+37,stl#User:missing information for payment message->User:missing information for payment message,Place Order,2,1,0,0,0
+38,stl#thirdpart payment system:send error message for invalid payment information->thirdpart payment system:send error message for invalid payment information->send error message for invalid payment information:invalid payment inforrmation->invalid payment inforrmation:redirect to payment page->redirect to payment page:missing information for payment message,Place Order,5,1,3,0,0
+39,stl#thirdpart payment system:approve transaction and display successful message->thirdpart payment system:approve transaction and display successful message->approve transaction and display successful message:payment successful message->payment successful message:redirect to payment page->redirect to payment page:missing information for payment message,Place Order,5,3,1,0,0
+40,stl#customer:unread message->customer:unread message->unread message:display comment input panel->display comment input panel:message,Private Message - Florist,4,2,1,0,0
+41,stl#customer:unread message->customer:unread message->unread message:display comment input panel->display comment input panel:reply input panel->reply input panel:save replied message->save replied message:message,Private Message - Florist,6,4,1,0,0
+42,stl#customer:reply input panel->customer:reply input panel->reply input panel:save replied message->save replied message:message,Private Message - Florist,4,3,0,0,0
+43,stl#customer:dashboard page->customer:dashboard page->dashboard page:display unread message->display unread message:message,Private Message - Florist,4,3,0,0,0
+44,stl#customer:dashboard page->customer:dashboard page->dashboard page:display unread message->display unread message:unread message->unread message:display comment input panel->display comment input panel:message,Private Message - Florist,6,4,1,0,0
+45,stl#customer:dashboard page->customer:dashboard page->dashboard page:display unread message->display unread message:unread message->unread message:display comment input panel->display comment input panel:reply input panel->reply input panel:save replied message->save replied message:message,Private Message - Florist,8,6,1,0,0
+46,stl#customer:chat button->customer:chat button->chat button:display chat panel->display chat panel:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:message,Private message,6,3,2,0,0
+47,stl#customer:chat button->customer:chat button->chat button:display chat panel->display chat panel:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:successful communication message,Private message,6,3,2,0,0
+48,stl#customer:successful communication message->customer:successful communication message,Private message,2,1,0,0,0
+49,stl#customer:exceeded limit error message->customer:exceeded limit error message,Private message,2,1,0,0,0
+50,stl#customer:comment and concerns panel->customer:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:message,Private message,4,3,0,0,0
+51,stl#customer:comment and concerns panel->customer:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:successful communication message,Private message,4,3,0,0,0
+52,stl#florist:update successful page->florist:update successful page,Provide tracking information,2,1,0,0,0
+53,stl#florist:Order page->florist:Order page->Order page:update order status information->update order status information:order,Provide tracking information,4,0,1,2,0
+54,stl#florist:Order page->florist:Order page->Order page:update order status information->update order status information:update successful page,Provide tracking information,4,1,1,1,0
+55,stl#customer:review panel->customer:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:store review and rating information->store review and rating information:review,Review and Rating,5,1,1,2,0
+56,stl#customer:review panel->customer:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,4,1,1,1,0
+57,stl#customer:review button->customer:review button->review button:display review penal->display review penal:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:store review and rating information->store review and rating information:review,Review and Rating,7,1,1,4,0
+58,stl#customer:review button->customer:review button->review button:display review penal->display review penal:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,6,1,1,3,0
+59,stl#customer:too short review error message->customer:too short review error message,Review and Rating,2,1,0,0,0
+60,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:No product error message,Search Product,4,0,3,0,0
+61,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:product,Search Product,4,0,3,0,0
+62,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:product page,Search Product,4,0,3,0,0
+63,stl#User:product page->User:product page,Search Product,2,0,1,0,0
+64,stl#User:No product error message->User:No product error message,Search Product,2,0,1,0,0
+65,stl#user:no order history page->user:no order history page,Track Order,2,1,0,0,0
+66,stl#user:order status->user:order status,Track Order,2,0,0,1,0
+67,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:no order history page,Track Order,4,1,1,1,0
+68,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order,Track Order,4,0,1,2,0
+69,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order status,Track Order,4,0,1,2,0
+70,stl#florist:exceeded limit error message->florist:exceeded limit error message,Upload catalog,2,1,0,0,0
+71,stl#florist:information is invalid->florist:information is invalid,Upload catalog,2,0,1,0,0
+72,stl#florist:Upload page->florist:Upload page->Upload page:pre-check if required information valid->pre-check if required information valid:exceeded limit error message,Upload catalog,4,2,1,0,0
+73,stl#florist:Upload page->florist:Upload page->Upload page:pre-check if required information valid->pre-check if required information valid:information is invalid,Upload catalog,4,1,2,0,0
+74,stl#florist:Upload page->florist:Upload page->Upload page:pre-check if required information valid->pre-check if required information valid:save uploaded information to db->save uploaded information to db:category,Upload catalog,5,1,3,0,0
+75,stl#florist:order history list->florist:order history list,View Past Transactions,2,1,0,0,0
+76,stl#florist:no order history page->florist:no order history page,View Past Transactions,2,1,0,0,0
+77,stl#florist:Order history button->florist:Order history button->Order history button:retrieve order history for a florist->retrieve order history for a florist:no order history page,View Past Transactions,4,2,1,0,0
+78,stl#florist:Order history button->florist:Order history button->Order history button:retrieve order history for a florist->retrieve order history for a florist:order,View Past Transactions,4,1,1,1,0
+79,stl#florist:Order history button->florist:Order history button->Order history button:retrieve order history for a florist->retrieve order history for a florist:order history list,View Past Transactions,4,2,1,0,0
+80,stl#User:Order history button->User:Order history button->Order history button:retrieve order history->retrieve order history:no order history page,View order history,4,2,1,0,0
+81,stl#User:Order history button->User:Order history button->Order history button:retrieve order history->retrieve order history:order,View order history,4,1,1,1,0
+82,stl#User:Order history button->User:Order history button->Order history button:retrieve order history->retrieve order history:order history list,View order history,4,2,1,0,0
+83,stl#User:no order history page->User:no order history page,View order history,2,1,0,0,0
+84,stl#User:order history list->User:order history list,View order history,2,1,0,0,0

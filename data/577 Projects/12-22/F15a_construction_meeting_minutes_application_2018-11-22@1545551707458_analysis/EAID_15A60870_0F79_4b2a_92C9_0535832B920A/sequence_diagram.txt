@@ -1,0 +1,63 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "System Boundary" as 09
+participant "Meeting Log" as 19
+participant "Project" as 39
+participant "UserInfo" as 49
+
+User -> 09: Administratordashboard()
+activate 09
+
+deactivate 09
+
+User -> 19: Loginpage()
+activate 19
+
+19 -> 49: verifylogininformation()
+activate 49
+
+49 -> 19: LoginErrorPage()
+deactivate 19
+
+49 -> 39: Selectprojectpage()
+activate 39
+
+39 -> 39: retrieveprojectinformation()
+39 -> 09: Administratordashboard()
+activate 09
+
+deactivate 09
+
+39 -> 39: projectinfo()
+deactivate 39
+
+49 -> 49: generaluserdashboard()
+deactivate 49
+
+49 -> 49: userinfo()
+activate 49
+
+deactivate 49
+
+User -> 19: LoginErrorPage()
+activate 19
+
+deactivate 19
+
+User -> 39: Selectprojectpage()
+activate 39
+
+39 -> 39: retrieveprojectinformation()
+deactivate 39
+
+User -> 49: generaluserdashboard()
+activate 49
+
+deactivate 49
+
+@enduml

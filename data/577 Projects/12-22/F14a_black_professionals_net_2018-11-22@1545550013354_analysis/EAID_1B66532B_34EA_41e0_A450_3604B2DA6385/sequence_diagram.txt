@@ -1,0 +1,84 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Recommendation Letter" as 09
+participant "FollowerSet" as 19
+participant "Update" as 39
+participant "Connection" as 69
+
+User -> 09: Removebutton()
+activate 09
+
+deactivate 09
+
+User -> 19: Followbutton()
+activate 19
+
+19 -> 39: Updatethefollowstatus()
+activate 39
+
+39 -> 19: Followbutton()
+19 -> 39: Updatethefollowstatus()
+39 -> 19: Unfollowbutton()
+19 -> 69: Redirecttoconnectionlist()
+activate 69
+
+69 -> 09: Removebutton()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+19 -> 39: Updatethefollowstatus()
+39 -> 19: Followbutton()
+deactivate 19
+
+39 -> 19: Unfollowbutton()
+activate 19
+
+19 -> 69: removeconnectionbetweenusers()
+activate 69
+
+69 -> 69: connection()
+deactivate 69
+
+deactivate 19
+
+39 -> 69: connection()
+activate 69
+
+deactivate 69
+
+deactivate 39
+
+39 -> 69: connection()
+activate 69
+
+deactivate 69
+
+User -> 19: Unfollowbutton()
+activate 19
+
+19 -> 69: Redirecttoconnectionlist()
+activate 69
+
+deactivate 69
+
+19 -> 39: Updatethefollowstatus()
+activate 39
+
+deactivate 39
+
+19 -> 69: removeconnectionbetweenusers()
+activate 69
+
+deactivate 69
+
+deactivate 19
+
+@enduml

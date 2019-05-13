@@ -1,0 +1,83 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "AdditionalInfo" as 09
+participant "User_Profile" as 19
+participant "Message" as 39
+participant "SearchEngine" as 49
+participant "Update" as 119
+participant "ActivityLogger" as 139
+
+User -> 09: headlineediticon()
+activate 09
+
+09 -> 09: popupwindowforheadlineedit()
+09 -> 09: Headlineeditfield()
+09 -> 49: checkinputheadline()
+activate 49
+
+49 -> 39: headlineinputerrormessage()
+activate 39
+
+deactivate 39
+
+49 -> 119: saveupdatedheadline()
+activate 119
+
+119 -> 49: Headline()
+deactivate 49
+
+119 -> 19: MyProfilePage()
+activate 19
+
+deactivate 19
+
+deactivate 119
+
+deactivate 09
+
+09 -> 19: MyProfilePage()
+activate 19
+
+deactivate 19
+
+09 -> 139: redirecttologinpage()
+activate 139
+
+139 -> 09: Headlineeditfield()
+activate 09
+
+09 -> 49: checkinputheadline()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+deactivate 139
+
+User -> 19: MyProfilePage()
+activate 19
+
+deactivate 19
+
+User -> 09: Headlineeditfield()
+activate 09
+
+09 -> 49: checkinputheadline()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User -> 39: headlineinputerrormessage()
+activate 39
+
+deactivate 39
+
+@enduml

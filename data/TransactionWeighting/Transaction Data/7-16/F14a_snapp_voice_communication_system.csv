@@ -1,0 +1,60 @@
+id,transaction,useCase,transactional, TL, DETs, TD, Arch_Diff
+1,stl#thirdparty call agency:call finishs and display call details->thirdparty call agency:call finishs and display call details->call finishs and display call details:call details,Call customers,TRAN_NA,3,0,6,18
+2,stl#User Agent:login page->User Agent:login page->login page:check login information->check login information:show leads list->show leads list:query leads list->query leads list:leads list->leads list:query lead information->query lead information:lead detail->lead detail:pop softphone screen->pop softphone screen:softphone screen->softphone screen:make a phone call->make a phone call:softphone screen->softphone screen:make a phone call,Call customers,TRAN_NA,13,0,6.25,81.25
+3,stl#User Agent:login page->User Agent:login page->login page:check login information->check login information:show leads list->show leads list:query leads list->query leads list:leads list->leads list:query lead information->query lead information:lead,Call customers,CTRL,8,0,6.857142857142857,54.857142857142854
+4,stl#User Agent:login page->User Agent:login page->login page:check login information->check login information:show leads list->show leads list:query leads list->query leads list:lead,Call customers,CTRL,6,0,7,42
+5,stl#User Agent:login page->User Agent:login page->login page:check login information->check login information:login info,Call customers,CTRL,4,0,2.3333333333333335,9.333333333333334
+6,stl#User Agent:show leads list->User Agent:show leads list->show leads list:query leads list->query leads list:leads list->leads list:query lead information->query lead information:lead detail->lead detail:pop softphone screen->pop softphone screen:softphone screen->softphone screen:make a phone call->make a phone call:softphone screen->softphone screen:make a phone call,Call customers,TRAN_NA,11,0,7,77
+7,stl#User Agent:show leads list->User Agent:show leads list->show leads list:query leads list->query leads list:leads list->leads list:query lead information->query lead information:lead,Call customers,CTRL,6,0,8.6,51.599999999999994
+8,stl#User Agent:show leads list->User Agent:show leads list->show leads list:query leads list->query leads list:lead,Call customers,CTRL,4,0,10,40
+9,stl#User Agent:leads list->User Agent:leads list->leads list:query lead information->query lead information:lead detail->lead detail:pop softphone screen->pop softphone screen:softphone screen->softphone screen:make a phone call->make a phone call:softphone screen->softphone screen:make a phone call,Call customers,TRAN_NA,9,0,6.25,56.25
+10,stl#User Agent:leads list->User Agent:leads list->leads list:query lead information->query lead information:lead,Call customers,CTRL,4,0,7.666666666666667,30.666666666666668
+11,stl#User Agent:call details->User Agent:call details,Call customers,CTRL,2,0,6,12
+12,stl#User Agent:call details->User Agent:call details,Call customers,EXTCLL,2,0,6,12
+13,stl#User Agent:call details->User Agent:call details,Call customers,INT,2,0,6,12
+14,stl#User Agent:lead detail->User Agent:lead detail->lead detail:pop softphone screen->pop softphone screen:softphone screen->softphone screen:make a phone call->make a phone call:softphone screen->softphone screen:make a phone call,Call customers,TRAN_NA,7,0,6.166666666666667,43.16666666666667
+15,stl#User Agent:softphone screen->User Agent:softphone screen->softphone screen:make a phone call->make a phone call:softphone screen->softphone screen:make a phone call,Call customers,TRAN_NA,5,0,5.5,27.5
+1,stl#Manager:softphone screen->Manager:softphone screen,Monitor Agents,CTRL,2,0,2,4
+2,stl#Manager:view agent activites button->Manager:view agent activites button->view agent activites button:query agent->query agent:list of agents with status->list of agents with status:connect to Twilio API for agent's call->connect to Twilio API for agent's call:softphone screen,Monitor Agents,TRAN_NA,6,0,1.8,10.8
+3,stl#Manager:view agent activites button->Manager:view agent activites button->view agent activites button:query agent->query agent:agent,Monitor Agents,TRAN_NA,4,0,1.6666666666666667,6.666666666666667
+4,stl#Manager:list of agents with status->Manager:list of agents with status->list of agents with status:connect to Twilio API for agent's call->connect to Twilio API for agent's call:softphone screen,Monitor Agents,TRAN_NA,4,0,2,8
+1,stl#Twilio API:redirect to void mail->Twilio API:redirect to void mail->redirect to void mail:voice mail panel->voice mail panel:connect to Twilio API for agent's call->connect to Twilio API for agent's call:softphone screen,Receeive Calls,TRAN_NA,5,0,5,25
+2,stl#Twilio API:redirect to void mail->Twilio API:redirect to void mail->redirect to void mail:voice mail panel->voice mail panel:connect to Twilio API for agent's call->connect to Twilio API for agent's call:agent,Receeive Calls,TRAN_NA,5,0,4.25,21.25
+3,stl#Twilio API:popup income call dialog->Twilio API:popup income call dialog->popup income call dialog:income call dialog,Receeive Calls,CTRL,3,0,7,21
+4,stl#Twilio API:save call log->Twilio API:save call log->save call log:call log,Receeive Calls,CTRL,3,0,2,6
+5,stl#Lead:voice mail panel->Lead:voice mail panel->voice mail panel:connect to Twilio API for agent's call->connect to Twilio API for agent's call:softphone screen,Receeive Calls,TRAN_NA,4,0,4.333333333333333,17.333333333333332
+6,stl#Lead:voice mail panel->Lead:voice mail panel->voice mail panel:connect to Twilio API for agent's call->connect to Twilio API for agent's call:agent,Receeive Calls,TRAN_NA,4,0,3.3333333333333335,13.333333333333334
+7,stl#Lead:1-800 dial button->Lead:1-800 dial button->1-800 dial button:assign call to agent,Receeive Calls,CTRL,3,0,5.5,16.5
+8,stl#Lead:softphone screen->Lead:softphone screen,Receeive Calls,CTRL,2,0,4,8
+9,stl#Customer:1-800 dial button->Customer:1-800 dial button->1-800 dial button:assign call to agent,Receeive Calls,CTRL,3,0,5.5,16.5
+1,stl#User Agent:income call popup->User Agent:income call popup->income call popup:answer phone call->answer phone call:call log,Record calls and call details,TRAN_NA,4,0,3.3333333333333335,13.333333333333334
+2,stl#User Agent:call/auto dialer button->User Agent:call/auto dialer button->call/auto dialer button:dial with Twilio API,Record calls and call details,TRAN_NA,3,0,4,12
+3,stl#Twilio API:popup income call and user agent number->Twilio API:popup income call and user agent number->popup income call and user agent number:caller number->caller number:answer phone call,Record calls and call details,TRAN_NA,4,0,4.666666666666667,18.666666666666668
+4,stl#Twilio API:popup income call and customer's number->Twilio API:popup income call and customer's number->popup income call and customer's number:income call popup->income call popup:answer phone call->answer phone call:call log,Record calls and call details,TRAN_NA,5,0,2.75,13.75
+5,stl#Lead:income call popup->Lead:income call popup->income call popup:answer phone call->answer phone call:call log,Record calls and call details,TRAN_NA,4,0,3.3333333333333335,13.333333333333334
+1,stl#Sales Agent:success message for removing lead->Sales Agent:success message for removing lead,Remove lead from auto dialer list,CTRL,2,0,3,6
+2,stl#Sales Agent:dropdown list for removing lead->Sales Agent:dropdown list for removing lead->dropdown list for removing lead:remove lead from autodialing list->remove lead from autodialing list:success message for removing lead,Remove lead from auto dialer list,TRAN_NA,4,0,2.3333333333333335,9.333333333333334
+3,stl#Sales Agent:dropdown list for removing lead->Sales Agent:dropdown list for removing lead->dropdown list for removing lead:remove lead from autodialing list->remove lead from autodialing list:autodialing list,Remove lead from auto dialer list,TRAN_NA,4,0,1.6666666666666667,6.666666666666667
+1,stl#Twilio API:notify acceptance from manager->Twilio API:notify acceptance from manager->notify acceptance from manager:Popup of manager's acceptance->Popup of manager's acceptance:autodialing list,Request Manager Conference,TRAN_NA,4,0,4.666666666666667,18.666666666666668
+2,stl#Twilio API:notify cancel request->Twilio API:notify cancel request->notify cancel request:conference cancel notification,Request Manager Conference,CTRL,3,0,6,18
+3,stl#Twilio API:Notify Manager->Twilio API:Notify Manager->Notify Manager:popup with request detail of the agent,Request Manager Conference,TRAN_NA,3,0,3,9
+4,stl#Manager:popup with request detail of the agent->Manager:popup with request detail of the agent,Request Manager Conference,CTRL,2,0,2,4
+5,stl#Manager:popup with request detail of the agent->Manager:popup with request detail of the agent,Request Manager Conference,EXTCLL,2,0,2,4
+6,stl#Manager:popup with request detail of the agent->Manager:popup with request detail of the agent,Request Manager Conference,INT,2,0,2,4
+7,stl#Manager:connect to ongoing call->Manager:connect to ongoing call,Request Manager Conference,CTRL,2,0,6,12
+8,stl#Customer:conference cancel notification->Customer:conference cancel notification,Request Manager Conference,CTRL,2,0,6,12
+9,stl#Customer:Popup of manager's acceptance->Customer:Popup of manager's acceptance->Popup of manager's acceptance:autodialing list,Request Manager Conference,TRAN_NA,3,0,5,15
+10,stl#Customer:request manager conference button->Customer:request manager conference button->request manager conference button:send conference request,Request Manager Conference,TRAN_NA,3,0,1,3
+1,stl#User Agent:changed status->User Agent:changed status,Update Lead Status,CTRL,2,0,4,8
+2,stl#User Agent:status selector dropdown list->User Agent:status selector dropdown list->status selector dropdown list:save status for lead->save status for lead:changed status,Update Lead Status,CTRL,4,0,4,16
+3,stl#User Agent:status selector dropdown list->User Agent:status selector dropdown list->status selector dropdown list:save status for lead->save status for lead:Lead,Update Lead Status,CTRL,4,0,3,12
+1,stl#Twilio API:receive call information->Twilio API:receive call information->receive call information:call detailed information,View call los and listen to call recordings,CTRL,3,0,11,33
+2,stl#Twilio API:download call records->Twilio API:download call records->download call records:call records,View call los and listen to call recordings,CTRL,3,0,11,33
+3,stl#Twilio API:download call records->Twilio API:download call records->download call records:call record downloaded message,View call los and listen to call recordings,CTRL,3,0,11,33
+4,stl#Manager:call record downloaded message->Manager:call record downloaded message,View call los and listen to call recordings,CTRL,2,0,11,22
+5,stl#Manager:call detailed information->Manager:call detailed information,View call los and listen to call recordings,CTRL,2,0,11,22
+6,stl#Manager:view agent activities link->Manager:view agent activities link->view agent activities link:query agent activies->query agent activies:list of agents with status->list of agents with status:connect to Twilio API for call's info,View call los and listen to call recordings,TRAN_NA,5,0,4.25,21.25
+7,stl#Manager:view agent activities link->Manager:view agent activities link->view agent activities link:query agent activies->query agent activies:list of agents with status->list of agents with status:connect to Twilio API for agent's call records,View call los and listen to call recordings,TRAN_NA,5,0,4.25,21.25
+8,stl#Manager:view agent activities link->Manager:view agent activities link->view agent activities link:query agent activies->query agent activies:agent,View call los and listen to call recordings,CTRL,4,0,1.6666666666666667,6.666666666666667
+9,stl#Manager:list of agents with status->Manager:list of agents with status->list of agents with status:connect to Twilio API for call's info,View call los and listen to call recordings,TRAN_NA,3,0,6.5,19.5
+10,stl#Manager:list of agents with status->Manager:list of agents with status->list of agents with status:connect to Twilio API for agent's call records,View call los and listen to call recordings,TRAN_NA,3,0,6.5,19.5

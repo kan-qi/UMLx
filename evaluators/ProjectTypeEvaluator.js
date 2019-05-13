@@ -35,7 +35,7 @@
 			return modelInfo['ProjectTypeEmpirics'].projectType;
 		}
 		
-		return "";
+		return "Unknown";
 	}
 	
 	

@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Visitor
+participant "400or500erorrpage" as 09
+participant "listofprogramsfortrekkingLA" as 29
+participant "displayanewsectionondashboard" as 39
+participant "validatethelinkofimage" as 69
+
+Visitor -> 09: 400or500erorrpage()
+activate 09
+
+deactivate 09
+
+Visitor -> 29: listofprogramsfortrekkingLA()
+activate 29
+
+29 -> 69: readimagesandtextsfromdb()
+activate 69
+
+69 -> 09: 400or500erorrpage()
+activate 09
+
+deactivate 09
+
+69 -> 29: displaytheTrekkingLApage()
+29 -> 29: trekkingLApage()
+deactivate 29
+
+69 -> 69: imagesandtextsdb()
+deactivate 69
+
+Visitor -> 29: programsbutton()
+activate 29
+
+29 -> 39: displayadropdownlist()
+activate 39
+
+39 -> 29: listofprogramsfortrekkingLA()
+29 -> 69: readimagesandtextsfromdb()
+activate 69
+
+deactivate 69
+
+deactivate 29
+
+deactivate 39
+
+Visitor -> 29: trekkingLApage()
+activate 29
+
+deactivate 29
+
+@enduml

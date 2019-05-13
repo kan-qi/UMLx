@@ -1,0 +1,96 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ProxyConnector" as 09
+participant "uploadfile" as 19
+participant "MicroWebsiteManagementPage" as 29
+participant "pdfformatisnotvalidmessage" as 39
+participant "createaccountbutton" as 59
+participant "Casestudydb" as 89
+participant "sendemailtouser" as 149
+
+User -> 09: Confirmbox()
+activate 09
+
+09 -> 29: MicroWebsitemanagement()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: uploadfailmessage()
+activate 19
+
+deactivate 19
+
+User -> 29: MicroWebsitemanagement()
+activate 29
+
+deactivate 29
+
+User -> 39: Successmessage()
+activate 39
+
+deactivate 39
+
+User -> 39: failuremessage()
+activate 39
+
+deactivate 39
+
+User -> 59: Sendtorecipientbutton()
+activate 59
+
+59 -> 09: Popupconfirmbox()
+activate 09
+
+09 -> 59: Sendtorecipientbutton()
+59 -> 09: Popupconfirmbox()
+09 -> 149: sendemailtouser()
+activate 149
+
+149 -> 09: Confirmbox()
+09 -> 29: MicroWebsitemanagement()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+149 -> 39: Displayfailermessage()
+activate 39
+
+39 -> 39: failuremessage()
+deactivate 39
+
+149 -> 39: displaysuccessmessage()
+activate 39
+
+39 -> 89: Casestudydb()
+activate 89
+
+deactivate 89
+
+39 -> 29: MicroWebsitemanagement()
+activate 29
+
+deactivate 29
+
+39 -> 39: Successmessage()
+deactivate 39
+
+149 -> 19: uploadfailmessage()
+activate 19
+
+deactivate 19
+
+deactivate 149
+
+deactivate 59
+
+@enduml

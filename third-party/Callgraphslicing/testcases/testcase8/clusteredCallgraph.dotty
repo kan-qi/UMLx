@@ -1,0 +1,27 @@
+digraph g {compound=true
+subgraph cluster_3 {"LApkParser.js/parse/ApkParser.js@412" [color=red]
+}
+subgraph cluster_4 {"Lruntime.js/exec" [color=red]
+}
+subgraph cluster_1 {"LapkInfo.js/apkInfo" [color=green, shape=box]
+}
+subgraph cluster_2 {"LapkInfo.js/store" [color=green, shape=box]
+}
+subgraph cluster_0 {"LApkParser.js/ApkParser.js@1662" [color=yellow]
+"Lexpress.js/send" [color=yellow]
+"LApkParser.js/ApkParser.js@1662"->"Lexpress.js/send"
+}
+subgraph cluster_7 {"LFakeRoot" [color=red]
+}
+subgraph cluster_5 {"LApkParser.js/parse" [color=red]
+}
+subgraph cluster_6 {"LApkParser.js" [color=red]
+}
+"LApkParser.js/parse/ApkParser.js@412"->"LApkParser.js/ApkParser.js@1662"[ltail=cluster_3,lhead=cluster_0]
+"LApkParser.js/parse/ApkParser.js@412"->"LapkInfo.js/apkInfo"[ltail=cluster_3,lhead=cluster_1]
+"LApkParser.js/parse/ApkParser.js@412"->"LapkInfo.js/store"[ltail=cluster_3,lhead=cluster_2]
+"Lruntime.js/exec"->"LApkParser.js/parse/ApkParser.js@412"[ltail=cluster_4,lhead=cluster_3]
+"LApkParser.js/parse"->"Lruntime.js/exec"[ltail=cluster_5,lhead=cluster_4]
+"LApkParser.js"->"LApkParser.js/parse"[ltail=cluster_6,lhead=cluster_5]
+"LFakeRoot"->"LApkParser.js"[ltail=cluster_7,lhead=cluster_6]
+}

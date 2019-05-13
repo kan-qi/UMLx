@@ -1,0 +1,43 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "successmessage" as 09
+participant "Product Configuration" as 19
+participant "User Account" as 39
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: projectdescriptionpage()
+activate 19
+
+19 -> 39: createuseraccount()
+activate 39
+
+39 -> 39: Useraccount()
+deactivate 39
+
+39 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+39 -> 09: projecthasbeencreatedmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 09: projecthasbeencreatedmessage()
+activate 09
+
+deactivate 09
+
+@enduml

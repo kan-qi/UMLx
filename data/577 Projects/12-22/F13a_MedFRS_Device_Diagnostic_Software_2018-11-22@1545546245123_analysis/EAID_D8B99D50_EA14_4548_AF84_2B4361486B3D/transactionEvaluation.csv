@@ -1,0 +1,8 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Empty username and password error message->User:Empty username and password error message,Login to MEDFRS Website,CTRL;EXTCLL;INT,2,0,6,1,12
+2,stl#User:Login page->User:Login page->Login page:Check user and password entered->Check user and password entered:Empty username and password error message,Login to MEDFRS Website,TRAN_NA,4,1,2.6666666666666665,3,10.666666666666666
+3,stl#User:Login page->User:Login page->Login page:Check user and password entered->Check user and password entered:Authenticate the username and password->Authenticate the username and password:Login error message,Login to MEDFRS Website,TRAN_NA,5,1,2.25,4,11.25
+4,stl#User:Login page->User:Login page->Login page:Check user and password entered->Check user and password entered:Authenticate the username and password->Authenticate the username and password:Username and password db,Login to MEDFRS Website,TRAN_NA,5,1,1,4,5
+5,stl#User:Login page->User:Login page->Login page:Check user and password entered->Check user and password entered:Authenticate the username and password->Authenticate the username and password:Redirect to MedFPS Supervisor/coordinate homepage->Redirect to MedFPS Supervisor/coordinate homepage:MedFPS homepage,Login to MEDFRS Website,TRAN_NA,6,1,2,5,12
+6,stl#User:Login error message->User:Login error message,Login to MEDFRS Website,CTRL;EXTCLL;INT,2,0,6,1,12
+7,stl#User:MedFPS homepage->User:MedFPS homepage,Login to MEDFRS Website,CTRL;EXTCLL;INT,2,0,6,1,12

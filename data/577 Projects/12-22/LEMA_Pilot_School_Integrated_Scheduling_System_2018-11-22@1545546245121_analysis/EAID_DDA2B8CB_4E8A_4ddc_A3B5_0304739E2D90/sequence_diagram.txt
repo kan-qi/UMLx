@@ -1,0 +1,41 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "student data" as 09
+participant "school name" as 19
+participant "course type" as 29
+participant "counselor data" as 49
+
+User -> 09: Studentcourselist()
+activate 09
+
+09 -> 29: Reviewcourseandapprove()
+activate 29
+
+29 -> 09: Updatestatusindatabase()
+09 -> 09: Studentcourselist()
+09 -> 29: Reviewcourseandapprove()
+deactivate 29
+
+deactivate 09
+
+09 -> 49: Database()
+activate 49
+
+deactivate 49
+
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

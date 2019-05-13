@@ -1,0 +1,49 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "Loginbutton" as 09
+participant "Slot" as 19
+participant "declinemessage" as 29
+participant "SurgeryCenter" as 39
+
+user -> 09: ViewSurgicalSlotPostbuttonandchoices()
+activate 09
+
+09 -> 39: checkthesurgicalslotbythecriteria()
+activate 39
+
+39 -> 29: Noexistingsurgicalslotpostmessage()
+activate 29
+
+deactivate 29
+
+39 -> 19: Surgicalslotinfo()
+activate 19
+
+deactivate 19
+
+39 -> 19: displaythesurgicalslotinfo()
+activate 19
+
+19 -> 19: surgicalslotinfo()
+deactivate 19
+
+deactivate 39
+
+deactivate 09
+
+user -> 19: surgicalslotinfo()
+activate 19
+
+deactivate 19
+
+user -> 29: Noexistingsurgicalslotpostmessage()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,21 @@
+id,element,useCase,type,component
+1,User:"micro website" form,create micro website,control,idlefor30ormoreminutes
+2,User:"Create Micro Website" Button,create micro website,boundary,createaccountbutton
+3,User:failure message,create micro website,control,pdfformatisnotvalidmessage
+4,User:View Market Director Accounts Page,create micro website,boundary,Redirecttoemailingpage
+5,User:emailing page,create micro website,boundary,Redirecttoemailingpage
+6,"Create Micro Website" Button:Redirect to an empty "micro website" form,create micro website,boundary,Redirecttoemailingpage
+7,Redirect to an empty "micro website" form:"Create Micro Website" Button,create micro website,boundary,createaccountbutton
+8,"Micro website" form:View Market Director Accounts Page,create micro website,boundary,Redirecttoemailingpage
+9,"Micro website" form:Check file format and required field,create micro website,boundary,Redirecttoemailingpage
+10,Redirect to an empty  "micro website" form:"Micro website" form,create micro website,control,idlefor30ormoreminutes
+11,"micro website" form:Redirect to emailing page,create micro website,boundary,Redirecttoemailingpage
+12,Redirect to an empty "micro website" form:"micro website" form,create micro website,control,idlefor30ormoreminutes
+13,Check file format and required field:failure message,create micro website,control,pdfformatisnotvalidmessage
+14,emailing page:Redirect to an empty  "micro website" form,create micro website,boundary,Redirecttoemailingpage
+15,Redirect to emailing page:emailing page,create micro website,boundary,Redirecttoemailingpage
+16,stl#User:"micro website" form,create micro website,Stimulus,undefined
+17,stl#User:"Create Micro Website" Button,create micro website,Stimulus,undefined
+18,stl#User:failure message,create micro website,Stimulus,undefined
+19,stl#User:View Market Director Accounts Page,create micro website,Stimulus,undefined
+20,stl#User:emailing page,create micro website,Stimulus,undefined

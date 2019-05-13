@@ -1,0 +1,37 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("transaction_regression_calibration.R")
+library(tidyverse)
+
+```
+Combined Data Effort Values
+```{r combined}
+#combined <- combineData("./Transaction Data")
+effort <- read.csv("projectData.csv")
+effort <- effort[which(effort$Effort != "NA")]
+rownames(effort) <- effort$Project
+print(effort)
+```
+SWTII Search Results
+```{r SWTII}
+SWTIIresults <- performSearch("./Transaction Data", effort, c("TD"))
+
+# Plot cross validation results
+print(c(SWTIIresults$MSE, SWTIIresults$MMRE, SWTIIresults$PRED))
+print(summary(SWTIIresults$model))
+
+# plot predicted vs actual
+predictedValues <- data.frame(Predicted = as.matrix(predict.lm(SWTIIresults$model, as.matrix(SWTIIresults$data)))[,1], Effort=SWTIIresults$data$Effort)
+
+print(as.matrix(predictedValues))
+
+ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) + xlab("Predicted Effort") +
+  ylab("Actual Effort") + ggtitle("Model Accuracy") +
+  theme(panel.spacing = unit(1, "lines"))
+```

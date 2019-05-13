@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "MessageController" as 09
+participant "$help://usecasediagram.htm" as 19
+participant "viewlink" as 29
+participant "showtherecordofthestudent" as 39
+
+User -> 09: norecordmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: selectdirectoryandfilenamedialog()
+activate 19
+
+deactivate 19
+
+User -> 29: viewlink()
+activate 29
+
+29 -> 39: showtherecordofthestudent()
+activate 39
+
+39 -> 09: norecordmessage()
+activate 09
+
+deactivate 09
+
+39 -> 39: recordsofthestudentpage()
+39 -> 39: popouttheframetoasksuertochoosedirectoryandfilename()
+39 -> 19: selectdirectoryandfilenamedialog()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+39 -> 39: studentinfo()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+User -> 39: recordsofthestudentpage()
+activate 39
+
+39 -> 39: popouttheframetoasksuertochoosedirectoryandfilename()
+deactivate 39
+
+@enduml

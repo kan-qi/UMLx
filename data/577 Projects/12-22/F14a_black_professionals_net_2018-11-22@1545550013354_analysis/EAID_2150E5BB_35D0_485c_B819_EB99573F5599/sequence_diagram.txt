@@ -1,0 +1,65 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Message" as 09
+participant "Connection" as 49
+
+User -> 09: invalidinputwarningmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: Messageeditpage()
+activate 09
+
+09 -> 09: closenewmessagepage()
+09 -> 09: Messagepage()
+deactivate 09
+
+09 -> 09: checkinputmessage()
+activate 09
+
+09 -> 09: invalidinputwarningmessage()
+deactivate 09
+
+09 -> 09: sendmessage()
+activate 09
+
+09 -> 09: message()
+deactivate 09
+
+09 -> 09: redirecttomessagepage()
+activate 09
+
+09 -> 09: Messagepage()
+deactivate 09
+
+User -> 09: Newmessagebutton()
+activate 09
+
+09 -> 09: displaynewmessagepage()
+09 -> 49: retriveconnectionsofauser()
+activate 49
+
+49 -> 49: Connection()
+deactivate 49
+
+49 -> 09: Messageeditpage()
+09 -> 09: closenewmessagepage()
+deactivate 09
+
+09 -> 09: checkinputmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: Messagepage()
+activate 09
+
+deactivate 09
+
+@enduml

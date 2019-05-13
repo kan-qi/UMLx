@@ -1,0 +1,64 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Contractor
+participant "confirmdialog" as 09
+participant "websites" as 19
+
+Contractor -> 09: confirmdialog()
+activate 09
+
+09 -> 19: addattributes()
+activate 19
+
+19 -> 19: websites()
+deactivate 19
+
+09 -> 19: deletewebsite()
+activate 19
+
+19 -> 19: websites()
+deactivate 19
+
+deactivate 09
+
+Contractor -> 19: Listofwebsites()
+activate 19
+
+19 -> 09: displayconfirmtab()
+activate 09
+
+09 -> 19: Listofwebsites()
+19 -> 09: displayconfirmtab()
+09 -> 09: confirmdialog()
+09 -> 19: addattributes()
+deactivate 19
+
+09 -> 19: deletewebsite()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Contractor -> 19: websitestab()
+activate 19
+
+19 -> 19: querycrawlinglistofwebsites()
+19 -> 19: Listofwebsites()
+19 -> 09: displayconfirmtab()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+19 -> 19: websites()
+activate 19
+
+deactivate 19
+
+@enduml

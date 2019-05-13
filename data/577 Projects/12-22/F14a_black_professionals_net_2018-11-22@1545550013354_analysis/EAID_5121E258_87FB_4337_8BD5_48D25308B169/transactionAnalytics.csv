@@ -1,0 +1,7 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:Remove button->User:Remove button,Cancel Connection,2,0,1,0,0
+2,stl#User:Remove button->User:Remove button->Remove button:show up confirmation dialog->show up confirmation dialog:Confirmation dialog->Confirmation dialog:remove connection between users->remove connection between users:connection,Cancel Connection,6,3,2,0,0
+3,stl#User:Remove button->User:Remove button->Remove button:show up confirmation dialog->show up confirmation dialog:Confirmation dialog->Confirmation dialog:Redirect to connection list->Redirect to connection list:Remove button,Cancel Connection,6,2,3,0,0
+4,stl#User:button state change to acceptance->User:button state change to acceptance,Cancel Connection,2,1,0,0,0
+5,stl#User:Confirmation dialog->User:Confirmation dialog->Confirmation dialog:remove connection between users->remove connection between users:connection,Cancel Connection,4,3,0,0,0
+6,stl#User:Confirmation dialog->User:Confirmation dialog->Confirmation dialog:Redirect to connection list->Redirect to connection list:Remove button,Cancel Connection,4,2,1,0,0

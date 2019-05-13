@@ -1,0 +1,251 @@
+id,element,useCase,type,component
+1,Administrator:Administrator's dashboard,Accept/Reject Comment,entity,System Boundary
+2,Administrator:submitted comments  screen,Accept/Reject Comment,control,Meeting Minute Comment
+3,Administrator:Comment View,Accept/Reject Comment,control,Meeting Minute Comment
+4,Administrator's dashboard:Display the submitted comments screen,Accept/Reject Comment,control,Meeting Minute Comment
+5,Change the status of the task:Task,Accept/Reject Comment,control,pendthetask
+6,Update acceptance status:Change the status of the task,Accept/Reject Comment,control,pendthetask
+7,Comment View:Update acceptance status,Accept/Reject Comment,entity,Status Notification
+8,Retrieve comment and user info:Comments,Accept/Reject Comment,control,Meeting Minute Comment
+9,Display the submitted comments screen:Comments,Accept/Reject Comment,control,Meeting Minute Comment
+10,Update acceptance status:Comments,Accept/Reject Comment,control,Meeting Minute Comment
+11,Display the submitted comments screen:submitted comments  screen,Accept/Reject Comment,control,Meeting Minute Comment
+12,Retrieve comment and user info:User Info,Accept/Reject Comment,control,UserInfo
+13,submitted comments  screen:Retrieve comment and user info,Accept/Reject Comment,control,UserInfo
+14,pend the task:Task,Accept/Reject Comment,control,pendthetask
+15,Update acceptance status:pend the task,Accept/Reject Comment,control,pendthetask
+16,stl#Administrator:Administrator's dashboard,Accept/Reject Comment,Stimulus,undefined
+17,stl#Administrator:submitted comments  screen,Accept/Reject Comment,Stimulus,undefined
+18,stl#Administrator:Comment View,Accept/Reject Comment,Stimulus,undefined
+19,Administrator:approve sign up screen,Approve Signup,entity,approvesignupscreen
+20,Administrator:signup request details,Approve Signup,boundary,retrieverequestdetail
+21,approve sign up screen:retrieve request detail,Approve Signup,boundary,retrieverequestdetail
+22,approve sign up screen:retrieve signup requests,Approve Signup,boundary,retrieverequestdetail
+23,retrieve signup requests:approve sign up screen,Approve Signup,entity,approvesignupscreen
+24,retrieve request detail:signup request,Approve Signup,entity,approvesignupscreen
+25,retrieve request detail:signup request details,Approve Signup,boundary,retrieverequestdetail
+26,retrieve signup requests:signup request,Approve Signup,entity,approvesignupscreen
+27,signup request details:update user info,Approve Signup,control,UserInfo
+28,update user info:user info,Approve Signup,control,UserInfo
+29,stl#Administrator:approve sign up screen,Approve Signup,Stimulus,undefined
+30,stl#Administrator:signup request details,Approve Signup,Stimulus,undefined
+31,Actor:Project detail,Change Project,entity,Project
+32,Actor:Selecting settings button,Change Project,control,Meeting Minute
+33,Actor:Projects list screen,Change Project,entity,Project
+34,Actor:dropdown settings menu,Change Project,control,Meeting
+35,Display dropdown settings menu:dropdown settings menu,Change Project,control,Meeting
+36,Selecting settings button:Display dropdown settings menu,Change Project,control,Meeting Minute
+37,Query project detail:Project,Change Project,entity,Project
+38,query projects:Project,Change Project,entity,Project
+39,Query project detail:Project detail,Change Project,entity,Project
+40,Projects list screen:Query project detail,Change Project,entity,Project
+41,query projects:Projects list screen,Change Project,entity,Project
+42,dropdown settings menu:query projects,Change Project,entity,Project
+43,stl#Actor:Project detail,Change Project,Stimulus,undefined
+44,stl#Actor:Selecting settings button,Change Project,Stimulus,undefined
+45,stl#Actor:Projects list screen,Change Project,Stimulus,undefined
+46,stl#Actor:dropdown settings menu,Change Project,Stimulus,undefined
+47,Administrator:Attendee is not available,Create New Project,entity,Editdefaultattendeelist
+48,Administrator:Create a project screen,Create New Project,entity,Project
+49,Administrator:Edit default attendee list,Create New Project,entity,Editdefaultattendeelist
+50,Administrator:Project information error,Create New Project,entity,Project
+51,verify attendee information:Attendee is not available,Create New Project,entity,Editdefaultattendeelist
+52,Create a project screen:Verify project information,Create New Project,entity,Project
+53,Edit default attendee list:verify attendee information,Create New Project,control,UserInfo
+54,Verify project information:Edit default attendee list,Create New Project,entity,Editdefaultattendeelist
+55,Verify project information:Project,Create New Project,entity,Project
+56,Verify project information:Project information error,Create New Project,entity,Project
+57,verify attendee information:attendee information list,Create New Project,entity,Editdefaultattendeelist
+58,stl#Administrator:Attendee is not available,Create New Project,Stimulus,undefined
+59,stl#Administrator:Create a project screen,Create New Project,Stimulus,undefined
+60,stl#Administrator:Edit default attendee list,Create New Project,Stimulus,undefined
+61,stl#Administrator:Project information error,Create New Project,Stimulus,undefined
+62,Administrator:create meeting option,Create meeting,control,Meeting
+63,Administrator:Create meeting screen,Create meeting,control,Meeting
+64,Administrator:user already exists toasts,Create meeting,control,UserInfo
+65,display the create meeting screen:Attendee Info,Create meeting,control,UserInfo
+66,Create meeting screen:Verifies attendee list,Create meeting,entity,Status Notification
+67,display the create meeting screen:Create meeting screen,Create meeting,control,Meeting
+68,display the create meeting screen:Tasks,Create meeting,entity,Tasks
+69,Verifies attendee list:create a meeting,Create meeting,control,Meeting
+70,Verifies attendee list:user already exists toasts,Create meeting,control,UserInfo
+71,create a meeting:meeting,Create meeting,control,Meeting
+72,create meeting option:display the create meeting screen,Create meeting,control,Meeting
+73,stl#Administrator:create meeting option,Create meeting,Stimulus,undefined
+74,stl#Administrator:Create meeting screen,Create meeting,Stimulus,undefined
+75,stl#Administrator:user already exists toasts,Create meeting,Stimulus,undefined
+76,User:Edit Profile Page,Edit Profile,entity,Project
+77,User:Error Information,Edit Profile,control,UserInfo
+78,Edit Profile Page:verify input information,Edit Profile,control,UserInfo
+79,verify input information:Error Information,Edit Profile,control,UserInfo
+80,update user account information:account information,Edit Profile,control,UserInfo
+81,verify input information:update user account information,Edit Profile,control,UserInfo
+82,stl#User:Edit Profile Page,Edit Profile,Stimulus,undefined
+83,stl#User:Error Information,Edit Profile,Stimulus,undefined
+84,Administrator:Information invalid,Edit meeting,control,UserInfo
+85,Administrator:Edit meeting option,Edit meeting,control,Meeting
+86,Administrator:meeting information screen,Edit meeting,control,Meeting
+87,Edit meeting option:display meetings screen,Edit meeting,control,Meeting
+88,verify attendee list:Information invalid,Edit meeting,control,UserInfo
+89,display meetings screen:meeting,Edit meeting,control,Meeting
+90,display meetings screen:meeting information screen,Edit meeting,control,Meeting
+91,save user info:meeting info,Edit meeting,control,Meeting
+92,meeting information screen:verify attendee list,Edit meeting,entity,System Boundary
+93,verify attendee list:save user info,Edit meeting,control,UserInfo
+94,stl#Administrator:Information invalid,Edit meeting,Stimulus,undefined
+95,stl#Administrator:Edit meeting option,Edit meeting,Stimulus,undefined
+96,stl#Administrator:meeting information screen,Edit meeting,Stimulus,undefined
+97,Administrator:Edit project option,Edit project,entity,Project
+98,Administrator:Edit project screen,Edit project,entity,Project
+99,Administrator:invalid user info toast,Edit project,control,UserInfo
+100,Edit project option:display edit project screen,Edit project,entity,Project
+101,Edit project screen:Verify default user list,Edit project,control,UserInfo
+102,display edit project screen:Edit project screen,Edit project,entity,Project
+103,Verify default user list:save project info,Edit project,entity,Project
+104,Verify default user list:invalid user info toast,Edit project,control,UserInfo
+105,display edit project screen:meeting,Edit project,control,Meeting
+106,save project info:project,Edit project,entity,Project
+107,stl#Administrator:Edit project option,Edit project,Stimulus,undefined
+108,stl#Administrator:Edit project screen,Edit project,Stimulus,undefined
+109,stl#Administrator:invalid user info toast,Edit project,Stimulus,undefined
+110,Administrator:generate meeting log,Generate log,boundary,Meeting Log
+111,Administrator:Meeting list,Generate log,control,Meeting
+112,Administrator:no meeting error page,Generate log,control,Meeting
+113,Meeting list:export meeting,Generate log,control,Meeting
+114,query meetings by project:Meeting list,Generate log,control,Meeting
+115,export meeting:meetings,Generate log,control,Meeting
+116,export meeting:pdf,Generate log,entity,pdf
+117,generate meeting log:query meetings by project,Generate log,control,Meeting
+118,query meetings by project:meetings,Generate log,control,Meeting
+119,query meetings by project:no meeting error page,Generate log,control,Meeting
+120,stl#Administrator:generate meeting log,Generate log,Stimulus,undefined
+121,stl#Administrator:Meeting list,Generate log,Stimulus,undefined
+122,stl#Administrator:no meeting error page,Generate log,Stimulus,undefined
+123,User:Administrator dashboard,Login,entity,System Boundary
+124,User:Login page,Login,boundary,Meeting Log
+125,User:Login Error Page,Login,boundary,Meeting Log
+126,User:Select project page,Login,entity,Project
+127,User:general user dashboard,Login,control,UserInfo
+128,retrieve project information:Administrator dashboard,Login,entity,System Boundary
+129,verify login information:Login Error Page,Login,boundary,Meeting Log
+130,Login page:verify login information,Login,control,UserInfo
+131,Select project page:retrieve project information,Login,entity,Project
+132,verify login information:Select project page,Login,entity,Project
+133,verify login information:general user dashboard,Login,control,UserInfo
+134,retrieve project information:project info,Login,entity,Project
+135,verify login information:user info,Login,control,UserInfo
+136,stl#User:Administrator dashboard,Login,Stimulus,undefined
+137,stl#User:Login page,Login,Stimulus,undefined
+138,stl#User:Login Error Page,Login,Stimulus,undefined
+139,stl#User:Select project page,Login,Stimulus,undefined
+140,stl#User:general user dashboard,Login,Stimulus,undefined
+141,Administrator:empty publish meeting screen,Publish Meeting,control,Meeting
+142,Administrator:meeting list and push lish options,Publish Meeting,control,Meeting
+143,Administrator:Administrator's dashboard,Publish Meeting,control,Administrator
+144,Administrator's dashboard:display publish meetings screen,Publish Meeting,control,Meeting
+145,display publish meetings screen:Meetings,Publish Meeting,control,Meeting
+146,Update meetings status:Meetings,Publish Meeting,control,Meeting
+147,Update meetings status:empty publish meeting screen,Publish Meeting,control,Meeting
+148,Update meetings status:send messages to attendees list,Publish Meeting,control,Administrator
+149,Update meetings status:attendee list,Publish Meeting,entity,System Boundary
+150,meeting list and push lish options:Update meetings status,Publish Meeting,control,Meeting
+151,send messages to attendees list:attendee list,Publish Meeting,entity,System Boundary
+152,display publish meetings screen:meeting list and push lish options,Publish Meeting,control,Meeting
+153,stl#Administrator:empty publish meeting screen,Publish Meeting,Stimulus,undefined
+154,stl#Administrator:meeting list and push lish options,Publish Meeting,Stimulus,undefined
+155,stl#Administrator:Administrator's dashboard,Publish Meeting,Stimulus,undefined
+156,Administrator:meeting publish button,Send notification,control,Meeting
+157,User:Task list with comment box,Send notification,control,Meeting Minute Comment
+158,Task list with comment box:add comment,Send notification,control,Meeting Minute Comment
+159,add comment:comment,Send notification,control,Meeting Minute Comment
+160,add comment:send notification,Send notification,entity,Status Notification
+161,publish meeting:meeting,Send notification,control,Meeting
+162,meeting publish button:publish meeting,Send notification,control,Meeting
+163,send notification:notification,Send notification,entity,Status Notification
+164,send notification:notification,Send notification,entity,Status Notification
+165,publish meeting:send notification,Send notification,entity,Status Notification
+166,stl#Administrator:meeting publish button,Send notification,Stimulus,undefined
+167,stl#User:Task list with comment box,Send notification,Stimulus,undefined
+168,Admin:View user registration info,Signup,control,UserInfo
+169,User:Notification of unsuccessful registration,Signup,entity,Status Notification
+170,User:Invalid information,Signup,control,UserInfo
+171,User:sign up page,Signup,entity,approvesignupscreen
+172,User:User info already created,Signup,control,UserInfo
+173,User:Login Page,Signup,boundary,Meeting Log
+174,User:notification of successful registration,Signup,entity,Status Notification
+175,Display error message:Invalid information,Signup,control,UserInfo
+176,save user info for admin:Display error message,Signup,control,Displayerrormessage
+177,Login Page:open sign up page,Signup,entity,approvesignupscreen
+178,save user info for admin:Notification of unsuccessful registration,Signup,entity,Status Notification
+179,save user info for admin:User info already created,Signup,control,UserInfo
+180,View user registration info:approve user registration,Signup,entity,approvesignupscreen
+181,save user info for admin:View user registration info,Signup,control,UserInfo
+182,approve user registration:user info,Signup,control,UserInfo
+183,save user info for admin:notification of successful registration,Signup,entity,Status Notification
+184,open sign up page:sign up page,Signup,entity,approvesignupscreen
+185,save user info for admin:user info,Signup,control,UserInfo
+186,select admin option:save user info for admin,Signup,control,UserInfo
+187,sign up page:save user info for admin,Signup,control,UserInfo
+188,sign up page:select admin option,Signup,control,Meeting Minute
+189,stl#Admin:View user registration info,Signup,Stimulus,undefined
+190,stl#User:Notification of unsuccessful registration,Signup,Stimulus,undefined
+191,stl#User:Invalid information,Signup,Stimulus,undefined
+192,stl#User:sign up page,Signup,Stimulus,undefined
+193,stl#User:User info already created,Signup,Stimulus,undefined
+194,stl#User:Login Page,Signup,Stimulus,undefined
+195,stl#User:notification of successful registration,Signup,Stimulus,undefined
+196,User:error for too long comment,Submit comments to assigned task,control,Meeting Minute Comment
+197,User:comment input page,Submit comments to assigned task,control,Meeting Minute Comment
+198,User:asigned task list,Submit comments to assigned task,boundary,asignedtasklist
+199,asigned task list:open comment input page,Submit comments to assigned task,control,Meeting Minute Comment
+200,submit comment:comment,Submit comments to assigned task,control,Meeting Minute Comment
+201,comment input page:submit comment,Submit comments to assigned task,control,Meeting Minute Comment
+202,open comment input page:comment input page,Submit comments to assigned task,control,Meeting Minute Comment
+203,submit comment:error for too long comment,Submit comments to assigned task,control,Meeting Minute Comment
+204,submit comment:notification,Submit comments to assigned task,entity,Status Notification
+205,stl#User:error for too long comment,Submit comments to assigned task,Stimulus,undefined
+206,stl#User:comment input page,Submit comments to assigned task,Stimulus,undefined
+207,stl#User:asigned task list,Submit comments to assigned task,Stimulus,undefined
+208,Administrator:pending tasks screen,View Pending Tasks,boundary,Task
+209,Administrator:Empty task screen,View Pending Tasks,boundary,Task
+210,Administrator:Display pending tasks button,View Pending Tasks,boundary,Task
+211,query detail of task and assignee.:Assignee,View Pending Tasks,entity,approvesignupscreen
+212,Display pending tasks button:Query task list,View Pending Tasks,boundary,Task
+213,Query task list:Empty task screen,View Pending Tasks,boundary,Task
+214,Query task list:pending tasks screen,View Pending Tasks,boundary,Task
+215,Query task list:Task,View Pending Tasks,boundary,Task
+216,query detail of task and assignee.:Task,View Pending Tasks,boundary,Task
+217,pending tasks screen:query detail of task and assignee.,View Pending Tasks,boundary,Task
+218,stl#Administrator:pending tasks screen,View Pending Tasks,Stimulus,undefined
+219,stl#Administrator:Empty task screen,View Pending Tasks,Stimulus,undefined
+220,stl#Administrator:Display pending tasks button,View Pending Tasks,Stimulus,undefined
+221,User:view status of submitted comments button,View Status of Submitted Comment,control,Meeting Minute Comment
+222,User:comment status view,View Status of Submitted Comment,control,Meeting Minute Comment
+223,User:no available comments,View Status of Submitted Comment,control,Meeting Minute Comment
+224,query comments:comment,View Status of Submitted Comment,control,Meeting Minute Comment
+225,query comments:comment status view,View Status of Submitted Comment,control,Meeting Minute Comment
+226,query comments:no available comments,View Status of Submitted Comment,control,Meeting Minute Comment
+227,view status of submitted comments button:query comments,View Status of Submitted Comment,control,Meeting Minute Comment
+228,stl#User:view status of submitted comments button,View Status of Submitted Comment,Stimulus,undefined
+229,stl#User:comment status view,View Status of Submitted Comment,Stimulus,undefined
+230,stl#User:no available comments,View Status of Submitted Comment,Stimulus,undefined
+231,user:view assigned tasks option,View assigned tasks,boundary,Task
+232,user:meeting minutes,View assigned tasks,control,Meeting Minute
+233,user:no assigned tasks message,View assigned tasks,boundary,Task
+234,query meeting minutes by project and user:meeting minutes,View assigned tasks,control,Meeting Minute
+235,query meeting minutes by project and user:meeting minutes,View assigned tasks,control,Meeting Minute
+236,query meeting minutes by project and user:no assigned tasks message,View assigned tasks,boundary,Task
+237,view assigned tasks option:query meeting minutes by project and user,View assigned tasks,control,Meeting Minute
+238,stl#user:view assigned tasks option,View assigned tasks,Stimulus,undefined
+239,stl#user:meeting minutes,View assigned tasks,Stimulus,undefined
+240,stl#user:no assigned tasks message,View assigned tasks,Stimulus,undefined
+241,User:meeting view,View meeting,control,Meeting
+242,User:view meeting option,View meeting,control,Meeting
+243,User:list with no meetings,View meeting,control,Meeting
+244,Query meetings by user:list with no meetings,View meeting,control,Meeting
+245,Query meetings by user:meeting,View meeting,control,Meeting
+246,Query meetings by user:meeting view,View meeting,control,Meeting
+247,view meeting option:Query meetings by user,View meeting,control,Meeting
+248,stl#User:meeting view,View meeting,Stimulus,undefined
+249,stl#User:view meeting option,View meeting,Stimulus,undefined
+250,stl#User:list with no meetings,View meeting,Stimulus,undefined

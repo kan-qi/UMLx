@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Taker
+participant "Stop" as 09
+participant "emptymapview" as 19
+participant "Tour" as 39
+participant "checkloginInfo" as 59
+
+Taker -> 09: stopinfo()
+activate 09
+
+deactivate 09
+
+Taker -> 19: emptymapview()
+activate 19
+
+deactivate 19
+
+Taker -> 09: listofstops()
+activate 09
+
+09 -> 39: retrievetour()
+activate 39
+
+39 -> 59: checkinternetconnection()
+activate 59
+
+59 -> 39: tourinfo()
+deactivate 39
+
+59 -> 19: emptymapview()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+39 -> 19: emptymapview()
+activate 19
+
+deactivate 19
+
+39 -> 09: stopinfo()
+deactivate 09
+
+39 -> 39: tourinfo()
+activate 39
+
+deactivate 39
+
+@enduml

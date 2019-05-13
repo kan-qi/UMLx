@@ -1,0 +1,118 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Email protocolactor User
+participant "Attachment" as 09
+participant "Email" as 19
+participant "AdditionalInfo" as 29
+participant "Invitation" as 39
+participant "Message" as 59
+participant "Experience" as 129
+participant "IndividualSearch" as 169
+participant "Connection" as 199
+
+Email protocol -> 09: checkemailsentstatus()
+activate 09
+
+09 -> 39: showinvitationpage()
+activate 39
+
+39 -> 39: Invitationpaage()
+deactivate 39
+
+09 -> 39: invitation()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 29: informationinputinvalidmessage()
+activate 29
+
+29 -> 199: cancelselections()
+activate 199
+
+199 -> 39: invitefriendform()
+activate 39
+
+39 -> 169: Checkifinputisvalid()
+activate 169
+
+169 -> 129: Checkiffriendalreadyexists()
+activate 129
+
+129 -> 19: Checkifemailalreadyexists()
+activate 19
+
+19 -> 39: Invitationpaage()
+deactivate 39
+
+19 -> 39: Sendaninvitationemail()
+activate 39
+
+39 -> 19: Emailprotocol()
+19 -> 09: checkemailsentstatus()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+deactivate 39
+
+19 -> 39: invitation()
+activate 39
+
+deactivate 39
+
+19 -> 19: emailalreadyexists()
+activate 19
+
+deactivate 19
+
+129 -> 129: friend()
+deactivate 129
+
+129 -> 59: friedalreadyexistmessage()
+activate 59
+
+deactivate 59
+
+169 -> 29: informationinputinvalidmessage()
+29 -> 199: cancelselections()
+deactivate 199
+
+deactivate 29
+
+deactivate 169
+
+User -> 39: Invitationpaage()
+activate 39
+
+deactivate 39
+
+User -> 39: invitefriendform()
+activate 39
+
+39 -> 169: Checkifinputisvalid()
+activate 169
+
+deactivate 169
+
+deactivate 39
+
+User -> 59: friedalreadyexistmessage()
+activate 59
+
+deactivate 59
+
+User -> 19: emailalreadyexists()
+activate 19
+
+deactivate 19
+
+@enduml

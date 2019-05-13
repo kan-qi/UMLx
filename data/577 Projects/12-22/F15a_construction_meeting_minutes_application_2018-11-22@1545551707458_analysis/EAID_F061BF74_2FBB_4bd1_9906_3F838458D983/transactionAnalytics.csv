@@ -1,0 +1,8 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:error for too long comment->User:error for too long comment,Submit comments to assigned task,2,0,1,0,0
+2,stl#User:comment input page->User:comment input page->comment input page:submit comment->submit comment:comment,Submit comments to assigned task,4,0,3,0,0
+3,stl#User:comment input page->User:comment input page->comment input page:submit comment->submit comment:error for too long comment,Submit comments to assigned task,4,0,3,0,0
+4,stl#User:comment input page->User:comment input page->comment input page:submit comment->submit comment:notification,Submit comments to assigned task,4,0,2,1,0
+5,stl#User:asigned task list->User:asigned task list->asigned task list:open comment input page->open comment input page:comment input page->comment input page:submit comment->submit comment:comment,Submit comments to assigned task,6,1,4,0,0
+6,stl#User:asigned task list->User:asigned task list->asigned task list:open comment input page->open comment input page:comment input page->comment input page:submit comment->submit comment:error for too long comment,Submit comments to assigned task,6,1,4,0,0
+7,stl#User:asigned task list->User:asigned task list->asigned task list:open comment input page->open comment input page:comment input page->comment input page:submit comment->submit comment:notification,Submit comments to assigned task,6,1,3,1,0

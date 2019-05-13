@@ -1,0 +1,11 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Admin:update of product message->Admin:update of product message,Approve pending product,2,0,1,0,0
+2,stl#Admin:product list->Admin:product list->product list:query product detail->query product detail:product,Approve pending product,4,0,3,0,0
+3,stl#Admin:product list->Admin:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:product,Approve pending product,6,0,5,0,0
+4,stl#Admin:product list->Admin:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:notify update of product->notify update of product:update of product message,Approve pending product,7,0,6,0,0
+5,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product,Approve pending product,4,0,3,0,0
+6,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product list->product list:query product detail->query product detail:product,Approve pending product,6,0,5,0,0
+7,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:product,Approve pending product,8,0,7,0,0
+8,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:notify update of product->notify update of product:update of product message,Approve pending product,9,0,8,0,0
+9,stl#Admin:product detail->Admin:product detail->product detail:change product status->change product status:product,Approve pending product,4,0,3,0,0
+10,stl#Admin:product detail->Admin:product detail->product detail:change product status->change product status:notify update of product->notify update of product:update of product message,Approve pending product,5,0,4,0,0

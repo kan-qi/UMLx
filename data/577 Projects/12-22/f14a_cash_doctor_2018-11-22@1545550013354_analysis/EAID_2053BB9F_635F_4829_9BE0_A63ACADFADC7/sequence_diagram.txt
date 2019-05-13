@@ -1,0 +1,41 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Medical services pricing information" as 09
+participant "Consumer Profile" as 79
+
+User -> 09: inputinformationinvaliderrormessage()
+activate 09
+
+deactivate 09
+
+User -> 09: Sharepricebutton()
+activate 09
+
+09 -> 09: diplaypriceinputpage()
+09 -> 09: pricedetailinputpage()
+09 -> 09: verifyinputpriceinformation()
+09 -> 09: inputinformationinvaliderrormessage()
+deactivate 09
+
+09 -> 09: saveinputpriceinformation()
+activate 09
+
+09 -> 79: profile()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+User -> 09: pricedetailinputpage()
+activate 09
+
+09 -> 09: verifyinputpriceinformation()
+deactivate 09
+
+@enduml

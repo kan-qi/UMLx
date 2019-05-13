@@ -1,0 +1,5524 @@
+
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>UMLx</title>
+				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
+				<link href='public/css/style.css', rel='stylesheet'>
+				<link href="public/css/lightgallery.css" rel="stylesheet">
+				<style>
+					table td {
+						padding: 5px;
+					}
+				</style>
+			</head>
+			
+			<body>
+				<div class="banner">
+					<div class="content-flex">
+						<div class="col-md-10 banner-title">
+							<h2>UMLx</h2>
+						</div>
+					</div>
+				</div>
+	
+				<div id='main-panel'>
+					<div id='display-panel'>
+						<div class='block panel panel-default'>
+							<div id="model-stats-chart" class="panel-body" style="min-height: 90vh">
+								
+		<div class="model-info-content">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a data-toggle="tab" href="#overview">Overview</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#usecase-analysis" onclick="">Model Elements</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#model-evaluation" id="model-evaluation-tab">Model Info</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#model-analytics">Model Analytics</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="overview" class="tab-pane fade in active">
+					
+		<div class="col-sm-12 status-row">
+			<div class="col-sm-3">
+				<div class="blue-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Use Cases</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="red-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Transactions</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="green-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Classes</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="purple-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Actors</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div id="result_chart">here should be distributions</div>
+		
+				</div>
+				<div id="usecase-analysis" class="tab-pane fade">
+					<div id="model-usecase-analysis">
+						<div class="col-md-3 no-padding-margin">
+							<div class="panel panel-default" id="model-use-cases-panel">
+								<div class="block-title panel-heading ">
+									<h3 class="panel-title analytics-title pull-left">
+										Use Cases
+									</h3>
+								</div>
+								<div class="panel-body">
+									<ul class="nav">
+										
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002">
+							Adds deletes and edits references
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_4B9B3BDB_4373_404a_A884_D342675785AB">
+							Checks investigator assigned to candidate
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_3792F516_8511_4747_AE66_630131E196E9">
+							Checks status of reference
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD">
+							Checks status of reference letters
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE">
+							Get applicant details
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_012B386B_33AC_4a67_B532_812E593A3153">
+							Get reference details for applicants
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044">
+							Picks up unassigned candidates
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9">
+							Populate reference form
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40">
+							Resends email to reference
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D">
+							Trigger emails to references
+						</a>
+					</li>
+				
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#EAID_24F8911D_6879_45b5_A6C9_4784F9258549">
+							Views reference letters
+						</a>
+					</li>
+				
+									</ul>
+								</div>
+							</div>
+						</div>	
+						<div class="col-md-9">
+							<div class="panel panel-default">
+								<div class="block-title panel-heading">
+									Use Case Detail
+								</div>
+								<div class="panel-body" id="use-case-detail-panel">
+									<div class="tab-content">
+										
+					<div class="tab-pane fade" id="EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002_use-case-info-pane">
+								<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002_use-case-analytics">
+								<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:36
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_A185F613_59B1_4cca_9ADB_3300EF6BB002/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_4B9B3BDB_4373_404a_A884_D342675785AB">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_4B9B3BDB_4373_404a_A884_D342675785AB_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_4B9B3BDB_4373_404a_A884_D342675785AB_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_4B9B3BDB_4373_404a_A884_D342675785AB_use-case-info-pane">
+								<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_4B9B3BDB_4373_404a_A884_D342675785AB_use-case-analytics">
+								<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:36
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_4B9B3BDB_4373_404a_A884_D342675785AB/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_3792F516_8511_4747_AE66_630131E196E9">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_3792F516_8511_4747_AE66_630131E196E9_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_3792F516_8511_4747_AE66_630131E196E9_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_3792F516_8511_4747_AE66_630131E196E9_use-case-info-pane">
+								<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_3792F516_8511_4747_AE66_630131E196E9_use-case-analytics">
+								<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:18
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:21
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:37
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_3792F516_8511_4747_AE66_630131E196E9/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD_use-case-info-pane">
+								<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD_use-case-analytics">
+								<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:38
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_7D579534_38BB_4116_B64E_58E1BB85A4AD/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE_use-case-info-pane">
+								<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE_use-case-analytics">
+								<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:39
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_5D5206A8_7CE0_4483_8FD7_1EBC65DD8DAE/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_012B386B_33AC_4a67_B532_812E593A3153">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_012B386B_33AC_4a67_B532_812E593A3153_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_012B386B_33AC_4a67_B532_812E593A3153_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_012B386B_33AC_4a67_B532_812E593A3153_use-case-info-pane">
+								<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_012B386B_33AC_4a67_B532_812E593A3153_use-case-analytics">
+								<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:40
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_012B386B_33AC_4a67_B532_812E593A3153/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044_use-case-info-pane">
+								<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044_use-case-analytics">
+								<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									200 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									598 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									2649 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									161 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									1875 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									9144 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_998DA7CF_D9B8_4d7c_B733_EFCFBAF4A044/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9_use-case-info-pane">
+								<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9_use-case-analytics">
+								<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:18
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:41
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_55674B62_E4C9_45b2_81A4_15F1757BD0D9/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40_use-case-info-pane">
+								<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40_use-case-analytics">
+								<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:42
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_32ABD5AB_0581_4881_88E2_62CDE94DFA40/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D_use-case-info-pane">
+								<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D_use-case-analytics">
+								<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:43
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:45
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:47
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:47
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_0341798D_1FDA_4f16_9BAE_A75F530C187D/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:47
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+					<div class="tab-pane fade" id="EAID_24F8911D_6879_45b5_A6C9_4784F9258549">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#EAID_24F8911D_6879_45b5_A6C9_4784F9258549_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#EAID_24F8911D_6879_45b5_A6C9_4784F9258549_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="EAID_24F8911D_6879_45b5_A6C9_4784F9258549_use-case-info-pane">
+								<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="EAID_24F8911D_6879_45b5_A6C9_4784F9258549_use-case-analytics">
+								<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									
+				  			<tr class="estimation-table">
+				  				<td>
+				  					1
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+								</td>
+								<td>
+									152 B
+								</td>
+								<td>
+									2018-12-23 06:35:52
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					2
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/useCase.dotty" target="_blank">useCase.dotty</a>
+								</td>
+								<td>
+									1917 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					3
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+								</td>
+								<td>
+									85 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					4
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/paths.dotty" target="_blank">paths.dotty</a>
+								</td>
+								<td>
+									78 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					5
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+								</td>
+								<td>
+									34 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					6
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+								</td>
+								<td>
+									91 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					7
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+								</td>
+								<td>
+									65 B
+								</td>
+								<td>
+									2018-12-23 06:39:02
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					8
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					9
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/paths.svg" target="_blank">paths.svg</a>
+								</td>
+								<td>
+									577 B
+								</td>
+								<td>
+									2018-12-23 06:40:17
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					10
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/useCase.svg" target="_blank">useCase.svg</a>
+								</td>
+								<td>
+									6803 B
+								</td>
+								<td>
+									2018-12-23 06:40:19
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					11
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+								</td>
+								<td>
+									0 B
+								</td>
+								<td>
+									2018-12-23 06:41:20
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					12
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/report.txt" target="_blank">report.txt</a>
+								</td>
+								<td>
+									1932 B
+								</td>
+								<td>
+									2018-12-23 06:45:44
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					13
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54341 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					14
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53540 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					15
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									53692 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					16
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55758 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					17
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									55459 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					18
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+								</td>
+								<td>
+									54564 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					19
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+								</td>
+								<td>
+									55903 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					20
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+								</td>
+								<td>
+									69542 B
+								</td>
+								<td>
+									2018-12-23 06:45:46
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					21
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+								</td>
+								<td>
+									34477 B
+								</td>
+								<td>
+									2018-12-23 06:45:47
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					22
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+								</td>
+								<td>
+									60345 B
+								</td>
+								<td>
+									2018-12-23 06:45:47
+								</td>								
+							</tr>
+				  		
+				  			<tr class="estimation-table">
+				  				<td>
+				  					23
+				  				</td>
+					  			<td>
+									<a href="./EAID_24F8911D_6879_45b5_A6C9_4784F9258549/transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+								</td>
+								<td>
+									57815 B
+								</td>
+								<td>
+									2018-12-23 06:45:47
+								</td>								
+							</tr>
+				  		
+								</table>
+							</div>
+						</div>
+					</div>
+				
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
+				</div>
+				<div id="model-evaluation" class="tab-pane fade">
+					<div class="model-evaluation">
+						<ul class="nav nav-pills">
+							<li class="nav-item active">
+								<a class="nav-links" data-toggle="pill" href="#pills-EUCP">EUCP</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-links" data-toggle="pill" href="#pills-EXUCP">EXUCP</a>
+							</li>	
+							<li class="nav-item">
+								<a class="nav-links" data-toggle="pill" href="#pills-DUCP">DUCP</a>
+							</li>													
+						</ul>
+					</div>
+					<div class="tab-content">
+						<div class="tab-pane fade in active" id="pills-EUCP">
+							<div class="eucp-evaluation">
+								<h4>EUCP</h4>
+								
+    			<div id="estimation-results-tables" data-estimation-model="eucp_lm">
+    				<div class="model-predictions">
+    					<table class="class table-bordered">
+    						<thead>
+    							<tr>
+    								<th>Model</th>
+						            <th>Effort (PH)</th>
+						            <th>Schedule (Months)</th>
+						            <th>EUCP</th>
+						            <th>Personnel (FT Developers)</th>
+						            <th>UI Developer</th>
+						            <th>Full Stack</th>
+						            <th>Database Developer</th>
+						            <th>Model</th>
+						            <th>View</th>
+						            <th>Control</th>
+    							</tr>
+    						</thead>
+    						<tbody>
+    							<tr class="estimation-table">
+    								<td>eucp_lm</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>NaN</td>
+						            <td>50.00%</td>
+						            <td>25.00%</td>
+						            <td>25.00%</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>0.00</td>						            
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    			<div>
+    				<a href="./estimationResultEUCP.json" target="_blank"> Diagram Json</a>
+    			</div>
+    			<div class="use-case-predictions table-responsive">
+    				<table class="table table-bordered">
+    					<thead>
+    						<tr>
+    							<th id="number_column">Number</th>
+								<th id="Use_Case">Use Case</th>
+								<th id="EffortPH">Effort (PH)</th>
+								<th id="EffortPM">Effort PM</th>
+								<th id="EffortDev">Effort Dev</th>
+								<th id="EffortSyn">Effort Syn</th>
+								<th id="Business">Business Value</th>
+								<th id="EffortBV">Effort/BV</th>
+								<th id="SizeMeasurement">EUCP</th>
+								<th id="Duration">Schedule (Months)</th>
+								<th id="Personnel">Personnel (FT Developers)</th>
+								<th id="Personnel_UI">UI Developer</th>
+								<th id="Personnel_FS">Full Stack</th>
+								<th id="Personnel_DB">Database Developer</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						
+	        	<tr class="estimation-table">
+					<td>0</td>
+					<td>Adds deletes and edits references</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>1</td>
+					<td>Checks investigator assigned to candidate</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>2</td>
+					<td>Checks status of reference</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>3</td>
+					<td>Checks status of reference letters</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>4</td>
+					<td>Get applicant details</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>5</td>
+					<td>Get reference details for applicants</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>6</td>
+					<td>Picks up unassigned candidates</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>7</td>
+					<td>Populate reference form</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>8</td>
+					<td>Resends email to reference</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>9</td>
+					<td>Trigger emails to references</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>10</td>
+					<td>Views reference letters</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+    					<tbody>
+    				</table>
+    			</div>
+    		
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-EXUCP">
+							<div class="excup-evaluation">
+								<h4>EXUCP</h4>
+								
+    			<div id="estimation-results-tables" data-estimation-model="exucp_lm">
+    				<div class="model-predictions">
+    					<table class="class table-bordered">
+    						<thead>
+    							<tr>
+    								<th>Model</th>
+						            <th>Effort (PH)</th>
+						            <th>Schedule (Months)</th>
+						            <th>EXUCP</th>
+						            <th>Personnel (FT Developers)</th>
+						            <th>UI Developer</th>
+						            <th>Full Stack</th>
+						            <th>Database Developer</th>
+						            <th>Model</th>
+						            <th>View</th>
+						            <th>Control</th>
+    							</tr>
+    						</thead>
+    						<tbody>
+    							<tr class="estimation-table">
+    								<td>exucp_lm</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>NaN</td>
+						            <td>50.00%</td>
+						            <td>25.00%</td>
+						            <td>25.00%</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>0.00</td>						            
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    			<div>
+    				<a href="./estimationResultEXUCP.json" target="_blank"> Diagram Json</a>
+    			</div>
+    			<div class="use-case-predictions table-responsive">
+    				<table class="table table-bordered">
+    					<thead>
+    						<tr>
+    							<th id="number_column">Number</th>
+								<th id="Use_Case">Use Case</th>
+								<th id="EffortPH">Effort (PH)</th>
+								<th id="EffortPM">Effort PM</th>
+								<th id="EffortDev">Effort Dev</th>
+								<th id="EffortSyn">Effort Syn</th>
+								<th id="Business">Business Value</th>
+								<th id="EffortBV">Effort/BV</th>
+								<th id="SizeMeasurement">EXUCP</th>
+								<th id="Duration">Schedule (Months)</th>
+								<th id="Personnel">Personnel (FT Developers)</th>
+								<th id="Personnel_UI">UI Developer</th>
+								<th id="Personnel_FS">Full Stack</th>
+								<th id="Personnel_DB">Database Developer</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						
+	        	<tr class="estimation-table">
+					<td>0</td>
+					<td>Adds deletes and edits references</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>1</td>
+					<td>Checks investigator assigned to candidate</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>2</td>
+					<td>Checks status of reference</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>3</td>
+					<td>Checks status of reference letters</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>4</td>
+					<td>Get applicant details</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>5</td>
+					<td>Get reference details for applicants</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>6</td>
+					<td>Picks up unassigned candidates</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>7</td>
+					<td>Populate reference form</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>8</td>
+					<td>Resends email to reference</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>9</td>
+					<td>Trigger emails to references</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>10</td>
+					<td>Views reference letters</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+    					<tbody>
+    				</table>
+    			</div>
+    		
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-DUCP">
+							<div class="ducp-evaluation">
+								<h4>DUCP</h4>
+								
+    			<div id="estimation-results-tables" data-estimation-model="ducp_lm">
+    				<div class="model-predictions">
+    					<table class="class table-bordered">
+    						<thead>
+    							<tr>
+    								<th>Model</th>
+						            <th>Effort (PH)</th>
+						            <th>Schedule (Months)</th>
+						            <th>DUCP</th>
+						            <th>Personnel (FT Developers)</th>
+						            <th>UI Developer</th>
+						            <th>Full Stack</th>
+						            <th>Database Developer</th>
+						            <th>Model</th>
+						            <th>View</th>
+						            <th>Control</th>
+    							</tr>
+    						</thead>
+    						<tbody>
+    							<tr class="estimation-table">
+    								<td>ducp_lm</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>NaN</td>
+						            <td>50.00%</td>
+						            <td>25.00%</td>
+						            <td>25.00%</td>
+						            <td>0.00</td>
+						            <td>0.00</td>
+						            <td>0.00</td>						            
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    			<div>
+    				<a href="./estimationResultDUCP.json" target="_blank"> Diagram Json</a>
+    			</div>
+    			<div class="use-case-predictions table-responsive">
+    				<table class="table table-bordered">
+    					<thead>
+    						<tr>
+    							<th id="number_column">Number</th>
+								<th id="Use_Case">Use Case</th>
+								<th id="EffortPH">Effort (PH)</th>
+								<th id="EffortPM">Effort PM</th>
+								<th id="EffortDev">Effort Dev</th>
+								<th id="EffortSyn">Effort Syn</th>
+								<th id="Business">Business Value</th>
+								<th id="EffortBV">Effort/BV</th>
+								<th id="SizeMeasurement">DUCP</th>
+								<th id="Duration">Schedule (Months)</th>
+								<th id="Personnel">Personnel (FT Developers)</th>
+								<th id="Personnel_UI">UI Developer</th>
+								<th id="Personnel_FS">Full Stack</th>
+								<th id="Personnel_DB">Database Developer</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						
+	        	<tr class="estimation-table">
+					<td>0</td>
+					<td>Adds deletes and edits references</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>1</td>
+					<td>Checks investigator assigned to candidate</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>2</td>
+					<td>Checks status of reference</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>3</td>
+					<td>Checks status of reference letters</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>4</td>
+					<td>Get applicant details</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>5</td>
+					<td>Get reference details for applicants</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>6</td>
+					<td>Picks up unassigned candidates</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>7</td>
+					<td>Populate reference form</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>8</td>
+					<td>Resends email to reference</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>9</td>
+					<td>Trigger emails to references</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+	        	<tr class="estimation-table">
+					<td>10</td>
+					<td>Views reference letters</td>
+					<td>0.00</td>
+					<td>-1.00</td>
+					<td>-1.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>undefined</td>
+					<td>0.00</td>
+					<td>0.00</td>
+					<td>0</td>
+					<td>50.00%</td>
+					<td>25.00%</td>
+					<td>25.00%</td>
+	        	</tr>
+	        	
+    					<tbody>
+    				</table>
+    			</div>
+    		
+							</div>
+						</div>												
+					</div>
+				</div> 
+				<div id="model-analytics" class="tab-pane fade">
+					<table class="table-bordered" style="margin: 10px auto">
+						<tr class="estimation-table">
+							<th>ID</th>
+							<th>File Name</th>
+							<th>Size</th>
+							<th>Creation Time</th>
+						</tr>
+						
+		  			<tr class="estimation-table">
+		  				<td>
+		  					1
+		  				</td>
+			  			<td>
+							<a href="./sequence_diagram.txt" target="_blank">sequence_diagram.txt</a>
+						</td>
+						<td>
+							152 B
+						</td>
+						<td>
+							2018-12-23 06:35:52
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					2
+		  				</td>
+			  			<td>
+							<a href="./useCase.dotty" target="_blank">useCase.dotty</a>
+						</td>
+						<td>
+							1917 B
+						</td>
+						<td>
+							2018-12-23 06:39:02
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					3
+		  				</td>
+			  			<td>
+							<a href="./useCase_simple.dotty" target="_blank">useCase_simple.dotty</a>
+						</td>
+						<td>
+							85 B
+						</td>
+						<td>
+							2018-12-23 06:39:02
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					4
+		  				</td>
+			  			<td>
+							<a href="./paths.dotty" target="_blank">paths.dotty</a>
+						</td>
+						<td>
+							78 B
+						</td>
+						<td>
+							2018-12-23 06:39:02
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					5
+		  				</td>
+			  			<td>
+							<a href="./elementAnalytics.csv" target="_blank">elementAnalytics.csv</a>
+						</td>
+						<td>
+							34 B
+						</td>
+						<td>
+							2018-12-23 06:39:02
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					6
+		  				</td>
+			  			<td>
+							<a href="./transactionAnalytics.csv" target="_blank">transactionAnalytics.csv</a>
+						</td>
+						<td>
+							91 B
+						</td>
+						<td>
+							2018-12-23 06:39:02
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					7
+		  				</td>
+			  			<td>
+							<a href="./transactionEvaluation.csv" target="_blank">transactionEvaluation.csv</a>
+						</td>
+						<td>
+							65 B
+						</td>
+						<td>
+							2018-12-23 06:39:02
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					8
+		  				</td>
+			  			<td>
+							<a href="./useCase_simple.svg" target="_blank">useCase_simple.svg</a>
+						</td>
+						<td>
+							577 B
+						</td>
+						<td>
+							2018-12-23 06:40:17
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					9
+		  				</td>
+			  			<td>
+							<a href="./paths.svg" target="_blank">paths.svg</a>
+						</td>
+						<td>
+							577 B
+						</td>
+						<td>
+							2018-12-23 06:40:17
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					10
+		  				</td>
+			  			<td>
+							<a href="./useCase.svg" target="_blank">useCase.svg</a>
+						</td>
+						<td>
+							6803 B
+						</td>
+						<td>
+							2018-12-23 06:40:19
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					11
+		  				</td>
+			  			<td>
+							<a href="./analytical_info_statistics_report.txt" target="_blank">analytical_info_statistics_report.txt</a>
+						</td>
+						<td>
+							0 B
+						</td>
+						<td>
+							2018-12-23 06:41:20
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					12
+		  				</td>
+			  			<td>
+							<a href="./report.txt" target="_blank">report.txt</a>
+						</td>
+						<td>
+							1932 B
+						</td>
+						<td>
+							2018-12-23 06:45:44
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					13
+		  				</td>
+			  			<td>
+							<a href="./interface_operation_analysis_result.svg" target="_blank">interface_operation_analysis_result.svg</a>
+						</td>
+						<td>
+							54341 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					14
+		  				</td>
+			  			<td>
+							<a href="./control_operation_analysis_result.svg" target="_blank">control_operation_analysis_result.svg</a>
+						</td>
+						<td>
+							53540 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					15
+		  				</td>
+			  			<td>
+							<a href="./external_input_operation_analysis_result.svg" target="_blank">external_input_operation_analysis_result.svg</a>
+						</td>
+						<td>
+							53692 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					16
+		  				</td>
+			  			<td>
+							<a href="./external_query_operation_analysis_result.svg" target="_blank">external_query_operation_analysis_result.svg</a>
+						</td>
+						<td>
+							55758 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					17
+		  				</td>
+			  			<td>
+							<a href="./external_invocation_operation_analysis_result.svg" target="_blank">external_invocation_operation_analysis_result.svg</a>
+						</td>
+						<td>
+							55459 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					18
+		  				</td>
+			  			<td>
+							<a href="./external_call_operation_analysis_result.svg" target="_blank">external_call_operation_analysis_result.svg</a>
+						</td>
+						<td>
+							54564 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					19
+		  				</td>
+			  			<td>
+							<a href="./not_matched_analysis_result.svg" target="_blank">not_matched_analysis_result.svg</a>
+						</td>
+						<td>
+							55903 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					20
+		  				</td>
+			  			<td>
+							<a href="./merged_distributions_for_transactions.svg" target="_blank">merged_distributions_for_transactions.svg</a>
+						</td>
+						<td>
+							69542 B
+						</td>
+						<td>
+							2018-12-23 06:45:46
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					21
+		  				</td>
+			  			<td>
+							<a href="./trasactional_pattern_counts.svg" target="_blank">trasactional_pattern_counts.svg</a>
+						</td>
+						<td>
+							34477 B
+						</td>
+						<td>
+							2018-12-23 06:45:47
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					22
+		  				</td>
+			  			<td>
+							<a href="./transaction_arch_diff_analysis_result.svg" target="_blank">transaction_arch_diff_analysis_result.svg</a>
+						</td>
+						<td>
+							60345 B
+						</td>
+						<td>
+							2018-12-23 06:45:47
+						</td>
+					</tr>
+		  		
+		  			<tr class="estimation-table">
+		  				<td>
+		  					23
+		  				</td>
+			  			<td>
+							<a href="./transaction_length_analysis_result.svg" target="_blank">transaction_length_analysis_result.svg</a>
+						</td>
+						<td>
+							57815 B
+						</td>
+						<td>
+							2018-12-23 06:45:47
+						</td>
+					</tr>
+		  								
+					</table>
+				</div>
+				<div id="repo-analysis-detail" class="panel-body">
+					<div class="repo-metrics table-responsive">
+						</table>
+					</div>
+				</div> 
+			</div>
+		</div>	  
+		
+							</div>
+						</div>
+					</div>
+				</div>
+				
+	
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+				<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+				<script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+				<script type="text/javascript" src="public//js/scripts.js"></script>
+				<script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
+				<script> 
+					function display(){
+						$('#result_chart').highcharts({
+							chart: {
+								type: 'column',
+								spacingLeft: 0
+							},
+	
+							title: {
+								text: 'Evaluation of Use Case Complexity'
+							},
+			
+							xAxis: {
+								categories: ['UC1','UC2','UC3','UC4','UC5','UC6','UC7','UC8','UC9','UC10','UC11'],
+								crosshair: true
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Frequency'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0
+								}
+							},
+							series: [ 
+								{
+									name: 'SWTI',
+									data: [0,0,0,0,0,0,0,0,0,0,0]
+								}, 
+								{
+									name: 'SWTII',
+									data: [0,0,0,0,0,0,0,0,0,0,0]
+								}, 
+								{
+									name: 'SWTIII',
+									data: [0,0,0,0,0,0,0,0,0,0,0]
+								}
+							]
+						});
+					}
+	
+					window.onload = display;
+				</script>
+			</body>
+		</html>
+		

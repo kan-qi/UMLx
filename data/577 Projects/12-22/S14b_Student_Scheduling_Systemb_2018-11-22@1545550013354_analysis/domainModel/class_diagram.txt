@@ -1,0 +1,461 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class ChoosingDegreeProgramPage {
+~ ChoosingDegreeProgramPage()
+~ Loginpage()
+~ homepage()
+~ initialpage()
+~ choosedegreeandyearbutton()
+}
+
+class Course {
+- course_id:EAJava_int
+- course_prefix:EAJava_string
+- course_number:EAJava_int
+- course_title:EAJava_string
+- course_credit:EAJava_int
+- course_prerequistite_ids:EAJava_string
+- course_corequisite_ids:EAJava_string
+- course_oncampus:EAJava_string
+- course_online:EAJava_string
+- undefined:EAID_427F3594_31F9_4d06_A72A_EC1BA46B4F65
+~ Course()
+}
+
+class CourseController {
+~ addCourse()
+~ deleteCourse()
+~ updateCourse()
+~ showCourse()
+~ usernameorpasswordiswrong()
+~ udpateuserprofile()
+}
+
+class CourseGroupController {
+~ addCourseGroup()
+~ deleteCourseGroup()
+~ showCourseGroup()
+~ updateCourseGroup()
+}
+
+class Degree {
+- degree_id:EAJava_int
+- degree_title:EAJava_string
+- degree_req_ids:EAJava_string
+- undefined:EAID_DDB3256D_BBE2_4702_9D31_5DBB0B1B0F6D
+~ Degree()
+}
+
+class DegreeController {
+~ showDegreeRequiredCourse()
+~ addDegreeRequirement()
+~ deleteDegreeRequirement()
+~ updateDegreeRequirement()
+~ showDegreeTitle()
+}
+
+class DesiredCoursesSelectionPage {
+~ DesiredCoursesSelectionPage()
+~ deletionsuccessmessage()
+~ showconfirmationcourseisadded()
+~ checkcorrectnessoftheinput()
+~ deletioncannotfinish()
+~ showmessagethatsenssionwasclosed()
+~ inputdataisnotcurrectmessage()
+~ deletionconfirmationdialog()
+~ redirecttoinitialpage()
+}
+
+class Requirement {
+- req_id:EAJava_int
+- req_title:EAJava_string
+- req_sr_ids:EAJava_string
+- undefined:EAID_1D8C9D20_EF82_4bcb_BEE9_BE6D7EE9E460
+~ Requirement()
+~ showconfirmationthenewrequirementisadded()
+~ showspecifiedrequirementsbyparameters()
+}
+
+class RequirementController {
+~ addRequirement()
+~ deleteRequirement()
+~ updateRequirement()
+~ showRequirement()
+}
+
+class SemesterSelectionPlage {
+~ SemesterSelectionPlage()
+~ deletebutton()
+~ retrieveinformationassociatedwithusername()
+~ usernamedb()
+~ updatesuccessmessage()
+~ notappropriatemessage()
+~ theusercannotbedeleteerrormessage()
+}
+
+class SimpleRequirementController {
+~ addSimpleReq()
+~ deleteSimpleReq()
+~ showSimpleReq()
+~ updateSimpleReq()
+}
+
+class SimpleRequirement {
+- sr_id:EAJava_int
+- sr_title:EAJava_string
+- sr_required_num:EAJava_int
+- sr_cg_id_fk:EAJava_int
+- sr_not:EAJava_boolean
+- undefined:EAID_5E6FD425_6942_4f2b_B717_E783EE4FCD39
+~ SimpleRequirement()
+}
+
+class StudyPlanController {
+~ addDesiredCourse()
+~ deleteDesiredCourse()
+~ addCompulsory()
+~ checkpreprequisite()
+~ checkcorequisite()
+~ generateCoursebin()
+~ topologicalSort()
+~ findCriticialPath()
+~ assignSemester()
+~ checkAvailability()
+~ studyplan()
+}
+
+class StudyPlanOutputPage {
+~ StudyPlanOutputPage()
+~ logoutbutton()
+~ logoutmessage()
+~ updatepage()
+}
+
+class coursegroup {
+- cd_id:EAJava_int
+- cg_title:EAJava_string
+- cg_course_ids:EAJava_string
+- undefined:EAID_7A731CB0_84EC_4020_9348_46B7016569CC
+~ coursegroup()
+~ addnewcoursepageupdatesourcepage()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ deleteuserfromdatabase()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class addnewusertothedb {
+~ addnewusertothedb()
+~ adduserprofilepage()
+~ userinfo()
+}
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+DegreeController .. ChoosingDegreeProgramPage
+
+@enduml

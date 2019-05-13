@@ -1,28 +1,32 @@
-html
-  head
+d
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
     link(href='css/style.css', rel='stylesheet')
-    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
-    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-    script(type='text/javascript', src='https://code.highcharts.com/highcharts.src.js')
-    script(type='text/javascript', src='http://d3js.org/d3.v4.min.js')
-    script(type='text/javascript', src='js/scripts.js')
-    script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv4@latest')
     script.
-        function showPage(pageNumer) {
+        window.onload = function () {
+            console.log("==================Date222======================");
+            document.getElementById("uuid_page1").value = UUID().toString();
+            document.getElementById("uuid_page2").value = UUID().toString();
+            document.getElementById("uuid_page3").value = UUID().toString();
+            document.getElementById("uuid_page4").value = UUID().toString();
+            document.getElementById("survey_date").value = new Date();
+            console.log("==================Date======================");
+            console.log(document.getElementById("uuid_page1").value);
+            console.log(document.getElementById("survey_date").value);
+        };
+        function showPage(pageNumber) {
             var uuid = "";
             for (var i = 1; i <= 4; i++) {
-                var uuidElementName = "uuid_page"+pageNumer;
+                var uuidElementName = "uuid_page" + pageNumber;
                 var classList = document.getElementById("page" + i).classList;
-                if (i != pageNumer) {
+                if (i != pageNumber) {
                     classList.add("hidden");
                 } else {
                     uuid = document.getElementById(uuidElementName).value;
                     classList.remove("hidden");
                 }
             }
-            send_analytics_data(uuid, ipAdress, pageNumer);
+            send_analytics_data(uuid, ipAdress, pageNumber);
         }
 
         var ipAdress = "localhost--";
@@ -34,9 +38,33 @@ html
             });
         });
 
+        function UUID() {
+            var uuid = (function () {
+                var i,
+                    c = "89ab",
+                    u = [];
+                for (i = 0; i < 36; i += 1) {
+                    u[i] = (Math.random() * 16 | 0).toString(16);
+                }
+                u[8] = u[13] = u[18] = u[23] = "-";
+                u[14] = "4";
+                u[19] = c.charAt(Math.random() * 4 | 0);
+                return u.join("");
+            })();
+            return {
+                toString: function () {
+                    return uuid;
+                },
+                valueOf: function () {
+                    return uuid;
+                }
+            };
+        }
+
+
 
   body#upload-body
-    include banner
+    include bannerForSurvey
     .container
       h2  Project Survey
       form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadSurveyData', enctype='multipart/form-data' )
@@ -44,29 +72,117 @@ html
         #page1
           .alert.alert-info Project Information
           .form-group
-            label.control-label.col-xs-4(for='uml_model_name') Project Name
+            label.control-label(style='text-align:left').col-xs-4(for='uml_model_name') Project Name
             .col-xs-8
               input#uml_model_name.form-control(type='text', placeholder='Project Name', name='uml_model_name')
           input#uml_model_type(type='hidden', name='uml_model_type', value='uml')
           input#repo_id(type='hidden', name='repo_id', value='598c93a9a9813b12105c953e')
           .form-group
-            label.control-label.col-xs-4(for='project_desc') Project Description
+            label.control-label(style='text-align:left').col-xs-4(for='project_desc') Project Description
             .col-xs-8
               textarea#project_desc.form-control(rows='5', name='project_desc', placeholder='Project description')
           .form-group
-            label.control-label.col-xs-4(for='project_effort') Effort
+            label.control-label(style='text-align:left').col-xs-4(for='project_effort') Effort
             .col-xs-8
               input#project_effort.form-control(type='text', placeholder='Effort', name='project_effort')
+              div
+                p Please input the actual effort measurements in person hours in the formats, including, 1030PH, 1030, 1030 Person-Hours, etc.
           .form-group
-            label.control-label.col-xs-4(for='project_duration') Duration
+            label.control-label(style='text-align:left').col-xs-4(for='project_duration') Duration
             .col-xs-8
               input#project_duration.form-control(type='text', placeholder='Duration', name='project_duration')
+              div
+                p Please input the actual duration of the project in the formats, including, 1 year 3 month, 1.3 year, 30 days, 14 months, etc.
           .form-group
-            label.control-label.col-xs-4(for='organization_name') Organization/Personal Name
+            label.control-label(style='text-align:left').col-xs-4(for='project_personnel') Personnel
+            .col-xs-8
+              input#project_personnel.form-control(type='text', placeholder='Personnel', name='project_personnel')
+              div
+                p Please input the actual personnel who contribute to the project, including managers, designers, developers, testers, and maintainers, in the formats, for example, 1 year 3 month, 1.3 year, 30 days, 14 months, etc.
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='project_year') Year
+            .col-xs-8
+              input#project_year.form-control(type='text', placeholder='Year', name='project_year')
+              div
+                p Please input the year or the date when the project was started. If the year/date is not available, other approximations, for example, project end/implementation/delivery data/year.
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='development_type') Development Type
+            .col-xs-8
+              //label.control-label(for='development_type') Development Type
+              //input#project_duration.form-control(type='text', placeholder='Development Type', name='development_type')
+              select#development_type(name='development_type')
+                option New Development
+                option Echancement
+                option Re-development
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='development_platform') Development Platform
+            .col-xs-8
+              //label.control-label(for='development_type') Development Type
+              //input#project_duration.form-control(type='text', placeholder='Development Type', name='development_type')
+              select#development_platform(name='development_platform')
+                option PC (Windows, Linux, Mac OS)
+                option Web (cloud, web services, websites)
+                option Mobile (android, ios, etc)
+                option Embedded
+                option Multi-Platforms
+                option Other
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='application_type') Application Type
+            .col-xs-8
+              //input#project_duration.form-control(type='text', placeholder='Application Type', name='application_type')
+              //label.control-label(for='application_type') Development Type
+              select#application_type(name='application_type')
+                option Information System
+                option Tansaction / Production system
+                option Process Control
+                option Business Application
+                option Real-time Application
+                option Mathematically-intensive Application
+                option Infrastructure Software
+                option Other
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='programming_language') Programming Language
+            .col-xs-8
+              //input#project_duration.form-control(type='text', placeholder='Application Type', name='application_type')
+              //label.control-label(for='application_type') Development Type
+              select#programming_language(name='programming_language')
+                option JAVA
+                option C++
+                option PL/1
+                option Natural
+                option Cobol
+                option Other
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='organization_name') Organization/Personal Name
             .col-xs-8
               input#organization_name.form-control(type='text', placeholder='Organization Name or Personal Name', name='organization_name')
           .form-group
-            label.control-label.col-xs-4(for='email') Contact Email
+            label.control-label(style='text-align:left').col-xs-4(for='organization_sector') Organization Sector
+            .col-xs-8
+              //input#organization_name.form-control(type='text', placeholder='Organization Sector', name='organization_sector')
+              // make it as a list Banking
+              //label.control-label(for='application_type') Development Type
+              select#organization_sector(name='organization_sector')
+                option Communication
+                option Construction
+                option Defence & Aerospace
+                option Education
+                option Electronics & Computers
+                option Energy Sources
+                option Environment & Waste
+                option Financial
+                option Government
+                option Insurance
+                option Manufacturing
+                option Medical & Health Care
+                option Mining
+                option Professional Services
+                option Service Industry
+                option Tourism
+                option Utilities
+                option Wholesale & Retail
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='email') Contact Email
             .col-xs-8
               input#email.form-control(type='text', placeholder='Contact Email', name='email')
           input#uuid_page1(type='hidden', name='uuid_page1', value='')
@@ -77,8 +193,12 @@ html
         // Page 2
         #page2.hidden
           .alert.alert-info Technical Complexity Factor
+          div
+            p Please provide the ratings for the 13 technical technical factors, which are the techical rerquirements for system being developed.
           .form-group
-            label.control-label(for='distributed_system') Distributed System
+            div
+              p Is the system a distributed system which was developed on multiple platforms and required communication between the subsystems/components be based on network protocals, events, or remote procedural calls?
+            label.control-label(style='text-align:left', for='distributed_system') Distributed System
             select#distributed_system.form-control(name='distributed_system')
               option 1
               option 2
@@ -86,7 +206,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='response_time') Response time or throughput performance objectives
+            div
+              p Is the system a distributed system which was developed on multiple platforms and required communication between the subsystems/components be based on network protocals, events, or remote procedural calls?
+            label.control-label(style='text-align:left', for='response_time') Response time or throughput performance objectives
             select#response_time.form-control(name='response_time')
               option 1
               option 2
@@ -94,7 +216,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='end_user_efficiency') End user efficiency
+            div
+              p To what degree, does the target system have to meet the required response time and throughput performance objectives?
+            label.control-label(style='text-align:left', for='end_user_efficiency') End user efficiency
             select#end_user_efficiency.form-control(name='end_user_efficiency')
               option 1
               option 2
@@ -102,7 +226,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='complex_internal_processing') Complex internal processing
+            div
+              p To what degree, does the target system have to meet the required end user efficiency?
+            label.control-label(style='text-align:left', for='complex_internal_processing') Complex internal processing
             select#complex_internal_processing.form-control(name='complex_internal_processing')
               option 1
               option 2
@@ -110,7 +236,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='code_must_be_reusable') Code must be reusable
+            div
+              p To what degree of difficulty, the internal processing should be rated?
+            label.control-label(style='text-align:left', for='code_must_be_reusable') Code must be reusable
             select#code_must_be_reusable.form-control(name='code_must_be_reusable')
               option 1
               option 2
@@ -118,7 +246,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='easy_to_install') Easy to install
+            div
+              p To what degree, the code should be reusable?
+            label.control-label(style='text-align:left', for='easy_to_install') Easy to install
             select#easy_to_install.form-control(name='easy_to_install')
               option 1
               option 2
@@ -126,7 +256,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='easy_to_use') Easy to use
+            div
+              p To what degree, the system has to be easy to be installed?
+            label.control-label(style='text-align:left', for='easy_to_use') Easy to use
             select#easy_to_use.form-control(name='easy_to_use')
               option 1
               option 2
@@ -134,7 +266,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='portable') Portable
+            div
+              p To what degree, the system has to be easy to use?
+            label.control-label(style='text-align:left', for='portable') Portable
             select#portable.form-control(name='portable')
               option 1
               option 2
@@ -142,7 +276,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='easy_to_change') Easy to change
+            div
+              p To what degree, the system has to be able to handle concurrent requests or processes?
+            label.control-label(style='text-align:left', for='easy_to_change') Easy to change
             select#easy_to_change.form-control(name='easy_to_change')
               option 1
               option 2
@@ -150,7 +286,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='concurrent') Concurrent
+            div
+              p To what degree, the system has to be able to handle concurrent requests or processes?
+            label.control-label(style='text-align:left', for='concurrent') Concurrent
             select#concurrent.form-control(name='concurrent')
               option 1
               option 2
@@ -158,7 +296,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='includes_special_security_objectives') Includes special security objectives
+            div
+              p To what degree, the system has to achieve special security objectives?
+            label.control-label(style='text-align:left', for='includes_special_security_objectives') Includes special security objectives
             select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
               option 1
               option 2
@@ -166,7 +306,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
+            div
+              p To what degree, the system has to provide access for third parties?
+            label.control-label(style='text-align:left', for='provides_direct_access_for_third_parties') Provides direct access for third parties
             select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
               option 1
               option 2
@@ -174,7 +316,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
+            div
+              p To what degree, special user training facilities have to provided for the end users?
+            label.control-label(style='text-align:left', for='special_user_training_facilities_are_required') Special user training facilities are required
             select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
               option 1
               option 2
@@ -189,8 +333,12 @@ html
         // Page 3
         #page3.hidden
           .alert.alert-info Environmental Factors
+          div
+            p Please provide the ratings for the 8 environmental factors, which are the general descriptions about the environments where system was developed.
           .form-group
-            label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
+            div
+              p Are the personnel familar with the development process?
+            label.control-label(style='text-align:left', for='familiar_with_the_project_model_that_is_used') Familiar with the development process that is used
             select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
               option 1
               option 2
@@ -198,7 +346,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='application_experience') Application experience
+            div
+              p Did the developers have related experience of developing this type of applications?
+            label.control-label(style='text-align:left', for='application_experience') Application experience
             select#application_experience.form-control(name='application_experience')
               option 1
               option 2
@@ -206,7 +356,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='object_oriented_experience') Object-oriented experience
+            div
+              p Did the developers have related experience of developing object-oriented applications?
+            label.control-label(style='text-align:left', for='object_oriented_experience') Object-oriented experience
             select#object_oriented_experience.form-control(name='object_oriented_experience')
               option 1
               option 2
@@ -214,7 +366,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='lead_analyst_capability') Lead analyst capability
+            div
+              p To what degree, the lead analyst of the team should be rated?
+            label.control-label(style='text-align:left', for='lead_analyst_capability') Lead analyst capability
             select#lead_analyst_capability.form-control(name='lead_analyst_capability')
               option 1
               option 2
@@ -222,7 +376,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='motivation') Motivation
+            div
+              p To what degree, the whole team is motived for the project?
+            label.control-label(style='text-align:left', for='motivation') Motivation
             select#motivation.form-control(name='motivation')
               option 1
               option 2
@@ -230,7 +386,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='stable_requirements') Stable requirements
+            div
+              p Are the requiremenst stable over time?
+            label.control-label(style='text-align:left', for='stable_requirements') Stable requirements
             select#stable_requirements.form-control(name='stable_requirements')
               option 1
               option 2
@@ -238,7 +396,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='part_time_staff') Part-time staff
+            div
+              p To what percentage, the team has part-time stafff?
+            label.control-label(style='text-align:left', for='part_time_staff') Part-time staff
             select#part_time_staff.form-control(name='part_time_staff')
               option 1
               option 2
@@ -246,7 +406,9 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='difficult_programming_language') Difficult programming language
+            div
+              p To what degree, the chosen programming language are diffficulty to the development team?
+            label.control-label(style='text-align:left', for='difficult_programming_language') Difficult programming language
             select#difficult_programming_language.form-control(name='difficult_programming_language')
               option 1
               option 2
@@ -262,22 +424,43 @@ html
         #page4.hidden
           .alert.alert-info Project model file and documents
           .form-group
-            label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
+            label.control-label(style='text-align:left').col-xs-4(for='project_plans') Project Plans
+            .col-xs-8
+              input#project_plans.form-control(type='file', name='project_plans', accept='text/xml')
+              p Project plans can include descriptions of milestones, assigned tasks, Jira ticket records, bug reports, sprints records, etc.
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='requirements') Requirements
+            .col-xs-8
+              input#requirements.form-control(type='file', name='requirements', accept='text/xml')
+              p A list of functional/non-functional requirements for the project.
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='use_cases') Use Cases
+            .col-xs-8
+              input#use_cases.form-control(type='file', name='use_cases', accept='text/xml')
+              p A list of use cases that drived from requirements to describe the high-level system functions. An exmaple of use case records can be found from here
+                a(href="./docs/UseCaseDataTemplate_umlx_2018_5_8.csv") link.
+          .form-group
+            label.control-label(style='text-align:left').col-xs-4(for='uml_file') Design/Model File
             .col-xs-8
               input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
+              p Design files that describe the design/architecture of the system.
           .form-group
-            label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
+            label.control-label(style='text-align:left').col-xs-4(for='uml_other') Other Documents
             .col-xs-8
               input#uml_other.form-control(type='file', name='uml_other')
+              p Other docments that reveal information about the system or project management decisions/practices, If availabe, source code of the project can be of great help too.
           input#uuid_page4(type='hidden', name='uuid_page4', value='')
           input#survey_date(type='hidden', name='survey_date', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
               button.btn.btn-success.pull-right(type='submit') Submit
-    script(type='text/javascript').
-        document.getElementById("uuid_page1").value = uuidv4();
-        document.getElementById("uuid_page2").value = uuidv4();
-        document.getElementById("uuid_page3").value = uuidv4();
-        document.getElementById("uuid_page4").value = uuidv4();
-        document.getElementById("survey_date").value = new Date();
+
+    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(type='text/javascript', src='https://code.highcharts.com/highcharts.src.js')
+    script(type='text/javascript', src='http://d3js.org/d3.v4.min.js')
+    script(type='text/javascript', src='js/scripts.js')
+    script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv4@latest')
+
+

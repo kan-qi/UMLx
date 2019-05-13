@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Message Context" as 09
+participant "Message HistoryA" as 19
+participant "Collaboration Graph" as 29
+participant "View Message History SubComponent " as 39
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Viewmessagehistory()
+activate 19
+
+19 -> 39: ChooseoneofmessageandClicktheViewbutton()
+activate 39
+
+39 -> 29: Confirmationpage()
+activate 29
+
+29 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+29 -> 19: Viewmessagehistory()
+19 -> 39: ChooseoneofmessageandClicktheViewbutton()
+deactivate 39
+
+deactivate 19
+
+deactivate 29
+
+@enduml

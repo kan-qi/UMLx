@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Surveydb" as 09
+participant "successmessage" as 19
+
+User -> 09: Surveyresultpage()
+activate 09
+
+09 -> 09: Inputsurveyresultinfo()
+09 -> 09: Surveydb()
+deactivate 09
+
+09 -> 19: Surveyresulthasbeencreatederrormessage()
+activate 19
+
+19 -> 09: addsurveydetailintodb()
+activate 09
+
+09 -> 19: surveyhasbeencreatedmessage()
+deactivate 19
+
+deactivate 09
+
+User -> 19: surveyhasbeencreatedmessage()
+activate 19
+
+deactivate 19
+
+User -> 19: Surveyresulthasbeencreatederrormessage()
+activate 19
+
+19 -> 09: addsurveydetailintodb()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+@enduml

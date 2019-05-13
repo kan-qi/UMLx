@@ -1,0 +1,39 @@
+digraph g {compound=true
+subgraph cluster_3 {"Lsimple.js/hello1" [color=yellow]
+"Lsimple.js/foo/simple.js@674" [color=yellow]
+"Lsimple.js/foo/simple.js@674"->"Lsimple.js/hello1"
+}
+subgraph cluster_4 {"Lpresentation.js/display" [color=yellow]
+}
+subgraph cluster_1 {"Lsimple.js/hello1" [color=yellow]
+"Lsimple.js/foo/simple.js@619" [color=yellow]
+"Lsimple.js/foo/simple.js@619"->"Lsimple.js/hello1"
+}
+subgraph cluster_2 {"Lsimple.js/i" [color=yellow]
+}
+subgraph cluster_0 {"Lsimple.js/doCallback" [color=yellow]
+"Lsimple.js/hello" [color=yellow]
+"Lsimple.js/hello"->"Lsimple.js/doCallback"
+}
+subgraph cluster_9 {"LFakeRoot" [color=red]
+}
+subgraph cluster_7 {"Lsimple.js/foo" [color=red]
+}
+subgraph cluster_8 {"Lsimple.js" [color=red]
+}
+subgraph cluster_5 {"Ldatabase.js/store" [color=green, shape=box]
+}
+subgraph cluster_6 {"Ldatabase.js/deleteFile" [color=green, shape=box]
+}
+"Lsimple.js/doCallback"->"Lsimple.js/foo/simple.js@674"[ltail=cluster_0,lhead=cluster_3]
+"Lsimple.js/foo/simple.js@619"->"Lsimple.js/hello1"[ltail=cluster_1,lhead=cluster_3]
+"Lsimple.js/hello1"->"Lpresentation.js/display"[ltail=cluster_1,lhead=cluster_4]
+"Lsimple.js/i"->"Lsimple.js/foo/simple.js@619"[ltail=cluster_2,lhead=cluster_1]
+"Lsimple.js/foo/simple.js@674"->"Lsimple.js/hello1"[ltail=cluster_3,lhead=cluster_1]
+"Lsimple.js/foo"->"Lsimple.js/hello"[ltail=cluster_7,lhead=cluster_0]
+"Lsimple.js/foo"->"Lsimple.js/i"[ltail=cluster_7,lhead=cluster_2]
+"Lsimple.js/foo"->"Ldatabase.js/store"[ltail=cluster_7,lhead=cluster_5]
+"Lsimple.js/foo"->"Ldatabase.js/deleteFile"[ltail=cluster_7,lhead=cluster_6]
+"Lsimple.js"->"Lsimple.js/foo"[ltail=cluster_8,lhead=cluster_7]
+"LFakeRoot"->"Lsimple.js"[ltail=cluster_9,lhead=cluster_8]
+}

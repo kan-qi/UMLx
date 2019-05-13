@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Collaboration Graph" as 09
+participant "Message Context" as 19
+participant "View Collaboration Graph Component " as 39
+
+User -> 09: Viewcollaborationgraphpage()
+activate 09
+
+09 -> 39: ChooseoneofgraphandClicktheViewbutton()
+activate 39
+
+39 -> 09: Confirmationpage()
+09 -> 09: Viewcollaborationgraphpage()
+09 -> 39: ChooseoneofgraphandClicktheViewbutton()
+deactivate 39
+
+deactivate 09
+
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,76 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ClickonAdd" as 09
+participant "fillinfieldasrequired" as 19
+participant "Homepage" as 39
+participant "Job Preference" as 49
+participant "User" as 79
+participant "Job Candidate Profile" as 89
+
+User -> 09: Clickjobseeker��()
+activate 09
+
+09 -> 49: Openjobseekerpage()
+activate 49
+
+49 -> 19: Validatesfield()
+activate 19
+
+19 -> 89: Notificationdisplayed��addjobseekerprofile��()
+activate 89
+
+89 -> 39: Homepage()
+activate 39
+
+deactivate 39
+
+89 -> 79: jobseekerdb()
+activate 79
+
+deactivate 79
+
+deactivate 89
+
+deactivate 19
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: fillinfieldasrequired()
+activate 19
+
+19 -> 19: Validatesfield()
+19 -> 89: Notificationdisplayed��addjobseekerprofile��()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+User -> 09: Clickonupdate()
+activate 09
+
+09 -> 19: Validatesfield()
+activate 19
+
+19 -> 89: Notificationdisplayed��addjobseekerprofile��()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+deactivate 09
+
+User -> 39: Homepage()
+activate 39
+
+deactivate 39
+
+@enduml

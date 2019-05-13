@@ -1,0 +1,108 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "SearchEngine" as 09
+participant "SearchResult" as 19
+participant "CompanySearch" as 39
+participant "Group" as 99
+participant "Company" as 109
+participant "people" as 119
+participant "Connection" as 129
+participant "IndividualSearch" as 159
+
+User -> 09: invalidsearchstring()
+activate 09
+
+deactivate 09
+
+User -> 19: Nomatchedresults()
+activate 19
+
+deactivate 19
+
+User -> 19: emptylistofsearchresults()
+activate 19
+
+deactivate 19
+
+User -> 39: advancedsearchpage()
+activate 39
+
+39 -> 159: checkvalidityofsearchstring()
+activate 159
+
+159 -> 39: searchpeoplecompanygroupbyoptions()
+39 -> 129: SQlinjectionprotection()
+activate 129
+
+129 -> 19: Matchedresults()
+activate 19
+
+deactivate 19
+
+129 -> 19: Nomatchedresults()
+activate 19
+
+deactivate 19
+
+129 -> 19: emptylistofsearchresults()
+activate 19
+
+deactivate 19
+
+129 -> 99: group()
+activate 99
+
+deactivate 99
+
+129 -> 109: company()
+activate 109
+
+deactivate 109
+
+129 -> 119: people()
+activate 119
+
+deactivate 119
+
+129 -> 129: sqlinjectionprotection()
+129 -> 159: checkvalidityofsearchstring()
+159 -> 39: searchpeoplecompanygroupbyoptions()
+deactivate 39
+
+159 -> 09: invalidsearchstring()
+activate 09
+
+deactivate 09
+
+deactivate 159
+
+deactivate 129
+
+159 -> 09: invalidsearchstring()
+activate 09
+
+deactivate 09
+
+User -> 19: Matchedresults()
+activate 19
+
+deactivate 19
+
+User -> 39: advancedsearchbutton()
+activate 39
+
+39 -> 39: redirectedtoadvancedsearchpage()
+39 -> 39: advancedsearchpage()
+39 -> 159: checkvalidityofsearchstring()
+activate 159
+
+deactivate 159
+
+deactivate 39
+
+@enduml

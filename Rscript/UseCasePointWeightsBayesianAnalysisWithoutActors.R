@@ -48,10 +48,10 @@ png(filename=paste(outputPath,"project_descriptive_statistics_for_bayesian_analy
 		pointsize=12,
 		res=96)
 
-projectHist1 <- ggplot(useCaseData, aes(x=Real_Effort_Person_Hours))+geom_histogram(binwidth=350, colour="white", fill="gray55")+xlab("Effort (person-hours)")+ylab("Number of Projects")
-projectHist2 <- ggplot(useCaseData, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")
-projectHist3 <- ggplot(useCaseData, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="white", fill="gray55")+xlab("Use Case Num")+ylab("Number of Projects")
-projectBar <- ggplot(useCaseData, aes(x=Application_Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)
+projectHist1 <- ggplot(useCaseData, aes(x=Real_Effort_Person_Hours))+geom_histogram(binwidth=350, colour="black", fill="white")+xlab("Effort (person-hours)")+ylab("Count")
+projectHist2 <- ggplot(useCaseData, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("KSLOC")+ylab("Count")
+projectHist3 <- ggplot(useCaseData, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="black", fill="white")+xlab("Use Case Num")+ylab("Count")
+projectBar <- ggplot(useCaseData, aes(x=Application_Type))+geom_bar(colour="black", fill="white")+xlab("Application Type")+ylab("Count")+ scale_x_discrete(label=abbreviate)
 print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2))
 
 #output the use case related statistics
@@ -63,11 +63,11 @@ png(filename=paste(outputPath,"project_counting_statistics_for_bayesian_analysis
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")
-UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")
-UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")
-UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")
-UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")
+UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="black", fill="white")+xlab("UAW")+ylab("Count")
+UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="black", fill="white")+xlab("UUCW")+ylab("Count")
+UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="black", fill="white")+xlab("TCF")+ylab("Count")
+UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="black", fill="white")+xlab("EF")+ylab("Count")
+UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="black", fill="white")+xlab("UCP")+ylab("Count")
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, ncol=2))
 
@@ -78,9 +78,9 @@ png(filename=paste(outputPath,"project_UC_counting_statistics_for_bayesian_analy
 		pointsize=12,
 		res=96)
 
-UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="white", fill="gray55")+xlab("Simple Use Case")+ylab("Number of Projects")
-UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("Average Use Case")+ylab("Number of Projects")
-UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="white", fill="gray55")+xlab("Complex Use Case")+ylab("Number of Projects")
+UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="black", fill="white")+xlab("Simple Use Case")+ylab("Count")
+UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("Average Use Case")+ylab("Count")
+UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="black", fill="white")+xlab("Complex Use Case")+ylab("Count")
 
 print(grid.arrange(UCHist1, UCHist2, UCHist3, ncol=2))
 
@@ -160,9 +160,9 @@ print(c1+c2)
 
 
 print('bayesian averaged coefficients')
-#bayesianCoefs = solve(w1+w2) %*% (c1 + c2)
-bayesianCoefs = (1/(w1+w2))*(c1+c2)
-print(bayesianCoefs)
+#averageCoefs = solve(w1+w2) %*% (c1 + c2)
+averageCoefs = (1/(w1+w2))*(c1+c2)
+print(averageCoefs)
 
 print('bayesian variance')
 bayesianVariance = 1/(w1+w2)
@@ -172,11 +172,11 @@ print(bayesianVariance)
 #bayesianModel <- as.formula("norm_UUCW ~ 5*Simple_UC + 10*Average_UC + 15*Complex_UC")
 #print(predict(eval(bayesianModel), useCaseDataX))
 
-#print(by(useCaseDataX, 1:nrow(useCaseDataX), function(row) row * bayesianCoefs))
+#print(by(useCaseDataX, 1:nrow(useCaseDataX), function(row) row * averageCoefs))
 
-print("summary and comparison between the means")
+print("comparison between the means")
 print("bayesian estimates")
-print(bayesianCoefs)
+print(averageCoefs)
 print(bayesianVariance)
 print("regression estimates")
 print(regressionCoefs)
@@ -187,7 +187,7 @@ print(aprioriMeans)
 print(aprioriVariance)
 
 useCaseDataSet <-  useCaseData[c("Simple_UC","Average_UC", "Complex_UC")]	
-bayesianPredictedUUCW <- as.matrix(useCaseDataSet) %*% t(bayesianCoefs)
+bayesianPredictedUUCW <- as.matrix(useCaseDataSet) %*% t(averageCoefs)
 #testRegressionCoefs <- coef(fit)
 #print("test regression coefs")
 #print(testRegressionCoefs)
@@ -215,26 +215,26 @@ print(summary(fit))
 #draw the density flots
 
 #Simple use case bayesian averaging plot
-dat1 <- data.frame(dens1 = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVariance[,'Simple_UC']), rnorm(100, regressionCoefs[,'Simple_UC'], regressionVariance[1, 'Simple_UC']),rnorm(100, bayesianCoefs[1,'Simple_UC'], bayesianVariance[1, 'Simple_UC']))
+dat1 <- data.frame(dens1 = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVariance[,'Simple_UC']), rnorm(100, regressionCoefs[,'Simple_UC'], regressionVariance[1, 'Simple_UC']),rnorm(100, averageCoefs[1,'Simple_UC'], bayesianVariance[1, 'Simple_UC']))
 		, lines1 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
-#print("data frame 1")
-#print(dat1)
+print("data frame 1")
+print(dat1)
 svg(paste(outputPath,"simple_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1)) + geom_density(alpha = 0.5, adjust=1.5)+labs(x="Simple Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5, 15)))
+simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1)) + geom_density(alpha = 0.5)+labs(x="Simple Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5, 15)))
 print(simplePlot)
 
 #Average use case bayesian averaging plot
-dat2 <- data.frame(dens2 = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, regressionCoefs[,'Average_UC'], regressionVariance[1, 'Average_UC']),rnorm(100, bayesianCoefs[1,'Average_UC'], bayesianVariance[1, 'Average_UC']))
+dat2 <- data.frame(dens2 = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, regressionCoefs[,'Average_UC'], regressionVariance[1, 'Average_UC']),rnorm(100, averageCoefs[1,'Average_UC'], bayesianVariance[1, 'Average_UC']))
 		, lines2 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
 svg(paste(outputPath,"average_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2)) + geom_density(alpha = 0.5, adjust=1.5)+labs(x="Average Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:25)))
+averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2)) + geom_density(alpha = 0.5)+labs(x="Average Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:25)))
 print(averagePlot)
 
 #Complex use case bayesian averaging plot
-dat3 <- data.frame(dens3 = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, regressionCoefs[,'Complex_UC'], regressionVariance[1, 'Complex_UC']),rnorm(100, bayesianCoefs[1,'Complex_UC'], bayesianVariance[1, 'Complex_UC']))
+dat3 <- data.frame(dens3 = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, regressionCoefs[,'Complex_UC'], regressionVariance[1, 'Complex_UC']),rnorm(100, averageCoefs[1,'Complex_UC'], bayesianVariance[1, 'Complex_UC']))
 		, lines3 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
 svg(paste(outputPath,"complex_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3)) + geom_density(alpha = 0.5, adjust=1.5)+labs(x="Complex Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5:35)))
+complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3)) + geom_density(alpha = 0.5)+labs(x="Complex Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5:35)))
 print(complexPlot)
 
 #print("output dat")
@@ -257,7 +257,7 @@ print(grid.arrange(arrangeGrob(simplePlot+guides(fill=FALSE), averagePlot+guides
 #Randomly shuffle the data
 useCaseData<-useCaseData[sample(nrow(useCaseData)),]
 #Create 10 equally size folds
-nfold = 10
+nfold = 5
 folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 
 #function
@@ -279,8 +279,8 @@ folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 #}
 
 #data structure to hold the data for 10 fold cross validation
-foldResults <- matrix(,nrow=nfold,ncol=16)
-colnames(foldResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','original_mmre','original_pred15','original_pred25','original_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
+foldResults <- matrix(,nrow=nfold,ncol=12)
+colnames(foldResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
 #data structure to hold
 foldResults1 <- array(0,dim=c(100,4,nfold))
 #colnames(foldResults1) <- c('baye_pred','apriori_pred','regression_pred')
@@ -408,26 +408,6 @@ for(i in 1:nfold){
 		apriori.pred <- c(apriori.pred, length(apriori.mre[apriori.mre<=0.01*j])/length(apriori.mre))
 	}
 	
-	print('original use case weights testing set predication')
-	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
-	originalWeights = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
-	original.predict = cbind(as.matrix(testDataX) %*% t(originalWeights), testData$norm_UUCW)
-	colnames(original.predict) = c('predicted', "actual")
-	print(original.predict)
-	original.mre = apply(original.predict, 1, function(x) abs(x[1] - x[2])/x[2])
-	original.mmre = mean(original.mre)
-	print(original.mmre)
-	#original.preds = sapply(original.mre, function(x) calculatePreds(x))
-	original.pred15 = length(original.mre[original.mre<=0.15])/length(original.mre)
-	original.pred25 = length(original.mre[original.mre<=0.25])/length(original.mre)
-	original.pred50 = length(original.mre[original.mre<=0.50])/length(original.mre)
-	print(c(original.pred15, original.pred25, original.pred50))
-	
-	original.pred <- 0
-	for(j in 1:99){
-		original.pred <- c(original.pred, length(original.mre[original.mre<=0.01*j])/length(original.mre))
-	}
-	
 	print('regression testing set predication')
 	#regression.m = lm(norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	#regression.m <- lm(Norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainDataX)
@@ -448,8 +428,29 @@ for(i in 1:nfold){
 	}
 	
 	
+	print('original use case weights testing set predication')
+	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
+	originalWeights = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
+	original.predict = cbind(as.matrix(testDataX) %*% t(originalWeights), testData$norm_UUCW)
+	colnames(original.predict) = c('predicted', "actual")
+	print(original.predict)
+	original.mre = apply(original.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	original.mmre = mean(original.mre)
+	print(original.mmre)
+	#original.preds = sapply(original.mre, function(x) calculatePreds(x))
+	original.pred15 = length(original.mre[original.mre<=0.15])/length(original.mre)
+	original.pred25 = length(original.mre[original.mre<=0.25])/length(original.mre)
+	original.pred50 = length(original.mre[original.mre<=0.50])/length(original.mre)
+	print(c(original.pred15, original.pred25, original.pred50))
+	
+	original.pred <- 0
+	for(j in 1:99){
+		original.pred <- c(original.pred, length(original.mre[original.mre<=0.01*j])/length(original.mre))
+	}
+	
+	
 	foldResults[i,] = c(bayesian.mmre,bayesian.pred15,bayesian.pred25,bayesian.pred50,apriori.mmre,apriori.pred15,apriori.pred25,apriori.pred50,original.mmre,original.pred15,original.pred25,original.pred50,regression.mmre,regression.pred15,regression.pred25,regression.pred50)
-	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, original.pred, regression.pred),c(100,4))
+	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, original.pred, regression.pred),c(100,3))
 	
 }
 
@@ -465,47 +466,29 @@ cvResults <- c(
 		mean(foldResults[, 'apriori_pred15']),
 		mean(foldResults[, 'apriori_pred25']),
 		mean(foldResults[, 'apriori_pred50']),
-		mean(foldResults[, 'original_mmre']),
-		mean(foldResults[, 'original_pred15']),
-		mean(foldResults[, 'original_pred25']),
-		mean(foldResults[, 'original_pred50']),
 		mean(foldResults[, 'regression_mmre']),
 		mean(foldResults[, 'regression_pred15']),
 		mean(foldResults[, 'regression_pred25']),
 		mean(foldResults[, 'regression_pred50'])
 );
 
-names(cvResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','original_mmre','original_pred15','original_pred25','original_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
+names(cvResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
 print(cvResults)
 
-
-#for(i in 1:nfold){
+for(i in 1:nfold){
 	#print(foldResults1[,,i])
-#}
-
-avgPreds <- matrix(,nrow=100,ncol=5)
-colnames(avgPreds) <- c("Pred","Bayesian","A Priori","Original", "Regression")
+}
+avgPreds <- matrix(,nrow=100,ncol=4)
+colnames(avgPreds) <- c("Pred","Bayesian","A Priori","Regression")
 for(i in 1:100){
-	bayesian_fold_mean = mean(foldResults1[i,1,]);
-	a_priori_fold_mean = mean(foldResults1[i,2,]);
-	original_fold_mean = mean(foldResults1[i,3,]);
-	regression_fold_mean = mean(foldResults1[i,4,]);
-	avgPreds[i,] <- c(i,bayesian_fold_mean,a_priori_fold_mean,original_fold_mean,regression_fold_mean)
+	avgPreds[i,] <- c(i, mean(foldResults1[i,1,]),mean(foldResults1[i,2,]),mean(foldResults1[i,3,]))
 	#print(i)
 	#print(avgPreds[i,])
 }
 
-print('average improvement over a priori')
-print(mean(avgPreds[, "Bayesian"] - avgPreds[,"A Priori"]))
-print('average improvement over original')
-print(mean(avgPreds[, "Bayesian"] - avgPreds[,"Original"]))
-print('average improvement over regression')
-print(mean(avgPreds[, "Bayesian"] - avgPreds[,"Regression"]))
-
 avgPreds <- data.frame(avgPreds)
 print(avgPreds)
 meltAvgPreds = melt(avgPreds, id.vars="Pred", value.name="Value", variable.name="Method")
-
 print("melt avg preds info")
 print(meltAvgPreds)
 svg(paste(outputPath,"use_case_weight_calibration_err_plot.svg", sep="/"), width=6, height=4)
@@ -524,7 +507,7 @@ print("melt avg preds info as dots and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_dots_smooth.svg", sep="/"), width=6, height=4)
 ggplot(meltAvgPreds) + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
-		scale_shape_manual(values=c(0,1,2,3))+
+		scale_shape_manual(values=c(0,1,2))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage")+ theme(legend.position="bottom")
 

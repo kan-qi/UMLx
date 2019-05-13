@@ -1,0 +1,43 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Owner:users list->Owner:users list->users list:change user file->change user file:send error message if not successful->send error message if not successful:Error message,Authorize tour creator,5,0,4,0,0
+2,stl#Owner:users list->Owner:users list->users list:change user file->change user file:user info,Authorize tour creator,4,0,3,0,0
+3,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:users list->users list:change user file->change user file:send error message if not successful->send error message if not successful:Error message,Authorize tour creator,7,0,6,0,0
+4,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:users list->users list:change user file->change user file:user info,Authorize tour creator,6,0,5,0,0
+5,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:users list->users list:retrieve user profile,Authorize tour creator,5,0,4,0,0
+6,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:user info,Authorize tour creator,4,0,3,0,0
+7,stl#Owner:Error message->Owner:Error message,Authorize tour creator,2,0,1,0,0
+8,stl#Creator:sign up error message->Creator:sign up error message->sign up error message:redirect to sign up page->redirect to sign up page:register page->register page:process login info->process login info:save user info->save user info:User Info,Creator log in and register,7,0,6,0,0
+9,stl#Creator:sign up error message->Creator:sign up error message->sign up error message:redirect to sign up page->redirect to sign up page:register page->register page:process login info->process login info:sign up error message->sign up error message:redirect to sign up page,Creator log in and register,7,0,6,0,0
+10,stl#Creator:login error->Creator:login error->login error:redirect to login page->redirect to login page:Login page->Login page:check login Info->check login Info:User Info,Creator log in and register,6,0,5,0,0
+11,stl#Creator:login error->Creator:login error->login error:redirect to login page->redirect to login page:Login page->Login page:check login Info->check login Info:login error->login error:redirect to login page,Creator log in and register,7,0,6,0,0
+12,stl#Creator:register page->Creator:register page->register page:process login info->process login info:save user info->save user info:User Info,Creator log in and register,5,0,4,0,0
+13,stl#Creator:register page->Creator:register page->register page:process login info->process login info:sign up error message->sign up error message:redirect to sign up page->redirect to sign up page:register page->register page:process login info,Creator log in and register,7,0,6,0,0
+14,stl#Creator:Login page->Creator:Login page->Login page:check login Info->check login Info:User Info,Creator log in and register,4,0,3,0,0
+15,stl#Creator:Login page->Creator:Login page->Login page:check login Info->check login Info:login error->login error:redirect to login page->redirect to login page:Login page->Login page:check login Info,Creator log in and register,7,0,6,0,0
+16,stl#Creator:Update error message->Creator:Update error message,Creator modify tour details,2,0,1,0,0
+17,stl#Creator:Tour detail->Creator:Tour detail->Tour detail:check tour detail->check tour detail:Information invalidity error,Creator modify tour details,4,0,1,2,0
+18,stl#Creator:Tour detail->Creator:Tour detail->Tour detail:check tour detail->check tour detail:update tour detail->update tour detail:tour detail info,Creator modify tour details,5,0,0,4,0
+19,stl#Creator:Tour detail->Creator:Tour detail->Tour detail:check tour detail->check tour detail:update tour detail->update tour detail:update error->update error:Update error message,Creator modify tour details,6,0,2,3,0
+20,stl#Creator:Information invalidity error->Creator:Information invalidity error,Creator modify tour details,2,0,1,0,0
+21,stl#Owner:List of tours->Owner:List of tours->List of tours:delete tour->delete tour:tours,Delete irrelevant tours,4,0,0,3,0
+22,stl#Owner:List of tours->Owner:List of tours->List of tours:retrieve tours->retrieve tours:List of tours->List of tours:delete tour->delete tour:tours,Delete irrelevant tours,6,0,0,5,0
+23,stl#Owner:List of tours->Owner:List of tours->List of tours:retrieve tours->retrieve tours:List of tours->List of tours:retrieve tours,Delete irrelevant tours,5,0,0,4,0
+24,stl#Owner:List of tours->Owner:List of tours->List of tours:retrieve tours->retrieve tours:tours,Delete irrelevant tours,4,0,0,3,0
+25,stl#taker:list of tours->taker:list of tours,Search for a tour,2,0,0,1,0
+26,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:list of tours,Search for a tour,4,1,0,2,0
+27,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:retrieve nearby tours->retrieve nearby tours:list of tours,Search for a tour,5,2,0,2,0
+28,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:retrieve nearby tours->retrieve nearby tours:tour info,Search for a tour,5,2,0,2,0
+29,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:tour info,Search for a tour,4,1,0,2,0
+30,stl#Creator:tour detail page->Creator:tour detail page->tour detail page:check update information->check update information:Popup for reenter tour info,Update tour,4,1,1,1,0
+31,stl#Creator:tour detail page->Creator:tour detail page->tour detail page:check update information->check update information:tour info,Update tour,4,0,1,2,0
+32,stl#Creator:Popup for reenter tour info->Creator:Popup for reenter tour info,Update tour,2,1,0,0,0
+33,stl#Creator:tour info error->Creator:tour info error,Upload tours,2,0,0,1,0
+34,stl#Creator:tour info page->Creator:tour info page->tour info page:process tour->process tour:tour info error,Upload tours,4,0,0,3,0
+35,stl#Creator:tour info page->Creator:tour info page->tour info page:process tour->process tour:tour info,Upload tours,4,0,0,3,0
+36,stl#Taker:stop info->Taker:stop info,View a particular stop,2,1,0,0,0
+37,stl#Taker:empty map view->Taker:empty map view,View a particular stop,2,1,0,0,0
+38,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:check internet connection->check internet connection:tour info,View a particular stop,5,1,1,2,0
+39,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:check internet connection->check internet connection:empty map view,View a particular stop,5,2,1,1,0
+40,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:empty map view,View a particular stop,4,2,0,1,0
+41,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:stop info,View a particular stop,4,2,0,1,0
+42,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:tour info,View a particular stop,4,1,0,2,0

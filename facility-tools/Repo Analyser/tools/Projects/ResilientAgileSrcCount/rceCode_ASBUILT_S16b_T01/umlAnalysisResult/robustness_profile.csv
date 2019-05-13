@@ -1,0 +1,407 @@
+Name,Admin deletes photo
+TotalLinks,9.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+cancel deletion,1,1
+change mode,1,0
+confirm delete photos,1,1
+photo,0,2
+photo list,3,3
+pop up photo connection error,1,1
+select photos,1,2
+
+Name,Admin searches for photo by event
+TotalLinks,17.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,3,0
+Admin page,0,3
+Display event list,1,1
+Event list,1,4
+Get event list,3,1
+Get photo list,2,1
+Photo list,0,1
+Pop up photo connection error,1,1
+Search box,0,4
+display photo list,1,1
+event,1,1
+photo,1,1
+pop up event connection error,2,0
+
+Name,Admin searches for photo by user
+TotalLinks,17.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,3,0
+Account,1,1
+Admin page,0,4
+Display user list,1,1
+Get photo list,2,1
+Get user list,3,1
+Photo list,0,1
+Pop up photo connection error,1,1
+Search box,0,3
+User list,1,4
+display photo list,1,1
+photo,1,1
+pop up event connection error,2,0
+
+Name,Automatic deletion
+TotalLinks,7.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,3,0
+Delete expired events automatically,1,2
+delete expired location photos automatically,1,2
+delete photos related to expired events automatically,1,2
+event,0,1
+photo,0,2
+
+Name,Create Account
+TotalLinks,14.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Account,0,1
+Display pop-up "Password do not match" on Sign up Screen,2,0
+Display pop-up "invalid Useername or Username is already in use" on Sign Up Screen,1,1
+Display pop-up "invalid email or email is already in use" on Sign Up Screen,1,1
+Display pop-up "invalid password" on Sign Up Screen,1,1
+Sign up Screen,1,6
+User Collection,0,1
+verify confirm password,0,1
+verify email,2,1
+verify password,2,1
+verify username,3,1
+
+Name,Create Profile
+TotalLinks,10.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Display Selected Photo on Profile Photo Screen,1,1
+Display available photos on Photos Screen,1,2
+Display photo on  Profile photo screen,2,0
+Display pop-up "Password do not match" on Sign up Screen,1,0
+Photos Screen,1,1
+Profile,0,1
+Profile Photo Screen,2,5
+Save Profile Photo,1,1
+
+Name,Create a Private Event
+TotalLinks,8.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Create Event Screen,2,2
+Event Collection,0,2
+Handle Validate Error,1,3
+Validate hashtag containts alphanume, dash, underscore,2,1
+Validate hashtag uniqueness,2,1
+
+Name,Create a Public Event
+TotalLinks,8.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Create Event Screen,2,2
+Event Collection,0,2
+Handle Validate Error,1,3
+Validate hashtag containts alphanume, dash, underscore,2,1
+Validate hashtag uniqueness,2,1
+
+Name,Delete Photos in Event if Owner
+TotalLinks,14
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,2,0
+Delete Photo Model,2,4
+Dismiss Delete Photo Model,0,2
+Display Deelete Photo Model,1,1
+Event,0,1
+Event Screen,2,3
+Handle Deletion Error,1,1
+Handle Photo Deletion,3,1
+Photo Collection,0,1
+Toggle Delete Mode,1,1
+Toggle Off Delete Mode,1,0
+
+Name,Delete uploaded photos
+TotalLinks,23.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,5,0
+Can't access server,1,1
+Confirm page,1,3
+Confirmed delete,1,1
+Delete,1,1
+Delete finished,1,1
+My photos screen,2,3
+Photo Collection,1,3
+Prepare photos,1,1
+Result,0,4
+Select a photo,1,1
+failed to delete,1,1
+get my upload,0,2
+my upload,4,1
+view photo,1,3
+
+Name,Downoad Photos to Device
+TotalLinks,7.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Download photo to Device,3,1
+Handle download error,1,1
+Handle download success,1,1
+Photo Selected Screen,1,4
+Server,0,1
+
+Name,Log In to Account
+TotalLinks,9.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Account,0,1
+Display pop-p "Authentication Failed" on Log In Screen,1,2
+Log In Screen,1,3
+User Collection,0,2
+Verify Password,3,1
+Verify Username,3,1
+
+Name,Log Out of Account
+TotalLinks,6.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Display pop-p "Authentication Failed" on Log In Screen,1,2
+Log In Screen,2,4
+Verify Username,2,1
+
+Name,Navigation
+TotalLinks,40
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+User,53,0
+Display navigation bar,1,0
+Log in screen,0,1
+Navigation bar,1,2
+Photo screen,0,1
+Tap a icon on navigation bar,1,1
+display  log in screen,1,1
+display event screen,1,1
+display photo screen,1,1
+display profile screen,1,1
+display search screen,1,1
+event screen,0,1
+is  user logged in?,5,1
+profile screen,0,1
+search screen,0,1
+
+Name,Reserve a Hashtag
+TotalLinks,10
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,2,0
+Create Event Screen,2,2
+Create new event with hashtag,3,2
+Event,0,1
+Event Collection,0,1
+Handle Creation Error,1,2
+Set Password Screen,1,3
+
+Name,Search by Location
+TotalLinks,15
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,4,0
+List Mutator,1,3
+Location Screen,1,2
+Perform Default Search,2,1
+Perform Select Range Search,2,1
+Photo Database,0,1
+Photo Database,0,1
+Photo Search Result List,0,1
+Photo Search Result List View,1,2
+Photo View,1,2
+Range Buttons(Default myhome),1,2
+User Directed to View Photo Use Case,0,1
+
+Name,Search by event
+TotalLinks,16.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,3,0
+Event Collection,2,2
+Perform Default Search,1,2
+Pop up Server Error Message,1,1
+Pop up daabase Error Message,1,1
+Search API,3,1
+Search Event Homepage,1,4
+Search Result Page,1,3
+Show Empty Result Page,1,2
+Valid Input Text,1,2
+
+Name,Search event and upload photo
+TotalLinks,23
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,4,0
+Event Collection,1,1
+Photos in the event,2,1
+Search Event,1,3
+Search Result Page,1,3
+Search(back-end),1,2
+Select an event,1,1
+Upload finished,1,1
+can't access server,2,0
+confirm,1,3
+confirm upload,1,1
+enter search item and search,1,2
+failed to upload,1,1
+prepare resullt,1,1
+result,0,2
+search & upload,2,0
+upload choice,0,3
+
+Name,Set a password
+TotalLinks,4.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Handle Password Error,1,1
+Set Password Screen,1,3
+Validates non-block password,1,1
+
+Name,Take a photo
+TotalLinks,13.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,3,0
+Upload,1,1
+camera,2,1
+can't access camera,1,1
+my photo screen,1,3
+prepare resullt,1,2
+take the photo successfully,1,1
+upload choice,0,3
+view photo,2,3
+
+Name,Take photo for location
+TotalLinks,16.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,3,0
+Upload finished,1,1
+camera,2,1
+current location,1,3
+failed to get current location,1,1
+failed to upload,1,1
+get location successfully,1,1
+my upload,2,1
+upload,1,1
+upload choice,1,3
+upload choice,0,4
+upload to current location,1,1
+
+Name,Upload photo to my event
+TotalLinks,22
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,4,0
+camera,1,1
+can't access server,1,1
+confirm,1,3
+confirm upload,1,1
+display my events,0,0
+display my events,2,1
+failed to upload,1,1
+my event,2,1
+my events,1,3
+photos in the event,1,2
+result,0,4
+select an event,1,1
+upload choice,1,3
+upload finished,2,1
+upload to my event,1,1
+
+Name,View photos of event/View photos of private event with password
+TotalLinks,13.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,1,0
+Determine if user is event owner,2,1
+Display Remaining Event Time,1,1
+Event,0,2
+Event Screen,5,4
+Handle photo retrieval error,1,1
+Hide Edit Button,1,1
+Navigate to Photo Selected Screen,0,1
+Photo Collection,0,2
+Retrieve Photos for Event,2,1
+
+Name,View photos on device
+TotalLinks,15.5
+ActorNum,0
+BoundaryNum,0
+ControlNum,0
+Element, Outbound, Inbound
+Actor,4,0
+Can't access local photos,1,1
+camera roll,1,3
+choose a photo,1,1
+get photos successfully,1,1
+local photos,2,1
+my photos screen,1,2
+process request,1,1
+upload,1,1
+upload choice,0,3
+view photo,1,3
+

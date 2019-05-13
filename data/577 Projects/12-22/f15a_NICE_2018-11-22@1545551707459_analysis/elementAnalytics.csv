@@ -1,0 +1,220 @@
+id,element,useCase,type,component
+1,User:Write new blog and click post,UC10: Create blog,entity,Blog
+2,User:Click post blog,UC10: Create blog,entity,Blog
+3,User:Homepage,UC10: Create blog,control,Homepage
+4,Click post blog:Redirect to write blog page,UC10: Create blog,entity,Blog
+5,added into database:Homepage,UC10: Create blog,control,Homepage
+6,New blog is posted on website :added into database,UC10: Create blog,control,addedintodatabase
+7,Write new blog and click post:New blog is posted on website ,UC10: Create blog,entity,Blog
+8,Redirect to write blog page:New blog is posted on website ,UC10: Create blog,entity,Blog
+9,added into database:blog db,UC10: Create blog,entity,Blog
+10,stl#User:Write new blog and click post,UC10: Create blog,Stimulus,undefined
+11,stl#User:Click post blog,UC10: Create blog,Stimulus,undefined
+12,stl#User:Homepage,UC10: Create blog,Stimulus,undefined
+13,User:Input new information about the product and click Create.,UC11: write comments,control,Medical Create Form
+14,User:Homepage,UC11: write comments,control,Homepage
+15,User:Click post page,UC11: write comments,control,Homepage
+16,Click post page:Redirect vendor to the product Create page.,UC11: write comments,control,Medical Create Form
+17,show confirmation page:Homepage,UC11: write comments,control,Homepage
+18,Input new information about the product and click Create.:Update the new information in product page ,UC11: write comments,boundary,Buyer Registration Form
+19,Redirect vendor to the product Create page.:Update the new information in product page ,UC11: write comments,boundary,Buyer Registration Form
+20,Redirect vendor to the product Create page.:show confirmation page,UC11: write comments,control,Homepage
+21,Update the new information in product page :show confirmation page,UC11: write comments,control,Homepage
+22,show confirmation page:comment db,UC11: write comments,entity,Component
+23,stl#User:Input new information about the product and click Create.,UC11: write comments,Stimulus,undefined
+24,stl#User:Homepage,UC11: write comments,Stimulus,undefined
+25,stl#User:Click post page,UC11: write comments,Stimulus,undefined
+26,User:Enter search name and click ��search�� in main page,UC12: Search product,control,Redirecttomainpagewithalistofproductmatchestheresult
+27,User:Input new information about the product and click Create.,UC12: Search product,control,Medical Create Form
+28,User:Homepage,UC12: Search product,control,Homepage
+29,Enter search name and click ��search�� in main page:Redirect to main page with a list of product matches the result,UC12: Search product,control,Redirecttomainpagewithalistofproductmatchestheresult
+30,and send a dialog ��Create success":Homepage,UC12: Search product,control,Homepage
+31,Redirect to main page with a list of product matches the result:Homepage,UC12: Search product,control,Homepage
+32,Input new information about the product and click Create.:Update the new information in product page ,UC12: Search product,control,Redirecttomainpagewithalistofproductmatchestheresult
+33,Redirect to main page with a list of product matches the result:Update the new information in product page ,UC12: Search product,control,Redirecttomainpagewithalistofproductmatchestheresult
+34,Redirect to main page with a list of product matches the result:and send a dialog ��Create success",UC12: Search product,control,Medical Create Form
+35,Update the new information in product page :and send a dialog ��Create success",UC12: Search product,control,Medical Create Form
+36,and send a dialog ��Create success":product db,UC12: Search product,entity,Buyer Profile
+37,stl#User:Enter search name and click ��search�� in main page,UC12: Search product,Stimulus,undefined
+38,stl#User:Input new information about the product and click Create.,UC12: Search product,Stimulus,undefined
+39,stl#User:Homepage,UC12: Search product,Stimulus,undefined
+40,User:Click ��unshipped orders��	,UC13: Check Information,boundary,Order
+41,User:Homepage,UC13: Check Information,control,Homepage
+42,User:Input new information about the product and click Create.,UC13: Check Information,control,Medical Create Form
+43,User:Vendor click Create button ,UC13: Check Information,control,Medical Create Form
+44,User:Homepage,UC13: Check Information,control,Homepage
+45,Click ��unshipped orders��	:Redirect to main page with a list of unshipped orders,UC13: Check Information,control,Redirecttomainpagewithalistofproductmatchestheresult
+46,Redirect to main page with a list of unshipped orders:Homepage,UC13: Check Information,control,Homepage
+47,and send a dialog ��Create success":Homepage,UC13: Check Information,control,Homepage
+48,Input new information about the product and click Create.:Update the new information in product page ,UC13: Check Information,control,Redirecttomainpagewithalistofproductmatchestheresult
+49,Redirect vendor to the product Create page.:Update the new information in product page ,UC13: Check Information,control,Redirecttomainpagewithalistofproductmatchestheresult
+50,Vendor click Create button :Redirect vendor to the product Create page.,UC13: Check Information,control,Redirecttomainpagewithalistofproductmatchestheresult
+51,Update the new information in product page :and send a dialog ��Create success",UC13: Check Information,control,Medical Create Form
+52,and send a dialog ��Create success":product db,UC13: Check Information,entity,Buyer Profile
+53,stl#User:Click ��unshipped orders��	,UC13: Check Information,Stimulus,undefined
+54,stl#User:Homepage,UC13: Check Information,Stimulus,undefined
+55,stl#User:Input new information about the product and click Create.,UC13: Check Information,Stimulus,undefined
+56,stl#User:Vendor click Create button ,UC13: Check Information,Stimulus,undefined
+57,stl#User:Homepage,UC13: Check Information,Stimulus,undefined
+58,User:Assign a unique code vendor��s email address and Click ��add vendor��,UC14: Approve new venders,control,Assignauniquecodevendor��semailaddressandClick��addvendor��
+59,User:Homepage,UC14: Approve new venders,control,Homepage
+60,Assign a unique code vendor��s email address and Click ��add vendor��:Vendor��s email will get the unique code for registration and the vendor will be added in vendor list,UC14: Approve new venders,control,Assignauniquecodevendor��semailaddressandClick��addvendor��
+61,Vendor��s email will get the unique code for registration and the vendor will be added in vendor list:Homepage,UC14: Approve new venders,control,Homepage
+62,stl#User:Assign a unique code vendor��s email address and Click ��add vendor��,UC14: Approve new venders,Stimulus,undefined
+63,stl#User:Homepage,UC14: Approve new venders,Stimulus,undefined
+64,User:Move mouse on the vendor��s name,UC15: Manage venders,control,Vender Registration Form
+65,User:Click Users all users tab,UC15: Manage venders,boundary,ClickUsersalluserstab
+66,User:Homepage,UC15: Manage venders,control,Homepage
+67,User:	Click Edit	,UC15: Manage venders,boundary,Medical Profile
+68,User:Change the role in detail page from vendor and click update user,UC15: Manage venders,control,Notifytheadminthattheuserisupdated
+69,	Click Edit	:Redirect to a page shows vendor details,UC15: Manage venders,control,Vender Profile
+70,	Edit and remove button appears:Redirect to a page shows vendor details,UC15: Manage venders,control,Vender Profile
+71,Redirect user to a user page listed with all users:	Edit and remove button appears,UC15: Manage venders,control,Medical Create Form
+72,Move mouse on the vendor��s name:	Edit and remove button appears,UC15: Manage venders,control,Medical Create Form
+73,Change the role in detail page from vendor and click update user:Notify the admin that the user is updated,UC15: Manage venders,control,Notifytheadminthattheuserisupdated
+74,Click Users all users tab:Redirect user to a user page listed with all users,UC15: Manage venders,boundary,ClickUsersalluserstab
+75,Notify the admin that the user is updated:Homepage,UC15: Manage venders,control,Homepage
+76,Redirect to a page shows vendor details:Notify the admin that the user is updated,UC15: Manage venders,control,Notifytheadminthattheuserisupdated
+77,stl#User:Move mouse on the vendor��s name,UC15: Manage venders,Stimulus,undefined
+78,stl#User:Click Users all users tab,UC15: Manage venders,Stimulus,undefined
+79,stl#User:Homepage,UC15: Manage venders,Stimulus,undefined
+80,stl#User:	Click Edit	,UC15: Manage venders,Stimulus,undefined
+81,stl#User:Change the role in detail page from vendor and click update user,UC15: Manage venders,Stimulus,undefined
+82,User:Click edit button for changing specific setting,UC16: Manage account setting,boundary,Buyer Registration Form
+83,User:Change the information and click save,UC16: Manage account setting,control,Vender Registration Form
+84,User:Homepage,UC16: Manage account setting,control,Homepage
+85,User:Homepage,UC16: Manage account setting,control,Homepage
+86,User:Enter search name and click ��search�� in main page,UC16: Manage account setting,boundary,ClickUsersalluserstab
+87,	Redirect user to a page for filling the new information of the specific account information.:Notify user the new setting has been saved.,UC16: Manage account setting,control,Notifytheadminthattheuserisupdated
+88,Click edit button for changing specific setting:	Redirect user to a page for filling the new information of the specific account information.,UC16: Manage account setting,control,Notifytheadminthattheuserisupdated
+89,Change the information and click save:Notify user the new setting has been saved.,UC16: Manage account setting,control,Notifytheadminthattheuserisupdated
+90,Enter search name and click ��search�� in main page:Redirect to main page with a list of product matches the result,UC16: Manage account setting,control,Notifytheadminthattheuserisupdated
+91,added into database:Homepage,UC16: Manage account setting,control,Homepage
+92,Notify user the new setting has been saved.:Homepage,UC16: Manage account setting,control,Homepage
+93,Redirect to main page with a list of product matches the result:Homepage,UC16: Manage account setting,control,Homepage
+94,Notify user the new setting has been saved.:added into database,UC16: Manage account setting,control,Notifytheadminthattheuserisupdated
+95,added into database:blog db,UC16: Manage account setting,entity,Blog
+96,stl#User:Click edit button for changing specific setting,UC16: Manage account setting,Stimulus,undefined
+97,stl#User:Change the information and click save,UC16: Manage account setting,Stimulus,undefined
+98,stl#User:Homepage,UC16: Manage account setting,Stimulus,undefined
+99,stl#User:Homepage,UC16: Manage account setting,Stimulus,undefined
+100,stl#User:Enter search name and click ��search�� in main page,UC16: Manage account setting,Stimulus,undefined
+101,User:Homepage,UC17: Newsletter,control,Homepage
+102,User:Select a theme,UC17: Newsletter,control,Selectatheme
+103,User:Click +new,UC17: Newsletter,boundary,ClickUsersalluserstab
+104,User:Click Newsletter tag,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+105,User:Fill all information required and click send through proceed to edit	,UC17: Newsletter,control,Vender Registration Form
+106,Click +new:Redirect admin select a new theme of newsletter,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+107,Click Newsletter tag:Redirect admin to newsletter main page,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+108,Fill all information required and click send through proceed to edit	:Notify the admin the newsletter is sent,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+109,Notify the admin the newsletter is sent:Homepage,UC17: Newsletter,control,Homepage
+110,Redirect to detail page of creating a newsletter:Notify the admin the newsletter is sent,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+111,Redirect admin select a new theme of newsletter:Redirect to detail page of creating a newsletter,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+112,Redirect admin to newsletter main page:Redirect admin select a new theme of newsletter,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+113,Redirect to detail page of creating a newsletter:newsletter ,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+114,Select a theme:Redirect to detail page of creating a newsletter,UC17: Newsletter,control,Redirectadmintonewslettermainpage
+115,stl#User:Homepage,UC17: Newsletter,Stimulus,undefined
+116,stl#User:Select a theme,UC17: Newsletter,Stimulus,undefined
+117,stl#User:Click +new,UC17: Newsletter,Stimulus,undefined
+118,stl#User:Click Newsletter tag,UC17: Newsletter,Stimulus,undefined
+119,stl#User:Fill all information required and click send through proceed to edit	,UC17: Newsletter,Stimulus,undefined
+120,User:Click pending,UC18: Apprive pending products,boundary,ClickUsersalluserstab
+121,User:Click Products products tab,UC18: Apprive pending products,boundary,ClickUsersalluserstab
+122,User:Change the status from pending review to publish and click update	,UC18: Apprive pending products,boundary,ClickUsersalluserstab
+123,User:Move mouse on the product and click quick edit,UC18: Apprive pending products,boundary,ClickUsersalluserstab
+124,User:Homepage,UC18: Apprive pending products,control,Homepage
+125,Change the status from pending review to publish and click update	:Notify the admin that the product is updated,UC18: Apprive pending products,control,Redirectadmintonewslettermainpage
+126,Click Products products tab:Redirect to all product list,UC18: Apprive pending products,boundary,Medical Profile
+127,Click pending:Redirect to pending product list,UC18: Apprive pending products,control,Redirectadmintonewslettermainpage
+128,Notify the admin that the product is updated:Homepage,UC18: Apprive pending products,control,Homepage
+129,Move mouse on the product and click quick edit:Shows product details,UC18: Apprive pending products,control,Vender Profile
+130,Shows product details:Notify the admin that the product is updated,UC18: Apprive pending products,control,Redirectadmintonewslettermainpage
+131,Redirect to all product list:Redirect to pending product list,UC18: Apprive pending products,control,Redirectadmintonewslettermainpage
+132,Redirect to pending product list:Shows product details,UC18: Apprive pending products,control,Vender Profile
+133,Shows product details:newsletter ,UC18: Apprive pending products,control,Redirectadmintonewslettermainpage
+134,stl#User:Click pending,UC18: Apprive pending products,Stimulus,undefined
+135,stl#User:Click Products products tab,UC18: Apprive pending products,Stimulus,undefined
+136,stl#User:Change the status from pending review to publish and click update	,UC18: Apprive pending products,Stimulus,undefined
+137,stl#User:Move mouse on the product and click quick edit,UC18: Apprive pending products,Stimulus,undefined
+138,stl#User:Homepage,UC18: Apprive pending products,Stimulus,undefined
+139,User:Homepage,UC19: Email,control,Homepage
+140,User:Check email information for the customer and send the email manually,UC19: Email,control,Vender Registration Form
+141,Check email information for the customer and send the email manually:show confirmation page,UC19: Email,control,Homepage
+142,show confirmation page:Homepage,UC19: Email,control,Homepage
+143,stl#User:Homepage,UC19: Email,Stimulus,undefined
+144,stl#User:Check email information for the customer and send the email manually,UC19: Email,Stimulus,undefined
+145,User:enter username and password and click enter,UC1:Login,boundary,ClickUsersalluserstab
+146,User:Homepage,UC1:Login,control,Homepage
+147,Check whether username and password is true.:Redirect user to user��s main page,UC1:Login,control,Redirectadmintonewslettermainpage
+148,enter username and password and click enter:Check whether username and password is true.,UC1:Login,control,Selectatheme
+149,Redirect user to user��s main page:Homepage,UC1:Login,control,Homepage
+150,stl#User:enter username and password and click enter,UC1:Login,Stimulus,undefined
+151,stl#User:Homepage,UC1:Login,Stimulus,undefined
+152,User:Fill in all required data click submit,UC4: Vender Registratoin,boundary,ClickUsersalluserstab
+153,User:Homepage,UC4: Vender Registratoin,control,Homepage
+154,Add new user record into database:Redirect user to main page,UC4: Vender Registratoin,control,Redirectadmintonewslettermainpage
+155,Fill in all required data click submit:Add new user record into database,UC4: Vender Registratoin,control,Redirectadmintonewslettermainpage
+156,Redirect user to main page:Homepage,UC4: Vender Registratoin,control,Homepage
+157,stl#User:Fill in all required data click submit,UC4: Vender Registratoin,Stimulus,undefined
+158,stl#User:Homepage,UC4: Vender Registratoin,Stimulus,undefined
+159,User:Homepage,UC5: Manage cart,control,Homepage
+160,User:Click ��add to cart�� button of the product,UC5: Manage cart,boundary,Medical Profile
+161,Add the product in customer��s pending buying list:Show confirmation page,UC5: Manage cart,control,Homepage
+162,Click ��add to cart�� button of the product:Add the product in customer��s pending buying list,UC5: Manage cart,entity,Buyer Profile
+163,Show confirmation page:Homepage,UC5: Manage cart,control,Homepage
+164,stl#User:Homepage,UC5: Manage cart,Stimulus,undefined
+165,stl#User:Click ��add to cart�� button of the product,UC5: Manage cart,Stimulus,undefined
+166,User:Buyer select payment method	,UC6: Check out,control,Selectatheme
+167,User:Homepage,UC6: Check out,control,Homepage
+168,User:Finish payment,UC6: Check out,control,Homepage
+169,Buyer select payment method	:Redirect to third party payment page with total amount,UC6: Check out,control,Redirectadmintonewslettermainpage
+170,Finish payment:Get receipt from third party payment method,UC6: Check out,control,Homepage
+171,Get receipt from third party payment method:clear cart item and generate orders,UC6: Check out,control,Vender Registration Form
+172,Redirect to third party payment page with total amount:Get receipt from third party payment method,UC6: Check out,control,Homepage
+173,clear cart item and generate orders:Homepage,UC6: Check out,control,Homepage
+174,stl#User:Buyer select payment method	,UC6: Check out,Stimulus,undefined
+175,stl#User:Homepage,UC6: Check out,Stimulus,undefined
+176,stl#User:Finish payment,UC6: Check out,Stimulus,undefined
+177,User:Input new information about the product and click Create.,UC7: Edit Product,control,Medical Create Form
+178,User:Vendor click Create button ,UC7: Edit Product,control,Medical Create Form
+179,User:Homepage,UC7: Edit Product,control,Homepage
+180,and send a dialog ��Create success":Homepage,UC7: Edit Product,control,Homepage
+181,Input new information about the product and click Create.:Update the new information in product page ,UC7: Edit Product,control,Redirectadmintonewslettermainpage
+182,Redirect vendor to the product Create page.:Update the new information in product page ,UC7: Edit Product,control,Redirectadmintonewslettermainpage
+183,Vendor click Create button :Redirect vendor to the product Create page.,UC7: Edit Product,control,Redirectadmintonewslettermainpage
+184,Update the new information in product page :and send a dialog ��Create success",UC7: Edit Product,control,Medical Create Form
+185,and send a dialog ��Create success":product db,UC7: Edit Product,entity,Buyer Profile
+186,stl#User:Input new information about the product and click Create.,UC7: Edit Product,Stimulus,undefined
+187,stl#User:Vendor click Create button ,UC7: Edit Product,Stimulus,undefined
+188,stl#User:Homepage,UC7: Edit Product,Stimulus,undefined
+189,User:Vendor click Create button ,UC8: Create product,control,Medical Create Form
+190,User:Input new information about the product and click Create.,UC8: Create product,control,Medical Create Form
+191,User:Homepage,UC8: Create product,control,Homepage
+192,and send a dialog ��Create success":Homepage,UC8: Create product,control,Homepage
+193,Input new information about the product and click Create.:Update the new information in product page ,UC8: Create product,control,Redirectadmintonewslettermainpage
+194,Redirect vendor to the product Create page.:Update the new information in product page ,UC8: Create product,control,Redirectadmintonewslettermainpage
+195,Vendor click Create button :Redirect vendor to the product Create page.,UC8: Create product,control,Redirectadmintonewslettermainpage
+196,Update the new information in product page :and send a dialog ��Create success",UC8: Create product,control,Medical Create Form
+197,and send a dialog ��Create success":product db,UC8: Create product,entity,Buyer Profile
+198,stl#User:Vendor click Create button ,UC8: Create product,Stimulus,undefined
+199,stl#User:Input new information about the product and click Create.,UC8: Create product,Stimulus,undefined
+200,stl#User:Homepage,UC8: Create product,Stimulus,undefined
+201,User:Homepage,UC9: Delete product,control,Homepage
+202,User:click ��yes��.,UC9: Delete product,boundary,ClickUsersalluserstab
+203,User:Vendor click Delete button for specific product,UC9: Delete product,control,Vender Profile
+204,delete product from database:Homepage,UC9: Delete product,control,Homepage
+205,Vendor click Delete button for specific product:send a dialog ��Are you sure to delete this product?��,UC9: Delete product,control,Vender Profile
+206,click ��yes��.:send a dialog ��Delete success,UC9: Delete product,control,Vender Profile
+207,delete product from database:product db,UC9: Delete product,entity,Buyer Profile
+208,send a dialog ��Delete success:delete product from database,UC9: Delete product,control,Selectatheme
+209,send a dialog ��Are you sure to delete this product?��:send a dialog ��Delete success,UC9: Delete product,control,Vender Profile
+210,stl#User:Homepage,UC9: Delete product,Stimulus,undefined
+211,stl#User:click ��yes��.,UC9: Delete product,Stimulus,undefined
+212,stl#User:Vendor click Delete button for specific product,UC9: Delete product,Stimulus,undefined
+213,User:clicks the ��log out�� hypertext ,UC: 2 Logout,boundary,ClickUsersalluserstab
+214,User:Homepage,UC: 2 Logout,control,Homepage
+215,Display a message:Homepage,UC: 2 Logout,control,Homepage
+216,End the session with this user :Display a message,UC: 2 Logout,control,Homepage
+217,clicks the ��log out�� hypertext :End the session with this user ,UC: 2 Logout,control,Vender Registration Form
+218,stl#User:clicks the ��log out�� hypertext ,UC: 2 Logout,Stimulus,undefined
+219,stl#User:Homepage,UC: 2 Logout,Stimulus,undefined

@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Data Service Configuration Form" as 19
+participant "Product Configuration" as 49
+participant "Web based product configurator and data service system" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Receivenotificationpage()
+activate 19
+
+19 -> 59: storesthedataintothedatabase()
+activate 59
+
+59 -> 19: validatedataservices()
+19 -> 49: Confirmationpage()
+activate 49
+
+49 -> 19: Receivenotificationpage()
+19 -> 59: storesthedataintothedatabase()
+deactivate 59
+
+deactivate 19
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+19 -> 19: dataservicesdb()
+activate 19
+
+deactivate 19
+
+@enduml

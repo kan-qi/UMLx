@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Login Screen" as 09
+participant "Hompage" as 19
+participant "<<entity>>  User  Datastore" as 39
+
+User -> 09: Logininpage()
+activate 09
+
+09 -> 39: validateusenameandpassword()
+activate 39
+
+39 -> 19: showconfirmationpage()
+activate 19
+
+19 -> 19: Homepage()
+deactivate 19
+
+19 -> 09: Logininpage()
+09 -> 39: validateusenameandpassword()
+deactivate 39
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

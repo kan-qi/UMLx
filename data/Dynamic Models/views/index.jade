@@ -1,0 +1,17 @@
+doctype html
+html
+  body
+    form(action='/predictRiskLevel', enctype='multipart/form-data', method='post')
+      | Project Data:
+      br
+      |   
+      input#project-data-file(type='file', name='project-data-file')
+      |   
+      br
+      br
+      |   
+      input(type='submit', value='Submit')
+    |  
+    p
+      | please submit a csv file with project data specified in this file: 
+      a(href='', \='')

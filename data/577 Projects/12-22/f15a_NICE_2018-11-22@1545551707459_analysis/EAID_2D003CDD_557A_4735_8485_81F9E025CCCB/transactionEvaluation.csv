@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Homepage->User:Homepage,UC10: Create blog,CTRL,2,0,2,1,4
+2,stl#User:Click post blog->User:Click post blog->Click post blog:Redirect to write blog page->Redirect to write blog page:New blog is posted on website ->New blog is posted on website :added into database->added into database:blog db,UC10: Create blog,TRAN_NA,6,1,5.2,5,31.200000000000003
+3,stl#User:Click post blog->User:Click post blog->Click post blog:Redirect to write blog page->Redirect to write blog page:New blog is posted on website ->New blog is posted on website :added into database->added into database:Homepage,UC10: Create blog,TRAN_NA,6,1,4.4,5,26.400000000000002
+4,stl#User:Write new blog and click post->User:Write new blog and click post->Write new blog and click post:New blog is posted on website ->New blog is posted on website :added into database->added into database:blog db,UC10: Create blog,TRAN_NA,5,1,5,4,25
+5,stl#User:Write new blog and click post->User:Write new blog and click post->Write new blog and click post:New blog is posted on website ->New blog is posted on website :added into database->added into database:Homepage,UC10: Create blog,TRAN_NA,5,1,4,4,20

@@ -1,0 +1,91 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Case_addresses" as 09
+participant "Password" as 19
+participant "Manager" as 29
+participant "Users" as 49
+participant "Case_email" as 59
+participant "Cases" as 69
+participant "Limited_User" as 79
+participant "$help://use_case_model_pattern.htm" as 109
+participant "Groups" as 149
+
+Administrator -> 09: casecreatedsuccessmessage()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: generatearandompassword()
+activate 19
+
+19 -> 19: emailpassword()
+19 -> 59: Emailprotocol()
+activate 59
+
+deactivate 59
+
+deactivate 19
+
+Administrator -> 29: unauthorizederrormessage()
+activate 29
+
+deactivate 29
+
+Administrator -> 19: usernameandreceivedpasswordinput()
+activate 19
+
+19 -> 19: insertusernameandreceivedpasswordintoDB()
+19 -> 49: User()
+activate 49
+
+deactivate 49
+
+19 -> 109: createacasefortheuser()
+activate 109
+
+109 -> 69: Case()
+activate 69
+
+deactivate 69
+
+109 -> 09: casecreatedsuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 109
+
+deactivate 19
+
+Administrator -> 49: Createuserbutton()
+activate 49
+
+49 -> 79: validateroleofuser()
+activate 79
+
+79 -> 19: generatearandompassword()
+activate 19
+
+19 -> 19: emailpassword()
+deactivate 19
+
+79 -> 149: role()
+activate 149
+
+deactivate 149
+
+79 -> 29: unauthorizederrormessage()
+activate 29
+
+deactivate 29
+
+deactivate 79
+
+deactivate 49
+
+@enduml

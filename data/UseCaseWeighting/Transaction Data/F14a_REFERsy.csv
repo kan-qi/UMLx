@@ -1,0 +1,105 @@
+d,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff
+1,stl#User:user profile page->User:user profile page,Create a new account,CTRL,2,15,2,4,15,30
+2,stl#User:user profile page->User:user profile page,Create a new account,EXTCLL,2,15,2,8,15,30
+3,stl#User:user profile page->User:user profile page,Create a new account,INT,2,15,2,9,15,30
+4,stl#User:invalid input information->User:invalid input information,Create a new account,CTRL,2,15,2,5,15,30
+5,stl#User:invalid input information->User:invalid input information,Create a new account,EXTCLL,2,15,2,5,15,30
+6,stl#User:invalid input information->User:invalid input information,Create a new account,INT,2,15,2,8,15,30
+7,stl#User:Account create page->User:Account create page->Account create page:validate input information->validate input information:save user account->save user account:user profile page,Create a new account,TRAN_NA,5,3.75,5,2,3.75,18.75
+8,stl#User:Account create page->User:Account create page->Account create page:validate input information->validate input information:save user account->save user account:account,Create a new account,TRAN_NA,5,3.75,5,4,3.75,18.75
+9,stl#User:Account create page->User:Account create page->Account create page:validate input information->validate input information:invalid input information,Create a new account,TRAN_NA,4,5,4,6,5,20
+1,stl#User:invalid email address message->User:invalid email address message,Email subscription,CTRL,2,15,2,2,15,30
+2,stl#User:invalid email address message->User:invalid email address message,Email subscription,EXTCLL,2,15,2,21,15,30
+3,stl#User:invalid email address message->User:invalid email address message,Email subscription,INT,2,15,2,11,15,30
+4,stl#User:subscribe for notification button->User:subscribe for notification button->subscribe for notification button:save preferences for subscription->save preferences for subscription:saved unsuccessfully message,Email subscription,TRAN_NA,4,5,4,6,5,20
+5,stl#User:subscribe for notification button->User:subscribe for notification button->subscribe for notification button:save preferences for subscription->save preferences for subscription:invalid email address message,Email subscription,TRAN_NA,4,5,4,6,5,20
+6,stl#User:subscribe for notification button->User:subscribe for notification button->subscribe for notification button:save preferences for subscription->save preferences for subscription:account,Email subscription,TRAN_NA,4,5,4,13,5,20
+7,stl#User:saved unsuccessfully message->User:saved unsuccessfully message,Email subscription,CTRL,2,15,2,6,15,30
+8,stl#User:saved unsuccessfully message->User:saved unsuccessfully message,Email subscription,EXTCLL,2,15,2,16,15,30
+9,stl#User:saved unsuccessfully message->User:saved unsuccessfully message,Email subscription,INT,2,15,2,19,15,30
+1,stl#User:incorrect user information->User:incorrect user information,Login,CTRL,2,15,2,11,15,30
+2,stl#User:incorrect user information->User:incorrect user information,Login,EXTCLL,2,15,2,5,15,30
+3,stl#User:incorrect user information->User:incorrect user information,Login,INT,2,15,2,13,15,30
+4,stl#User:Login page->User:Login page->Login page:validate user information->validate user information:user profile and search page,Login,TRAN_NA,4,5,4,7,5,20
+5,stl#User:Login page->User:Login page->Login page:validate user information->validate user information:save user account->save user account:incorrect user information,Login,TRAN_NA,5,3.75,5,4,3.75,18.75
+6,stl#User:Login page->User:Login page->Login page:validate user information->validate user information:save user account->save user account:account,Login,TRAN_NA,5,3.75,5,11,3.75,18.75
+7,stl#User:Login page->User:Login page->Login page:validate user information->validate user information:incorrect user information,Login,TRAN_NA,4,5,4,4,5,20
+8,stl#User:Login page->User:Login page->Login page:validate user information->validate user information:account,Login,TRAN_NA,4,5,4,10,5,20
+9,stl#User:user profile and search page->User:user profile and search page,Login,CTRL,2,15,2,5,15,30
+10,stl#User:user profile and search page->User:user profile and search page,Login,EXTCLL,2,15,2,14,15,30
+11,stl#User:user profile and search page->User:user profile and search page,Login,INT,2,15,2,9,15,30
+1,stl#User:Invalid input data->User:Invalid input data,Loginout,CTRL,2,15,2,10,15,30
+2,stl#User:incorrect user information->User:incorrect user information,Loginout,CTRL,2,15,2,10,15,30
+3,stl#User:incorrect user information->User:incorrect user information,Loginout,EXTCLL,2,15,2,15,15,30
+4,stl#User:incorrect user information->User:incorrect user information,Loginout,INT,2,15,2,17,15,30
+5,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display edit profile page->display edit profile page:incorrect user information,Loginout,CTRL,4,5,4,8,5,20
+6,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display edit profile page->display edit profile page:incorrect user information,Loginout,EXTCLL,4,5,4,12,5,20
+7,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display edit profile page->display edit profile page:incorrect user information,Loginout,INT,4,5,4,7,5,20
+8,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display edit profile page->display edit profile page:Profile Edit Page->Profile Edit Page:validate input data->validate input data:save updated profile->save updated profile:Profile,Loginout,CTRL,7,2.5,7,9,2.5,17.5
+9,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display edit profile page->display edit profile page:Profile,Loginout,CTRL,4,5,4,9,5,20
+10,stl#User:Profile Edit Page->User:Profile Edit Page->Profile Edit Page:validate input data->validate input data:save updated profile->save updated profile:Profile,Loginout,CTRL,5,3.75,5,11,3.75,18.75
+1,stl#User:search saved unsuccessfully error message->User:search saved unsuccessfully error message,Mark favorite jobs,CTRL,2,15,2,2,15,30
+2,stl#User:search saved unsuccessfully error message->User:search saved unsuccessfully error message,Mark favorite jobs,EXTCLL,2,15,2,12,15,30
+3,stl#User:search saved unsuccessfully error message->User:search saved unsuccessfully error message,Mark favorite jobs,INT,2,15,2,9,15,30
+4,stl#User:saved unsuccessfully message->User:saved unsuccessfully message,Mark favorite jobs,CTRL,2,15,2,5,15,30
+5,stl#User:saved unsuccessfully message->User:saved unsuccessfully message,Mark favorite jobs,EXTCLL,2,15,2,6,15,30
+6,stl#User:saved unsuccessfully message->User:saved unsuccessfully message,Mark favorite jobs,INT,2,15,2,11,15,30
+7,stl#User:saved successfully message->User:saved successfully message,Mark favorite jobs,CTRL,2,15,2,16,15,30
+8,stl#User:saved successfully message->User:saved successfully message,Mark favorite jobs,EXTCLL,2,15,2,5,15,30
+9,stl#User:saved successfully message->User:saved successfully message,Mark favorite jobs,INT,2,15,2,8,15,30
+10,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:saved successfully message,Mark favorite jobs,CTRL,4,5,4,7,5,20
+11,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:saved successfully message,Mark favorite jobs,EXTCLL,4,5,4,10,5,20
+12,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:saved successfully message,Mark favorite jobs,INT,4,5,4,10,5,20
+13,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:search saved unsuccessfully error message,Mark favorite jobs,CTRL,4,5,4,11,5,20
+14,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:search saved unsuccessfully error message,Mark favorite jobs,EXTCLL,4,5,4,10,5,20
+15,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:search saved unsuccessfully error message,Mark favorite jobs,INT,4,5,4,15,5,20
+16,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:saved unsuccessfully message,Mark favorite jobs,CTRL,4,5,4,10,5,20
+17,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:saved unsuccessfully message,Mark favorite jobs,EXTCLL,4,5,4,15,5,20
+18,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:saved unsuccessfully message,Mark favorite jobs,INT,4,5,4,10,5,20
+19,stl#User:Save Favorite Job Button->User:Save Favorite Job Button->Save Favorite Job Button:Save favorite jobs->Save favorite jobs:Favorite Jobs,Mark favorite jobs,CTRL,4,5,4,11,5,20
+1,stl#User:Invalid input data->User:Invalid input data,Save search results,CTRL,2,15,2,13,15,30
+2,stl#User:Save search button->User:Save search button->Save search button:save filters and criteria->save filters and criteria:search saved unsuccessfully error message,Save search results,TRAN_NA,4,5,4,8,5,20
+3,stl#User:Save search button->User:Save search button->Save search button:save filters and criteria->save filters and criteria:search result,Save search results,TRAN_NA,4,5,4,17,5,20
+4,stl#User:Save search button->User:Save search button->Save search button:save filters and criteria->save filters and criteria:search saved successfully message->search saved successfully message:validate input data->validate input data:save updated profile->save updated profile:search result,Save search results,TRAN_NA,7,2.5,7,11,2.5,17.5
+5,stl#User:Save search button->User:Save search button->Save search button:save filters and criteria->save filters and criteria:search saved successfully message->search saved successfully message:validate input data->validate input data:Invalid input data,Save search results,TRAN_NA,6,3,6,8,3,18
+6,stl#User:search saved unsuccessfully error message->User:search saved unsuccessfully error message,Save search results,CTRL,2,15,2,9,15,30
+7,stl#User:search saved unsuccessfully error message->User:search saved unsuccessfully error message,Save search results,EXTCLL,2,15,2,8,15,30
+8,stl#User:search saved unsuccessfully error message->User:search saved unsuccessfully error message,Save search results,INT,2,15,2,14,15,30
+9,stl#User:search saved successfully message->User:search saved successfully message->search saved successfully message:validate input data->validate input data:save updated profile->save updated profile:search result,Save search results,TRAN_NA,5,3.75,5,13,3.75,18.75
+10,stl#User:search saved successfully message->User:search saved successfully message->search saved successfully message:validate input data->validate input data:Invalid input data,Save search results,TRAN_NA,4,5,4,8,5,20
+1,stl#User:invalid input information->User:invalid input information,Search for jobs,CTRL,2,15,2,13,15,30
+2,stl#User:invalid input information->User:invalid input information,Search for jobs,EXTCLL,2,15,2,11,15,30
+3,stl#User:invalid input information->User:invalid input information,Search for jobs,INT,2,15,2,-1,15,30
+4,stl#User:Invalid input data->User:Invalid input data,Search for jobs,CTRL,2,15,2,1,15,30
+5,stl#User:Job list page->User:Job list page->Job list page:validate input data->validate input data:Invalid input data,Search for jobs,CTRL,4,5,4,11,5,20
+6,stl#User:Job search page->User:Job search page->Job search page:verify input information->verify input information:invalid input information,Search for jobs,TRAN_NA,4,5,4,8,5,20
+7,stl#User:Job search page->User:Job search page->Job search page:verify input information->verify input information:Search by input keywords from Indeed.com->Search by input keywords from Indeed.com:Profile,Search for jobs,TRAN_NA,5,3.75,5,11,3.75,18.75
+8,stl#User:Job search page->User:Job search page->Job search page:verify input information->verify input information:Profile,Search for jobs,TRAN_NA,4,5,4,8,5,20
+9,stl#Indeed.com:Sort search results->Indeed.com:Sort search results->Sort search results:Job list page->Job list page:validate input data->validate input data:Invalid input data,Search for jobs,CTRL,5,3.75,5,5,3.75,18.75
+1,stl#User:Request Referral Button->User:Request Referral Button->Request Referral Button:display friends by organization->display friends by organization:No fried found message,Send a referral request email,TRAN_NA,4,5,4,9,5,20
+2,stl#User:Request Referral Button->User:Request Referral Button->Request Referral Button:display friends by organization->display friends by organization:Friends,Send a referral request email,TRAN_NA,4,5,4,2,5,20
+3,stl#User:Request Referral Button->User:Request Referral Button->Request Referral Button:display friends by organization->display friends by organization:Friend selection page->Friend selection page:display message edit page->display message edit page:message edit page->message edit page:send email message,Send a referral request email,TRAN_NA,7,2.5,7,11,2.5,17.5
+4,stl#User:No fried found message->User:No fried found message,Send a referral request email,CTRL,2,15,2,9,15,30
+5,stl#User:No fried found message->User:No fried found message,Send a referral request email,EXTCLL,2,15,2,10,15,30
+6,stl#User:No fried found message->User:No fried found message,Send a referral request email,INT,2,15,2,8,15,30
+7,stl#User:Friend selection page->User:Friend selection page->Friend selection page:display message edit page->display message edit page:message edit page->message edit page:send email message,Send a referral request email,TRAN_NA,5,3.75,5,11,3.75,18.75
+8,stl#User:message edit page->User:message edit page->message edit page:send email message,Send a referral request email,TRAN_NA,3,7.5,3,10,7.5,22.5
+1,stl#User:sign in error message->User:sign in error message,Sign in social media accounts,CTRL,2,15,2,14,15,30
+2,stl#User:sign in error message->User:sign in error message,Sign in social media accounts,EXTCLL,2,15,2,7,15,30
+3,stl#User:sign in error message->User:sign in error message,Sign in social media accounts,INT,2,15,2,6,15,30
+4,stl#User:credential input page->User:credential input page->credential input page:query linkedin,Sign in social media accounts,TRAN_NA,3,7.5,3,10,7.5,22.5
+5,stl#User:credential input page->User:credential input page->credential input page:query facebook info->query facebook info:session,Sign in social media accounts,TRAN_NA,4,5,4,10,5,20
+6,stl#User:credential input page->User:credential input page->credential input page:query google plus info,Sign in social media accounts,TRAN_NA,3,7.5,3,6,7.5,22.5
+7,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query linkedin,Sign in social media accounts,TRAN_NA,5,3.75,5,11,3.75,18.75
+8,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query facebook info->query facebook info:session,Sign in social media accounts,TRAN_NA,6,3,6,6,3,18
+9,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query google plus info,Sign in social media accounts,TRAN_NA,5,3.75,5,10,3.75,18.75
+10,stl#LinkedIn:query linkedin->LinkedIn:query linkedin->query linkedin:sign in error message,Sign in social media accounts,CTRL,3,7.5,3,10,7.5,22.5
+11,stl#LinkedIn:query linkedin->LinkedIn:query linkedin->query linkedin:sign in error message,Sign in social media accounts,EXTCLL,3,7.5,3,4,7.5,22.5
+12,stl#LinkedIn:query linkedin->LinkedIn:query linkedin->query linkedin:sign in error message,Sign in social media accounts,INT,3,7.5,3,2,7.5,22.5
+13,stl#Google plus:query google plus info->Google plus:query google plus info->query google plus info:sign in error message,Sign in social media accounts,CTRL,3,7.5,3,8,7.5,22.5
+14,stl#Google plus:query google plus info->Google plus:query google plus info->query google plus info:sign in error message,Sign in social media accounts,EXTCLL,3,7.5,3,12,7.5,22.5
+15,stl#Google plus:query google plus info->Google plus:query google plus info->query google plus info:sign in error message,Sign in social media accounts,INT,3,7.5,3,9,7.5,22.5
+16,stl#Facebook:query facebook info->Facebook:query facebook info->query facebook info:sign in error message,Sign in social media accounts,CTRL,3,7.5,3,6,7.5,22.5
+17,stl#Facebook:query facebook info->Facebook:query facebook info->query facebook info:sign in error message,Sign in social media accounts,EXTCLL,3,7.5,3,12,7.5,22.5
+18,stl#Facebook:query facebook info->Facebook:query facebook info->query facebook info:sign in error message,Sign in social media accounts,INT,3,7.5,3,3,7.5,22.5
+1,stl#User:Invalid input data->User:Invalid input data,Update user profile,CTRL,2,15,2,15,15,30

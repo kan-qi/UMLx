@@ -1,0 +1,60 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Hompage" as 09
+participant "Meeting Minute Content" as 19
+participant "Meeting" as 29
+participant "User End Points" as 69
+participant "Meeting Minute" as 79
+
+User -> 09: Hompage()
+activate 09
+
+deactivate 09
+
+User -> 19: Entersmeetinginformationandattendeelist()
+activate 19
+
+19 -> 69: Verifiesattendeelistcontainsvalidusers()
+activate 69
+
+69 -> 19: Createsameetingwiththeenteredinformation()
+19 -> 09: Hompage()
+activate 09
+
+deactivate 09
+
+19 -> 29: meetingdb()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+deactivate 69
+
+User -> 29: Selectsthecreateameetingoption()
+activate 29
+
+29 -> 79: displaysthecreateameetingscreen()
+activate 79
+
+79 -> 69: Verifiesattendeelistcontainsvalidusers()
+activate 69
+
+69 -> 19: Createsameetingwiththeenteredinformation()
+activate 19
+
+deactivate 19
+
+deactivate 69
+
+deactivate 79
+
+deactivate 29
+
+@enduml

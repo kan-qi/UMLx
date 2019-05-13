@@ -1,0 +1,160 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case manageractor General staff
+participant "Account" as 09
+participant "Case_email" as 19
+participant "Groups" as 39
+participant "Manager" as 49
+participant "Cases" as 169
+participant "Cases_Activities" as 199
+participant "Limited_User" as 209
+participant "Email Template" as 219
+participant "Users" as 229
+participant "Case_addresses" as 249
+
+Administrator -> 09: unauthorizedaccesserror()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: Emailsentsuccessmessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 19: sendemailpage()
+activate 19
+
+19 -> 19: sendemail()
+19 -> 19: Emailprotocol()
+deactivate 19
+
+19 -> 199: Addactivitiestocase()
+activate 199
+
+199 -> 169: Case()
+activate 169
+
+deactivate 169
+
+199 -> 19: Emailsentsuccessmessage()
+activate 19
+
+deactivate 19
+
+199 -> 09: unauthorizedaccesserror()
+activate 09
+
+deactivate 09
+
+deactivate 199
+
+Administrator -> 39: Usergrouplist()
+activate 39
+
+39 -> 209: validateroleofuser()
+activate 209
+
+209 -> 249: findemailaddressoftheselectedyouth()
+activate 249
+
+249 -> 229: user()
+activate 229
+
+deactivate 229
+
+249 -> 219: loademailtemplate()
+activate 219
+
+219 -> 219: emailtemplate()
+deactivate 219
+
+219 -> 19: sendemailpage()
+activate 19
+
+19 -> 19: sendemail()
+deactivate 19
+
+deactivate 249
+
+209 -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+deactivate 209
+
+deactivate 39
+
+Administrator -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+Case manager -> 09: unauthorizedaccesserror()
+activate 09
+
+deactivate 09
+
+Case manager -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+Case manager -> 19: sendemailpage()
+activate 19
+
+19 -> 19: sendemail()
+deactivate 19
+
+Case manager -> 19: Emailsentsuccessmessage()
+activate 19
+
+deactivate 19
+
+Case manager -> 39: Usergrouplist()
+activate 39
+
+39 -> 209: validateroleofuser()
+activate 209
+
+deactivate 209
+
+deactivate 39
+
+General staff -> 19: sendemailpage()
+activate 19
+
+19 -> 19: sendemail()
+deactivate 19
+
+General staff -> 39: Usergrouplist()
+activate 39
+
+39 -> 209: validateroleofuser()
+activate 209
+
+deactivate 209
+
+deactivate 39
+
+General staff -> 19: Emailsentsuccessmessage()
+activate 19
+
+deactivate 19
+
+General staff -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+General staff -> 09: unauthorizedaccesserror()
+activate 09
+
+deactivate 09
+
+@enduml

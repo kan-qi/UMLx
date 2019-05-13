@@ -1,0 +1,193 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manager
+participant "Case Manager" as 09
+participant "Cases" as 19
+participant "Document" as 29
+participant "Case_education_history" as 39
+participant "Manager" as 49
+participant "validaterole" as 59
+participant "Case_email" as 259
+
+Administrator -> 09: caseinformationpage()
+activate 09
+
+09 -> 59: validaterole()
+activate 59
+
+59 -> 39: displayinformationeditpage()
+activate 39
+
+39 -> 39: caseinformationeditpage()
+39 -> 59: validateinputinformation()
+59 -> 59: informatininvaliderrormessage()
+deactivate 59
+
+59 -> 39: savecaseupdateinformation()
+39 -> 39: caseinformation()
+deactivate 39
+
+59 -> 59: role()
+activate 59
+
+deactivate 59
+
+59 -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+Administrator -> 19: listofcases()
+activate 19
+
+19 -> 259: querydetailofacase()
+activate 259
+
+259 -> 19: case()
+deactivate 19
+
+259 -> 09: caseinformationpage()
+activate 09
+
+09 -> 59: validaterole()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+deactivate 259
+
+Administrator -> 29: documentuploadpage()
+activate 29
+
+29 -> 59: validaterole()
+activate 59
+
+59 -> 39: displayinformationeditpage()
+activate 39
+
+deactivate 39
+
+59 -> 59: role()
+deactivate 59
+
+59 -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+deactivate 29
+
+Administrator -> 39: caseinformationeditpage()
+activate 39
+
+39 -> 59: validateinputinformation()
+activate 59
+
+deactivate 59
+
+deactivate 39
+
+Administrator -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+Administrator -> 59: informatininvaliderrormessage()
+activate 59
+
+deactivate 59
+
+Administrator -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+Administrator -> 39: caseinformationeditpage()
+activate 39
+
+39 -> 59: validateinputinformation()
+activate 59
+
+deactivate 59
+
+deactivate 39
+
+Administrator -> 19: listofcases()
+activate 19
+
+19 -> 259: querydetailofacase()
+activate 259
+
+deactivate 259
+
+deactivate 19
+
+Administrator -> 09: caseinformationpage()
+activate 09
+
+09 -> 59: validaterole()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+Case Manager -> 39: caseinformationeditpage()
+activate 39
+
+39 -> 59: validateinputinformation()
+activate 59
+
+deactivate 59
+
+deactivate 39
+
+Case Manager -> 09: caseinformationpage()
+activate 09
+
+09 -> 59: validaterole()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+Case Manager -> 29: documentuploadpage()
+activate 29
+
+29 -> 59: validaterole()
+activate 59
+
+deactivate 59
+
+deactivate 29
+
+Case Manager -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+Case Manager -> 59: informatininvaliderrormessage()
+activate 59
+
+deactivate 59
+
+Case Manager -> 19: listofcases()
+activate 19
+
+19 -> 259: querydetailofacase()
+activate 259
+
+deactivate 259
+
+deactivate 19
+
+@enduml

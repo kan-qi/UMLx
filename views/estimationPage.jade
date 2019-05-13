@@ -1,0 +1,345 @@
+
+html
+    head
+        title UMLx
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        link(href='css/style.css', rel='stylesheet')
+        //script.
+        //    function showPage(pageNumer) {
+        //        for (var i = 1; i <= 5; i++) {
+        //            var classList = document.getElementById("page" + i).classList;
+        //            if (i != pageNumer) {
+        //                classList.add("hidden");
+        //            } else {
+        //                classList.remove("hidden");
+        //            }
+        //        }
+        //    }
+    body#upload-body(onload="estimationCheckCookie('#{cookieName}')")
+        include heading
+        .container.estimation_page_container
+            form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+
+                #sec-1
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div.panel_words Technical Complexity Factor
+                                    div.panel_triangle_toggle
+                                        a(data-toggle='collapse', href='#collapse1')
+                                            span.glyphicon.glyphicon-triangle-bottom.collapseButtom1
+                            #collapse1.panel-collapse.in
+                                .panel-body
+                                    .form-group  
+                                        .form-group
+                                        label.control-label(for='distributed_system') Distributed System
+                                        select#distributed_system.form-control.estimation-selector(name='distributed_system',onChange='estimationOptionChange("distributed_system")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p Is the system a distributed system which was developed on multiple platforms and required communication between the subsystems/components be based on network protocals, events, or remote procedural calls?
+                                    .form-group
+                                        label.control-label(for='response_time') Response time or throughput performance objectives
+                                        select#response_time.form-control.estimation-selector(name='response_time',onChange='estimationOptionChange("response_time")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, does the target system have to meet the required response time and throughput performance objectives?
+                                    .form-group
+                                        label.control-label(for='end_user_efficiency') End user efficiency
+                                        select#end_user_efficiency.form-control.estimation-selector(name='end_user_efficiency',onChange='estimationOptionChange("end_user_efficiency")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, does the target system have to meet the required end user efficiency?
+                                    .form-group
+                                        label.control-label(for='complex_internal_processing') Complex internal processing
+                                        select#complex_internal_processing.form-control.estimation-selector(name='complex_internal_processing',onChange='estimationOptionChange("complex_internal_processing")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree of difficulty, the internal processing should be rated?
+                                    .form-group
+                                        label.control-label(for='code_must_be_reusable') Code must be reusable
+                                        select#code_must_be_reusable.form-control.estimation-selector(name='code_must_be_reusable',onChange='estimationOptionChange("code_must_be_reusable")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the code should be reusable?
+                                    .form-group
+                                        label.control-label(for='easy_to_install') Easy to install
+                                        select#easy_to_install.form-control.estimation-selector(name='easy_to_install',onChange='estimationOptionChange("easy_to_install")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the system has to be easy to be installed?
+                                    .form-group
+                                        label.control-label(for='easy_to_use') Easy to use
+                                        select#easy_to_use.form-control.estimation-selector(name='easy_to_use',onChange='estimationOptionChange("easy_to_use")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the system has to be easy to use?
+                                    .form-group
+                                        label.control-label(for='portable') Portable
+                                        select#portable.form-control.estimation-selector(name='portable',onChange='estimationOptionChange("portable")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, is the system required to be portable to other platforms?
+                                    .form-group
+                                        label.control-label(for='easy_to_change') Easy to change
+                                        select#easy_to_change.form-control.estimation-selector(name='easy_to_change',onChange='estimationOptionChange("easy_to_change")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
+                                    .form-group
+                                        label.control-label(for='concurrent') Concurrent
+                                        select#concurrent.form-control.estimation-selector(name='concurrent',onChange='estimationOptionChange("concurrent")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
+                                    .form-group
+                                        label.control-label(for='includes_special_security_objectives') Includes special security objectives
+                                        select#includes_special_security_objectives.form-control.estimation-selector(name='includes_special_security_objectives',onChange='estimationOptionChange("includes_special_security_objectives")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the system has to achieve special security objectives?
+                                    .form-group
+                                        label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
+                                        select#provides_direct_access_for_third_parties.form-control.estimation-selector(name='provides_direct_access_for_third_parties',onChange='estimationOptionChange("provides_direct_access_for_third_parties")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the system has to provide access for third parties?
+                                    .form-group
+                                        label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
+                                        select#special_user_training_facilities_are_required.form-control.estimation-selector(name='special_user_training_facilities_are_required',onChange='estimationOptionChange("special_user_training_facilities_are_required")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, special user training facilities should be provided?
+                                    //input#uuid-page1(type='hidden', name='uuid-page1', value='')
+                                    //
+                                    //.form-group
+                                    //    .col-sm-offset-2.col-xs-8
+                                    //        button.btn.btn-default.disabled.pull-left(type='button') < Previous
+                                    //        button.btn.btn-success.pull-right(type='button', onclick='showPage(2)') Next >
+                // end of #sec-1
+
+                #sec-2
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div.panel_words Environmental Factors
+                                    //p Please provide the ratings for the 8 environmental factors, which are the general descriptions about the environments where system was developed.
+                                    div.panel_triangle_toggle
+                                        a(data-toggle='collapse', href='#collapse2')
+                                            //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                            span.glyphicon.glyphicon-triangle-bottom.collapseButtom2
+                            #collapse2.panel-collapse.in
+                                .panel-body
+                                    .form-group
+                                        label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
+                                        select#familiar_with_the_project_model_that_is_used.form-control.estimation-selector(name='familiar_with_the_project_model_that_is_used',onChange='estimationOptionChange("familiar_with_the_project_model_that_is_used")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p Are the personnel familar with the development process?
+                                    .form-group
+                                        label.control-label(for='application_experience') Application experience
+                                        select#application_experience.form-control.estimation-selector(name='application_experience',onChange='estimationOptionChange("application_experience")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p Did the developers have related experience of developing this type of applications?
+                                    .form-group
+                                        label.control-label(for='object_oriented_experience') Object-oriented experience
+                                        select#object_oriented_experience.form-control.estimation-selector(name='object_oriented_experience',onChange='estimationOptionChange("object_oriented_experience")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p Did the developers have related experience of developing object-oriented applications?
+                                    .form-group
+                                        label.control-label(for='lead_analyst_capability') Lead analyst capability
+                                        select#lead_analyst_capability.form-control.estimation-selector(name='lead_analyst_capability',onChange='estimationOptionChange("lead_analyst_capability")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the lead analyst of the team should be rated?
+                                    .form-group
+                                        label.control-label(for='motivation') Motivation
+                                        select#motivation.form-control.estimation-selector(name='motivation',onChange='estimationOptionChange("motivation")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the whole team is motived for the project?
+                                    .form-group
+                                        label.control-label(for='stable_requirements') Stable requirements
+                                        select#stable_requirements.form-control.estimation-selector(name='stable_requirements',onChange='estimationOptionChange("stable_requirements")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p Are the requiremenst stable over time?
+                                    .form-group
+                                        label.control-label(for='part_time_staff') Part-time staff
+                                        select#part_time_staff.form-control.estimation-selector(name='part_time_staff',onChange='estimationOptionChange("part_time_staff")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what percentage, the team has part-time stafff?
+                                    .form-group
+                                        label.control-label(for='difficult_programming_language') Difficult programming language
+                                        select#difficult_programming_language.form-control.estimation-selector(name='difficult_programming_language',onChange='estimationOptionChange("difficult_programming_language")')
+                                            option(value="1") Very Low
+                                            option(value="2") Low
+                                            option(value="3",selected="selected") Nominal
+                                            option(value="4") High
+                                            option(value="5") Very High
+                                        p To what degree, the chosen programming language are diffficulty to the development team?
+                                    //input#uuid-page2(type='hidden', name='uuid-page2', value='')
+                                    //.form-group
+                                    //    .col-sm-offset-2.col-xs-8
+                                    //        button.btn.btn-default.pull-left(type='button', onclick='showPage(1)') < Previous
+                                    //        button.btn.btn-success.pull-right(type='button', onclick='showPage(3)') Next >
+                // end of #sec-2
+                #sec-3
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div.panel_words
+                                        | Resource Estimation
+                                    //div.panel_triangle_toggle
+                                    //    a(data-toggle='collapse', href='#collapse3')
+                                    //        span.glyphicon.glyphicon-triangle-bottom.collapseButtom3
+                            #collapse3.panel-collapse.in
+                                .panel-body
+                                    .form-group
+                                       label.control-label(style='text-align:left').col-xs-2(for='personnel') Personnel
+                                       .col-xs-10
+                                           input#uml-model-name.form-control(type='text', placeholder='Number of team members', name='personnel')
+                                           p Estimate the available personnel. If it is unlimited, leave it blank.
+                                    .form-group
+                                       label.control-label(style='text-align:left').col-xs-2(for='schedule') Schedule (Monthes)
+                                       .col-xs-10
+                                           input#uml-model-name.form-control(type='text', placeholder='Months', name='schedule')
+                                           p Estimate the available schedule in months. If it is unlimited, leave it blank.
+                                    .form-group
+                                       label.control-label(style='text-align:left').col-xs-2(for='hours-per-month') Hours/Month
+                                       .col-xs-10
+                                           input#project-effort.form-control(type='text', placeholder='Hours/Month', name='hours-per-month')
+                                           p Estimate the evarage number of working hours per month for team members, for example, 160 horus for full number members, 20 hours for part-time developers, etc.
+                                    //input#uuid-page3(type='hidden', name='uuid-page3', value='')
+                                    //
+                                    //.form-group
+                                    //    .col-sm-offset-2.col-xs-8
+                                    //        button.btn.btn-default.pull-left(type='button', onclick='showPage(2)') < Previous
+                                    //        button.btn.btn-success.pull-right(type='button', onclick='showPage(4)') Next >
+                // end of #sec-3
+                #sec-4
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div.panel_words
+                                        | Project model file and documents
+                                    //div.panel_triangle_toggle
+                                    //    a(data-toggle='collapse', href='#collapse4')
+                                    //        span.glyphicon.glyphicon-triangle-left.collapseButtom4
+                            #collapse4.panel-collapse
+                                .panel-body
+                                    .form-group
+                                        label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
+                                        .col-xs-8
+                                            input#uml_file.form-control(type='file', name='uml_file', accept='.apk, text/xml')
+                                            a(href='./F14a_women_at_work_website_redesign.zip') Download Example XML File
+                                    //.form-group
+                                      //  label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
+                                      //  .col-xs-8
+                                      //      input#uml_other.form-control(type='file', name='uml_other')
+                                    .form-group
+                                        label.control-label.col-xs-4(for='model') Select Estimator
+                                        .col-xs-8
+                                            select#model.estimator-selection-form-control(name='model')
+                                                option(value="eucp_lm") EUCP
+                                                option(value="exucp_lm") EXUCP
+                                                option(value="ducp_lm") DUCP
+
+                                    button.btn.btn-success.pull-right(type='submit') Submit
+
+                                //input#uuid-page4(type='hidden', name='uuid-page4', value='')
+                                //
+                                //.form-group
+                                //    .col-sm-offset-2.col-xs-8
+                                //        button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
+                                //        button.btn.btn-success.pull-right(type='submit', onclick='showPage(5)') Submit
+                // end of #sec-4
+                #sec-5
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    | Estimation Results
+                            #collapse5.panel-collapse
+                                div(id="estimation-result-panel-body")
+                    //input#uuid-page5(type='hidden', name='uuid-page5', value='')
+                // end of #sec-5
+                #loadingScreen.hidden
+                    div.full-page-model
+                    div.full-page-model-content
+                        div(style='padding: 30px')
+                            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                            p Processing...                
+
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+        script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src="js/charts.js")

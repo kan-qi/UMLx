@@ -1,0 +1,21 @@
+id,element,useCase,type,component
+1,Supervisor:"Resend OTP" Page,Resent one time pass email,boundary,returnsaddEMTfrompage
+2,Supervisor:Manage Individuals Page,Resent one time pass email,entity,Transport Coordinator
+3,Supervisor:"manage individuals" button,Resent one time pass email,entity,Transport Coordinator
+4,Supervisor:Manage individualss page with list of individual details,Resent one time pass email,boundary,checkthebarcodeambulancenumberandhospitalinfo
+5,"Resend OTP" Page:clears device ID of volunteer,Resent one time pass email,control,Volunteer
+6,"Resend OTP" Page:Redirect to the manage individuals page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+7,"Resend OTP" Page:Redirects to the manage individuals page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+8,Redirects to the individual resend OTP page:"Resend OTP" Page,Resent one time pass email,boundary,returnsaddEMTfrompage
+9,"manage individuals" button:Redirects tot he manage individual page with list of individual details,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+10,Redirect to the manage individuals page:Manage Individuals Page,Resent one time pass email,entity,Transport Coordinator
+11,Manage individualss page with list of individual details:Redirects to the individual resend OTP page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+12,Redirects tot he manage individual page with list of individual details:Manage individualss page with list of individual details,Resent one time pass email,boundary,checkthebarcodeambulancenumberandhospitalinfo
+13,sends OTP to volunteer's email ID:Redirect to the manage individuals page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+14,Redirects to the individual resend OTP page:Username and password db,Resent one time pass email,control,User
+15,clears device ID of volunteer:sends OTP to volunteer's email ID,Resent one time pass email,control,Volunteer
+16,clears device ID of volunteer:volunteer info database,Resent one time pass email,control,Volunteer
+17,stl#Supervisor:"Resend OTP" Page,Resent one time pass email,Stimulus,undefined
+18,stl#Supervisor:Manage Individuals Page,Resent one time pass email,Stimulus,undefined
+19,stl#Supervisor:"manage individuals" button,Resent one time pass email,Stimulus,undefined
+20,stl#Supervisor:Manage individualss page with list of individual details,Resent one time pass email,Stimulus,undefined

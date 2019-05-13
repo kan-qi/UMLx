@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "System Boundary" as 09
+participant "User social media information" as 19
+participant "email message requesting referral" as 29
+participant "savedSearch" as 79
+
+User -> 09: Accountcreatepage()
+activate 09
+
+09 -> 19: validateinputinformation()
+activate 19
+
+19 -> 19: invalidinputinformation()
+deactivate 19
+
+19 -> 79: saveuseraccount()
+activate 79
+
+79 -> 09: account()
+deactivate 09
+
+79 -> 29: userprofilepage()
+activate 29
+
+deactivate 29
+
+deactivate 79
+
+User -> 19: invalidinputinformation()
+activate 19
+
+deactivate 19
+
+User -> 29: userprofilepage()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,18 @@
+id,element,useCase,type,component
+1,user:personal home page,Login,boundary,PaymentController
+2,user:not allowed to login message,Login,control,Notifyadministrator
+3,user:Invalid user information,Login,boundary,Reservation
+4,user:Login button,Login,boundary,Loginbutton
+5,Validate username and password:Invalid user information,Login,boundary,Reservation
+6,Login button:Validate username and password,Login,control,$help://use_case_model_pattern.htm
+7,Login button:disable the user's privilege to login,Login,boundary,Loginbutton
+8,Notify administrator:not allowed to login message,Login,boundary,Loginbutton
+9,Notify administrator:administrator email box,Login,control,Notifyadministrator
+10,disable the user's privilege to login:Notify administrator,Login,control,Notifyadministrator
+11,Validate username and password:User Info,Login,boundary,User
+12,Validate username and password:redirect the user to their personal home page,Login,control,$help://usecasediagram.htm
+13,redirect the user to their personal home page:personal home page,Login,boundary,PaymentController
+14,stl#user:personal home page,Login,Stimulus,undefined
+15,stl#user:not allowed to login message,Login,Stimulus,undefined
+16,stl#user:Invalid user information,Login,Stimulus,undefined
+17,stl#user:Login button,Login,Stimulus,undefined

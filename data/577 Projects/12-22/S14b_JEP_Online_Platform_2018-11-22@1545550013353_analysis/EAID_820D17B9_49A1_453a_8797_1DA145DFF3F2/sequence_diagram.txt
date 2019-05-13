@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "MessageManage Page" as 09
+participant "emptyannouncementform" as 19
+participant "logoutbutton" as 39
+participant "MessageController" as 49
+participant "checkconflictsituation" as 79
+
+User -> 09: logoutmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: emptytable()
+activate 19
+
+deactivate 19
+
+User -> 09: searchpanal()
+activate 09
+
+09 -> 79: deactivateusersession()
+activate 79
+
+79 -> 49: usersession()
+activate 49
+
+deactivate 49
+
+79 -> 19: emptytable()
+activate 19
+
+deactivate 19
+
+79 -> 09: logoutmessage()
+deactivate 09
+
+deactivate 79
+
+User -> 39: logoutbutton()
+activate 39
+
+39 -> 39: logtheuserout()
+39 -> 79: deactivateusersession()
+activate 79
+
+79 -> 49: usersession()
+activate 49
+
+deactivate 49
+
+79 -> 19: emptytable()
+activate 19
+
+deactivate 19
+
+79 -> 09: logoutmessage()
+activate 09
+
+deactivate 09
+
+deactivate 79
+
+deactivate 39
+
+@enduml

@@ -1,0 +1,126 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Go Grrrls App" as 09
+participant "chapter view" as 19
+participant "TheuserclicksontheForwardRewindbuttonlistedinthevideowindow" as 29
+participant "Chapter" as 39
+participant "Twitter" as 49
+participant "Home" as 89
+participant "chapter controller" as 129
+
+User -> 09: opensGoGrrrlsApp()
+activate 09
+
+09 -> 89: Showthehomepageoftheapp()
+activate 89
+
+89 -> 129: Displayallthechaptertextandotherlinksavailabletogotofromthatchapter()
+activate 129
+
+deactivate 129
+
+deactivate 89
+
+deactivate 09
+
+User -> 19: Clickonthechaptertoview()
+activate 19
+
+19 -> 129: Displayallthechaptertextandotherlinksavailabletogotofromthatchapter()
+activate 129
+
+deactivate 129
+
+deactivate 19
+
+User -> 29: TheuserclicksontheTwitteroptionamongthelistedone()
+activate 29
+
+29 -> 49: UseristakentologinpageofTwitter()
+activate 49
+
+49 -> 29: Thevideoispostedonuser��sTwitteraccount()
+deactivate 29
+
+deactivate 49
+
+User -> 39: clicksonspecificchapter()
+activate 39
+
+39 -> 29: Chaptercontentisloadedandwithwatchmorelinklisted()
+activate 29
+
+29 -> 29: ThevideoisloadedfromtheYouTubeAPIandisavailabletowatchalongwiththetextinline()
+29 -> 49: UseristakentologinpageofTwitter()
+activate 49
+
+49 -> 29: Thevideoispostedonuser��sTwitteraccount()
+deactivate 29
+
+deactivate 49
+
+deactivate 39
+
+User -> 49: UserentersherTwitteraccountcredentials()
+activate 49
+
+49 -> 29: Thevideoispostedonuser��sTwitteraccount()
+activate 29
+
+deactivate 29
+
+deactivate 49
+
+User -> 29: clicksonWatchmorelink()
+activate 29
+
+29 -> 29: ThevideoisloadedfromtheYouTubeAPIandisavailabletowatchalongwiththetextinline()
+29 -> 49: UseristakentologinpageofTwitter()
+activate 49
+
+deactivate 49
+
+deactivate 29
+
+User -> 19: Clickonviewcontent()
+activate 19
+
+19 -> 39: Displayallthechapterslisted()
+activate 39
+
+39 -> 29: Chaptercontentisloadedandwithwatchmorelinklisted()
+activate 29
+
+29 -> 29: ThevideoisloadedfromtheYouTubeAPIandisavailabletowatchalongwiththetextinline()
+deactivate 29
+
+deactivate 39
+
+deactivate 19
+
+User -> 09: opensGoGrrrlsApp()
+activate 09
+
+09 -> 89: Showthehomepageoftheapp()
+activate 89
+
+89 -> 39: Displayallthechapterslisted()
+activate 39
+
+39 -> 29: Chaptercontentisloadedandwithwatchmorelinklisted()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+deactivate 89
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,17 @@
+id,element,useCase,type,component
+1,User:update page,update system user profile,boundary,StudyPlanOutputPage
+2,User:updae success message,update system user profile,boundary,DesiredCoursesSelectionPage
+3,User:initial page,update system user profile,boundary,ChoosingDegreeProgramPage
+4,User:incorrect input message,update system user profile,boundary,DesiredCoursesSelectionPage
+5,check the correctness of the data:incorrect input message,update system user profile,boundary,DesiredCoursesSelectionPage
+6,check the correctness of the data:update user to database,update system user profile,control,$help://use_case_model_pattern.htm
+7,update page:check the correctness of the data,update system user profile,boundary,DesiredCoursesSelectionPage
+8,redirect to initial page:initial page,update system user profile,boundary,ChoosingDegreeProgramPage
+9,redirect to initial page:user info,update system user profile,entity,addnewusertothedb
+10,update user to database:redirect to initial page,update system user profile,boundary,DesiredCoursesSelectionPage
+11,update user to database:updae success message,update system user profile,boundary,DesiredCoursesSelectionPage
+12,update user to database:user info,update system user profile,entity,addnewusertothedb
+13,stl#User:update page,update system user profile,Stimulus,undefined
+14,stl#User:updae success message,update system user profile,Stimulus,undefined
+15,stl#User:initial page,update system user profile,Stimulus,undefined
+16,stl#User:incorrect input message,update system user profile,Stimulus,undefined

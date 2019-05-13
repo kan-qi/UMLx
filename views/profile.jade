@@ -37,8 +37,12 @@ html
      div.col-sm-8
       h1 Repositories
       ul
-      if profileInfo.gitData
-       each repo in profileInfo.gitData
-        h3
-         a(href="#{repo.html_url}") #{repo.name}
-        span #{repo.commits} commits
+      if profileRep
+      h3.row
+          .col-sm-2 Index
+          .col-sm-6 Repo ID
+          .col-sm-4 Output Directory
+      .list-group
+          .col-sm-2 1
+          .col-sm-6 #{profileRep._id}
+          .col-sm-4 #{profileRep.OutputDir}

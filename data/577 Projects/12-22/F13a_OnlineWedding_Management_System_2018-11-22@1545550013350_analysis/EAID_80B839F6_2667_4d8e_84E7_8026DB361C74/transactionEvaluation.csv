@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#guests:guest list->guests:guest list,view guest list,CTRL,2,0,5,1,10
+2,stl#guests:empty list message->guests:empty list message->empty list message:redirect to survey form page,view guest list,TRAN_NA,3,0,2,2,6
+3,stl#guests:guest list page->guests:guest list page->guest list page:query guest list->query guest list:guest list info,view guest list,CTRL,4,1,5,3,20
+4,stl#guests:guest list page->guests:guest list page->guest list page:query guest list->query guest list:guest list,view guest list,CTRL,4,1,5,3,20
+5,stl#guests:guest list page->guests:guest list page->guest list page:query guest list->query guest list:empty list message->empty list message:redirect to survey form page,view guest list,TRAN_NA,5,0,3.5,4,17.5

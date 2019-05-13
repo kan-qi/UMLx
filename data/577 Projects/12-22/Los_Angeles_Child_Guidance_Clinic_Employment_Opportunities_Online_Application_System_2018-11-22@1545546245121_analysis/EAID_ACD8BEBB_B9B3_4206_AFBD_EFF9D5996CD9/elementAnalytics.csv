@@ -1,0 +1,18 @@
+id,element,useCase,type,component
+1,User:fills in the rest of the details for the new user ,Create Employee Account,boundary,NewPostDetails
+2,User:Homepage,Create Employee Account,boundary,Login Page
+3,User:enters in a unique login name for the new user,Create Employee Account,boundary,Login Info
+4,Show confirmation page:Employee Account db,Create Employee Account,entity,employee
+5,creates an account for the user and sends an email :Employee Account db,Create Employee Account,entity,employee
+6,show confirmation about that the account created and the email sent:Homepage,Create Employee Account,boundary,Login Page
+7,Show confirmation page:Homepage,Create Employee Account,boundary,Login Page
+8,Show confirmation page:enters in a unique login name for the new user,Create Employee Account,boundary,Login Info
+9,check the login name is available:Show confirmation page,Create Employee Account,control,Online application page
+10,check the login name is available:checks to ensure that the new user has correct credentials,Create Employee Account,boundary,User Authentication Controller
+11,enters in a unique login name for the new user:check the login name is available,Create Employee Account,control,Show available jobs page
+12,checks to ensure that the new user has correct credentials:creates an account for the user and sends an email ,Create Employee Account,control,New Account Details
+13,fills in the rest of the details for the new user :checks to ensure that the new user has correct credentials,Create Employee Account,boundary,User Authentication Controller
+14,creates an account for the user and sends an email :show confirmation about that the account created and the email sent,Create Employee Account,boundary,User Authentication Controller
+15,stl#User:fills in the rest of the details for the new user ,Create Employee Account,Stimulus,undefined
+16,stl#User:Homepage,Create Employee Account,Stimulus,undefined
+17,stl#User:enters in a unique login name for the new user,Create Employee Account,Stimulus,undefined

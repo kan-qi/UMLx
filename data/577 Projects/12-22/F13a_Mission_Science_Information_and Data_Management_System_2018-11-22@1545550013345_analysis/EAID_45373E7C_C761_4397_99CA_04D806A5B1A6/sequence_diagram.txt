@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "searchresultslist" as 09
+participant "User Account" as 49
+
+User -> 09: nosearchresultisfound()
+activate 09
+
+deactivate 09
+
+User -> 09: Searchqueryinputbar()
+activate 09
+
+09 -> 09: searchqueryfromdb()
+09 -> 49: Useraccount()
+activate 49
+
+deactivate 49
+
+09 -> 09: nosearchresultisfound()
+deactivate 09
+
+09 -> 09: searchresultslist()
+activate 09
+
+deactivate 09
+
+User -> 09: searchresultslist()
+activate 09
+
+deactivate 09
+
+@enduml

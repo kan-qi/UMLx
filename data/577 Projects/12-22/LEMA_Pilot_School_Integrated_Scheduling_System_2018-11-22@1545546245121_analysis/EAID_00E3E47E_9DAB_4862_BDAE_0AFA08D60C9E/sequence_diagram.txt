@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Displaypage" as 09
+participant "course constraints" as 19
+participant "semester" as 29
+participant "teacher data" as 39
+participant "pair course" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Constraintsmanagementpage()
+activate 19
+
+19 -> 19: Displayconstraintdetails()
+19 -> 39: Updatechangedinformation()
+activate 39
+
+39 -> 09: Displayinformation()
+activate 09
+
+09 -> 09: Homepage()
+deactivate 09
+
+deactivate 39
+
+deactivate 19
+
+User -> 29: Makesomechanges()
+activate 29
+
+29 -> 49: Confirmbutton()
+activate 49
+
+49 -> 39: Updatechangedinformation()
+activate 39
+
+39 -> 09: Displayinformation()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 49
+
+deactivate 29
+
+@enduml

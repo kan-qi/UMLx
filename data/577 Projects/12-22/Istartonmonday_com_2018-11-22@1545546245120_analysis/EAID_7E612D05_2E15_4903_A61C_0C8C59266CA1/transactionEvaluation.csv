@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Homepage->User:Homepage,Delete job-seeker profile,CTRL;EXTCLL;INT,2,0,3,1,6
+2,stl#User:Click delete job-seeker button->User:Click delete job-seeker button->Click delete job-seeker button:pop delete confirm  information->pop delete confirm  information:delete job seeker->delete job seeker:sponser job seeker,Delete job-seeker profile,TRAN_NA,5,1,1.75,4,8.75
+3,stl#User:Click delete job-seeker button->User:Click delete job-seeker button->Click delete job-seeker button:pop delete confirm  information->pop delete confirm  information:delete job seeker->delete job seeker:Homepage,Delete job-seeker profile,TRAN_NA,5,2,2,4,10
+4,stl#User:click confirm ->User:click confirm ->click confirm :delete job seeker->delete job seeker:sponser job seeker,Delete job-seeker profile,TRAN_NA,4,1,2,3,8
+5,stl#User:click confirm ->User:click confirm ->click confirm :delete job seeker->delete job seeker:Homepage,Delete job-seeker profile,TRAN_NA,4,2,2.3333333333333335,3,9.333333333333334

@@ -1,0 +1,22 @@
+id,element,useCase,type,component
+1,Supervisor:management page with list of individual details,Retrieve and update victim data,boundary,EMT Building Assignment
+2,Supervisor:management page with list of individual details,Retrieve and update victim data,boundary,EMT Building Assignment
+3,Supervisor:"Manage individuals" button,Retrieve and update victim data,entity,Transport Coordinator
+4,Supervisor:Manage Individuals Page,Retrieve and update victim data,entity,Transport Coordinator
+5,Supervisor:Individual resend OTP page,Retrieve and update victim data,control,ValidatesInput
+6,"Manage individuals" button:Redirect to the manage individuals page with list of individual details,Retrieve and update victim data,boundary,Redirectstorespirationperfusionmetalstatuspage
+7,Individual resend OTP page:clears device ID of volunteer in db,Retrieve and update victim data,control,Volunteer
+8,Individual resend OTP page:Manage Individuals Page,Retrieve and update victim data,entity,Transport Coordinator
+9,Redirects to the individual resent otp page:Individual resend OTP page,Retrieve and update victim data,control,ValidatesInput
+10,Redirect to the manage individuals page:Manage Individuals Page,Retrieve and update victim data,entity,Transport Coordinator
+11,sends OTP to volunteer email ID:Redirect to the manage individuals page,Retrieve and update victim data,boundary,Redirectstorespirationperfusionmetalstatuspage
+12,Redirect to the manage individuals page with list of individual details:management page with list of individual details,Retrieve and update victim data,boundary,EMT Building Assignment
+13,management page with list of individual details:Redirects to the individual resent otp page,Retrieve and update victim data,boundary,Redirectstorespirationperfusionmetalstatuspage
+14,clears device ID of volunteer in db:sends OTP to volunteer email ID,Retrieve and update victim data,control,Volunteer
+15,clears device ID of volunteer in db:volunteer database,Retrieve and update victim data,control,Volunteer
+16,sends OTP to volunteer email ID:volunteer database,Retrieve and update victim data,control,Volunteer
+17,stl#Supervisor:management page with list of individual details,Retrieve and update victim data,Stimulus,undefined
+18,stl#Supervisor:management page with list of individual details,Retrieve and update victim data,Stimulus,undefined
+19,stl#Supervisor:"Manage individuals" button,Retrieve and update victim data,Stimulus,undefined
+20,stl#Supervisor:Manage Individuals Page,Retrieve and update victim data,Stimulus,undefined
+21,stl#Supervisor:Individual resend OTP page,Retrieve and update victim data,Stimulus,undefined

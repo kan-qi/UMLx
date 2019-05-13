@@ -1,0 +1,41 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "subactivitydetailinputpage" as 09
+participant "successmessage" as 29
+
+User -> 09: subactivitydetailinputpage()
+activate 09
+
+09 -> 09: Inputactivityintodb()
+09 -> 29: Successfullycreatedmessage()
+activate 29
+
+deactivate 29
+
+09 -> 09: subactivitydb()
+deactivate 09
+
+User -> 09: Createsubactivitypage()
+activate 09
+
+09 -> 09: addsubactivityintodb()
+09 -> 09: subactivitydetailinputpage()
+09 -> 09: Inputactivityintodb()
+deactivate 09
+
+09 -> 09: subactivitydb()
+activate 09
+
+deactivate 09
+
+User -> 29: Successfullycreatedmessage()
+activate 29
+
+deactivate 29
+
+@enduml

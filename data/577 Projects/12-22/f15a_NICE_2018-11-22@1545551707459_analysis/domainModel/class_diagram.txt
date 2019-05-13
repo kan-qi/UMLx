@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Blog {
+~ Blog()
+~ Writenewblogandclickpost()
+~ Redirecttowriteblogpage()
+~ Newblogispostedonwebsite()
+}
+
+class BuyerProfile {
+~ BuyerProfile()
+~ productdb()
+~ Addtheproductincustomer��spendingbuyinglist()
+}
+
+class BuyerRegistrationForm {
+~ BuyerRegistrationForm()
+~ Updatethenewinformationinproductpage()
+~ Clickeditbuttonforchangingspecificsetting()
+}
+
+class Component {
+~ Component()
+}
+
+class MedicalCreateForm {
+~ MedicalCreateForm()
+~ InputnewinformationabouttheproductandclickCreate()
+~ RedirectvendortotheproductCreatepage()
+~ andsendadialog��Createsuccess()
+~ VendorclickCreatebutton()
+~ Editandremovebuttonappears()
+}
+
+class MedicalProfile {
+~ MedicalProfile()
+~ ClickEdit()
+~ Redirecttoallproductlist()
+~ Click��addtocart��buttonoftheproduct()
+}
+
+class Order {
+~ Order()
+~ Click��unshippedorders��()
+}
+
+class Review {
+~ Review()
+}
+
+class VenderProfile {
+~ VenderProfile()
+~ Redirecttoapageshowsvendordetails()
+~ Showsproductdetails()
+~ VendorclickDeletebuttonforspecificproduct()
+~ sendadialog��Areyousuretodeletethisproduct��()
+~ sendadialog��Deletesuccess()
+}
+
+class VenderRegistrationForm {
+~ VenderRegistrationForm()
+~ Movemouseonthevendor��sname()
+~ Changetheinformationandclicksave()
+~ Fillallinformationrequiredandclicksendthroughproceedtoedit()
+~ Checkemailinformationforthecustomerandsendtheemailmanually()
+~ clearcartitemandgenerateorders()
+~ Endthesessionwiththisuser()
+}
+
+class Redirectadmintonewslettermainpage {
+~ Redirectadmintonewslettermainpage()
+~ ClickNewslettertag()
+~ Notifytheadminthenewsletterissent()
+~ Notifytheadminthattheproductisupdated()
+~ Redirecttopendingproductlist()
+~ Addnewuserrecordintodatabase()
+~ Redirecttothirdpartypaymentpagewithtotalamount()
+~ Updatethenewinformationinproductpage()
+}
+
+class Homepage {
+~ Homepage()
+~ Clickpostpage()
+~ showconfirmationpage()
+~ Finishpayment()
+~ Getreceiptfromthirdpartypaymentmethod()
+~ Displayamessage()
+}
+
+class ClickUsersalluserstab {
+~ ClickUsersalluserstab()
+~ Redirectusertoauserpagelistedwithallusers()
+~ Entersearchnameandclick��search��inmainpage()
+~ Clicknew()
+~ Clickpending()
+~ ClickProductsproductstab()
+~ Changethestatusfrompendingreviewtopublishandclickupdate()
+~ Movemouseontheproductandclickquickedit()
+~ enterusernameandpasswordandclickenter()
+~ Fillinallrequireddataclicksubmit()
+~ click��yes��()
+~ clicksthe��logout��hypertext()
+}
+
+class Selectatheme {
+~ Selectatheme()
+~ Checkwhetherusernameandpasswordistrue()
+~ Buyerselectpaymentmethod()
+~ deleteproductfromdatabase()
+}
+
+@enduml

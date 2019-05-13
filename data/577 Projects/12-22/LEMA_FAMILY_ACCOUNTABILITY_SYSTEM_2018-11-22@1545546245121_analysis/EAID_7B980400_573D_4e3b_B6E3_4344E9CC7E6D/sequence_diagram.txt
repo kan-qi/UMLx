@@ -1,0 +1,158 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Cass Attendance Info" as 09
+participant "Delete" as 19
+participant "Admin Info" as 29
+participant "Resource page" as 49
+participant "Send Messagepage" as 69
+participant "Resource Input page" as 89
+participant "Resource List with Status" as 119
+
+User -> 09: update()
+activate 09
+
+09 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+User -> 19: delete()
+activate 19
+
+19 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+activate 09
+
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+deactivate 19
+
+User -> 29: Add()
+activate 29
+
+29 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+activate 09
+
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+deactivate 29
+
+User -> 09: Update()
+activate 09
+
+09 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+User -> 49: Manageresourcesbutton()
+activate 49
+
+49 -> 119: Showlistsofresources()
+activate 119
+
+119 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+activate 09
+
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+deactivate 119
+
+deactivate 49
+
+User -> 29: add()
+activate 29
+
+29 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+activate 09
+
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+deactivate 29
+
+User -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+User -> 19: delete()
+activate 19
+
+19 -> 89: Updateinformationofresource()
+activate 89
+
+89 -> 09: Database()
+activate 09
+
+deactivate 09
+
+89 -> 69: Homepage()
+activate 69
+
+deactivate 69
+
+deactivate 89
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,98 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "UserModel" as 09
+participant "Sharebutton" as 19
+participant "Displaysuccessmessagetouser" as 49
+participant "DatabaseAdapter" as 89
+participant "CreateSphereView" as 99
+participant "db" as 139
+
+User -> 09: successmessagetouser()
+activate 09
+
+deactivate 09
+
+User -> 19: Sharebutton()
+activate 19
+
+19 -> 49: displayalistofuserswiththeirpermission()
+activate 49
+
+49 -> 09: Listofuserswiththeirpermissions()
+activate 09
+
+09 -> 49: computeaverageofagivensubsetofuser()
+49 -> 49: Displaysuccessmessagetouser()
+49 -> 09: successmessagetouser()
+deactivate 09
+
+deactivate 49
+
+09 -> 89: removepermissionindatabase()
+activate 89
+
+89 -> 49: Displaysuccessmessagetouser()
+activate 49
+
+49 -> 09: successmessagetouser()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+89 -> 139: db()
+activate 139
+
+deactivate 139
+
+deactivate 89
+
+09 -> 99: UpdatesDBwithnewpermissioninfo()
+activate 99
+
+99 -> 49: Displaysuccessmessagetouser()
+activate 49
+
+49 -> 09: successmessagetouser()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 99
+
+49 -> 09: User()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 09: Listofuserswiththeirpermissions()
+activate 09
+
+09 -> 49: computeaverageofagivensubsetofuser()
+activate 49
+
+deactivate 49
+
+09 -> 89: removepermissionindatabase()
+activate 89
+
+deactivate 89
+
+09 -> 99: UpdatesDBwithnewpermissioninfo()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+@enduml

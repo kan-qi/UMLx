@@ -1,0 +1,83 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "descriptionshouldnotbeblankmessage" as 09
+participant "reportbutton" as 29
+participant "Document upload" as 39
+participant "Case information" as 49
+participant "Limited User" as 59
+participant "Use information" as 79
+participant "User" as 139
+
+User -> 09: unauthorizedactionmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: invaliddescriptionmessage()
+activate 09
+
+deactivate 09
+
+User -> 29: addvewbutton()
+activate 29
+
+29 -> 59: validatetheroleofuser()
+activate 59
+
+59 -> 39: documentuploadpage()
+activate 39
+
+39 -> 79: validateinformationofdescription()
+activate 79
+
+79 -> 39: insertdocumentintodocumentdb()
+39 -> 39: documentdb()
+deactivate 39
+
+39 -> 49: updatethecaseinformationpage()
+activate 49
+
+deactivate 49
+
+79 -> 09: invaliddescriptionmessage()
+activate 09
+
+deactivate 09
+
+deactivate 79
+
+59 -> 09: unauthorizedactionmessage()
+activate 09
+
+deactivate 09
+
+59 -> 139: user()
+activate 139
+
+deactivate 139
+
+deactivate 59
+
+deactivate 29
+
+User -> 39: documentuploadpage()
+activate 39
+
+39 -> 79: validateinformationofdescription()
+activate 79
+
+deactivate 79
+
+deactivate 39
+
+User -> 49: updatethecaseinformationpage()
+activate 49
+
+deactivate 49
+
+@enduml

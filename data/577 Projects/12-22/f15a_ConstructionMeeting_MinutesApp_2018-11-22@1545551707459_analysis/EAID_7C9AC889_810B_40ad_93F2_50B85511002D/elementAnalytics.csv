@@ -1,0 +1,16 @@
+id,element,useCase,type,component
+1,User:selects the export button.,Generate Logs,boundary,Usert EndPoints
+2,User:Chooses a meeting ,Generate Logs,control,Meeting
+3,User:Hompage,Generate Logs,boundary,Hompage
+4,User:Chooses the option to generate meeting log ,Generate Logs,entity,Meeting Log
+5,Chooses a meeting :Meeting is saved on the administrator��s android device in PDF format.,Generate Logs,boundary,<<block>>    <<system>>   Meeting minutes Android
+6,Chooses the option to generate meeting log :displays the generate meeting screen,Generate Logs,control,Meeting Minute
+7,invalid information is displayed to the user:Hompage,Generate Logs,boundary,Hompage
+8,Meeting is saved on the administrator��s android device in PDF format.:log db,Generate Logs,entity,Meeting Log
+9,Meeting is saved on the administrator��s android device in PDF format.:invalid information is displayed to the user,Generate Logs,control,<<entity>>  User  Datastore
+10,displays the generate meeting screen:Meeting is saved on the administrator��s android device in PDF format.,Generate Logs,boundary,<<block>>    <<system>>   Meeting minutes Android
+11,selects the export button.:Meeting is saved on the administrator��s android device in PDF format.,Generate Logs,boundary,<<block>>    <<system>>   Meeting minutes Android
+12,stl#User:selects the export button.,Generate Logs,Stimulus,undefined
+13,stl#User:Chooses a meeting ,Generate Logs,Stimulus,undefined
+14,stl#User:Hompage,Generate Logs,Stimulus,undefined
+15,stl#User:Chooses the option to generate meeting log ,Generate Logs,Stimulus,undefined

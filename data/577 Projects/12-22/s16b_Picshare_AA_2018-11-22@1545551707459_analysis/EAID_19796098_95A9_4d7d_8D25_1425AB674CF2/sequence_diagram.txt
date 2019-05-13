@@ -1,0 +1,33 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "AppMainPage" as 09
+participant "Warninginformationofduplicate" as 19
+participant "textboxforusertoinputname" as 39
+
+User -> 09: RegisterPage()
+activate 09
+
+09 -> 19: CheckUserInformation()
+activate 19
+
+19 -> 19: WarningInvalidInformation()
+deactivate 19
+
+19 -> 39: User()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 19: WarningInvalidInformation()
+activate 19
+
+deactivate 19
+
+@enduml

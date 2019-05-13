@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+<script>
+	function jsonToPlantUML(jsonObj) {
+		var text = "";
+		for(var entry in jsonObj) {
+			console.log(jsonObj[entry]);
+			for(var i = 0; i < jsonObj[entry].length; i++) {
+				if(i == 0) {
+					for(var j = 0; j < jsonObj[entry][i]; j++) {
+						text += "\t";
+					}
+				}
+				else {
+					text += jsonObj[entry][i] + "\n";
+				}
+			}
+		}
+		console.log(text);
+		return text;
+	}
+</script>
+</head>
+
+<body>
+	<div id="output"></div>
+	<script>
+	var jsonObj =
+		{
+			1: [0, "Alice -> Bob: Authentication Request"],
+			2: [0, "alt sucessful case"],
+			3: [1, "Bob -> Alice: Authentification Accepted"],
+			4: [0, "else some kind of failure"],
+			5: [1, "Bob -> Alice: Authentification Failure"],
+			6: [1, "group My own label"],
+			7: [3, "Alice -> Log: Log attack start"],
+			8: [2, "loop 1000 times"],
+			9: [3, "Alice -> Bob: DNS Attack"],
+			10: [2, "end"],
+			11: [3, "Alice -> Log: Log attack end"],
+			12: [1, "end"],
+			13: [0, "else Another type of failure"],
+			14: [1, "Bob -> Alice: Please repeat"],
+			15: [0, "end"]
+		};
+
+	var plantUMLtext = jsonToPlantUML(jsonObj);
+	document.getElementById("output").innerHTML = plantUMLtext;
+	</script>
+</body>
+</html>

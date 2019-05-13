@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "Dashboard order management page" as 09
+participant "Dashboard course management page" as 19
+participant "Payment page" as 29
+participant "Course providing records" as 49
+participant "Order records page" as 59
+participant "Course" as 79
+
+Admin -> 09: Invalidenteredinformation()
+activate 09
+
+deactivate 09
+
+Admin -> 19: Managecoursepage()
+activate 19
+
+19 -> 49: Processcourseinformation()
+activate 49
+
+49 -> 09: Invalidenteredinformation()
+activate 09
+
+deactivate 09
+
+49 -> 19: savecourseinformationintodatabase()
+19 -> 79: course()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+deactivate 49
+
+19 -> 59: redirecttohomepage()
+activate 59
+
+59 -> 29: homepage()
+activate 29
+
+deactivate 29
+
+deactivate 59
+
+Admin -> 29: homepage()
+activate 29
+
+deactivate 29
+
+@enduml

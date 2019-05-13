@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:activity already exists->User:activity already exists,Create Activity,CTRL;EXTCLL;INT,2,0,5,1,10
+2,stl#User:Activity input page->User:Activity input page->Activity input page:add activity into db->add activity into db:success message,Create Activity,TRAN_NA,4,5,4,3,16
+3,stl#User:Activity input page->User:Activity input page->Activity input page:add activity into db->add activity into db:activity already exists,Create Activity,TRAN_NA,4,0,5,3,20
+4,stl#User:Activity input page->User:Activity input page->Activity input page:add activity into db->add activity into db:activity,Create Activity,TRAN_NA,4,1,5,3,20
+5,stl#User:success message->User:success message,Create Activity,CTRL;EXTCLL;INT,2,5,2,1,4

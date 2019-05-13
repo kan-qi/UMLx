@@ -1,0 +1,794 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class 2dView {
+~ render()
+~ 2DChartViewpage()
+}
+
+class 3dView {
+~ render()
+}
+
+class AnswerView {
+~ render()
+~ answerslistpage()
+}
+
+class AppView {
+~ render()
+}
+
+class AuthorizationChecker {
+~ isUserAuthorized()
+~ sendsnotificationtoseconduser()
+~ generatesecuritytoken()
+~ updatesthechartwithonlythedataforcheckedusers()
+}
+
+class CategoryModel {
+- questions:EAJava_void
+- title:EAJava_void
+- undefined:EAID_F2F589C9_8F7F_4e61_88E6_9295D2F8F1E5
+~ addQuestion()
+~ getName()
+~ updateName()
+~ removeCategory()
+~ getQuestions()
+~ nodeisnotupdatedmessage()
+}
+
+class CreateFormTemplateView {
+~ render()
+~ Displayalistoftemplates()
+~ Createfromtemplatebutton()
+~ queryavailabletemplates()
+~ Displayconfirmationprompt()
+~ savetemplate()
+~ displaycreatesectorsandnodespage()
+}
+
+class CreateSphereView {
+~ render()
+~ createasphereindb()
+~ validateinputonspherechange()
+~ updatesdbfornewproperties()
+~ createsectorsandnodespage()
+~ displayopenorcreatespherepage()
+~ queryspheredatafromdbanddisplay3dsphereviewpage()
+~ UpdatesDBwithnewpermissioninfo()
+~ queryforthelatestspheredata()
+~ computeaverageofallusersinsphere()
+}
+
+class DataValidator {
+~ updateUser()
+~ addUser()
+~ updateSphere()
+~ addSphere()
+~ getUser()
+~ getSphere()
+~ updateDBwithnewvalues()
+~ validatetheduplicityofusername()
+~ invalidinput()
+~ checksecuritytokenvalidity()
+}
+
+class DatabaseAdapter {
+~ insert()
+~ read()
+~ update()
+~ delete()
+~ templatesdatabase()
+~ Requestsaspherelistotheuserfromdatabase()
+~ updatetitleofthespheretodatabase()
+~ removepermissionindatabase()
+~ Rendersadifferentdatasetforeachuser()
+~ addusernameandpasswordintouserdatabase()
+}
+
+class EditSphereView {
+~ render()
+~ editspherepage()
+~ Sphereoverview()
+~ Listofusrswithspecificsphere()
+~ Displaysspherepropertiesineditabletable()
+~ display2dviewofselectedsphere()
+~ searchspheretitleorownerfrodb()
+}
+
+class EmailSender {
+~ sendTo():EAJava_void
+~ sendsemailnotificationtoseconduser()
+~ emailissentmessage()
+~ emailaddressprompts()
+~ render2Dpolarchat()
+}
+
+class ForgotPasswordView {
+~ render()
+~ passworddialog()
+~ Forgotpasswordlink()
+~ promptsusertoenternewpassword()
+~ storenewpasswordindatabase()
+}
+
+class HomeView {
+~ render()
+~ Homepage()
+}
+
+class LoginView {
+~ render()
+}
+
+class ManageAccountView {
+~ render()
+~ successmessage()
+~ searchpage()
+}
+
+class NavView {
+~ render()
+}
+
+class OpenSphereView {
+~ render()
+~ Openasavedspherebutton()
+~ openaspheretemplate()
+}
+
+class QuestionModel {
+- label:EAJava_void
+- text:EAJava_void
+- answers:EAJava_void
+- undefined:EAID_E73E0EA4_BFA4_4a54_B8B9_915694B30C0D
+~ getLabel()
+~ updateLabel()
+~ getText()
+~ updateText()
+~ getUserValue()
+~ answer()
+~ nodes()
+~ Listofquestionsandnodes()
+~ sectorlabelofthequestionsisupdated()
+~ queriesusersandansweredquestions()
+}
+
+class RegisterView {
+~ render()
+}
+
+class RestApi {
+~ resetPassword()
+~ updateUser()
+~ registerUser()
+~ updateSphere()
+~ addSphere()
+~ getUserData()
+~ getSphereData()
+}
+
+class Router {
+~ start()
+~ loadView()
+~ Logoutapp()
+}
+
+class SphereModel {
+- tile:EAJava_void
+- categories:EAJava_void
+- permissions:EAJava_void
+- undefined:EAID_D014A5E5_3FC9_42fe_81AA_4E0373FBAAAE
+~ shareWithUser()
+~ updateTitle()
+~ addCategory()
+~ removecategory()
+~ delete()
+~ getTitle()
+~ getCategories()
+~ getSharedUsers()
+~ removeUser()
+~ fetch()
+~ Deletespherebutton()
+~ sphere()
+~ averagevalueinthesphere()
+}
+
+class UserModel {
+- name:EAJava_void
+- email:EAJava_void
+- password:EAJava_void
+- spheres:EAJava_void
+~ resetPassword()
+~ updatePassword()
+~ updateName()
+~ getName()
+~ getSpheres()
+~ fetch()
+~ areCredsValid()
+~ successmessagetouser()
+~ Listofuserswiththeirpermissions()
+~ User()
+~ alistofuserspanel()
+}
+
+class VizualizationView {
+~ render()
+~ confirmationprompt()
+~ addassociationindb()
+~ Inappnotification()
+}
+
+class main {
+~ main()
+~ marketasdeletedindb()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+~ redirectusertohomepage()
+~ newnameinputdiagram()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class buildsalistofmatches {
+~ buildsalistofmatches()
+~ nomatchesmessage()
+}
+
+class Sharebutton {
+~ Sharebutton(EAJava_void nameEAJava_void emailEAJava_void password):EAJava_void
+~ Overlayon2Dchart()
+~ filterdatabutton()
+~ 2Dpolarchart()
+}
+
+class Displaysuccessmessagetouser {
+~ Displaysuccessmessagetouser()
+~ computeaverageofagivensubsetofuser()
+~ displayalistofuserswiththeirpermission()
+~ Displayslistofusersthathaveentereddataofthisspheres()
+~ displayinappnotificaiton()
+~ errormessage()
+~ displaycreatesectorsandnodespage()
+~ Displayerrormessageifemailisnotinsystem()
+~ successinformationmessage()
+~ redirectusertohomepage()
+~ alistofaccessiblespheres()
+}
+
+3dView <|-- VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView .. VizualizationView
+
+2dView <|-- VizualizationView
+
+CreateFormTemplateView <|-- CreateSphereView
+
+RegisterView <|-- LoginView
+
+@enduml

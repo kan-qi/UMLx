@@ -1,0 +1,9 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:course list button->User:course list button->course list button:load course list->load course list:user,Share course,CTRL;EXTCLL;DM;EI,4,2,3,3,12
+2,stl#User:course list button->User:course list button->course list button:load course list->load course list:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:send course information to users->send course information to users:Notification,Share course,TRAN_NA,8,5,3.2857142857142856,7,26.285714285714285
+3,stl#User:course list button->User:course list button->course list button:load course list->load course list:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:Redirect to login page->Redirect to login page:Login page,Share course,TRAN_NA,8,4,4,7,32
+4,stl#User:Share menu->User:Share menu->Share menu:send course information to users->send course information to users:Notification,Share course,TRAN_NA,4,1,2.3333333333333335,3,9.333333333333334
+5,stl#User:Share menu->User:Share menu->Share menu:Redirect to login page->Redirect to login page:Login page,Share course,TRAN_NA,4,0,4,3,16
+6,stl#User:Course list->User:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:send course information to users->send course information to users:Notification,Share course,TRAN_NA,6,3,3,5,18
+7,stl#User:Course list->User:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:Redirect to login page->Redirect to login page:Login page,Share course,TRAN_NA,6,2,4,5,24
+8,stl#User:Login page->User:Login page,Share course,CTRL,2,1,4,1,8

@@ -1,0 +1,15 @@
+id,element,useCase,type,component
+1,User:Delete sphere button,Delete sphere,entity,SphereModel
+2,User:confirmation prompt,Delete sphere,control,VizualizationView
+3,User:Home page,Delete sphere,boundary,HomeView
+4,Delete sphere button:Display confirmation prompt,Delete sphere,control,CreateFormTemplateView
+5,Display confirmation prompt:builds a list of matches,Delete sphere,boundary,buildsalistofmatches
+6,Display confirmation prompt:confirmation prompt,Delete sphere,control,VizualizationView
+7,redirect user to home page:Home page,Delete sphere,boundary,HomeView
+8,builds a list of matches:confirmation prompt,Delete sphere,control,VizualizationView
+9,confirmation prompt:market as deleted in db,Delete sphere,control,main
+10,market as deleted in db:sphere,Delete sphere,entity,SphereModel
+11,market as deleted in db:redirect user to home page,Delete sphere,boundary,$help://usecasediagram.htm
+12,stl#User:Delete sphere button,Delete sphere,Stimulus,undefined
+13,stl#User:confirmation prompt,Delete sphere,Stimulus,undefined
+14,stl#User:Home page,Delete sphere,Stimulus,undefined

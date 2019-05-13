@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Volunteer Application" as 09
+participant "Homepage" as 19
+participant "Checkallrequiredinformation" as 29
+
+User -> 09: ViewvolunteerapplicationPage()
+activate 09
+
+09 -> 09: Chooseoneofvolunteerapplication()
+09 -> 29: Showconfirmationpage()
+activate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+29 -> 09: ViewvolunteerapplicationPage()
+09 -> 09: Chooseoneofvolunteerapplication()
+deactivate 09
+
+deactivate 29
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml
