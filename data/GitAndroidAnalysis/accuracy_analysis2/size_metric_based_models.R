@@ -8,18 +8,23 @@ m_fit.ucp <- function(ucp,dataset){
 
 m_predict.ucp <- function(ucp, testData){
   print("ucp predict")
-  print(testData$Effort)
+  #print(testData$Effort)
   predict(ucp$m, testData)
 }
 
 #define the cocomo model
+#the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
 m_fit.cocomo <- function(cocomo,dataset){
+  print("cocomo fit")
+  dataset$log_effort = log(data$Effort)
+  dataset$log_sloc = log(data$SLOC)
+  cocomo$m = lm(log_effort~log_sloc, data=dataset)
   cocomo
 }
 
 m_predict.cocomo <- function(cocomo, testData){
-  predicted = testData$COCOMO_Estimate
-  names(predicted) = rownames(testData)
+  print("cocomo predict")
+  predicted = exp(predict(cocomo$m, log(testData$SlOC)))
   predicted
 }
 
@@ -34,15 +39,15 @@ m_predict.fp <- function(fp, testData){
 }
 
 #define the cocomo apriori model
-m_fit.cocomo_apriori <- function(cocomo_apriori,dataset){
-  cocomo_apriori
-}
+#m_fit.cocomo_apriori <- function(cocomo_apriori,dataset){
+#  cocomo_apriori
+#}
 
-m_predict.cocomo_apriori <- function(cocomo_apriori, testData){
-  predicted = testData$Priori_COCOMO_Estimate
-  names(predicted) = rownames(testData)
-  predicted
-}
+#m_predict.cocomo_apriori <- function(cocomo_apriori, testData){
+#  predicted = testData$Priori_COCOMO_Estimate
+#  names(predicted) = rownames(testData)
+#  predicted
+#}
 
 #define the cosmic model
 m_fit.cosmic <- function(cosmic,dataset){
@@ -112,7 +117,7 @@ size_metric_models <- function(){
   
   #define the cocomo apriori model
   
-  models$cocomo_apriori = list()
+  #models$cocomo_apriori = list()
   
   #define the cosmic model
   
