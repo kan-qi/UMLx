@@ -123,6 +123,8 @@
 		
 		var dicClassUnits = codeAnalysisResults.dicClassUnits;
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
+
+		var dicResponseMethodUnits = {};
 		
 		if (gatorFilePath && fs.existsSync(gatorFilePath)) {
 		 
@@ -148,8 +150,6 @@
 				methodSigns.push(methodSign);
 			}
 		}
-		
-		var dicResponseMethodUnits = {};
 		
 		if(contents && methodSigns.length > 0){
 		var lines = contents.split(/\r?\n/g);

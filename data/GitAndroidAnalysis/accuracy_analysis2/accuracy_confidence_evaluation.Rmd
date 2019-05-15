@@ -29,7 +29,7 @@ Combined Data Effort Values
 #The previous dataset
 #modelData <- selectData("dsets/modelEvaluations-1-3.csv")
 #The current dataset
-modelData <- selectData("dsets/android_dataset_5_4.csv")
+modelData <- selectData("dsets/android_dataset_5_15.csv")
 rownames(modelData) <- modelData$Project
 modelData$Project <- NULL
 ```
@@ -50,7 +50,7 @@ modelData$Project <- NULL
 
 models = list()
 #register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
-#models$tm1 = trainsaction_based_model(modelData)
+models$tm1 = trainsaction_based_model(modelData)
 
 #initialize the size metric based models
 size_models <- size_metric_models()

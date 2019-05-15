@@ -525,6 +525,14 @@ var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparat
 //    modelOutputDirs.push(projectInfo.path+"_"+projectInfo.clusterConfig);
 //}
 
+var repoProjects = [];
+var repoProjectsIndex = {};
+for(var i in repo.projectList){
+    var repoProject = repo.projectList[i];
+    repoProjects.push(repoProject.tag);
+    repoProjectsIndex[repoProject.tag] = i;
+}
+
 var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
 var onlineProjects = [];
 var onlineProjectsIndex = {};
@@ -577,6 +585,7 @@ var modelEvaluationContents = FileManagerUtils.readFilesSync(modelEvaluationFile
 var modelEvaluationConsolidation = "";
 var matchedProjectIndex = new Set();
 var matchedCseCaseProjectIndex = new Set();
+var unavailableProject = [];
 console.log("matched projects:")
 for(var i in modelEvaluationContents){
 	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
@@ -614,14 +623,17 @@ for(var i in modelEvaluationContents){
             		matchedProjectIndex.add(onlineProjectsIndex[matches.bestMatch.target]);
 //            		}
                     console.log(project+" matched: "+matches.bestMatch.target);
+            }
 
+
+            if(useCaseProjects.length > 0){
                     //matches for the use case analysis data
                     var useCaseProjMatches = stringSimilarity.findBestMatch(project, useCaseProjects);
-                    //            		if(useCaseProjMatches.bestMatch.rating > 0.5){
-                                		matchedCseCaseProject  =  useCaseProjectData[useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]];
-                                		matchedCseCaseProjectIndex.add(useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]);
-                    //            		}
-                                        console.log(project+" matched: "+useCaseProjMatches.bestMatch.target)
+                    // if(useCaseProjMatches.bestMatch.rating > 0.5){
+                     matchedCseCaseProject  =  useCaseProjectData[useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]];
+                     matchedCseCaseProjectIndex.add(useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]);
+                    // }
+                    console.log(project+" matched: "+useCaseProjMatches.bestMatch.target);
             }
 
             for(var k in matchedOnlineProject){
@@ -700,12 +712,16 @@ for(var i in transactionEvaluationContents){
 
 FileManagerUtils.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
 
+          var unmatchedRepoProjects = {};
 		  console.log("unmatched online projects.");
 		  console.log(matchedProjectIndex);
 		  for(var i in onlineProjects){
 		    if(matchedProjectIndex.has(i)){
 		        continue;
 		    }
+		     var repoProjMatches = stringSimilarity.findBestMatch(onlineProjects[i], repoProjects);
+              // if(useCaseProjMatches.bestMatch.rating > 0.5){
+              unmatchedRepoProjects[repoProjMatches.bestMatch.target] = 1;
 		    console.log(onlineProjects[i]);
 		  }
 
@@ -715,7 +731,22 @@ FileManagerUtils.writeFileSync(repo.repoDir + pathSeparator + "transactionEvalua
           		    if(matchedCseCaseProjectIndex.has(i)){
           		        continue;
           		    }
+          		     var repoProjMatches = stringSimilarity.findBestMatch(useCaseProjects[i], repoProjects);
+                                  // if(useCaseProjMatches.bestMatch.rating > 0.5){
+                                  unmatchedRepoProjects[repoProjMatches.bestMatch.target] = 1;
           		    console.log(useCaseProjects[i]);
-          		  }
 
+   		  }
+
+   		  var unmatchedProjectsProfile = {
+   		  reportDir: repo.reportDir,
+   		  repoDir: repo.repoDir,
+   		  projectList : [
+   		  ]
+   		  }
+
+   		  for(var i in unmatchedRepoProjects){
+   		   unmatchedProjectsProfile.projectList.push(repo.projectList[repoProjectsIndex[i]]);
+   		  }
+     FileManagerUtils.writeJSONFilesSync([repo.repoDir + pathSeparator + "unmatched_projects.json"], [unmatchedProjectsProfile]);
 }

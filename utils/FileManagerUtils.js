@@ -74,10 +74,10 @@
      		 return fileContents;
       }
 
-      function writeJSONFilesSync(filePaths, fileContents){
+      function writeJSONFilesSync(filePaths, jsonObjects){
 
                   		 for(var i in filePaths){
-                  		  fs.writeFileSync(filePaths[i], JSON.stringify(fileContents[i]));
+                  		  fs.writeFileSync(filePaths[i], JSON.stringify(jsonObjects[i]));
                   		 }
       	 }
 	 

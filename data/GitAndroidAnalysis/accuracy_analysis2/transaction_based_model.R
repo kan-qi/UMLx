@@ -847,9 +847,10 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     #generate classified regression data
     regressionData <- generateRegressionData(projects, cutPoints, effortData, transactionFiles)
     
+    `%ni%` <- Negate(`%in%`)
     paramVals <- bayesfit(regressionData, 10000, 500)
     bayesianModel = list()
-    bayesianModel$weights = subset(paramVals, select = levels)
+    bayesianModel$weights = subset(paramVals, select = colnames(regressionData) %ni% c("Effort"))
     bayesianModel$effortAdj = paramVals[,"effortAdj"] 
     bayesianModel$sd = paramVals[,"sd"] 
     bayesianModel$cuts <- cutPoints
