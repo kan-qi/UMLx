@@ -11,18 +11,36 @@ getTotalPages <- function(linkHeaderStr){
   as.integer((matched[ ,2]))
 }
 
+
+rbind.match.columns <- function(input1, input2) {
+  n.input1 <- ncol(input1)
+  n.input2 <- ncol(input2)
+  
+  if (n.input2 < n.input1) {
+    TF.names <- which(names(input2) %in% names(input1))
+    column.names <- names(input2[, TF.names])
+  } else {
+    TF.names <- which(names(input1) %in% names(input2))
+    column.names <- names(input1[, TF.names])
+  }
+  
+  return(rbind(input1[, column.names], input2[, column.names]))
+}
+
 # set user-agent
-user = ""
-pw = ""
+user = "flyqk"
+pw = "qk@github/910304"
 
 # import urls
 data = read.xlsx("repos.xlsx",sheetName="data",header=T)
+data[i,1] = as.character(data[i,1])
+data[i,2] = as.character(data[i,2])
 
 # read email segment and return data
 out <- data.frame()
-for(i in 1:2){
+for(i in 63:nrow(data)){
   
-  repo_name = data[i,1]
+  repo_name = as.character(data[i,1])
   repo_url = data[i,2]
   
   print(paste("## ",repo_name, " ##"))
@@ -38,12 +56,14 @@ for(i in 1:2){
     for(k in seq(1:pages)){
       resp <- GET(paste(url, "/contributors?page=", k, sep=''), authenticate(user, pw))
       currentPage <- fromJSON(content(resp, "text"), flatten = TRUE)
+      currentPage$repo_name <- repo_name
       contributors[[k]] <- currentPage
     }
   }else{
     print(paste(i, "else"))
     resp <- GET(paste(url, "/contributors", sep=''), authenticate(user, pw))
     currentPage <- fromJSON(content(resp, "text"), flatten = TRUE)
+    currentPage$repo_name <- repo_name
     contributors[[i]] <- currentPage
   }
   contributors <- rbind_pages(contributors)
@@ -52,9 +72,10 @@ for(i in 1:2){
   # find user info
   
   max = 200
-  line <- data.frame("begin")
+  line <- data.frame(name=c(), email=c(), contributions = c(), repo_name=c())
   for(k in 1:nrow(contributors[1])){
     user_url = paste("https://api.github.com/users", contributors[k, 1], "events/public", sep="/")
+    print(user_url)
     user_info <- GET(user_url, authenticate(user, pw))
     user_info = as.character(user_info)
     
@@ -66,12 +87,13 @@ for(i in 1:2){
     name = as.character(contributors[[1]][k])
     
     if(is.na(email)==FALSE){
-      sub_line <- data.frame(name, email)
-      line <- cbind(line,sub_line)
+      sub_line <- data.frame(name = name, email = email, contributions = contributors[["contributions"]][k], repo_name = contributors[["repo_name"]][k])
+      line <- rbind(line,sub_line)
       email = NA
       print(sub_line)
     }
   }
   out <- rbind(out, line)
 }
+
 write.xlsx(out, "email.xlsx")

@@ -15,6 +15,7 @@ var mkdirp = require('mkdirp');
 var fs = require('fs');
 var execSync = require('child_process').execSync;
 var AndroidLogUtil = require("./AndroidLogUtil.js");
+var AndroidAPKUtil = require("./AndroidAPKUtil.js");
 var FileManagerUtils = require("./FileManagerUtils.js");
 var RScriptExec = require('./RScriptUtil.js');
 var LogFilter = require('./AndroidLogFilter.js');
@@ -44,7 +45,7 @@ function analyseAndroidApks(repoInfo){
     	    return promise
     	      .then((result) => {
     	        console.log("analysing project: "+project.apkFileName);
-    	        return AndroidLogUtil.generateAndroidAnalysis(project).then(result => final.push(result));
+    	        return AndroidAPKUtil.generateAndroidAnalysis(project).then(result => final.push(result));
     	      })
     	      .catch(console.error);
     	  }, Promise.resolve());
@@ -154,6 +155,9 @@ function analyseAndroidProjectsShellBatch(repoInfo){
 
     for(var i in projectList){
         var projectInfo = projectList[i];
+            if(!FileManagerUtils.existsSync(projectInfo.path)){
+                continue;
+            }
             var executionInfo = {
                 reportDir: repoInfo.reportDir,
                 repoDir: repoInfo.repoDir,
@@ -338,6 +342,9 @@ else if(functionSelection === "--fix-android-analysis-reference"){
 	var androidAnalysisReadPaths = [];
 	var androidAnalysisWritePaths = [];
 	for(var i in repo.projectList){
+	    if(!FileManagerUtils.existsSync(repo.projectList[i].path)){
+	        continue;
+	    }
 	    androidAnalysisPaths.push(repo.projectList[i].path);
 		androidAnalysisReadPaths.push(repo.projectList[i].path+"/android-analysis-output.json");
 		androidAnalysisWritePaths.push(repo.projectList[i].path+"/android-analysis-output1.json");
@@ -355,7 +362,7 @@ else if(functionSelection === "--fix-android-analysis-reference"){
     androidAnalysisResult.extendsGraph=androidAnalysisPaths[i]+"/extendsgraph.json"
     androidAnalysisResult.compositionGraph=androidAnalysisPaths[i]+"/compositiongraph.json"
 
-    if(!FileManagerUtils.existsSync(androidAnalysisPaths[i]+"/soot-cfg-2.json")){
+    if(!FileManagerUtils.existsSync(androidAnalysisPaths[i]+"/soot-cfg-1.json")){
             androidAnalysisResult.cfg= androidAnalysisPaths[i]+"/soot-cfg-2.json"
     }
     else{
@@ -511,6 +518,66 @@ else if(functionSelection === "--filter-logs"){
 	}
 
 }
+else if(functionSelection === "--distribute-effort-to-personnel"){
+    var onlineProjects = [];
+    var onlineProjectsIndex = {};
+    if(FileManagerUtils.existsSync(repo.repoDir+"/project_list_4_25.csv")){
+    var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
+    for(var i in onlineProjectData){
+        var onlineProject = onlineProjectData[i];
+        onlineProjects.push(onlineProject.Project);
+        onlineProjectsIndex[onlineProject.Project] = i;
+    }
+    }
+
+//        var contributors = [];
+        var contributorProjects = {};
+        if(FileManagerUtils.existsSync(repo.repoDir+"/emails.csv")){
+        var contributorData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/emails.csv", true);
+        for(var i in contributorData){
+            var contributor = contributorData[i];
+//            contributors.push(contributor);
+            var contributorProject = contributorProjects[contributor.repo_name];
+            if(!contributorProject){
+                contributorProjects[contributor.repo_name] = [];
+                contributorProject = contributorProjects[contributor.repo_name];
+            }
+            contributorProject.push(contributor);
+        }
+     }
+
+    var output = "id,name,email,contributions,repo_name,effort\n";
+     for(var i in contributorProjects){
+        var contributorProject = contributorProjects[i];
+        var totalContribution = 0;
+        for(var j in contributorProject){
+            var contributor = contributorProject[j];
+            totalContribution += Number(contributor.contributions);
+        }
+        var effort = 0;
+        var repo_name = j;
+
+           if(onlineProjects.length>0){
+                    		var matches = stringSimilarity.findBestMatch(repo_name, onlineProjects);
+        //            		if(matches.bestMatch.rating > 0.5){
+                    		matchedOnlineProject  =  onlineProjectData[onlineProjectsIndex[matches.bestMatch.target]];
+        //            		}
+                            console.log(repo_name+" matched: "+matches.bestMatch.target);
+
+           effort = Number(matchedOnlineProject.Effort)
+           }
+
+        for(var j in contributorProject){
+                    var contributor = contributorProject[j];
+                    contributor["effort"] = totalContribution == 0 ? 0 : Number(contributor.contributions)/totalContribution*effort;
+                    output += contributor.id+","+contributor.name+","+contributor.email+","+contributor.contributions+","+contributor.repo_name+","+contributor.effort+"\n";
+         }
+     }
+
+
+     FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "effort_distribution.csv", output);
+
+}
 else if(functionSelection === "--generate-repo-analysis-report"){
 
 //var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
@@ -533,23 +600,28 @@ for(var i in repo.projectList){
     repoProjectsIndex[repoProject.tag] = i;
 }
 
-var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
+
 var onlineProjects = [];
 var onlineProjectsIndex = {};
+if(FileManagerUtils.existsSync(repo.repoDir+"/project_list_4_25.csv")){
+var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
 for(var i in onlineProjectData){
     var onlineProject = onlineProjectData[i];
     onlineProjects.push(onlineProject.Project);
     onlineProjectsIndex[onlineProject.Project] = i;
 }
+}
 
 
-var useCaseProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/UseCaseAnalysisResults.csv", true);
 var useCaseProjects = [];
 var useCaseProjectsIndex = {};
+if(FileManagerUtils.existsSync(repo.repoDir+"/UseCaseAnalysisResults.csv")){
+var useCaseProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/UseCaseAnalysisResults.csv", true);
 for(var i in useCaseProjectData){
     var useCaseProject = useCaseProjectData[i];
     useCaseProjects.push(useCaseProject.Project);
     useCaseProjectsIndex[useCaseProject.Project] = i;
+}
 }
 
 var transactionFiles = [];
@@ -586,22 +658,27 @@ var modelEvaluationConsolidation = "";
 var matchedProjectIndex = new Set();
 var matchedCseCaseProjectIndex = new Set();
 var unavailableProject = [];
+var headed = false;
 console.log("matched projects:")
 for(var i in modelEvaluationContents){
+      if(modelEvaluationContents[i] === "" || !modelEvaluationContents[i]){
+      continue;
+      }
 	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
-	  if(i == 0){
+	  if(!headed){
 		  modelEvaluationConsolidation += modelEvaluationLines[0]+","+"transaction_file";
-	   if(onlineProjectData){
+	   if(onlineProjects.length > 0){
 	        for(var k in onlineProjectData[0]){
                            modelEvaluationConsolidation += ","+k;
             }
       	}
 
-      	 if(useCaseProjectData){
+      	 if(useCaseProjects.length > 0){
         	        for(var k in useCaseProjectData[0]){
                                    modelEvaluationConsolidation += ","+k;
                     }
-              	}
+         }
+         headed = true;
 	  }
 
 
@@ -612,10 +689,11 @@ for(var i in modelEvaluationContents){
 		  }
 
 		  modelEvaluationConsolidation += "\n"+modelEvaluationLines[j]+","+filteredTransactionFiles[i];
-          if(onlineProjectData){
+
 		  var fields = modelEvaluationLines[j].split(",");
 		  if(fields){
 		    var project = fields[1].substring(0, fields[1].lastIndexOf("_"));
+
             if(onlineProjects.length>0){
             		var matches = stringSimilarity.findBestMatch(project, onlineProjects);
 //            		if(matches.bestMatch.rating > 0.5){
@@ -623,6 +701,11 @@ for(var i in modelEvaluationContents){
             		matchedProjectIndex.add(onlineProjectsIndex[matches.bestMatch.target]);
 //            		}
                     console.log(project+" matched: "+matches.bestMatch.target);
+
+
+            for(var k in matchedOnlineProject){
+                    modelEvaluationConsolidation += ",\""+ matchedOnlineProject[k]+"\"";
+            }
             }
 
 
@@ -634,16 +717,14 @@ for(var i in modelEvaluationContents){
                      matchedCseCaseProjectIndex.add(useCaseProjectsIndex[useCaseProjMatches.bestMatch.target]);
                     // }
                     console.log(project+" matched: "+useCaseProjMatches.bestMatch.target);
-            }
 
-            for(var k in matchedOnlineProject){
-                    modelEvaluationConsolidation += ",\""+ matchedOnlineProject[k]+"\"";
-            }
 
-            for(var k in matchedCseCaseProject){
+                for(var k in matchedCseCaseProject){
                                 modelEvaluationConsolidation += ",\""+ matchedCseCaseProject[k]+"\"";
+                }
+
+
             }
-		  }
 		  }
 
 		  }

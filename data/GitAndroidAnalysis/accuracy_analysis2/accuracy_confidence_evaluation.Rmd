@@ -30,6 +30,7 @@ Combined Data Effort Values
 #modelData <- selectData("dsets/modelEvaluations-1-3.csv")
 #The current dataset
 modelData <- selectData("dsets/android_dataset_5_15.csv")
+#modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
 rownames(modelData) <- modelData$Project
 modelData$Project <- NULL
 ```
@@ -58,9 +59,10 @@ size_models <- size_metric_models()
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-#models$step_lnr <- stepwise_linear_model()
+models$step_lnr <- stepwise_linear_model(modelData)
 
-##models$neuralnet = neuralnet_model()
+#initialize the neuralnet model
+models$neuralnet = neuralnet_model(modelData)
 
 #models$ucp = list()
 #models$cocomo = list()
@@ -161,11 +163,11 @@ for (i in 1:length(metric_labels)){
 # family-wise hypothesis test
 source('familywiseHypoTest.R')
 foldResults <- cvResults$foldResults
-sig_cv <- familywiseHypoTest(iterationResults=foldResults, accuracy_metrics, model_names)
+# sig_cv <- familywiseHypoTest(iterationResults=foldResults, accuracy_metrics, model_names)
+
+# head(sig_cv)
 
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names)
-
-head(sig_cv)
 
 head(sig_bs)
 
