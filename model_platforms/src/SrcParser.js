@@ -103,7 +103,7 @@
 						 tag:"S1W1L1"
 				 }
 		
-				 // S1W3L1 Euclidean Relative Single ?
+				 // S1W3L1 Euclidean Relative Single Size: 70%
 				 var S1W3L1 = {
 						 s: 1,
 						 w: 3,
