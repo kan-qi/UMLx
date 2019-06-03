@@ -16,7 +16,7 @@ library(stringr)
 # Variables
 input_filename = "repos.xlsx"
 output_filename = "emails.xlsx"
-MAX_NUM_EMAILS = 500 # set a maximum number of emails to retrieve for each project
+MAX_NUM_EMAILS = 200 # set a maximum number of emails to retrieve for each project
 
 # set user-agent
 agent_user = "flyqk"
