@@ -126,7 +126,7 @@
 
 //                                				if(callbackfunc){
                                                  //                                					callbackfunc(umlModelInfo);
-                                                 //                                				}
+                                                 //
 
                                                   resolve(true, model);
 

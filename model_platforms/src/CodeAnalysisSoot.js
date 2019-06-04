@@ -166,13 +166,13 @@
 			cfg: androidAnalysisResults.cfg
 		};
 
-		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
-	    debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
-		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
-	    debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
+	    //debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
+	    //debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
 		
 		return result;
 	}

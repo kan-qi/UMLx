@@ -33,6 +33,8 @@ modelData <- selectData("dsets/android_dataset_5_15.csv")
 #modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
 rownames(modelData) <- modelData$Project
 modelData$Project <- NULL
+
+#data set exploratory statistics, eg, correlation statistics, marginal distributions, etc.
 ```
 
 #load the comparative models. Each model for comparison should include two functions for evaluateion:
@@ -63,6 +65,9 @@ models$step_lnr <- stepwise_linear_model(modelData)
 
 #initialize the neuralnet model
 models$neuralnet = neuralnet_model(modelData)
+
+#initialize the lasso regression model
+models$lasso = lass_model(modelData)
 
 #models$ucp = list()
 #models$cocomo = list()
