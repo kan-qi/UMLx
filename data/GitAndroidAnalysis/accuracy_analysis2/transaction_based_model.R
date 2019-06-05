@@ -26,6 +26,7 @@ library(ggplot2)
 library(MASS)
 library(mvtnorm)
 library(invgamma)
+library(classInt)
 
 combineData <- function(transactionFiles) {
 	# Combines all the data from multiple transaction analytics files into one
@@ -71,15 +72,8 @@ empiricalStats <- function(data){
   u = quantile(data, 0.975))
 }
 
-parametricKStest <- function(dist){
-  # perform parametric kermogorov smirnov test for goodness of fit of gamma distribution. 
-  #
-  # Args:
-  #   dist: an empirical distribution to perform goodness of fit test
-  #
-  # Returns:
-  #   the p-value of k-s test
-  
+
+distFit <- function(dist){
   tableValues <- table(dist)
   
   dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
@@ -92,6 +86,18 @@ parametricKStest <- function(dist){
   # Check result
   shape = coefficients(fit.gamma)["shape"]
   rate = coefficients(fit.gamma)["rate"]
+  
+  list(shape=shape, rate=rate)
+}
+
+parametricKStest <- function(dist, shape, rate){
+  # perform parametric kermogorov smirnov test for goodness of fit of gamma distribution. 
+  #
+  # Args:
+  #   dist: an empirical distribution to perform goodness of fit test
+  #
+  # Returns:
+  #   the p-value of k-s test
   
   ksResult <- ks.test(dist, "pgamma", shape, rate)
   ks = ksResult[['statistic']]
@@ -159,7 +165,7 @@ chisqTest <- function(dist){
   1-pchisq(X2,gdl) ## p-value
 }
 
-discretize <- function(shape, rate, n) {
+discretize <- function(dataset, n, fit=FALSE) {
 	# Discretizes continuous data into different levels of complexity based on
 	# quantiles of normal distribution defined by the data.
 	#
@@ -170,14 +176,27 @@ discretize <- function(shape, rate, n) {
 	# Returns:
 	#   A vector of cut points
   
-	if (n <= 1) {
-		return(c(-Inf, Inf))
-	}
+  if (n <= 1) {
+    return(c(-Inf, Inf))
+  }
   
+  if(fit){
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	
-	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
+  params <- distFit(dataset)
+	cutPoints <- qgamma(quantiles, params$shape, params$rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
+  }
+  else{
+  cutPoints <- as.vector(classIntervals(dataset, n)$brks)
+  lastPoint <- -1;
+    for(i in 1:length(cutPoints)){
+      if(cutPoints[i] == lastPoint){
+        cutPoints[i] = cutPoints[i]+0.1;
+      }
+      lastPoint = cutPoints[i]
+    }
+  cutPoints
+  }
 }
 
 classify <- function(data, cutPoints) {
@@ -823,25 +842,42 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   transactionFiles = transactionData$transactionFiles
   projects <- names(transactionData$transactionFiles)
   
-  distParams = list();
-  distParams[['TL']] = list(shape=6.543586, rate=1.160249);
-  distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
-  distParams[['DETs']] = list(shape=1.6647412, rate=0.1691911);
+  #distParams = list();
+  #distParams[['TL']] = list(shape=6.543586, rate=1.160249);
+  #distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
+  #distParams[['DETs']] = list(shape=1.6647412, rate=0.1691911);
+  
+  
+  #Ks parameteric test
+  #distParams = list();
+  #print(combinedData[,])
+  #hist(combinedData[combinedData$TL < 20 & combinedData$TL > 2,"TL"])
+  #hist(combinedData[combinedData$TD < 100, "TD"])
+  #hist(combinedData[combinedData$DETs < 10, "DETs"])
+  #n <- 5
+  #quantiles <- seq(1/n, 1 - (1/n), 1/n)
+  #print(classIntervals(combinedData[combinedData$DETs < 30, "DETs"], 6, style = 'quantile'))
+  #print(classIntervals(combinedData[,"TL"], 4)$brks)
+  #print(quantize(combinedData[,"TL"], quantiles))
+  
+  #distParams[['TL']] = (combinedData[combinedData$TL < 20 & combinedData$TL > 2,"TL"]);
+  #distParams[['TD']] = distFit(combinedData[combinedData$TD < 1000, "TD"]);
+  #distParams[['DETs']] = distFit(combinedData[combinedData$DETs < 10, "DETs"]);
   
   #paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   #paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
-  
+ 
   if(length(parameters) == 0){
     n = 1
   }
   
   searchResults <- list()
-  
+  i = 2
   for (i in seq(1,n)) {
     cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
     rownames(cutPoints) <- parameters
     for (p in parameters) {
-      cutPoints[p, ] <- discretize(distParams[[p]][['shape']], distParams[[p]][['rate']], i)
+      cutPoints[p, ] <- discretize(combinedData[,p], i)
     }
     
     #generate classified regression data
@@ -969,11 +1005,12 @@ trainsaction_based_model <- function(modelData){
   #cachedTransactionFiles = list()
   SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
-  SWTIIIModelSelector <- 4
+  SWTIIIModelSelector <- 3
  
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
   swtiiiParams = list(
-    cuts = modelParams$cuts
+    cuts = modelParams$cuts,
+    SWTIIIresults = SWTIIIresults
   )
 }
 

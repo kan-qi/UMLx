@@ -581,6 +581,7 @@ else if(functionSelection === "--distribute-effort-to-personnel"){
 else if(functionSelection === "--generate-repo-analysis-report"){
 
 //var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
+console.log(repo.reportDir + pathSeparator + "files.txt");
 var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "files.txt").split(/\r?\n/g);
 //console.log(modelOutputDirs)
 // or load the modelOutputDirs from the json file
