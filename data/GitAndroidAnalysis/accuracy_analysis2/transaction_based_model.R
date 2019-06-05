@@ -188,10 +188,12 @@ discretize <- function(dataset, n, fit=FALSE) {
   }
   else{
   cutPoints <- as.vector(classIntervals(dataset, n)$brks)
+  cutPoints[1] <- -Inf
+  cutPoints[length(cutPoints)] <- Inf
   lastPoint <- -1;
     for(i in 1:length(cutPoints)){
-      if(cutPoints[i] == lastPoint){
-        cutPoints[i] = cutPoints[i]+0.1;
+      if(cutPoints[i] <= lastPoint){
+        cutPoints[i] = lastPoint+0.1;
       }
       lastPoint = cutPoints[i]
     }
@@ -212,6 +214,8 @@ classify <- function(data, cutPoints) {
   #   A vector that indicates how many data points fall into each bin.
   #
   
+  #data <- fileData
+  
   numVariables <- nrow(cutPoints)
   numBins <- ncol(cutPoints) - 1
   if(numVariables == 0){
@@ -226,12 +230,14 @@ classify <- function(data, cutPoints) {
     names(result) <- genColNames(nrow(cutPoints), numBins)
     if(nrow(data) > 0){
       for (i in 1:nrow(data)) {
-      classifications <- c()
+      sumCoord <- 0
+      #classifications <- c()
       for (p in rownames(cutPoints)) {
         parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-        classifications <- c(classifications, parameterResult)
+        #classifications <- c(classifications, parameterResult)
+        sumCoord <- sumCoord + parameterResult
       }
-      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1), sep = "")
+      combinedClass <- paste("l", sumCoord-nrow(cutPoints)+1, sep = "")
       result[combinedClass] <- result[combinedClass] + 1
       }
     }
@@ -872,14 +878,12 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   }
   
   searchResults <- list()
-  i = 2
   for (i in seq(1,n)) {
     cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
     rownames(cutPoints) <- parameters
     for (p in parameters) {
       cutPoints[p, ] <- discretize(combinedData[,p], i)
     }
-    
     #generate classified regression data
     regressionData <- generateRegressionData(projects, cutPoints, effortData, transactionFiles)
     
