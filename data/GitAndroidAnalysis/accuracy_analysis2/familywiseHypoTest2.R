@@ -22,7 +22,13 @@ if(nmodels < 2){
     return
 }
 
+
 nmetrics <- length(metric_names)
+
+nhypo <- choose(nmodels,2) * nmetrics
+print("number of hypothesis:")
+print(nhypo)
+
 
 dfHypothesis <- matrix(nrow=nhypo,ncol=4)
 colnames(dfHypothesis) <- c('model1','model2','metric','direction')
@@ -83,7 +89,6 @@ return(p)
 
 # for each accuracy metric, pair two models to construct hypothesis and run significance test
 # total number of hypothesis = C(nmodels, 2) * nmetrics
-nhypo <- choose(nmodels,2) * nmetrics
 i <- 1
 while (i<=nhypo){
 for (j in 1:nmetrics){

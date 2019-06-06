@@ -842,12 +842,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   
   #load transaction data from the datasheet
   transactionData <- loadTransactionData(dataset)
-  
-  effortData <- transactionData$effort
-  combinedData <- transactionData$combined
-  transactionFiles = transactionData$transactionFiles
-  projects <- names(transactionData$transactionFiles)
-  
+    
   #distParams = list();
   #distParams[['TL']] = list(shape=6.543586, rate=1.160249);
   #distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
@@ -890,7 +885,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     `%ni%` <- Negate(`%in%`)
     paramVals <- bayesfit(regressionData, 10000, 500)
     bayesianModel = list()
-    bayesianModel$weights = subset(paramVals, select = colnames(regressionData) %ni% c("Effort"))
+    bayesianModel$weights = subset(paramVals, select = colnames(regressionData) %ni% c("Effort", "sd"))
     bayesianModel$effortAdj = paramVals[,"effortAdj"] 
     bayesianModel$sd = paramVals[,"sd"] 
     bayesianModel$cuts <- cutPoints
@@ -950,7 +945,7 @@ predict.swt <- function(trainedModel, testData){
   predicted
 }
 
-m_fit.tm1 <- function(swtiii,dataset){
+m_fit.tm1 <- function(swtiii,dataset, profileData=FALSE){
   # the model fitting function which would be repeated called during the cross validation and bootstrapping function
   #
   # Args:
@@ -975,6 +970,32 @@ m_fit.tm1 <- function(swtiii,dataset){
   bayesianModel = list()
   bayesianModel$paramVals <- paramVals
   bayesianModel$cuts <- swtiii$cuts
+  
+  if(profileData){
+    profileData <- matrix(nrow=nrow(dataset), ncol=12+ncol(regressionData))
+    profileData <- as.data.frame(profileData)
+    rownames(profileData) <- rownames(dataset)
+    colnames(profileData) <- c("Trans", "Stm", "Comp", 
+                               "TL", "TL_SE", "TD",
+                               "TD_SE", "DETs", "DETs_SE",colnames(regressionData)[!(colnames(regressionData) %in% c("Effort"))],"SWT", "UUCP", "AFP","ProjEff")
+    profileData$Trans <- dataset$Tran_Num
+    profileData$Stm <- dataset$Stimulus_Num
+    profileData$Comp <- dataset$Component_Num
+    attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
+    attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
+    profileData$TL <- attr_means$TL
+    profileData$TD <- attr_means$TD
+    profileData$DETs <- attr_means$DETs
+    profileData$TL_SE <- attr_sds$TL
+    profileData$TD_SE <- attr_sds$TD
+    profileData$DETs_SE <- attr_sds$DETs
+    profileData[,colnames(regressionData)[!(colnames(regressionData) %in% c("Effort"))]] <- regressionData[,colnames(regressionData)[!(colnames(regressionData) %in% c("Effort"))]]
+    profileData$SWT <- predict.blm(as.matrix(paramVals), newdata = regressionData) 
+    profileData$UUCP <- dataset$UUCP 
+    profileData$AFP <- dataset$IFPUG
+    profileData$ProjEff <- effortData
+    write.csv(format(profileData, digits=2, nsmall=2), file = "profileData.csv")
+  }
   
   swtiii$cuts = NULL;
   swtiii$m = bayesianModel;
@@ -1012,8 +1033,14 @@ trainsaction_based_model <- function(modelData){
   SWTIIIModelSelector <- 3
  
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
+  
   swtiiiParams = list(
     cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
     SWTIIIresults = SWTIIIresults
   )
 }

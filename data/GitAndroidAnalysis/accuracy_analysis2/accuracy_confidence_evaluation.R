@@ -83,15 +83,20 @@ for(i in 1:nfold){
 	  
 	  predicted = m_predict(model, testData)
 	  
+	  #print(predicted)
 	  actual = testData$Effort
 	  names(actual) <- rownames(testData)
+	  #print(actual)
 	  
 	  intersectNames <- intersect(names(predicted), names(actual))
 	  
-	  model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames] )
+	  model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
+	  #print(model_eval_predict)
+	  
 	  eval_metric_results = list()
 	  
 	  model_eval_mre = apply(model_eval_predict, 1, mre)
+	  
 	  
 	  model_eval_mre <- na.omit(model_eval_mre)
 	  #print(model_eval_mre)
@@ -213,6 +218,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
       intersectNames <- intersect(names(predicted), names(actual))
       
       model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames] )
+      print(model_eval_predict)
       
       eval_metric_results = list()
       
