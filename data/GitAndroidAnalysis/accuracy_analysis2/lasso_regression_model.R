@@ -87,9 +87,9 @@ lines(log(lambda_list),overall_mean_pred,xlim=range(log(lambda_list)), ylim=rang
 
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
-
-  x_data <- data.matrix(data[ind_variables])
-  y_data <- data.matrix(data[c("Effort")])
+  ind_variables = c("Activity_Num", "Component_Num", "Precedence_Num",	"Stimulus_Num",	"Response_Num",	"Tran_Num",	"UseCase_Num",	"Activity_Num",	"Actor_Num", "Avg_Actor",	"Boundary_Num")
+  x_data <- data.matrix(dataset[ind_variables])
+  y_data <- data.matrix(dataset[c("Effort")])
   lasso_lm <- glmnet(x = x_data, y = y_data, alpha = 1, standardize = T)
   print(lasso_lm$lambda)
   plot(lasso_lm)
@@ -104,12 +104,8 @@ m_predict.lasso <- function(lasso, testData){
   pred <- predict(lasso$m,newx=testData,s=lasso$lambda)
 }
 
-lasso_model <- function(){
+lasso_model <- function(dataset){
   
-  models = list()
-  
-  models$lasso = list()
-  
-  models
+  parameters = list()
   
 }

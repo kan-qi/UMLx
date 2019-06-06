@@ -93,7 +93,7 @@ m_predict.ln_sloc <- function(ln_sloc, testData){
 }
 
 
-size_metric_models <- function(){
+size_metric_models <- function(dataset){
   
   models = list()
   

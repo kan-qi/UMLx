@@ -21,16 +21,56 @@ predR <- function(mre, predRange) {
 
 #modelBenchmark would preform both cross validation and bootrapping significance test
 modelBenchmark <- function(models, dataset){
+  #evaluating the goodness of fit for the compared models: R^2 and Eta. Squared (for the standardized effect size)
+  goodness_fit_metrics <- c("R2", "eta-squared")
+  fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
-  
   cvResults <- cv(models, dataset, accuracy_metrics)
   bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
-  ret <-list(cvResults = cvResults, 
+  ret <-list(
+             fitResults = fitResults,
+             cvResults = cvResults, 
              bsResults = bsResults,
              model_names = names(models),
              accuracy_metrics = accuracy_metrics
              )
+}
+
+evalFit <- function(models, dataset, fit_metrics){
+  
+  modelNames = names(models)
+  
+  nmodels <- length(modelNames)
+  
+  nmetrics <- length(fit_metrics)
+  
+  eval_metric_results = list()
+  
+  for(j in 1:nmodels){
+    modelName <- modelNames[j]
+    
+    print(modelName)
+    
+    model = fit(dataset, modelNames[j], models[[j]])
+    
+    predicted = m_predict(model, dataset)
+    
+    #print(predicted)
+    actual = dataset$Effort
+    names(actual) <- rownames(dataset)
+    #print(actual)
+    
+    intersectNames <- intersect(names(predicted), names(actual))
+    
+    model_eval_fit = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
+    #print(model_eval_predict)
+    
+    #calculate R2 and Eta-squared based on the predicted and actual values.
+    #add the evaluationr esults to the "eval_metric_results"
+  }
+  
+  eval_metric_results
 }
   
 cv <- function(models, dataset, accuracy_metrics){
@@ -44,7 +84,6 @@ folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
 modelNames = names(models)
 
 nmodels <- length(modelNames)
-
 
 nmetrics <- length(accuracy_metrics)
 

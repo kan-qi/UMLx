@@ -47,12 +47,10 @@ m_predict.reg_tree <- function(reg_tree, testData, predictors = 'default'){
     predict(reg_tree$m, test_df)
 }
 
-regression_tree_model <- function(){
+regression_tree_model <- function(dataset){
   
-  models = list()
+  parameters = list()
   
-  models$reg_tree = list()
-  
-  models
+  parameters
   
 }

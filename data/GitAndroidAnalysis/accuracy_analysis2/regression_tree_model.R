@@ -8,12 +8,8 @@ m_predict.reg_tree <- function(reg_tree, testData){
   predict(reg_tree$m, testData)
 }
 
-regression_tree_model <- function(){
+regression_tree_model <- function(dataset){
   
-  models = list()
-  
-  models$reg_tree = list()
-  
-  models
+  parameters = list()
   
 }
