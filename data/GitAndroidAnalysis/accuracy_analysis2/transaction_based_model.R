@@ -877,10 +877,10 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
     rownames(cutPoints) <- parameters
     for (p in parameters) {
-      cutPoints[p, ] <- discretize(combinedData[,p], i)
+      cutPoints[p, ] <- discretize(transactionData$combined[,p], i)
     }
     #generate classified regression data
-    regressionData <- generateRegressionData(projects, cutPoints, effortData, transactionFiles)
+    regressionData <- generateRegressionData(transactionData$projects, cutPoints, transactionData$effort, transactionData$transactionFiles)
     
     `%ni%` <- Negate(`%in%`)
     paramVals <- bayesfit(regressionData, 10000, 500)

@@ -63,16 +63,16 @@ size_models <- size_metric_models(modelData)
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-models$step_lnr <- stepwise_linear_model(modelData)
+##models$step_lnr <- stepwise_linear_model(modelData)
 
 #initialize the neuralnet model
-models$neuralnet = neuralnet_model(modelData)
+##models$neuralnet = neuralnet_model(modelData)
 
 #initialize the lasso regression model. having problems, need to debug
-#models$lasso = lasso_model(modelData)
+##models$lasso = lasso_model(modelData)
 
 #initialize the regression tree model
-models$reg_tree = regression_tree_model(modelData)
+##models$reg_tree = regression_tree_model(modelData)
 
 #load the machine learning based models
 #to create a model, following 3 steps:
