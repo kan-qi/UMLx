@@ -211,6 +211,9 @@ m_fit.neuralnet <- function(neuralnet, dataset){
   library(caret)
   library(dplyr)
   
+  #dataset <- modelData
+  #neuralnet <- models$neuralnet
+  
   # Set the seeds
   set.seed(1984)
   
@@ -268,6 +271,7 @@ m_fit.neuralnet <- function(neuralnet, dataset){
   # Stop parallel processing
   stopParallelProcessing(cluster)
   neuralnet$m = nnet.model
+  print("finished training")
   neuralnet
 }
 

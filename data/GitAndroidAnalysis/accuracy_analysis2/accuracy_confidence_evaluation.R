@@ -26,11 +26,11 @@ modelBenchmark <- function(models, dataset){
   fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
-  cvResults <- cv(models, dataset, accuracy_metrics)
+  #cvResults <- cv(models, dataset, accuracy_metrics)
   bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(
              fitResults = fitResults,
-             cvResults = cvResults, 
+             #cvResults = cvResults, 
              bsResults = bsResults,
              model_names = names(models),
              accuracy_metrics = accuracy_metrics
@@ -104,6 +104,8 @@ foldResults1 <- array(0,dim=c(predRange,nmodels,nfold))
 
 #Perform 10 fold cross validation
 for(i in 1:nfold){
+  print("iter:")
+  print(i)
 	#Segement your data by fold using the which() function
 	testIndexes <- which(folds==i,arr.ind=TRUE)
 	
@@ -120,12 +122,14 @@ for(i in 1:nfold){
 	  
 	  model = fit(trainData, modelNames[j], models[[j]])
 	  
-	  predicted = m_predict(model, testData)
+	  predicted = as.vector(m_predict(model, testData))
+	  names(predicted) <- rownames(testData)
+	  print(predicted)
 	  
-	  #print(predicted)
 	  actual = testData$Effort
 	  names(actual) <- rownames(testData)
-	  #print(actual)
+	  
+	  print(actual)
 	  
 	  intersectNames <- intersect(names(predicted), names(actual))
 	  
@@ -135,7 +139,8 @@ for(i in 1:nfold){
 	  eval_metric_results = list()
 	  
 	  model_eval_mre = apply(model_eval_predict, 1, mre)
-	  
+	  print("mre")
+	  print(model_eval_mre)
 	  
 	  model_eval_mre <- na.omit(model_eval_mre)
 	  #print(model_eval_mre)
@@ -193,7 +198,8 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   # create 10000 samples of size 50
   N <- nrow(dataset)
   #niters <- 10
-  sample_size <- as.integer(0.83*N)
+  #sample_size <- as.integer(0.83*N)
+  sample_size <- N
   
   niters <- 100
   
@@ -221,14 +227,11 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
     model_accuracy_indice <- cbind(model_accuracy_indice, paste(modelName, accuracy_metrics, sep="_"));
   }
   
-  
   iterResults <- matrix(nrow=niters, ncol=nmodels*nmetrics)
   colnames(iterResults) <- model_accuracy_indice
   
-  
   iterResults1 <- array(0,dim=c(predRange,nmodels,niters))
-  
-  
+
   for (i in 1:niters){
     sampleIndexes <- sample(1:N, size=sample_size)
     # train:test = 40:10
@@ -249,6 +252,8 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
       
       predicted = m_predict(model, testData)
       #print(predicted)
+      names(predicted) <- rownames(testData)
+      print(predicted)
       
       actual = testData$Effort
       names(actual) <- rownames(testData)
