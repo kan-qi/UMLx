@@ -26,11 +26,11 @@ modelBenchmark <- function(models, dataset){
   fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
-  #cvResults <- cv(models, dataset, accuracy_metrics)
+  cvResults <- cv(models, dataset, accuracy_metrics)
   bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(
              fitResults = fitResults,
-             #cvResults = cvResults, 
+             cvResults = cvResults, 
              bsResults = bsResults,
              model_names = names(models),
              accuracy_metrics = accuracy_metrics

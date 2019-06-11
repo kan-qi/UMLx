@@ -157,15 +157,29 @@ df$metric_labels <- metric_labels
 for (i in 1:length(metric_labels)){
     g = metric_labels[i]
     selectedData <- df[df$metric_labels == g,]
-    p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) + 
-    geom_crossbar(width = 0.5, position = "dodge") + 
-    #coord_flip() +
-    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
+    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
+    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
     xlab('model') +
     ylab(g) +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
     ggtitle(g)
     print(p)
 }
+
+
+# for (i in 1:length(metric_labels)){
+#     g = metric_labels[i]
+#     selectedData <- df[df$metric_labels == g,]
+#     p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) +
+#     geom_crossbar(width = 0.5, position = "dodge") +
+#     #coord_flip() +
+#     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+#     xlab('model') +
+#     ylab(g) +
+#     ggtitle(g)
+#     print(p)
+# }
 
 # family-wise hypothesis test
 source('familywiseHypoTest2.R')
@@ -177,5 +191,4 @@ foldResults <- cvResults$foldResults
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names)
 
 head(sig_bs)
-
 ```
