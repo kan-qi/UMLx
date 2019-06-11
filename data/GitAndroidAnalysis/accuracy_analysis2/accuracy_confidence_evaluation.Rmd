@@ -14,8 +14,6 @@ source("transaction_based_model.R")
 source("size_metric_based_models.R")
 source("neuralnet_model_1.R")
 source("stepwise_linear_model.R")
-source("lasso_regression_model.R")
-source("regression_tree_model_1.R")
 library(jsonlite)
 library(reshape)
 library(tidyverse)
@@ -58,21 +56,21 @@ models = list()
 models$tm1 = trainsaction_based_model(modelData)
 
 #initialize the size metric based models
-size_models <- size_metric_models(modelData)
+size_models <- size_metric_models()
 #register the list of the size metric based models. 
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-models$step_lnr <- stepwise_linear_model(modelData)
+##models$step_lnr <- stepwise_linear_model(modelData)
 
 #initialize the neuralnet model
-models$neuralnet = neuralnet_model(modelData)
+##models$neuralnet = neuralnet_model(modelData)
 
-#initialize the lasso regression model. having problems
-#models$lasso = lasso_model(modelData)
+#initialize the lasso regression model
+##models$lasso = lass_model(modelData)
 
-#initialize the regression tree model
-models$reg_tree = regression_tree_model(modelData)
+#models$ucp = list()
+#models$cocomo = list()
 
 #load the machine learning based models
 #to create a model, following 3 steps:
@@ -157,15 +155,29 @@ df$metric_labels <- metric_labels
 for (i in 1:length(metric_labels)){
     g = metric_labels[i]
     selectedData <- df[df$metric_labels == g,]
-    p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) + 
-    geom_crossbar(width = 0.5, position = "dodge") + 
-    #coord_flip() +
-    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
+    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
+    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
     xlab('model') +
     ylab(g) +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
     ggtitle(g)
     print(p)
 }
+
+
+# for (i in 1:length(metric_labels)){
+#     g = metric_labels[i]
+#     selectedData <- df[df$metric_labels == g,]
+#     p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) +
+#     geom_crossbar(width = 0.5, position = "dodge") +
+#     #coord_flip() +
+#     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+#     xlab('model') +
+#     ylab(g) +
+#     ggtitle(g)
+#     print(p)
+# }
 
 # family-wise hypothesis test
 source('familywiseHypoTest2.R')
