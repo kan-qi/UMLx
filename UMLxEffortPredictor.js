@@ -18,17 +18,17 @@
 //	var EUCPModel = require("./effort_estimators/EUCPModel.js");
 //	var EXUCPModel = require("./effort_estimators/EXUCPModel.js");
 	
-	var EUCPModel = require("./effort_estimators/UCPModels.js").init("eucp_lm");
-	var EXUCPModel = require("./effort_estimators/UCPModels.js").init("exucp_lm");
-	var DUCPModel = require("./effort_estimators/UCPModels.js").init("ducp_lm");
+//	var EUCPModel = require("./effort_estimators/UCPModels.js").init("eucp_lm");
+//	var EXUCPModel = require("./effort_estimators/UCPModels.js").init("exucp_lm");
+//	var DUCPModel = require("./effort_estimators/UCPModels.js").init("ducp_lm");
 	
 //	var models = [EUCPModel, EXUCPModel, DUCPModel];
 	
-	var models = {
-			eucp_lm: EUCPModel,
-			exucp_lm : EXUCPModel,
-			ducp_lm: DUCPModel
-			};
+//	var models = {
+//		eucp_lm: EUCPModel,
+//		exucp_lm : EXUCPModel,
+//		ducp_lm: DUCPModel
+//	};
 	
 //	console.log(models);
 //	process.exit();
@@ -38,16 +38,44 @@
 		predictEffortByModel: function(modelInfo, estimationModel, callbackfunc){
 			console.log("project effort estimation");
 			console.log(estimationModel);
-			var predictionModel = models[estimationModel];
-			if(!predictionModel){
-				if(callbackfunc){
-					callbackfunc(false);
-				}
-				return;
-			}
-			
-			predictionModel.predictEffort(modelInfo, estimationModel, function(modelInfo){
-    			console.log("finished prediction 1");
+			//var predictionModel = models[estimationModel];
+			//* now instead of using individual nodejs files (under ./effort_estimators) for prediction functions, we now directly implement the prediction functions in the evaluators.
+
+//            console.log("started prediction 1");
+//            process.exit();
+
+            if(!estimationModel){
+                if(callbackfunc){
+                		callbackfunc(false);
+                }
+                return;
+            }
+
+                        var evaluators = umlModelEvaluator.evaluators;
+
+                        		    var predictionModel = null;
+
+                        		    for(var i in evaluators){
+                        		        var evaluator = evaluators[i];
+                        		        if(evaluator.getPredictionModels){
+                        		        var predictionModels = evaluator.getPredictionModels();
+                                        if(predictionModels && predictionModels[estimationModel]){
+                                            predictionModel = predictionModels[estimationModel];
+                                            break;
+                                        }
+                        		        }
+                        		    }
+
+			 if(!predictionModel){
+                            if(callbackfunc){
+                            		callbackfunc(false);
+                            }
+                            return;
+                        }
+
+			predictionModel.predictEffort(modelInfo, estimationModel, function(estimationResults){
+//    			console.log("finished prediction 1");
+//    			process.exit();
     			
     			if(!modelInfo){
     				if(callbackfunc){
@@ -55,16 +83,16 @@
     				}
     				return;
     			}
-    			
+//    			modelInfo[estimationModel]
     			if(callbackfunc){
-    				callbackfunc(modelInfo[estimationModel]);
+    				callbackfunc(estimationResults);
     			}
     		})
 		},
 		predictEffort: function(modelInfo, callbackfunc){
 			
 			  //use promise to construct the repo objects
-            function predictEffortWithModel(model, key){
+            function predictEffortM(model, key){
                 return new Promise((resolve, reject) => {
 
                 		model.predictEffort(modelInfo, key, function(modelInfo){
@@ -74,11 +102,27 @@
                         //console.log(modelInfo);
                 });
             }
+
+            var models = {}
+            var evaluators = umlModelEvaluator.evaluators;
+
+            		    var predictionModel = null;
+
+            		    for(var i in evaluators){
+            		        var evaluator = evaluators[i];
+            		        if(evaluator.getPredictionModels){
+            		        predictionModels = evaluator.getPredictionModels();
+                            for(var j in predictionModels){
+                                models[j] = predictionModels[j]
+                            }
+            		        }
+            		    }
+
             
-            console.log("keys");
-            console.log(models);
+//            console.log("keys");
+//            console.log(models);
 		    return Promise.all(Object.keys(models).map(key=>{
-                return predictEffortWithModel(models[key], key);
+                return predictEffortM(models[key], key);
             })).then(
                 function(){
                     return new Promise((resolve, reject) => {
@@ -101,11 +145,13 @@
                 }
             });
 		},
-		
+		queryExistingModels: function(modelSearchStr){
+
+		},
 		predictEffortRepo: function(repoInfo, callbackfunc){
 			  //use promise to construct the repo objects
 			
-            function predictEffortWithModel(modelInfo, estimationModel, key){
+            function predictEffortM(modelInfo, estimationModel, key){
                 return new Promise((resolve, reject) => {
 
                 		estimationModel.predictEffort(modelInfo, key, function(modelInfo){
@@ -116,14 +162,29 @@
                 });
             }
             
-            console.log("keys");
-            console.log(models);
+//            console.log("keys");
+//            console.log(models);
+
+            var models = {}
+            var evaluators = umlModelEvaluator.evaluators;
+
+            		    var predictionModel = null;
+
+            		    for(var i in evaluators){
+            		        var evaluator = evaluators[i];
+            		        if(evaluator.getPredictionModels){
+            		        predictionModels = evaluator.getPredictionModels();
+                            for(var j in predictionModels){
+                                models[j] = predictionModels[j]
+                            }
+            		        }
+            		    }
             
             var promiseTasks = [];
             for(var i in repoInfo.Models){
 				var modelInfo = repoInfo.Models[i];
 				Object.keys(models).map(key=>{
-	                promiseTasks.push(predictEffortWithModel(modelInfo, models[key], key));
+	                promiseTasks.push(predictEffortM(modelInfo, models[key], key));
 	            })
 			}
             

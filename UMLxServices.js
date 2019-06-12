@@ -835,7 +835,6 @@ app.get('/clearDB', function(req, res){
 	}
 })
 
-
 app.get('/setupRepoStorage', function(req, res){
 	var userId = req.query.user_id;
 	if(userId === "flyqk191829189181810282"){
@@ -875,9 +874,6 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxC
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
 });
-
-
-
 
 app.get('/thankYou', function(req, res){
 	res.render('thankYou');
@@ -1015,9 +1011,6 @@ app.get('/surveyAnalytics', function (req, res){
     // console.log(data)
     // res.sendStatus(200);
 });
-
-
-
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { name: 'uml_other', maxCount: 1 },
     { name: 'uml_model_name', maxCount: 1 }, { name: 'uml_model_type', maxCount: 1 }, { name: 'repo_id', maxCount: 1 }]), function (req, res) {
