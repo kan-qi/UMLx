@@ -40,6 +40,7 @@ function evaluateUploadedProject(req) {
     console.l("DEBUGGGG: start evaluating project");
     var umlFilePath = null;
     var umlOtherPath = null;
+    console.log(req);
     //need to implement unzipped xml file data-analysis, for now only process single xml file!!
     if(req.files['uml_file'] != null && req.files['uml_other'] != null){
         // console.log("================================path===================");

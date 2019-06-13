@@ -729,11 +729,11 @@ app.get('/login',function(req,res){
 });
 
 app.get('/logout',function(req,res){
-	if(req.cookies){
-		req.cookies.appToken = null;
-	}
-	
-	res.redirect('/login');
+	// if(req.cookies){
+	// 	req.cookies.appToken = null;
+	// }
+	res.clearCookie('appToken', {path : '/'});
+	res.redirect('/');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
@@ -747,11 +747,11 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 })
 
 app.get('/logout', function (req, res) {
-	if (req.cookies){
-		req.cookies.appTooken = null;
-	}
-
-	res.redirect('/login')
+	// if (req.cookies){
+	// 	// req.cookies.appToken = null;
+	// }
+	res.clearCookie('appToken', {path : '/'});
+	res.redirect('/');
 })
 
 
@@ -924,7 +924,10 @@ app.use(function(req, res, next) {
 	} else {
 
 	 // if there is no token
-		res.redirect('/login');
+	 req.userInfo = {};
+	 req.userInfo.repoId = '5cf9cf93049031c21c5e86a4';
+	  next();
+		 // res.redirect('/login');
 	}
 
 });
@@ -1038,13 +1041,14 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { n
         res.redirect('/'); // 第二次redirect 
     });
 
+	console.log(req);
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.l("DEBUGGGG: inside uploadUMLFile");
     sendPush(subscription, 'Project Analyzing');
     
-    console.l("DEBUGGGG: before evaluate project");
+	console.l("DEBUGGGG: before evaluate project");
 
     
     // setTimeout(() => evaluateUploadedProject(req), 2000);
@@ -1081,11 +1085,11 @@ function evaluateUploadedProject(req) {
     var umlFilePath = null;
     var umlOtherPath = null;
     //need to implement unzipped xml file data-analysis, for now only process single xml file!!
-    if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+    if(req.files['uml_file'] != null && req.files['uml_other'] != null){
         // console.log("================================path===================");
 
-        umlFilePath = req.files['uml-file'][0].path;
-        umlOtherPath = req.files['uml-other'][0].path;
+        umlFilePath = req.files['uml_file'][0].path;
+        umlOtherPath = req.files['uml_other'][0].path;
 
         // console.log(umlFilePath);
         // console.log(umlOtherPath);
@@ -1098,12 +1102,12 @@ function evaluateUploadedProject(req) {
             }
         });
     }
-    else if (req.files['uml-file'] != null) {
-        umlFilePath = req.files['uml-file'][0].path;
+    else if (req.files['uml_file'] != null) {
+        umlFilePath = req.files['uml_file'][0].path;
     }
     //same problem as above comment
-    else if (req.files['uml-other'] != null) {
-        umlOtherPath = req.files['uml-other'][0].path;
+    else if (req.files['uml_other'] != null) {
+        umlOtherPath = req.files['uml_other'][0].path;
 
         console.log("================================path===================");
         console.log(umlOtherPath);
@@ -1760,7 +1764,26 @@ app.get('/', function(req, res){
     
     if(currentPage >1){
         start = (currentPage - 1) * pageSize;
-    }
+	}
+
+	var profileInfo = {}
+	var userID = req.userInfo._id;
+	var profileRep = {}
+
+	profileInfo.userName = req.userInfo.userName;
+	profileInfo.email = req.userInfo.email;
+	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+	
+	umlModelInfoManager.getGitData(userID, function(gitData, success, msg){
+		if(success==true){
+			profileInfo.gitData = gitData;
+		}
+	
+		umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
+			profileRep = result.Repos[0];
+		});
+	});
+	
 
 //    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
     umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
@@ -1799,6 +1822,9 @@ app.get('/', function(req, res){
 			res.send("error");
 			return;
 		}
+
+		
+    	
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
 				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
@@ -1816,23 +1842,25 @@ app.get('/', function(req, res){
 						repoInfo.requestUUID = requestUUID;
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
-							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, profileInfo: profileInfo, profileRep: profileRep});
 					});
 				});
 			} else {
-                repoInfo.requestUUID = requestUUID;
+				repoInfo.requestUUID = requestUUID;
+				if (repoId === '5cf9cf93049031c21c5e86a4') {
+					res.render('index_login', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
+						repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
+						pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, profileInfo: profileInfo, profileRep: profileRep});
+				}
 				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
 					repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
-					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, profileInfo: profileInfo, profileRep: profileRep });
 			}
 
 		});
     });
          });
 	});
-
-
-
 });
 
 

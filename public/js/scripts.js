@@ -346,7 +346,6 @@ function predict_project_effort_func(show_loading_screen = true) {
         document.getElementById("loadingScreen").classList.remove("hidden");
     }
 
-    
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
@@ -361,7 +360,7 @@ function predict_project_effort_func(show_loading_screen = true) {
             // hide loading
             document.getElementById("loadingScreen").classList.add("hidden");
 
-            console.log(response);
+            console.log('inside post upload' + response);
             $("#estimation-result-panel-body").html(response);
             var estimationModel = $(response).data("estimation-model");
             // console.log(estimationModel);
