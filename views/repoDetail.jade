@@ -7,7 +7,7 @@ div.block.panel.panel-default
     div.tab-content
       div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0; margin-top: -60px")
         div.form-container
-          form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+          form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func("' + repoID + '")', method='post', action='/')
             // file browser
             div.input-group
                 input.form-control.form-blank(type='text',readonly)

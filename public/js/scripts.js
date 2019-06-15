@@ -335,7 +335,7 @@ function model_file_update_fnc() {
     return false;
 }
 
-function predict_project_effort_func(show_loading_screen = true) {
+function predict_project_effort_func(repoID, show_loading_screen = true) {
     var formData = new FormData($('#project-effort-prediction-form')[0]);
     console.log("starting the ajax call to some where");
     console.log(formData);
@@ -350,7 +350,7 @@ function predict_project_effort_func(show_loading_screen = true) {
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
-        url: "predictProjectEffort",
+        url: "predictProjectEffort?repoID=" + repoID,
         //url: "uploadUMLFile",
         cache: false,
         processData: false, // Don't process the files

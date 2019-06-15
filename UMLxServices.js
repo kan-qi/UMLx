@@ -657,7 +657,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		var umlModelType = "uml";
 		var umlModelName = "query1";
 		var formInfo = req.body;
-		umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
+		var repoID = req.query.repoID;
+		umlModelInfoManager.queryRepoInfo(repoID, function(repoInfo){
 			if(!repoInfo){
 				res.end("error");
 				return;
@@ -1867,7 +1868,8 @@ app.get('/queryUsers', function(req,res){
 });
 
 app.get('/listFileUnderDir', function(req, res) {
-	var filePath = req.query.fileFolder;
+	var filePath = '.' + req.query.fileFolder;
+	console.log(filePath);
 
 	var isAbsolute = false;
 	if(filePath.includes(":")){
