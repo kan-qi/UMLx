@@ -730,11 +730,8 @@ app.get('/login',function(req,res){
 });
 
 app.get('/logout',function(req,res){
-	if(req.cookies){
-		req.cookies.appToken = null;
-	}
-	
-	res.redirect('/login');
+	res.clearCookie('appToken', { path: '/' });
+	res.redirect('/');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
@@ -748,11 +745,8 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 })
 
 app.get('/logout', function (req, res) {
-	if (req.cookies){
-		req.cookies.appTooken = null;
-	}
-
-	res.redirect('/login')
+	res.clearCookie('appToken', { path: '/' });
+	res.redirect('/')
 })
 
 
@@ -883,7 +877,7 @@ app.get('/thankYou', function(req, res){
 //route middleware to verify a token
 app.use(function(req, res, next) {
 
-	var token =undefined ;
+	var token = undefined ;
 	if(req.cookies){
 		token = req.cookies.appToken;
 	}
@@ -906,22 +900,25 @@ app.use(function(req, res, next) {
 		    	req.userInfo.userName = user.username;
 		    	req.userInfo.repoId = user.repoId;
 		    	req.userInfo._id = user._id;
-		    	req.userInfo.isEnterprise = (user.isEnterprise?true:false);
+				req.userInfo.isEnterprise = (user.isEnterprise?true:false);
+				req.userInfo.isTempUser = false;
 		    	if(req.userInfo.isEnterprise){
 		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
 		    	}
-		    	req.userInfo.email = user.email;
-
-		     next();
-
+				req.userInfo.email = user.email;
+				next();
 		 	  });
 		   }
 		 });
-
 	} else {
-
-	 // if there is no token
-		res.redirect('/login');
+		umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
+			repoId = repoInfo._id;
+			req.userInfo = {};
+			req.userInfo.repoId = repoId;
+			req.userInfo.isTempUser = true;
+			console.log(repoId);
+			next();
+		})
 	}
 
 });
@@ -1744,89 +1741,91 @@ app.get('/', function(req, res){
 //        repID = repoInfo._id;
 //        //stepSize = repoInfo.Models.length;
 //        //pageSize = 3;
-    //    }
-
-
-
-    if(req.param('currentPage') != undefined){
-        currentPage = parseInt(req.param('currentPage'));
-    }
-    
-    if(currentPage >1){
-        start = (currentPage - 1) * pageSize;
-    }
-
-//    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
-    umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
-
-      
-//    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
-  umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
-
-  	console.log("==========================sfsdfsdfs==============");
-  	//console.log(repoInfo);
-
-  	umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
-  	    repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
-        repoInfo.NT = resultForRepoInfo.NT;
-        repoInfo.EntityNum = resultForRepoInfo.EntityNum;
-		var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
-		for (let i = 0, len = newKeys.length; i < len; ++i) {
-			repoInfo[newKeys[i]] = resultForRepoInfo[newKeys[i]];
-			totalVal[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+	//    }
+	
+	
+		if(req.param('currentPage') != undefined){
+			currentPage = parseInt(req.param('currentPage'));
 		}
-
-        totalUseCaseNum = resultForRepoInfo.UseCaseNum;
-        totalNT = resultForRepoInfo.NT;
-        totalEntityNum =  resultForRepoInfo.EntityNum;
 		
-	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
-      
-        totalRec = modelNum;
-        pageCount =  Math.ceil(totalRec/pageSize);
-       
-        console.log("total Records"+totalRec);
-        
-        console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
-		
-        if(!repoInfo){
-			res.send("error");
-			return;
+		if(currentPage >1){
+			start = (currentPage - 1) * pageSize;
 		}
-			if(req.userInfo.isEnterprise){
-				// get the repoinfo for all the repo that are part of this enterprise account
-				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
-					repoIds.push(req.userInfo.repoId);
-					//console.log(repoIds);
-					umlModelInfoManager.queryRepoInfoForAdmin(repoIds, function(modelArray){
-
-						for(var i in modelArray ){
-							var model = modelArray[i];
-							for(var j in model ){
-							repoInfo.Models.push(model[j]);
-							}
-						}
-						
-						repoInfo.requestUUID = requestUUID;
-						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
-							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
-							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
-					});
-				});
-			} else {
-                repoInfo.requestUUID = requestUUID;
-				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
-					repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
-					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+	
+	//    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+		umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
+	
+		  
+	//    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
+	  umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+	
+		  console.log("==========================sfsdfsdfs==============");
+		  //console.log(repoInfo);
+	
+		  umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
+			  repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
+			repoInfo.NT = resultForRepoInfo.NT;
+			repoInfo.EntityNum = resultForRepoInfo.EntityNum;
+			var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+			for (let i = 0, len = newKeys.length; i < len; ++i) {
+				repoInfo[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+				totalVal[newKeys[i]] = resultForRepoInfo[newKeys[i]];
 			}
-
+	
+			totalUseCaseNum = resultForRepoInfo.UseCaseNum;
+			totalNT = resultForRepoInfo.NT;
+			totalEntityNum =  resultForRepoInfo.EntityNum;
+			
+		  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
+		  
+			totalRec = modelNum;
+			pageCount =  Math.ceil(totalRec/pageSize);
+		   
+			console.log("total Records"+totalRec);
+			
+			console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
+			
+			if(!repoInfo){
+				res.send("error");
+				return;
+			}
+				if(req.userInfo.isEnterprise){
+					// get the repoinfo for all the repo that are part of this enterprise account
+					umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
+						repoIds.push(req.userInfo.repoId);
+						//console.log(repoIds);
+						umlModelInfoManager.queryRepoInfoForAdmin(repoIds, function(modelArray){
+	
+							for(var i in modelArray ){
+								var model = modelArray[i];
+								for(var j in model ){
+								repoInfo.Models.push(model[j]);
+								}
+							}
+							
+							repoInfo.requestUUID = requestUUID;
+							res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
+								repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
+								pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+						});
+					});
+				} else {
+					repoInfo.requestUUID = requestUUID;
+					if (req.userInfo.isTempUser) {
+						res.render('index_login', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
+							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
+							pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+					} else {
+						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
+							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
+							pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+					}
+				}
+	
+			});
 		});
-    });
-         });
-	});
-
-
-
+			 });
+		});
 });
 
 
