@@ -55,14 +55,14 @@ m_predict.cosmic <- function(cosmic, testData){
 }
 
 #define the mkii model
-m_fit.mkii <- function(mkii,dataset){
-  mkii$m = lm(Effort~MKII, data=dataset)
-  mkii
-}
+#m_fit.mkii <- function(mkii,dataset){
+#  mkii$m = lm(Effort~MKII, data=dataset)
+#  mkii
+#}
 
-m_predict.mkii <- function(mkii, testData){
-  predict(mkii$m, testData)
-}
+#m_predict.mkii <- function(mkii, testData){
+#  predict(mkii$m, testData)
+#}
 
 #define the sloc model
 m_fit.sloc <- function(sloc,dataset){
@@ -77,6 +77,8 @@ m_predict.sloc <- function(sloc, testData){
 #define the ln_sloc model
 #the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
 m_fit.ln_sloc <- function(ln_sloc, dataset){
+  #dataset <- modelData
+  #ln_sloc <- list()
   dataset <- dataset[dataset$SLOC!=0 & dataset$Effort != 0,]
   dataset$log_effort = log(dataset$Effort)
   dataset$log_sloc = log(dataset$SLOC)
@@ -85,9 +87,10 @@ m_fit.ln_sloc <- function(ln_sloc, dataset){
 }
 
 m_predict.ln_sloc <- function(ln_sloc, testData){
+  #testData <- modelData
   a = summary(ln_sloc$m)$coefficients[1,1]
   b = summary(ln_sloc$m)$coefficients[2,1]
-  predicted=testData$SLOC^b+exp(a)
+  predicted=exp(a)*testData$SLOC^b
   names(predicted) = rownames(testData)
   predicted
 }
@@ -119,7 +122,7 @@ size_metric_models <- function(dataset){
   
   #define the mkii model
   
-  models$mkii = list()
+  #models$mkii = list()
   
   #define the sloc model
   

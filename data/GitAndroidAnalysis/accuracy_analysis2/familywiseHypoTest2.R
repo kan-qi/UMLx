@@ -1,4 +1,46 @@
-familywiseHypoTest <- function(iterationResults, metric_names, model_names){
+singleHypoTest <- function(x, y, method='boot'){
+  #Args:
+  #method: 'boot': bootstrap shift test (default); 
+  #        't_test': T Test
+  #Return:
+  #p: p value
+  
+  t_test <- t.test(x, y)
+  
+  if (method == 't_test'){
+    p <- t_test$p.value
+  }
+  else if (method == 'double boot'){
+    #sample from H0 with no distribution assumption
+    #https://stats.stackexchange.com/questions/136661/using-bootstrap-under-h0-to-perform-a-test-for-the-difference-of-two-means-repl
+    print("double bootstrap")
+    nrounds <- 10000 #bootstrapping rounds
+    
+    z <- c(x,y)
+    xt <- x - mean(x) + mean(z)
+    yt <- y - mean(y) + mean(z)
+    
+    boot.t <- c(1:nrounds)
+    for (i in 1:nrounds){
+      sample.x <- sample(xt,size=50)
+      sample.y <- sample(yt,size=50)
+      boot.t[i] <- t.test(sample.x, sample.y)$statistic
+    }
+    p <- (1 + sum(abs(boot.t) > abs(t_test$statistic))) / (10000+1)
+  }
+  else if(method == "boot"){
+    print("bootstrap hypothesis test")
+    diff = x[1] - y[1]
+    diffs = x[-c(1)] - y[-c(1)]
+    diffs = diffs - mean(diffs)
+    p <- (1+sum(abs(diff) > abs(diffs)))/(10000+1)
+  }
+  
+  return(p)
+}
+
+
+familywiseHypoTest <- function(iterationResults, metric_names, model_names, method){
 
 #Args:
 #iterationResults: matrix of (nmoldes*nmetrics) columns, iteration results from CV or bootstrapping
@@ -14,6 +56,9 @@ familywiseHypoTest <- function(iterationResults, metric_names, model_names){
 
 #model_names <- c('ducp','ucp','cocomo','cocomo_apriori','IFPUG','MKII','COSMIC','SLOC','SLOC_LN')
 #metric_names <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
+#metric_names <- accuracy_metrics
+#iterationResults <- iterResults
+#method <- 'boot'
 
 nmodels <- length(model_names)
 
@@ -50,43 +95,6 @@ for(i in 1:nmodels){
   }
 }
 
-
-singleHypoTest <- function(x, y, method='boot'){
-#Args:
-#method: 'boot': bootstrap shift test (default); 
-#        't_test': T Test
-#Return:
-#p: p value
-
-t_test <- t.test(x, y)
-
-if (method == 't_test'){
-    p <- t_test$p.value
-}
-
-if (method == 'boot'){
-#sample from H0 with no distribution assumption
-#https://stats.stackexchange.com/questions/136661/using-bootstrap-under-h0-to-perform-a-test-for-the-difference-of-two-means-repl
-    
-    nrounds <- 10000 #bootstrapping rounds
-    
-    z <- c(x,y)
-    xt <- x - mean(x) + mean(z)
-    yt <- y - mean(y) + mean(z)
-    
-    boot.t <- c(1:nrounds)
-    for (i in 1:nrounds){
-        sample.x <- sample(xt,size=50)
-        sample.y <- sample(yt,size=50)
-        boot.t[i] <- t.test(sample.x, sample.y)$statistic
-    }
-    p <- (1 + sum(abs(boot.t) > abs(t_test$statistic))) / (10000+1)
-}
-
-return(p)
-}
-
-
 # for each accuracy metric, pair two models to construct hypothesis and run significance test
 # total number of hypothesis = C(nmodels, 2) * nmetrics
 i <- 1
@@ -107,7 +115,12 @@ for (k in 1:(nmodels-1)){
             x <- iterationResults[,id1]
             y <- iterationResults[,id2]
 
-            p <- singleHypoTest(x,y)
+            if(method == 'cv'){
+            p <- singleHypoTest(x,y, 't_test')
+            }
+            else {
+              p <- singleHypoTest(x,y,'boot')
+            }
             
             mu_1 <- mean(x)
             mu_2 <- mean(y)

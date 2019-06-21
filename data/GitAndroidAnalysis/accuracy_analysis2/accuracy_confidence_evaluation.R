@@ -19,6 +19,124 @@ predR <- function(mre, predRange) {
   eval_pred
 }
 
+profileData <- function(models, dataset){
+  #models = trainedModels
+  #dataset = modelData
+  
+  swti = models$tm1$m
+  swtii = models$tm2$m
+  swtiii = models$tm3$m
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData1 <- generateRegressionData(projects, swti$cuts, effortData, transactionFiles)
+  regressionData2 <- generateRegressionData(projects, swtii$cuts, effortData, transactionFiles)
+  regressionData3 <- generateRegressionData(projects, swtiii$cuts, effortData, transactionFiles)
+  
+  regLevels1 <- colnames(regressionData1)[!(colnames(regressionData1) %in% c("Effort"))]
+  regLevels2 <- colnames(regressionData2)[!(colnames(regressionData2) %in% c("Effort"))]
+  regLevels3 <- colnames(regressionData3)[!(colnames(regressionData3) %in% c("Effort"))]
+  
+  profileData <- matrix(nrow=nrow(dataset), ncol=17+length(regLevels1)+length(regLevels2)+length(regLevels3))
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swti_levels <- paste("swti_", regLevels1)
+  swtii_levels <- paste("swtii_", regLevels2)
+  swtiii_levels <- paste("swtiii_", regLevels3)
+  
+  colnames(profileData) <- c("Trans", "Stm", "Comp", 
+                             "TL", "TL_SE", "TD",
+                             "TD_SE", "DETs", "DETs_SE",
+                             swti_levels, swtii_levels, swtiii_levels,
+                             "SWTI", "SWTII", "SWTIII", "UUCP", "AFP", "SLOC", "COSMIC", "Effort")
+  profileData$Trans <- dataset$Tran_Num
+  profileData$Stm <- dataset$Stimulus_Num
+  profileData$Comp <- dataset$Component_Num
+  attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
+  attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
+  profileData$TL <- attr_means$TL
+  profileData$TD <- attr_means$TD
+  profileData$DETs <- attr_means$DETs
+  profileData$TL_SE <- attr_sds$TL
+  profileData$TD_SE <- attr_sds$TD
+  profileData$DETs_SE <- attr_sds$DETs
+  
+  regress1 <- as.matrix(regressionData1[,regLevels1])
+  rownames(regress1) <- rownames(regressionData1)
+  colnames(regress1) <- swti_levels
+  #print(regress1)
+  profileData[,swti_levels] <- regress1
+  
+  
+  regress2 <- as.matrix(regressionData2[,regLevels2])
+  rownames(regress2) <- rownames(regressionData2)
+  colnames(regress2) <- swtii_levels
+  #print(regress1)
+  profileData[,swtii_levels] <- regress2
+  
+  regress3 <- as.matrix(regressionData3[,regLevels3])
+  rownames(regress3) <- rownames(regressionData1)
+  colnames(regress3) <- swtiii_levels
+  #print(regress1)
+  profileData[,swtiii_levels] <- regress3
+  
+  profileData$SWTI <- calculateSize(as.matrix(models$tm1$m$paramVals), regressionData1)
+  profileData$SWTII <- calculateSize(as.matrix(models$tm2$m$paramVals), regressionData2) 
+  profileData$SWTIII <- calculateSize(as.matrix(models$tm3$m$paramVals), regressionData3) 
+  profileData$UUCP <- dataset$UUCP 
+  profileData$AFP <- dataset$IFPUG
+  profileData$Effort <- effortData
+  profileData$SLOC <- dataset$SLOC
+  profileData$COSMIC <- dataset$COSMIC
+  #write.csv(format(profileData, digits=2, nsmall=2), file = "profileData.csv")
+  profileData
+}
+
+#the batch method to train the models.
+modelTrain <- function(models, dataset){
+  trainedModels = list()
+  
+  modelNames = names(models)
+  
+  nmodels <- length(modelNames)
+  
+  for(i in 1:nmodels){
+    modelName <- modelNames[i]
+    
+    print(modelName)
+    
+    model = fit(dataset, modelNames[i], models[[i]])
+    
+    trainedModels[[modelName]] = model
+  }
+  
+  trainedModels
+}
+
+#the batach method to predict with all the trained models
+modelPredict <- function(models, dataset){
+  predictions = list()
+  
+  modelNames = names(models)
+  
+  nmodels <- length(modelNames)
+  
+  for(i in 1:nmodels){
+    modelName <- modelNames[i]
+    
+    print(modelName)
+
+    
+    predictions[[modelName]] = m_predict(models[[modelName]], dataset)
+  }
+  
+  predictions
+}
+
 #modelBenchmark would preform both cross validation and bootrapping significance test
 modelBenchmark <- function(models, dataset){
   #evaluating the goodness of fit for the compared models: R^2 and Eta. Squared (for the standardized effect size)
@@ -230,16 +348,25 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   iterResults <- matrix(nrow=niters, ncol=nmodels*nmetrics)
   colnames(iterResults) <- model_accuracy_indice
   
-  iterResults1 <- array(0,dim=c(predRange,nmodels,niters))
+  iterResults1 <- array(0,dim=c(predRange,nmodels,niters+1))
 
   for (i in 1:niters){
-    sampleIndexes <- sample(1:N, size=sample_size)
+    
+    if(i == 1){
+      resample = dataset
+    }
+    else{
+      resampleIndexes <- sample(1:N, size=sample_size, replace=TRUE)
+      resample = dataset[resampleIndexes,]
+    }
+    
+    #sampleIndexes <- sample(1:N, size=sample_size)
     # train:test = 40:10
     train_data_size = as.integer(0.8*sample_size)
-    trainIndexes <- sample(sampleIndexes, size=train_data_size)
+    trainIndexes <- sample(1:N, size=train_data_size)
     
-    trainData <- dataset[trainIndexes, ]
-    testData <- dataset[-trainIndexes, ]
+    trainData <- resample[trainIndexes, ]
+    testData <- resample[-trainIndexes, ]
     
     eval_metrics = c()
     eval_pred = c()
