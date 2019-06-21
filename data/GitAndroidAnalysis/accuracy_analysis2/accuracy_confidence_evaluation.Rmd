@@ -89,6 +89,7 @@ comparison between the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, u
 ```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
 
 benchmarkResults <- modelBenchmark(models, modelData)
+benchmarkResults
 
 model_names <- benchmarkResults$model_names
 accuracy_metrics <- benchmarkResults$accuracy_metrics
@@ -167,7 +168,6 @@ for (i in 1:length(metric_labels)){
     print(p)
 }
 
-
 # for (i in 1:length(metric_labels)){
 #     g = metric_labels[i]
 #     selectedData <- df[df$metric_labels == g,]
@@ -180,6 +180,38 @@ for (i in 1:length(metric_labels)){
 #     ggtitle(g)
 #     print(p)
 # }
+
+#rank the cv results of different metric
+
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$model_labels <- model_labels
+cvAccuracyResults$metric_labels <- metric_labels
+
+cvRankResults <- data.frame(names(models))
+names(cvRankResults)<-c("model_labels")
+
+for (i in 1:length(accuracy_metrics)){
+  g = metric_labels[i]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  names(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#change the first line as the row name
+rownames(cvRankResults) = cvRankResults[,1]
+cvRankResults <- cvRankResults[,-1]
+
+cvRankResults
+
+
+
 
 # family-wise hypothesis test
 source('familywiseHypoTest2.R')
