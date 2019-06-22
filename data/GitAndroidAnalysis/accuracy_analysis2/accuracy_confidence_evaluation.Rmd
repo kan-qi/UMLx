@@ -23,6 +23,7 @@ library(fitdistrplus)
 library(egg)
 library(gridExtra)
 library(plyr)
+library(lsr)
 require(MASS)
 
 ```
@@ -59,6 +60,8 @@ models = list()
 transaction_models <- trainsaction_based_model(modelData)
 models = append(models, transaction_models)
 
+models.tm3 <- trainsaction_based_model3(modelData)
+
 #initialize the size metric based models
 size_models <- size_metric_models(modelData)
 #register the list of the size metric based models. 
@@ -92,7 +95,11 @@ models = append(models, size_models)
 #using the entire dataset to train the models
 #currentModels = models
 #models = currentModels
-trainedModels <-modelTrain(models, modelData)
+
+fitEval = evalFit(models, modelData, c("R2", "eta-squared"))
+
+trainedModels <-modelT
+rain(models, modelData)
 outputData <- profileData(trainedModels, modelData)
 
 sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
@@ -256,7 +263,7 @@ for (i in 1:length(accuracy_metrics)){
 rownames(cvRankResults) = cvRankResults[,1]
 cvRankResults <- cvRankResults[,-1]
 
-cvRankResults
+print(round(cvRankResults,2))
 
 # family-wise hypothesis test
 source('familywiseHypoTest2.R')
@@ -267,6 +274,19 @@ foldResults <- cvResults$foldResults
 
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
 
-head(sig_bs)
+
+round_df <- function(df, digits) {
+  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
+
+  df[,nums] <- round(df[,nums], digits = digits)
+
+  (df)
+}
+sig_bs_f = sig_bs[which(sig_bs$bonferroni_p_value < 0.05),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "pred15", "pred25", "pred50")),]
+sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
+sig_bs_f = round_df(sig_bs_f, 2)
+
+# filter for 
 
 ```

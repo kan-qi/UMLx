@@ -156,6 +156,7 @@ modelBenchmark <- function(models, dataset){
 }
 
 evalFit <- function(models, dataset, fit_metrics){
+  dataset = modelData
   
   modelNames = names(models)
   
@@ -186,6 +187,30 @@ evalFit <- function(models, dataset, fit_metrics){
     
     #calculate R2 and Eta-squared based on the predicted and actual values.
     #add the evaluationr esults to the "eval_metric_results"
+    
+    #calculate R2 and Eta-squared based on the predicted and actual values.
+    npoints <- nrow(model_eval_fit)
+    grouping <- c(1:npoints, 1:npoints)
+    anova <- aov( c(model_eval_fit$predicted, model_eval_fit$actual) ~ grouping )
+    eta_squared <- etaSquared(anova)[1,1]
+    #print(eta_squared)
+    
+    meanActual <- mean(model_eval_fit$actual)
+    r_squared <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
+    #print(r_squared)
+    
+    #f-test
+    f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)
+    
+    #LM <- lm( c(model_eval_fit$predicted, model_eval_fit$actual) ~ grouping );
+    #r_squared <- summary(LM)$r.squared
+    #print(r_squared)
+    
+    #add the evaluation results to the "eval_metric_results"
+    eval_metric_results[[modelName]] = list(eta_squared = eta_squared, 
+                                            r_squared = r_squared,
+                                            model_eval_fit = model_eval_fit,
+                                            f_test = f_test)
   }
   
   eval_metric_results
