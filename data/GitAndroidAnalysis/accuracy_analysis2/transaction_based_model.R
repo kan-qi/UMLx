@@ -1056,7 +1056,7 @@ trainsaction_based_model <- function(modelData){
  
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
   
-  models$tm3 = list(
+  models$tm2 = list(
     cuts = modelParams$cuts,
     trainedModel = list(
       weights = lapply(modelParams$weights,Bayes.sum),
@@ -1070,7 +1070,7 @@ trainsaction_based_model <- function(modelData){
   SWTIIModelSelector <- 4
   modelParams = SWTIIresults[[SWTIIModelSelector]][["bayesModel"]]
   
-  models$tm2 = list(
+  models$tm3 = list(
     cuts = modelParams$cuts,
     trainedModel = list(
       weights = lapply(modelParams$weights,Bayes.sum),

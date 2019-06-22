@@ -33,7 +33,7 @@ Combined Data Effort Values
 #The current dataset
 #modelData <- selectData("dsets/android_dataset_6_4.csv")
 #modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
-modelData <- selectData("../android_analysis_datasets/android_dataset_6_20.csv")
+modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv")
 rownames(modelData) <- modelData$Project
 modelData$Project <- NULL
 
@@ -229,6 +229,35 @@ for (i in 1:length(accuracy_metrics)){
 #     print(p)
 # }
 
+#rank the cv results of different metric
+
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$model_labels <- model_labels
+cvAccuracyResults$metric_labels <- metric_labels
+
+cvRankResults <- data.frame(names(models))
+names(cvRankResults)<-c("model_labels")
+
+for (i in 1:length(accuracy_metrics)){
+  g = metric_labels[i]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  names(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#change the first line as the row name
+rownames(cvRankResults) = cvRankResults[,1]
+cvRankResults <- cvRankResults[,-1]
+
+cvRankResults
+
 # family-wise hypothesis test
 source('familywiseHypoTest2.R')
 foldResults <- cvResults$foldResults
@@ -239,4 +268,5 @@ foldResults <- cvResults$foldResults
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
 
 head(sig_bs)
+
 ```
