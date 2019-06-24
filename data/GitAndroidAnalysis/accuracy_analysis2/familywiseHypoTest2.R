@@ -78,7 +78,10 @@ print(nhypo)
 dfHypothesis <- matrix(nrow=nhypo,ncol=4)
 colnames(dfHypothesis) <- c('model1','model2','metric','direction')
 dfPValue <- matrix(nrow=nhypo,ncol=5)
-colnames(dfPValue) <- c('model1_mean','model2_mean','p_value','BH_p_value','bonferroni_p_value')
+colnames(dfPValue) <- c('model1_mean','model2_mean', 'p_value','BH_p_value','bonferroni_p_value')
+
+dfeffectS <- matrix(nrow=nhypo, ncol=1)
+colnames(dfeffectS) <- c('cohen_d')
 
 model_metric_name <- names(iterationResults)
 model_labels <- c()
@@ -125,6 +128,13 @@ for (k in 1:(nmodels-1)){
             mu_1 <- mean(x)
             mu_2 <- mean(y)
             
+            n1 = length(x)
+            n2 = length(y)
+            s1_squared = sum((x-mu_1)^2)/(n1-1)
+            s2_squared = sum((y-mu_2)^2)/(n2-1)
+            s = sqrt(((n1-1)*s1_squared+(n2-1)*s2_squared))/(n1+n2-2)
+            cohen_d <- (mu_1-mu_2)/s
+            
             d <- mu_1 - mu_2
             if (d>0){
                 direction <- '+'
@@ -138,6 +148,7 @@ for (k in 1:(nmodels-1)){
 
             dfHypothesis[i,] <- c(model_labels[id1], model_labels[id2], metric_labels[id1], direction)
             dfPValue[i,1:3] <- c(mu_1, mu_2, p)
+            dfeffectS[i, 1] <- cohen_d
             
             i <- i+1
         }        
@@ -158,6 +169,7 @@ sig_df <- data.frame(model1=dfHypothesis[,'model1'],
                   model2_mean=dfPValue[,'model2_mean'],
                   p_value=dfPValue[,'p_value'],
                   BH_p_value=dfPValue[,'BH_p_value'],
-                  bonferroni_p_value=dfPValue[,'bonferroni_p_value'])
+                  bonferroni_p_value=dfPValue[,'bonferroni_p_value'],
+                  cohen_d=dfeffectS[,'cohen_d'])
 return(sig_df)
 }

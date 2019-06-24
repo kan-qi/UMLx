@@ -95,6 +95,15 @@ m_predict.ln_sloc <- function(ln_sloc, testData){
   predicted
 }
 
+#the baseline model which only takes the average of the output traning dataset.
+m_fit.baseline_model <- function(baseline_model, dataset){
+  baseline_model$m = list(mean_value = mean(dataset$Effort))
+}
+
+m_predict.baseline_model <- function(baseline_model, testData){
+  baseline_model$m$mean_value
+}
+
 
 size_metric_models <- function(dataset){
   
@@ -131,6 +140,9 @@ size_metric_models <- function(dataset){
   #define the ln_sloc model
   
   models$ln_sloc = list()
+  
+  #define the baseline model
+  #models$baseline_model = list()
   
   models
   

@@ -57,10 +57,10 @@ modelData$Project <- NULL
 
 models = list()
 #register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
-transaction_models <- trainsaction_based_model(modelData)
-models = append(models, transaction_models)
+#transaction_models <- trainsaction_based_model(modelData)
+#models = append(models, transaction_models)
 
-models.tm3 <- trainsaction_based_model3(modelData)
+models$tm3 <- trainsaction_based_model3(modelData)
 
 #initialize the size metric based models
 size_models <- size_metric_models(modelData)
@@ -98,8 +98,7 @@ models = append(models, size_models)
 
 fitEval = evalFit(models, modelData, c("R2", "eta-squared"))
 
-trainedModels <-modelT
-rain(models, modelData)
+trainedModels <-modelTrain(models, modelData)
 outputData <- profileData(trainedModels, modelData)
 
 sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
@@ -284,8 +283,10 @@ round_df <- function(df, digits) {
 }
 sig_bs_f = sig_bs[which(sig_bs$bonferroni_p_value < 0.05),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "pred15", "pred25", "pred50")),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
 sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
 sig_bs_f = round_df(sig_bs_f, 2)
+print(sig_bs_f)
 
 # filter for 
 
