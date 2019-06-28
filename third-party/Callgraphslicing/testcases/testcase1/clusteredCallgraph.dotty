@@ -1,0 +1,48 @@
+digraph g {compound=true
+subgraph cluster_3 {"Lapigee.js/apigee.js@19114/apigee.js@24099" [color=green, shape=box]
+}
+subgraph cluster_4 {"Lclient.js/saveData/client.js@8499" [color=green, shape=box]
+}
+subgraph cluster_1 {"Lpreamble.js/DOMWindow/window_open" [color=yellow]
+}
+subgraph cluster_2 {"Lapigee.js/apigee.js@19114/apigee.js@19230" [color=green, shape=box]
+}
+subgraph cluster_0 {"Lpreamble.js/DOMDocument/Document_prototype_write" [color=yellow]
+}
+subgraph cluster_10 {"LFakeRoot" [color=red]
+}
+subgraph cluster_9 {"Lclient.js" [color=red]
+}
+subgraph cluster_7 {"Lclient.js/queryAppServices2" [color=red]
+}
+subgraph cluster_8 {"Lclient.js/queryAppServices" [color=red]
+}
+subgraph cluster_5 {"Lclient.js/queryAppServices/client.js@820" [color=red]
+"Lapigee.js/apigee.js@19114/apigee.js@27134" [color=red]
+"Lclient.js/queryAppServices2/client.js@4028" [color=red]
+"Lapigee.js/apigee.js@19114/apigee.js@27134"->"Lclient.js/queryAppServices/client.js@820"
+"Lapigee.js/apigee.js@19114/apigee.js@27134"->"Lclient.js/queryAppServices2/client.js@4028"
+}
+subgraph cluster_6 {"Lclient.js/queryAppServices3" [color=red]
+"Lclient.js/saveData" [color=red]
+"Lclient.js/queryAppServices3"->"Lclient.js/saveData"
+}
+"Lclient.js/saveData/client.js@8499"->"Lapigee.js/apigee.js@19114/apigee.js@19230"[ltail=cluster_4,lhead=cluster_2]
+"Lclient.js/saveData/client.js@8499"->"Lapigee.js/apigee.js@19114/apigee.js@24099"[ltail=cluster_4,lhead=cluster_3]
+"Lclient.js/queryAppServices/client.js@820"->"Lpreamble.js/DOMDocument/Document_prototype_write"[ltail=cluster_5,lhead=cluster_0]
+"Lapigee.js/apigee.js@19114/apigee.js@27134"->"Lclient.js/saveData/client.js@8499"[ltail=cluster_5,lhead=cluster_4]
+"Lclient.js/queryAppServices2/client.js@4028"->"Lclient.js/queryAppServices3"[ltail=cluster_5,lhead=cluster_6]
+"Lclient.js/queryAppServices/client.js@820"->"Lclient.js/queryAppServices2"[ltail=cluster_5,lhead=cluster_7]
+"Lclient.js/queryAppServices3"->"Lpreamble.js/DOMDocument/Document_prototype_write"[ltail=cluster_6,lhead=cluster_0]
+"Lclient.js/queryAppServices3"->"Lpreamble.js/DOMWindow/window_open"[ltail=cluster_6,lhead=cluster_1]
+"Lclient.js/saveData"->"Lapigee.js/apigee.js@19114/apigee.js@19230"[ltail=cluster_6,lhead=cluster_2]
+"Lclient.js/saveData"->"Lapigee.js/apigee.js@19114/apigee.js@27134"[ltail=cluster_6,lhead=cluster_5]
+"Lclient.js/queryAppServices2"->"Lapigee.js/apigee.js@19114/apigee.js@19230"[ltail=cluster_7,lhead=cluster_2]
+"Lclient.js/queryAppServices2"->"Lapigee.js/apigee.js@19114/apigee.js@27134"[ltail=cluster_7,lhead=cluster_5]
+"Lclient.js/queryAppServices2"->"Lclient.js/queryAppServices3"[ltail=cluster_7,lhead=cluster_6]
+"Lclient.js/queryAppServices"->"Lapigee.js/apigee.js@19114/apigee.js@19230"[ltail=cluster_8,lhead=cluster_2]
+"Lclient.js/queryAppServices"->"Lapigee.js/apigee.js@19114/apigee.js@27134"[ltail=cluster_8,lhead=cluster_5]
+"Lclient.js/queryAppServices"->"Lclient.js/queryAppServices3"[ltail=cluster_8,lhead=cluster_6]
+"Lclient.js"->"Lclient.js/queryAppServices"[ltail=cluster_9,lhead=cluster_8]
+"LFakeRoot"->"Lclient.js"[ltail=cluster_10,lhead=cluster_9]
+}

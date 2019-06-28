@@ -1,0 +1,145 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor User
+participant "UserInfo" as 09
+participant "Status Notification" as 19
+participant "approvesignupscreen" as 39
+participant "Meeting Log" as 59
+participant "Displayerrormessage" as 89
+participant "Meeting Minute" as 209
+
+Admin -> 09: Viewuserregistrationinfo()
+activate 09
+
+09 -> 39: approveuserregistration()
+activate 39
+
+39 -> 09: userinfo()
+deactivate 09
+
+deactivate 39
+
+User -> 19: Notificationofunsuccessfulregistration()
+activate 19
+
+deactivate 19
+
+User -> 09: Invalidinformation()
+activate 09
+
+deactivate 09
+
+User -> 39: signuppage()
+activate 39
+
+39 -> 09: saveuserinfoforadmin()
+activate 09
+
+09 -> 89: Displayerrormessage()
+activate 89
+
+89 -> 09: Invalidinformation()
+deactivate 09
+
+deactivate 89
+
+09 -> 19: Notificationofunsuccessfulregistration()
+activate 19
+
+deactivate 19
+
+09 -> 09: Userinfoalreadycreated()
+activate 09
+
+deactivate 09
+
+09 -> 09: Viewuserregistrationinfo()
+activate 09
+
+09 -> 39: approveuserregistration()
+deactivate 39
+
+deactivate 09
+
+09 -> 19: notificationofsuccessfulregistration()
+activate 19
+
+deactivate 19
+
+09 -> 09: userinfo()
+activate 09
+
+deactivate 09
+
+39 -> 209: selectadminoption()
+activate 209
+
+209 -> 09: saveuserinfoforadmin()
+activate 09
+
+09 -> 89: Displayerrormessage()
+activate 89
+
+deactivate 89
+
+09 -> 19: Notificationofunsuccessfulregistration()
+activate 19
+
+deactivate 19
+
+09 -> 09: Userinfoalreadycreated()
+deactivate 09
+
+09 -> 09: Viewuserregistrationinfo()
+activate 09
+
+deactivate 09
+
+09 -> 19: notificationofsuccessfulregistration()
+activate 19
+
+deactivate 19
+
+09 -> 09: userinfo()
+activate 09
+
+deactivate 09
+
+deactivate 209
+
+User -> 09: Userinfoalreadycreated()
+activate 09
+
+deactivate 09
+
+User -> 59: LoginPage()
+activate 59
+
+59 -> 39: opensignuppage()
+activate 39
+
+39 -> 39: signuppage()
+39 -> 09: saveuserinfoforadmin()
+activate 09
+
+deactivate 09
+
+39 -> 209: selectadminoption()
+activate 209
+
+deactivate 209
+
+deactivate 39
+
+deactivate 59
+
+User -> 19: notificationofsuccessfulregistration()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,109 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User Agentactor thirdparty call agency
+participant "Create agent form" as 09
+participant "Lead customer profile" as 19
+participant "calls" as 29
+participant "Call logs" as 59
+
+User Agent -> 09: softphonescreen()
+activate 09
+
+09 -> 29: makeaphonecall()
+activate 29
+
+29 -> 29: thirdpartycallagency()
+29 -> 29: callfinishsanddisplaycalldetails()
+29 -> 29: calldetails()
+deactivate 29
+
+29 -> 09: softphonescreen()
+09 -> 29: makeaphonecall()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+User Agent -> 19: leaddetail()
+activate 19
+
+19 -> 09: popsoftphonescreen()
+activate 09
+
+09 -> 09: softphonescreen()
+09 -> 29: makeaphonecall()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+deactivate 19
+
+User Agent -> 29: calldetails()
+activate 29
+
+deactivate 29
+
+User Agent -> 19: leadslist()
+activate 19
+
+19 -> 09: queryleadinformation()
+activate 09
+
+09 -> 19: lead()
+deactivate 19
+
+09 -> 19: leaddetail()
+activate 19
+
+19 -> 09: popsoftphonescreen()
+deactivate 09
+
+deactivate 19
+
+User Agent -> 19: showleadslist()
+activate 19
+
+19 -> 19: queryleadslist()
+19 -> 19: lead()
+deactivate 19
+
+19 -> 19: leadslist()
+activate 19
+
+19 -> 09: queryleadinformation()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User Agent -> 59: loginpage()
+activate 59
+
+59 -> 09: checklogininformation()
+activate 09
+
+09 -> 59: logininfo()
+deactivate 59
+
+09 -> 19: showleadslist()
+activate 19
+
+19 -> 19: queryleadslist()
+deactivate 19
+
+deactivate 09
+
+thirdparty call agency -> 29: callfinishsanddisplaycalldetails()
+activate 29
+
+deactivate 29
+
+@enduml

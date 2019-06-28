@@ -1,0 +1,41 @@
+html
+    head
+        title UMLx
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        link(href='css/style.css', rel='stylesheet')
+
+    body#upload-body
+        include banner
+        .container
+            h2 KDM Model Recovery
+            form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/genkdmModel', enctype='multipart/form-data')
+                .form-group
+                    label.control-label(style='text-align:left', for='project-zip-file').col-xs-4 Eclipse project zipped (file types: zip, rar, tar are supported)
+                    .col-xs-8
+                        input#uml-other.form-control(type='file', name='project-zip-file', accept='application/x-zip-compressed')
+                .form-group
+                    button.btn.btn-success.pull-right(type='submit', onclick='showLoading()') Submit
+            #sec-5
+                .panel-group
+                    .panel.panel-default
+                        .panel-heading
+                            h4.panel-title
+                                | Analysis Results
+                        #collapse5.panel-collapse
+                            div(id="analysis-result-panel-body")
+
+
+        #loadingScreen.hidden
+            div.full-page-model
+            div.full-page-model-content
+                div(style='padding: 30px')
+                    img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                    p Processing...                
+
+
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+        script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src="js/charts.js")

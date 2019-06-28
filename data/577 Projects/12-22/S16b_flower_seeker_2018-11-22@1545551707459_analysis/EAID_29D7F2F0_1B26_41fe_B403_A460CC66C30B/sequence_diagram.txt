@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "CustomerProfileController" as 09
+participant "FloristProfileController" as 19
+participant "successfulchangemessage" as 29
+participant "OrderForm" as 49
+participant "precheckrequiredfields" as 89
+participant "User" as 109
+
+User -> 09: Editprofilebutton()
+activate 09
+
+09 -> 19: displayprofileeditpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: existingprofileerrormessage()
+activate 19
+
+deactivate 19
+
+User -> 29: successfulchangemessage()
+activate 29
+
+deactivate 29
+
+User -> 19: profileeditpage()
+activate 19
+
+19 -> 89: precheckrequiredfields()
+activate 89
+
+89 -> 49: invalidinformationerrormessage()
+activate 49
+
+deactivate 49
+
+89 -> 19: updateprofileentry()
+19 -> 29: successfulchangemessage()
+activate 29
+
+deactivate 29
+
+19 -> 109: userinfo()
+activate 109
+
+deactivate 109
+
+deactivate 19
+
+deactivate 89
+
+User -> 49: invalidinformationerrormessage()
+activate 49
+
+deactivate 49
+
+@enduml

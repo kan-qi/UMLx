@@ -1,0 +1,39 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ChoosingDegreeProgramPage" as 09
+participant "CourseController" as 29
+participant "SemesterSelectionPlage" as 39
+
+User -> 09: Loginpage()
+activate 09
+
+09 -> 39: retrieveinformationassociatedwithusername()
+activate 39
+
+39 -> 09: homepage()
+deactivate 09
+
+39 -> 29: usernameorpasswordiswrong()
+activate 29
+
+deactivate 29
+
+39 -> 39: usernamedb()
+deactivate 39
+
+User -> 09: homepage()
+activate 09
+
+deactivate 09
+
+User -> 29: usernameorpasswordiswrong()
+activate 29
+
+deactivate 29
+
+@enduml

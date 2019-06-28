@@ -1,0 +1,81 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "AdditionalInfo" as 09
+participant "Update" as 19
+participant "Invitation" as 59
+participant "refreshsocialfeed" as 89
+
+User -> 09: Invalidinputinformation()
+activate 09
+
+deactivate 09
+
+User -> 19: updatechoicepanel()
+activate 19
+
+19 -> 19: showupdatepanel()
+19 -> 19: updatepanel()
+19 -> 19: showupdatepanel()
+19 -> 19: updatepanel()
+19 -> 19: validateupdate()
+19 -> 09: Invalidinputinformation()
+activate 09
+
+deactivate 09
+
+19 -> 59: Invitation()
+activate 59
+
+deactivate 59
+
+19 -> 19: createanupdaterecord()
+19 -> 59: Invitation()
+activate 59
+
+deactivate 59
+
+19 -> 19: update()
+deactivate 19
+
+19 -> 89: refreshsocialfeed()
+activate 89
+
+89 -> 19: latestupdates()
+activate 19
+
+deactivate 19
+
+89 -> 19: update()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+19 -> 19: latestupdates()
+activate 19
+
+deactivate 19
+
+User -> 19: updatepanel()
+activate 19
+
+19 -> 19: showupdatepanel()
+deactivate 19
+
+19 -> 19: validateupdate()
+activate 19
+
+deactivate 19
+
+User -> 19: latestupdates()
+activate 19
+
+deactivate 19
+
+@enduml

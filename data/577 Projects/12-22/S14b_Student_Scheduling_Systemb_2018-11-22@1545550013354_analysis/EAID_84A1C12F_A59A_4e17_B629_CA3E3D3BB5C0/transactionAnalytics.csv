@@ -1,0 +1,9 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:updae success message->User:updae success message,Update existing degree requirements,2,1,0,0,0
+2,stl#User:requirements lists->User:requirements lists,Update existing degree requirements,2,1,0,0,0
+3,stl#User:update requiremeents page->User:update requiremeents page->update requiremeents page:check correctness of the input->check correctness of the input:requirements lists,Update existing degree requirements,4,3,0,0,0
+4,stl#User:update requiremeents page->User:update requiremeents page->update requiremeents page:check correctness of the input->check correctness of the input:course requirements,Update existing degree requirements,4,3,0,0,0
+5,stl#User:update requiremeents page->User:update requiremeents page->update requiremeents page:check correctness of the input->check correctness of the input:udpate user profile->udpate user profile:course requirements,Update existing degree requirements,5,3,1,0,0
+6,stl#User:update requiremeents page->User:update requiremeents page->update requiremeents page:check correctness of the input->check correctness of the input:udpate user profile->udpate user profile:incorrect input,Update existing degree requirements,5,3,1,0,0
+7,stl#User:update requiremeents page->User:update requiremeents page->update requiremeents page:check correctness of the input->check correctness of the input:udpate user profile->udpate user profile:show confirmation requirement is updated->show confirmation requirement is updated:updae success message,Update existing degree requirements,6,4,1,0,0
+8,stl#User:incorrect input->User:incorrect input,Update existing degree requirements,2,1,0,0,0

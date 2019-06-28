@@ -1,0 +1,119 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+~ redirecttoselectthemepage()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+~ sendemail()
+~ cartitem()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+~ mainpage()
+}
+
+class Blog {
+~ Blog()
+~ postblogbutton()
+~ redirecttoblogpage()
+~ Confirmdialog()
+~ loginpage()
+}
+
+class BuyerProfile {
+~ BuyerProfile()
+~ addingproductinbuyinglist()
+~ Emailprotocol()
+~ product()
+}
+
+class BuyerRegistrationForm {
+~ BuyerRegistrationForm()
+~ buyinglist()
+~ notification()
+~ invalidinformationerror()
+~ Accountinformationpage()
+}
+
+class Comment {
+~ Comment()
+~ paymentmethodpage()
+~ finishpayment()
+}
+
+class MedicalCreateForm {
+~ MedicalCreateForm()
+~ redirecttothirdpartypaymentpage()
+~ displaycreatesuccessdialog()
+~ Clearcachedata()
+~ Userinfoupdatedmessage()
+~ invalidinfomessage()
+}
+
+class MedicalProfile {
+~ MedicalProfile()
+~ changeunsaveddialog()
+~ deletefaileddialog()
+~ editbuttonforspecificproduct()
+~ producteditpage()
+}
+
+class Order {
+~ Order()
+~ unshippedordersbutton()
+~ generateorders()
+}
+
+class Review {
+~ Review()
+}
+
+class VenderRegistrationForm {
+~ VenderRegistrationForm()
+~ queryvendoremail()
+~ sendnotification()
+~ vendorsidebar()
+~ userlistwitheditandremovebuttons()
+~ vendordetailpage()
+~ Noresultisfound()
+~ sendconfirmationemail()
+}
+
+class VendorRegistrationForm {
+~ VendorRegistrationForm()
+~ listofvendors()
+~ Vendorapprovepage()
+~ vendoralreadyexistsmessage()
+~ redirectvendor()
+~ updatevendorinfo()
+}
+
+class postpage {
+~ postpage()
+}
+
+class Itemquantityfieldincart {
+~ Itemquantityfieldincart()
+}
+
+class notifyuser {
+~ notifyuser()
+~ userinfo()
+~ listofusers()
+~ queryuseremail()
+}
+
+@enduml

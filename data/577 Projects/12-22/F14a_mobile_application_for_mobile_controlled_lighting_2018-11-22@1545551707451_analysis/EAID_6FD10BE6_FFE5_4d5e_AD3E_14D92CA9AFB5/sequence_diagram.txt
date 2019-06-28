@@ -1,0 +1,42 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "deletegatewayconfirmdialog" as 09
+participant "Errormessagewhenupdating" as 19
+
+User -> 09: Listofgateways()
+activate 09
+
+09 -> 09: deleteconfirmdialog()
+09 -> 09: gateways()
+deactivate 09
+
+09 -> 09: deletegatewayconfirmdialog()
+activate 09
+
+09 -> 09: deletegatewayfromdb()
+09 -> 19: Displayerrormessagewhendeleting()
+activate 19
+
+deactivate 19
+
+09 -> 09: gateways()
+deactivate 09
+
+User -> 19: Errorwhendeletinggateway()
+activate 19
+
+19 -> 19: Displayerrormessagewhendeleting()
+deactivate 19
+
+User -> 09: deletegatewayconfirmdialog()
+activate 09
+
+09 -> 09: deletegatewayfromdb()
+deactivate 09
+
+@enduml

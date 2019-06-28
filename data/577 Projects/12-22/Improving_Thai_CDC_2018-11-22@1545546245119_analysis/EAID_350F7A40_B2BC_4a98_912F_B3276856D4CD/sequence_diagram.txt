@@ -1,0 +1,101 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Clicksubmit" as 09
+participant "Contacts list file" as 19
+participant "Homepage" as 29
+participant "Contacts information profile" as 79
+participant "Staff Profile" as 129
+
+User  -> 09: clickdeletebutton()
+activate 09
+
+09 -> 79: Popaconfirminformation()
+activate 79
+
+79 -> 129: checkstaff��sauthority()
+activate 129
+
+129 -> 19: contactsdb()
+activate 19
+
+deactivate 19
+
+129 -> 129: staff��sauthorityapproved()
+129 -> 79: deletecontactsfromSalesforce()
+79 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 79
+
+deactivate 129
+
+deactivate 09
+
+User  -> 19: confirmrequest()
+activate 19
+
+19 -> 129: checkstaff��sauthority()
+activate 129
+
+129 -> 19: contactsdb()
+deactivate 19
+
+129 -> 129: staff��sauthorityapproved()
+deactivate 129
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User  -> 19: clickcontactsid()
+activate 19
+
+19 -> 79: Popaconfirminformation()
+activate 79
+
+79 -> 129: checkstaff��sauthority()
+activate 129
+
+deactivate 129
+
+deactivate 79
+
+deactivate 19
+
+User  -> 19: DeleteContactpage()
+activate 19
+
+19 -> 79: Deletecontactinformation()
+activate 79
+
+79 -> 79: Showconfirmation()
+79 -> 19: Contactdb()
+deactivate 19
+
+79 -> 19: DeleteContactpage()
+activate 19
+
+19 -> 79: Deletecontactinformation()
+deactivate 79
+
+deactivate 19
+
+79 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,84 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "EditSphereView" as 09
+participant "UserModel" as 19
+participant "Sharebutton" as 29
+participant "Displaysuccessmessagetouser" as 39
+participant "DatabaseAdapter" as 99
+
+User -> 09: 2Dviewofselectedsphere()
+activate 09
+
+deactivate 09
+
+User -> 19: alistofuserspanel()
+activate 19
+
+19 -> 99: Rendersadifferentdatasetforeachuser()
+activate 99
+
+99 -> 29: Overlayon2Dchart()
+activate 29
+
+29 -> 09: 2Dviewofselectedsphere()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 99
+
+19 -> 99: renderdataforonlyselectedusers()
+activate 99
+
+99 -> 29: Overlayon2Dchart()
+activate 29
+
+29 -> 09: 2Dviewofselectedsphere()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 99
+
+deactivate 19
+
+User -> 29: Comparebutton()
+activate 29
+
+29 -> 39: Displayslistofusersthathaveentereddataofthisspheres()
+activate 39
+
+39 -> 19: Users()
+activate 19
+
+deactivate 19
+
+39 -> 19: alistofuserspanel()
+activate 19
+
+19 -> 99: Rendersadifferentdatasetforeachuser()
+activate 99
+
+deactivate 99
+
+19 -> 99: renderdataforonlyselectedusers()
+activate 99
+
+deactivate 99
+
+deactivate 19
+
+deactivate 39
+
+deactivate 29
+
+@enduml

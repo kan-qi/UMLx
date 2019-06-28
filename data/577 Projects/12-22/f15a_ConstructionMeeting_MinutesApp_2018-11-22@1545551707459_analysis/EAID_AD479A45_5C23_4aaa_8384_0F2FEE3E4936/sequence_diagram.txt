@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Hompage" as 09
+participant "Meeting" as 19
+participant "<<entity>>  Meeting  Datastore" as 29
+participant "<<block>>    <<system>>   Meeting minutes Android" as 39
+participant "Status Notification" as 69
+
+User -> 09: Hompage()
+activate 09
+
+deactivate 09
+
+User -> 19: Choosestheoptiontopublishmeeting()
+activate 19
+
+19 -> 19: displaysthepublishmeetingscreen()
+19 -> 39: Meetingispublishedandaccessibletootheradministratorsandusersontheattendeelist()
+activate 39
+
+39 -> 69: receiveaninappnotification()
+activate 69
+
+69 -> 09: Hompage()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+deactivate 39
+
+deactivate 19
+
+User -> 29: Choosesacreatedmeetingforwhichtopublishandthenselectsthepublishbutton()
+activate 29
+
+29 -> 39: Meetingispublishedandaccessibletootheradministratorsandusersontheattendeelist()
+activate 39
+
+39 -> 69: receiveaninappnotification()
+activate 69
+
+deactivate 69
+
+deactivate 39
+
+deactivate 29
+
+@enduml

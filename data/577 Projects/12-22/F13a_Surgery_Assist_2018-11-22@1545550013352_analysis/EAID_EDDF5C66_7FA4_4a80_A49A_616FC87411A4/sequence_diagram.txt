@@ -1,0 +1,80 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "Loginbutton" as 09
+participant "PaymentController" as 19
+participant "Reservation" as 29
+participant "User" as 39
+participant "$help://use_case_model_pattern.htm" as 79
+participant "$help://usecasediagram.htm" as 99
+participant "userController" as 119
+
+user -> 09: ViewProfileButton()
+activate 09
+
+deactivate 09
+
+user -> 19: personalhomepage()
+activate 19
+
+deactivate 19
+
+user -> 29: Invaliduserinformation()
+activate 29
+
+deactivate 29
+
+user -> 39: Userprofile()
+activate 39
+
+39 -> 09: disabletheusersprivilegetologin()
+activate 09
+
+09 -> 119: displayuserprofiletouser()
+activate 119
+
+119 -> 39: Userprofile()
+39 -> 09: disabletheusersprivilegetologin()
+deactivate 09
+
+39 -> 79: Validateusernameandpassword()
+activate 79
+
+79 -> 29: Invaliduserinformation()
+activate 29
+
+deactivate 29
+
+79 -> 39: UserInfo()
+deactivate 39
+
+79 -> 99: redirecttheusertotheirpersonalhomepage()
+activate 99
+
+99 -> 19: personalhomepage()
+activate 19
+
+deactivate 19
+
+deactivate 99
+
+deactivate 79
+
+119 -> 09: ViewProfileButton()
+activate 09
+
+deactivate 09
+
+119 -> 119: useprofileinfo()
+deactivate 119
+
+39 -> 79: Validateusernameandpassword()
+activate 79
+
+deactivate 79
+
+@enduml

@@ -1,0 +1,420 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+~ Imageselectorfield()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+~ Checkiffriendsexistinsystem()
+~ checkwithblackprofessionsexternalsystem()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+}
+
+class Account {
+- accountId:EAJava_int
+- emailAddress:EAJava_char__
+- firstName:EAJava_char__
+- lastName:EAJava_char__
+- password:EAJava_char__
+~ createAccount():EAJava_int
+~ deleteAccount():EAJava_int
+~ not():EAJava_int
+~ where(EAJava_char__ attributes):EAJava_int
+~ Acceptbutton()
+}
+
+class ActivityLogger {
+- undefined:EAID_3550EC78_3B1D_4e05_AE26_D046E44C2D06
+~ createUpdate(EAJava_char typeEAJava_char__ event):EAJava_int
+~ editUpdate(EAJava_char typeEAJava_char__ event):EAJava_int
+~ Loginerror()
+~ redirecttologinpage()
+~ activitylist()
+~ retriverecentactivities()
+~ categorizeactivities()
+}
+
+class AdditionalInfo {
+- contactNumber:EAJava_int
+- emailAddress:EAJava_char__
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ addInfo():EAJava_int
+~ getInfo():EAJava_int
+~ removeInfo():EAJava_int
+~ setInfo():EAJava_int
+~ Confirmationdialog()
+~ Informationinputisnotvalid()
+~ Savegroupinformation()
+~ QueryuserinformationfromLinkedIN()
+~ saveittouserinfo()
+~ headlineediticon()
+~ Manageadslink()
+~ Existingadslist()
+~ invalidfilename()
+}
+
+class Admin {
+- undefined:EAID_F2060FE0_A7F7_47f3_8E0D_252EF446B0E3
+~ deleteAccount(EAJava_int accid):EAJava_int
+~ getAccountId():EAJava_int
+~ ads()
+}
+
+class Advertisement {
+~ Advertisement()
+~ Admanagementpanel()
+~ showupexistingadspage()
+}
+
+class Attachment {
+- contentType:EAJava_char__
+- filename:EAJava_char__
+- url:EAJava_char__
+- undefined:EAID_3550EC78_3B1D_4e05_AE26_D046E44C2D06
+~ Attachment()
+~ buttonstatechangetoacceptance()
+~ checkemailsentstatus()
+~ Sentbutton()
+}
+
+class Comment {
+~ Comment()
+~ Notconsistentpasswords()
+}
+
+class Company {
+- aboutUs:EAJava_char__
+- bannerImage:EAJava_int__
+- followers:EAJava_int__
+- headquarters:EAJava_char__
+- industry:EAJava_char__
+- institutionName:EAJava_char__
+- numEmployees:EAJava_int
+- profilePicture:EAJava_char__
+- website:EAJava_char__
+- undefined:EAID_F2060FE0_A7F7_47f3_8E0D_252EF446B0E3
+~ deletePost():EAJava_int
+~ editPost():EAJava_int
+~ getDetails():EAJava_int
+~ postUpdate():EAJava_int
+~ setDetails():EAJava_int
+~ company()
+}
+
+class CompanySearch {
+- Search:EAJava_parameters_String__
+- undefined:EAID_F4BF5AAE_870D_4422_ACD9_9B7BCD172EB4
+~ sortSearchResult(EAJava_char searchResult):EAJava_int
+~ advancedsearchpage()
+~ searchpeoplecompanygroupbyoptions()
+}
+
+class Connection {
+~ Connection()
+~ cancelselections()
+~ sqlinjectionprotection()
+}
+
+class ConnectionUpdate {
+- connection:EAJava_Profile
+- undefined:EAID_3550EC78_3B1D_4e05_AE26_D046E44C2D06
+~ getConnection():EAJava_int
+~ showupconfirmationdialog()
+~ Popupgroupoperationpanel()
+~ Cancelupdatingandredirectto()
+~ Updateaddescription()
+}
+
+class Courses {
+- courseCode:EAJava_int
+- courseInstitude:EAJava_char__
+- courseName:EAJava_string
+- undefined:EAID_5A8B632A_71E6_4d44_BEED_82170BDEE03F
+~ addCourse():EAJava_int
+~ getCourse():EAJava_int
+~ removeCourse():EAJava_int
+~ setCourse():EAJava_int
+~ Session()
+}
+
+class Email {
+- undefined:EAID_3891F64F_BBCB_433c_BFA1_6DD2C6AC639D
+~ checkEmailSent():EAJava_int
+~ isEmailExist():EAJava_int
+~ sendInviationEmail():EAJava_int
+~ validateEmail():EAJava_int
+~ Emailprotocol()
+~ returnthestatusofemailbeingsent()
+~ popupinputemailandpasswordpage()
+~ sendemailtofriend()
+~ Mainpage()
+~ Addetailpage()
+}
+
+class Experience {
+- compnayName:EAJava_int
+- designation:EAJava_int
+- endDate:EAJava_int
+- expInfo:EAJava_char__
+- startDate:EAJava_int
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ addExprience():EAJava_int
+~ getDetails():EAJava_int
+~ removeEducation():EAJava_int
+~ setDetails():EAJava_int
+~ cancelbutton()
+~ friend()
+~ Checkiffriendalreadyexists()
+}
+
+class FollowerSet {
+- userAccid:EAJava_int
+- undefined:EAID_4DF11695_C616_4508_81A9_A90982235ECB
+~ addFollowers():EAJava_int
+~ getFollowers():EAJava_int
+~ Followbutton()
+}
+
+class Group {
+~ Group()
+~ groupcreateform()
+~ Viewgroupsbutton()
+~ Groupoperationpanel()
+~ queryfriendswhoisnotingroup()
+~ Groupstatuschange()
+}
+
+class HobbySet {
+- hobbyName:EAJava_int
+- undefined:EAID_B809CEFA_15AD_42f8_A71D_C744506E7657
+~ addHobby():EAJava_int
+~ getHobby():EAJava_int
+~ removeHobby():EAJava_int
+~ setHobby():EAJava_int
+}
+
+class Individual {
+- careerInterest:EAJava_char
+- ethnicity:EAJava_int
+- experienceSet:EAJava_char__
+- headline:EAJava_char
+- industry:EAJava_char
+- location:EAJava_int
+- notificationSet:EAJava_char__
+- profilePicture:EAJava_char
+- projectSet:EAJava_char__
+- skillSet:EAJava_char__
+- summary:EAJava_char
+- website:EAJava_char
+- undefined:EAID_4DF11695_C616_4508_81A9_A90982235ECB
+~ deletePost():EAJava_int
+~ editPost():EAJava_int
+~ getDetails():EAJava_int
+~ postUpdate():EAJava_int
+~ setDetails():EAJava_int
+}
+
+class IndividualSearch {
+- Search:EAJava_parameters_String__
+- undefined:EAID_F4BF5AAE_870D_4422_ACD9_9B7BCD172EB4
+~ IndividualSearch()
+~ checkvalidityofsearchstring()
+~ Checkifinputisvalid()
+}
+
+class Invitation {
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ checkUserInUserTable():EAJava_int
+~ getLinkedInFriendList():EAJava_int
+~ getUserInGroup():EAJava_int
+~ sendForEmail():EAJava_int
+~ sendForGroup():EAJava_int
+~ sendNotification():EAJava_int
+~ Invitation()
+~ invitefriendform()
+}
+
+class LinkedInAPI {
+- undefined:EAID_3891F64F_BBCB_433c_BFA1_6DD2C6AC639D
+~ LinkedInAPI()
+~ InvalidincorrectLinkedIncredentials()
+~ LikedInButton()
+~ prompterrorwithlinkedinlogin()
+~ ValidatelogininfobyLinkedIn()
+~ redirecttomainpage()
+~ Homelink()
+}
+
+class Member {
+- groupId:EAJava_int
+- individualId:EAJava_int
+- memeberId:EAJava_int
+- status:EAJava_int
+- undefined:EAID_CCEAB95A_A5BE_4667_884E_4B9731C990E1
+~ Member()
+}
+
+class Message {
+~ Message()
+~ Loginpage()
+~ displayloginfailuremessagewithLinkIn()
+~ headlineinputerrormessage()
+~ sortedlistofmessagesbysimilarity()
+~ homepagelink()
+~ friedalreadyexistmessage()
+~ emailsendingfailedmessage()
+~ pictureformaterrormessage()
+~ saveimage()
+~ retrievessentmessages()
+~ displaylistofsentmessages()
+~ Nouserexisterrormessage()
+}
+
+class Notification {
+- notificationId:EAJava_int
+- sender:EAJava_char__
+- status:EAJava_int
+- type:EAJava_char__
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ getNotificationDetails():EAJava_int
+~ setNotificationDetails():EAJava_int
+~ updateStatus():EAJava_int
+}
+
+class Post {
+~ Post()
+}
+
+class Projects {
+- completionDate:EAJava_int
+- projDescription:EAJava_int
+- projTitle:EAJava_int
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ addProject():EAJava_int
+~ getDetails():EAJava_int
+~ removeProject():EAJava_int
+~ setDetails():EAJava_int
+~ Rejectbutton()
+~ Approvedeclineapplicants()
+}
+
+class RecommendationLetter {
+~ RecommendationLetter()
+~ Removebutton()
+~ Nocommentsavailableonupdate()
+~ saveentereduserinformation()
+~ Deleteconfirmationdialog()
+~ DeleteAd()
+}
+
+class SearchEngine {
+- searchStrategies:EAJava_List
+- undefined:EAID_50EC70F1_8830_4067_9017_AE72C9C398AE
+- undefined:EAID_8392558A_E777_4b4e_8BAC_B974A9E1C8EE
+~ generateSearchParameters(EAJava_char request):EAJava_int
+~ handle(EAJava_char requestEAJava_char response):EAJava_int
+~ searchBySearchParameters(EAJava_String__ searchParamters):EAJava_int
+~ validateSearchParameters():EAJava_Boolean
+~ invalidsearchstring()
+~ Headline()
+~ Searchbar()
+~ BlackProfessionalsnetcheckingsystem()
+}
+
+class SearchParameters {
+- fieldNames:EAJava_String__
+- fieldValue:EAJava_String__
+- parameterNumber:EAJava_int
+~ getParameterSize():EAJava_int
+~ getParamterNameAt(EAJava_int position):EAJava_int
+~ operation():EAJava_int
+~ SearchParameters(EAJava_Request request):EAJava_int
+}
+
+class SearchResult {
+- SearchResultList:EAJava_list
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+- undefined:EAID_7CEF4002_E5DD_4ae8_996E_9B1DB8C38DB4
+~ getSearchResultAt(EAJava_int position):EAJava_int
+~ getSearchResultSize():EAJava_int
+~ request()
+~ Nomatchedresultsfound()
+}
+
+class SearchResultEntity {
+- names:EAJava_String__
+- values:EAJava_String__
+~ getEntityNameAt(EAJava_int position):EAJava_int
+~ getEntityValueAt(EAJava_int position):EAJava_int
+~ getResultSize()():EAJava_int
+~ clearcurrentsession()
+}
+
+class SearchStrategy {
+- Search:EAJava_parameters_list
+- undefined:EAID_A12ADB6D_DA7D_4bf9_B242_AD54E36CD4A7
+~ sortSearchResult(EAJava_char searchResult):EAJava_int
+}
+
+class Skill {
+- skillName:EAJava_int
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ addSkill():EAJava_int
+~ getSkill():EAJava_int
+~ removeSkill():EAJava_int
+~ setSkill():EAJava_int
+}
+
+class Update {
+- attachments:EAJava_char__
+- description:EAJava_char__
+- publisher:EAJava_char__
+- title:EAJava_char__
+- type:EAJava_int
+- undefined:EAID_F2060FE0_A7F7_47f3_8E0D_252EF446B0E3
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ getDetails():EAJava_int
+~ isValid():EAJava_int
+~ saveupdatedheadline()
+~ Updatethefollowstatus()
+~ updatechoicepanel()
+~ latestupdates()
+~ createanupdaterecord()
+}
+
+class UserRecommender {
+- recomendationWeights:EAJava_int
+- undefined:EAID_8647229E_3561_4615_8271_BB00D59D7E0F
+~ initialise(EAJava_User user):EAJava_int
+~ recommendByField(EAJava_char__ filename):EAJava_int
+~ weightedRecommendation():EAJava_int
+~ sendrequestaccept()
+~ querymatchedusers()
+~ Showcorrespondingstatus()
+}
+
+class UserProfile {
+~ UserProfile()
+~ popupprofileeditpage()
+~ Displaynouserexist()
+}
+
+class refreshsocialfeed {
+~ refreshsocialfeed()
+}
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Board {
+- bombs:EAJava_int
+- bombs_allowed:EAJava_int
+- cols:EAJava_int
+- item:EAJava_int
+- multiplier:EAJava_int
+- rows:EAJava_int
+~ calculatePoints():EAJava_void
+~ create():EAJava_void
+~ detonateAllBombs():EAJava_void
+~ showAllItems():EAJava_void
+}
+
+class Bomb {
+~ Bomb()
+}
+
+class Item {
+- nnint:EAJava_int
+- rarity:EAJava_int
+- type:EAJava_int
+~ Item()
+}
+
+class User {
+- board_played:EAJava_int
+- email:EAJava_int
+- password:EAJava_int
+- username:EAJava_int
+~ changeEmail():EAJava_void
+~ changePassword():EAJava_void
+~ login():EAJava_void
+~ logout():EAJava_void
+}
+
+class GameEngine {
+~ GameEngine()
+}
+
+class GameHistory {
+~ GameHistory()
+}
+
+class LeaderBoard {
+~ LeaderBoard()
+}
+
+class Points {
+~ Points()
+}
+
+class Prize {
+~ Prize()
+}
+
+class UserProfile {
+~ UserProfile()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+@enduml

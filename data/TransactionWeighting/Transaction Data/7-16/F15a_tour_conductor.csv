@@ -1,0 +1,49 @@
+id,transaction,useCase,transactional, TL, DETs, TD, Arch_Diff
+1,stl#Owner:Error message->Owner:Error message,Authorize tour creator,CTRL,2,0,3,6
+2,stl#Owner:Error message->Owner:Error message,Authorize tour creator,EXTCLL,2,0,3,6
+3,stl#Owner:Error message->Owner:Error message,Authorize tour creator,INT,2,0,3,6
+4,stl#Owner:users list->Owner:users list->users list:change user file->change user file:user info,Authorize tour creator,TRAN_NA,4,0,2.3333333333333335,9.333333333333334
+5,stl#Owner:users list->Owner:users list->users list:change user file->change user file:send error message if not successful->send error message if not successful:Error message,Authorize tour creator,TRAN_NA,5,0,2.5,12.5
+1,stl#Creator:Login page->Creator:Login page->Login page:check login Info->check login Info:login error->login error:redirect to login page->redirect to login page:Login page->Login page:check login Info,Creator log in and register,TRAN_NA,7,0,5.333333333333333,37.33333333333333
+2,stl#Creator:Login page->Creator:Login page->Login page:check login Info->check login Info:User Info,Creator log in and register,CTRL,4,0,5.333333333333333,21.333333333333332
+3,stl#Creator:Login page->Creator:Login page->Login page:check login Info->check login Info:User Info,Creator log in and register,EXTCLL,4,0,5.333333333333333,21.333333333333332
+4,stl#Creator:Login page->Creator:Login page->Login page:check login Info->check login Info:User Info,Creator log in and register,INT,4,0,5.333333333333333,21.333333333333332
+5,stl#Creator:register page->Creator:register page->register page:process login info->process login info:sign up error message->sign up error message:redirect to sign up page->redirect to sign up page:register page->register page:process login info,Creator log in and register,TRAN_NA,7,0,4,28
+6,stl#Creator:register page->Creator:register page->register page:process login info->process login info:save user info->save user info:User Info,Creator log in and register,TRAN_NA,5,0,3.25,16.25
+7,stl#Creator:login error->Creator:login error->login error:redirect to login page->redirect to login page:Login page->Login page:check login Info->check login Info:login error->login error:redirect to login page,Creator log in and register,TRAN_NA,7,0,5.666666666666667,39.66666666666667
+8,stl#Creator:login error->Creator:login error->login error:redirect to login page->redirect to login page:Login page->Login page:check login Info->check login Info:User Info,Creator log in and register,TRAN_NA,6,0,5.6,33.599999999999994
+9,stl#Creator:sign up error message->Creator:sign up error message->sign up error message:redirect to sign up page->redirect to sign up page:register page->register page:process login info->process login info:sign up error message->sign up error message:redirect to sign up page,Creator log in and register,TRAN_NA,7,0,5,35
+10,stl#Creator:sign up error message->Creator:sign up error message->sign up error message:redirect to sign up page->redirect to sign up page:register page->register page:process login info->process login info:save user info->save user info:User Info,Creator log in and register,TRAN_NA,7,0,4.166666666666667,29.166666666666668
+1,stl#Creator:Information invalidity error->Creator:Information invalidity error,Creator modify tour details,CTRL,2,0,2,4
+2,stl#Creator:Tour detail->Creator:Tour detail->Tour detail:check tour detail->check tour detail:update tour detail->update tour detail:update error->update error:Update error message,Creator modify tour details,TRAN_NA,6,0,3.6,21.6
+3,stl#Creator:Tour detail->Creator:Tour detail->Tour detail:check tour detail->check tour detail:update tour detail->update tour detail:tour detail info,Creator modify tour details,CTRL,5,0,4,20
+4,stl#Creator:Tour detail->Creator:Tour detail->Tour detail:check tour detail->check tour detail:Information invalidity error,Creator modify tour details,CTRL,4,0,3.3333333333333335,13.333333333333334
+5,stl#Creator:Update error message->Creator:Update error message,Creator modify tour details,CTRL,2,0,3,6
+6,stl#Creator:Update error message->Creator:Update error message,Creator modify tour details,EXTCLL,2,0,3,6
+7,stl#Creator:Update error message->Creator:Update error message,Creator modify tour details,INT,2,0,3,6
+1,stl#Owner:List of tours->Owner:List of tours->List of tours:delete tour->delete tour:tours,Delete irrelevant tours,CTRL,4,0,4,16
+1,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:tour info,Search for a tour,TRAN_NA,4,0,4.666666666666667,18.666666666666668
+2,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:retrieve nearby tours->retrieve nearby tours:tour info,Search for a tour,TRAN_NA,5,0,4,20
+3,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:retrieve nearby tours->retrieve nearby tours:list of tours,Search for a tour,TRAN_NA,5,0,4,20
+4,stl#taker:tour search criteria page->taker:tour search criteria page->tour search criteria page:retrieve tour->retrieve tour:list of tours,Search for a tour,TRAN_NA,4,0,4.666666666666667,18.666666666666668
+5,stl#taker:list of tours->taker:list of tours,Search for a tour,CTRL,2,0,6,12
+1,stl#Creator:Popup for reenter tour info->Creator:Popup for reenter tour info,Update tour,CTRL,2,0,2,4
+2,stl#Creator:Popup for reenter tour info->Creator:Popup for reenter tour info,Update tour,EXTCLL,2,0,2,4
+3,stl#Creator:Popup for reenter tour info->Creator:Popup for reenter tour info,Update tour,INT,2,0,2,4
+4,stl#Creator:tour detail page->Creator:tour detail page->tour detail page:check update information->check update information:tour info,Update tour,CTRL,4,0,1.6666666666666667,6.666666666666667
+5,stl#Creator:tour detail page->Creator:tour detail page->tour detail page:check update information->check update information:Popup for reenter tour info,Update tour,CTRL,4,0,1.6666666666666667,6.666666666666667
+6,stl#Creator:tour detail page->Creator:tour detail page->tour detail page:check update information->check update information:Popup for reenter tour info,Update tour,EXTCLL,4,0,1.6666666666666667,6.666666666666667
+7,stl#Creator:tour detail page->Creator:tour detail page->tour detail page:check update information->check update information:Popup for reenter tour info,Update tour,INT,4,0,1.6666666666666667,6.666666666666667
+1,stl#Creator:tour info page->Creator:tour info page->tour info page:process tour->process tour:tour info,Upload tours,CTRL,4,0,5,20
+2,stl#Creator:tour info page->Creator:tour info page->tour info page:process tour->process tour:tour info error,Upload tours,CTRL,4,0,5,20
+3,stl#Creator:tour info error->Creator:tour info error,Upload tours,CTRL,2,0,5,10
+1,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:stop info,View a particular stop,TRAN_NA,4,0,2.6666666666666665,10.666666666666666
+2,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:empty map view,View a particular stop,TRAN_NA,4,0,2.6666666666666665,10.666666666666666
+3,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:check internet connection->check internet connection:empty map view,View a particular stop,TRAN_NA,5,0,2.25,11.25
+4,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:check internet connection->check internet connection:tour info,View a particular stop,TRAN_NA,5,0,2,10
+5,stl#Taker:empty map view->Taker:empty map view,View a particular stop,CTRL,2,0,3,6
+6,stl#Taker:empty map view->Taker:empty map view,View a particular stop,EXTCLL,2,0,3,6
+7,stl#Taker:empty map view->Taker:empty map view,View a particular stop,INT,2,0,3,6
+8,stl#Taker:stop info->Taker:stop info,View a particular stop,CTRL,2,0,3,6
+9,stl#Taker:stop info->Taker:stop info,View a particular stop,EXTCLL,2,0,3,6
+10,stl#Taker:stop info->Taker:stop info,View a particular stop,INT,2,0,3,6

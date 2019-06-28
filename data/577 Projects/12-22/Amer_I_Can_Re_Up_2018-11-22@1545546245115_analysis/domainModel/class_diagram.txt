@@ -1,0 +1,170 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class AmerICanreupSystem {
+~ AmerICanreupSystem()
+}
+
+class FAQ {
+- Ans_id:EAJava_int
+- Question_id:EAJava_int
+~ FAQ()
+}
+
+class Goals {
+- g_id:EAJava_int
+- g_list:EAJava_int
+~ Goals()
+~ Addgoalpage()
+~ Addgoalinformation()
+~ addthegoalstothedatabase()
+}
+
+class HonorCode {
+- grade_total:EAJava_int
+- task_ID:EAJava_int
+~ HonorCode()
+~ Showconfirmation()
+}
+
+class ReUp {
+- message:EAJava_string
+- receiver_id:EAJava_int
+- sender_id:EAJava_int
+~ ReUp()
+}
+
+class Reportcard {
+- Honor_code_link:EAJava_int
+- myG_link:EAJava_int
+- task_total:EAJava_int
+- will power:EAJava_int
+~ Reportcard()
+~ clickson��viewreportcard��button()
+}
+
+class Sacrifices {
+- s_id:EAJava_int
+- s_list:EAJava_int
+~ Sacrifices()
+~ userwillbepromptedtoentersacrifices()
+~ Editscacirficesinfrormation()
+}
+
+class UserAccountRecord {
+- address:EAJava_string
+- contact_no:EAJava_string
+- email:EAJava_string
+- name:EAJava_string
+- password:EAJava_string
+- user id:EAJava_int
+~ UserAccountRecord()
+~ enteruserstatusmessageandchooseMottoorFreeSpeech()
+~ searchinthecorrespondinguser��srecord()
+}
+
+class UserProfile {
+- Goals_link:EAJava_string
+- personal legend_link:EAJava_string
+- profile avatar:EAJava_png
+- squad_list:EAJava_list
+- status link:EAJava_string
+- theme_song_link:EAJava_string
+- tt_Box_link:EAJava_string
+- tutorial_video_link:EAJava_string
+~ UserProfile()
+~ clicksonaddsgoalstohisprofilebutton()
+~ displaythegoalsonthemember��sprofilepage()
+~ Userdb()
+}
+
+class UserSettings {
+- personal_legend_url:EAJava_int
+- Report_card_flag:EAJava_int
+- Status_flag:EAJava_int
+- theme_song_url:EAJava_int
+- ttBox_flag:EAJava_int
+~ UserSettings()
+~ AddMottoinformation()
+~ displayamessagetotheuserstating()
+~ choosetoeditoralteranalreadyexistingtask()
+}
+
+class myG {
+- date_task_added:EAJava_int
+- task:EAJava_int
+- task_id:EAJava_int
+~ myG()
+}
+
+class personallegend {
+- date modified:EAJava_date
+- size:EAJava_int
+- url:EAJava_string
+~ personallegend()
+~ entersupto5taskspage()
+~ Validateusenameandpassword()
+}
+
+class status {
+- date_modified:EAJava_date
+- size:EAJava_int
+- type:EAJava_string
+~ status()
+~ clickson��Addeditstatus��button()
+~ enteruserstatusmessageandaddMotto()
+~ statusmessagewillbedisplayed()
+~ Taskdb()
+~ Addstatusinformation()
+~ userdatabse()
+}
+
+class themesong {
+- date_added:EAJava_int
+- size:EAJava_int
+- song_id:EAJava_int
+~ themesong()
+~ Memberdb()
+~ Endthesession()
+~ typesanameinthesearchbox()
+~ clickson��UploadThemesong��button()
+~ prompttheusertoenterthethemesong()
+}
+
+class ttBox {
+- task_done_flag:EAJava_int
+- task_id:EAJava_int
+- task_name:EAJava_int
+- task_sacrifice:EAJava_int
+- task_total:EAJava_int
+- task_weight:EAJava_int
+- tasks:EAJava_int
+~ ttBox()
+~ Mottodb()
+~ enteredtaskswillbedisplayedinthettBox()
+}
+
+class tutorialvideo {
+- url:EAJava_string
+- v_size:EAJava_int
+~ tutorialvideo()
+~ Chooseoneofallvideos()
+}
+
+class updatethepathinthedatabase {
+~ updatethepathinthedatabase()
+~ checkwhetherthesyntaxenteredisthatofanURLornot()
+~ memberdatabse()
+~ searchforthecorrespondingnameinthedatabase()
+}
+
+class Homepage {
+~ Homepage(EAJava_string Goals_linkEAJava_string personal legend_linkEAJava_png profile avatarEAJava_list squad_listEAJava_string status linkEAJava_string theme_song_linkEAJava_string tt_Box_link):EAJava_string
+~ Edittaskpage()
+~ Showconfirmationpage()
+~ Loginpage()
+}
+
+class Object1 
+
+@enduml

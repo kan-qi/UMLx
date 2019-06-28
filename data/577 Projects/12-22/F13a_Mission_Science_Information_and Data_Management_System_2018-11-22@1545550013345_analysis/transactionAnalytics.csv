@@ -1,0 +1,41 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:success message->User:success message,Create Activity,2,1,0,0,0
+2,stl#User:Activity input page->User:Activity input page->Activity input page:add activity into db->add activity into db:activity,Create Activity,4,3,0,0,0
+3,stl#User:Activity input page->User:Activity input page->Activity input page:add activity into db->add activity into db:activity already exists,Create Activity,4,3,0,0,0
+4,stl#User:Activity input page->User:Activity input page->Activity input page:add activity into db->add activity into db:success message,Create Activity,4,3,0,0,0
+5,stl#User:activity already exists->User:activity already exists,Create Activity,2,1,0,0,0
+6,stl#User:success message->User:success message,Create STEM Project,2,1,0,0,0
+7,stl#User:project description page->User:project description page->project description page:create user account->create user account:User account,Create STEM Project,4,0,1,2,0
+8,stl#User:project description page->User:project description page->project description page:create user account->create user account:success message,Create STEM Project,4,1,1,1,0
+9,stl#User:project description page->User:project description page->project description page:create user account->create user account:project has been created message,Create STEM Project,4,1,1,1,0
+10,stl#User:project has been created message->User:project has been created message,Create STEM Project,2,1,0,0,0
+11,stl#User:survey has been created message->User:survey has been created message,Create Survey,2,1,0,0,0
+12,stl#User:Survey detail page->User:Survey detail page->Survey detail page:add survey detail into db->add survey detail into db:survey has been created message,Create Survey,4,1,2,0,0
+13,stl#User:Survey detail input page->User:Survey detail input page->Survey detail input page:Input survey brief info->Input survey brief info:Survey detail page->Survey detail page:add survey detail into db->add survey detail into db:survey has been created message,Create Survey,6,1,4,0,0
+14,stl#User:Survey detail input page->User:Survey detail input page->Survey detail input page:Input survey brief info->Input survey brief info:Survey db,Create Survey,4,0,3,0,0
+15,stl#User:subactivity detail input page->User:subactivity detail input page->subactivity detail input page:Input activity into db->Input activity into db:Successfully created message,Create subactivity,4,1,0,2,0
+16,stl#User:subactivity detail input page->User:subactivity detail input page->subactivity detail input page:Input activity into db->Input activity into db:subactivity db,Create subactivity,4,0,0,3,0
+17,stl#User:Create subactivity page->User:Create subactivity page->Create subactivity page:add subactivity into db->add subactivity into db:subactivity detail input page->subactivity detail input page:Input activity into db->Input activity into db:Successfully created message,Create subactivity,6,1,0,4,0
+18,stl#User:Create subactivity page->User:Create subactivity page->Create subactivity page:add subactivity into db->add subactivity into db:subactivity detail input page->subactivity detail input page:Input activity into db->Input activity into db:subactivity db,Create subactivity,6,0,0,5,0
+19,stl#User:Create subactivity page->User:Create subactivity page->Create subactivity page:add subactivity into db->add subactivity into db:subactivity db,Create subactivity,4,0,0,3,0
+20,stl#User:Successfully created message->User:Successfully created message,Create subactivity,2,1,0,0,0
+21,stl#User:Survey result page->User:Survey result page->Survey result page:Input survey result info->Input survey result info:Survey db,Input results for survey,4,0,3,0,0
+22,stl#User:Survey result page->User:Survey result page->Survey result page:Input survey result info->Input survey result info:Survey result has been created error message->Survey result has been created error message:add survey detail into db->add survey detail into db:survey has been created message,Input results for survey,6,2,3,0,0
+23,stl#User:survey has been created message->User:survey has been created message,Input results for survey,2,1,0,0,0
+24,stl#User:Survey result has been created error message->User:Survey result has been created error message->Survey result has been created error message:add survey detail into db->add survey detail into db:survey has been created message,Input results for survey,4,2,1,0,0
+25,stl#User:Successfully input message->User:Successfully input message,Reserve Inventory,2,1,0,0,0
+26,stl#User:Project info page->User:Project info page->Project info page:save project info->save project info:Project info,Reserve Inventory,4,0,3,0,0
+27,stl#User:Project info page->User:Project info page->Project info page:save project info->save project info:Successfully input message,Reserve Inventory,4,1,2,0,0
+28,stl#User:Project info page->User:Project info page->Project info page:save project info->save project info:search results list,Reserve Inventory,4,1,2,0,0
+29,stl#User:search results list->User:search results list,Reserve Inventory,2,1,0,0,0
+30,stl#User:no search result is found->User:no search result is found,Search,2,1,0,0,0
+31,stl#User:Search query input bar->User:Search query input bar->Search query input bar:search query from db->search query from db:User account,Search,4,2,0,1,0
+32,stl#User:Search query input bar->User:Search query input bar->Search query input bar:search query from db->search query from db:no search result is found,Search,4,3,0,0,0
+33,stl#User:Search query input bar->User:Search query input bar->Search query input bar:search query from db->search query from db:search results list,Search,4,3,0,0,0
+34,stl#User:search results list->User:search results list,Search,2,1,0,0,0
+35,stl#User:show "successfully input" message->User:show "successfully input" message,Sign in sheet,2,1,0,0,0
+36,stl#User:search results list->User:search results list,Sign in sheet,2,1,0,0,0
+37,stl#User:Student info page->User:Student info page->Student info page:save student info->save student info:show "successfully input" message,Sign in sheet,4,1,0,2,0
+38,stl#User:Student info page->User:Student info page->Student info page:save student info->save student info:student info,Sign in sheet,4,0,0,3,0
+39,stl#User:Student info page->User:Student info page->Student info page:save student info->save student info:search results list,Sign in sheet,4,1,0,2,0

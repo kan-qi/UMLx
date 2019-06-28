@@ -1,0 +1,60 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Contacts list file" as 09
+participant "Homepage" as 19
+participant "Clicksubmit" as 29
+participant "Contacts information profile" as 49
+participant "editworkerfromSalesforce" as 59
+participant "Staff Profile" as 69
+
+User  -> 09: selectacontact()
+activate 09
+
+09 -> 69: checkstaff��sauthority()
+activate 69
+
+69 -> 59: worker��sauthorityapproved()
+activate 59
+
+59 -> 49: Displayinformationofselectedcontacttostaff()
+activate 49
+
+49 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+deactivate 59
+
+deactivate 69
+
+deactivate 09
+
+User  -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User  -> 29: clickviewbutton()
+activate 29
+
+29 -> 69: checkstaff��sauthority()
+activate 69
+
+69 -> 59: worker��sauthorityapproved()
+activate 59
+
+deactivate 59
+
+deactivate 69
+
+deactivate 29
+
+@enduml

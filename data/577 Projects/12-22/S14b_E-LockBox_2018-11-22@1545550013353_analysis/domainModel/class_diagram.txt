@@ -1,0 +1,649 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Activity {
+- Title:EAJava_void
+- Time:EAJava_void
+- Status:EAJava_void
+- AssignedTo:EAJava_void
+- Phone:EAJava_void
+~ Activity()
+~ returnactivitydescriptionpage()
+~ validatethedescirpitonofactivity()
+~ activateuserstatus()
+}
+
+class Administration {
+~ EditUser()
+~ CreateHighLevelUser()
+~ Activate()
+~ Inactivate()
+}
+
+class CaseManagement {
+- LimitedUserName:EAJava_void
+- DOB:EAJava_void
+- Email:EAJava_void
+- Phone:EAJava_void
+- Case Manager:EAJava_void
+- ID:EAJava_void
+- Document ID:EAJava_void
+- Action:EAJava_void
+~ CaseManagement()
+~ successmessage()
+}
+
+class CaseManager {
+- ID:EAJava_void
+- Phone:EAJava_void
+- Address:EAJava_void
+- Email:EAJava_void
+- Name:EAJava_void
+~ CreateNewCase()
+~ UploadDocument()
+~ ReportGeneration()
+~ LogActivity()
+~ CreateLimitedUser()
+~ ViewDocument()
+~ CheckCaseInformation()
+~ EditCase()
+~ ResetPassword()
+~ loginpage()
+~ caselist()
+~ caseinfopage()
+~ redirecttonewcasepage()
+~ choosefilepage()
+}
+
+class Caseinformation {
+- Name:EAJava_void
+- Education:EAJava_void
+- Work:EAJava_void
+- Age:EAJava_void
+- VitalDocumentList:EAJava_void
+- EmergencyContact:EAJava_void
+- Server:EAJava_void
+- Email:EAJava_void
+- Address:EAJava_void
+~ Caseinformation()
+~ Createnewcasebutton()
+~ validatetheifnoramtionfromcaseinformationpage()
+~ insertcaseintocasedatabase()
+~ returncaseinfopageforediting()
+}
+
+class Documentupload {
+- Name:EAJava_void
+- Description:EAJava_void
+- Date:EAJava_void
+~ Documentupload()
+~ specificdocumentrecord()
+~ filedownloadinterface()
+~ insertdocumentintodocumentdb()
+}
+
+class GeneralUser {
+- ID:EAJava_void
+- Phone:EAJava_void
+- Address:EAJava_void
+- Email:EAJava_void
+- Name:EAJava_void
+~ CheckCaseInformation()
+~ generatearandompasswordfortheusername()
+~ returngeneratesuccessmessage()
+~ generatereportpage()
+}
+
+class LimitedUser {
+- Name:EAJava_void
+- Age:EAJava_void
+- Education:EAJava_void
+- Work:EAJava_void
+- DOB:EAJava_void
+- Phone:EAJava_void
+- Email:EAJava_void
+- Address:EAJava_void
+- Vital document:EAJava_void
+~ ViewDocument()
+~ createuserbutton()
+~ validatetheroleofuser()
+~ printer()
+}
+
+class Restpassword {
+- UserName:EAJava_void
+- Password:EAJava_void
+- PasswordConfirm:EAJava_void
+~ Restpassword()
+~ insertthenewusernameandpasswordintotheuserdb()
+~ correspondingrolesmainpage()
+~ Sendrequesttocasedatabase()
+~ updatethepasswordtodatebase()
+}
+
+class Useinformation {
+- ID:EAJava_void
+- Phone:EAJava_void
+- Address:EAJava_void
+- Email:EAJava_void
+- Name:EAJava_void
+~ Useinformation()
+~ validationfailedmessage()
+~ wronguserinfomessage()
+~ redirecttheusertothecorrespondingrolesmainpage()
+~ validateinformationofdescription()
+}
+
+class User {
+~ Login()
+~ Logout()
+~ userinfo()
+~ checkexistingusers()
+~ checkthestatusofuser()
+}
+
+class Usermanagement {
+- UserName:EAJava_void
+- UserID:EAJava_void
+- Status:EAJava_void
+- UserEmail:EAJava_void
+- UserPhone:EAJava_void
+~ Usermanagement()
+~ Insertsuccessmessage()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class reportbutton {
+~ reportbutton()
+~ addvewbutton()
+}
+
+class descriptionshouldnotbeblankmessage {
+~ descriptionshouldnotbeblankmessage()
+~ wrongactionmessage()
+~ statuschagesuccessmessage()
+~ validationfailedmessage()
+}
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Activity .. Administration
+
+Administration <|-- CaseManager
+
+CaseManager <|-- User
+
+GeneralUser <|-- User
+
+LimitedUser <|-- User
+
+@enduml

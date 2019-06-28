@@ -1,0 +1,829 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Building {
+- Name:EAJava_void
+- Address:EAJava_void
+- Hub:EAJava_void
+~ Building()
+~ Redirectstotheaddbuildinghubformpage()
+~ Updatesthedatabaseforbuildinginformation()
+~ Managebuildingshubsdisastersbutton()
+~ buildshubsdiastersdb()
+}
+
+class Disaster {
+- Name:EAJava_void
+- ID:EAJava_void
+- startTime:EAJava_void
+- endTime:EAJava_void
+~ Disaster()
+~ Managebildingshubsdisasterspage()
+~ Supervisersemergencydisasterhomepage()
+~ SystemredirectstoDisastepage()
+~ Systeminsertsthedisasterrecordinthedatabase()
+~ checkOTPenteredisnonempty()
+}
+
+class EMTBuildingAssignment {
+- Name:EAJava_void
+- EMT Number:EAJava_void
+~ EMTBuildingAssignment()
+~ VolunteerassignmentandEMTassignmentDB()
+~ Redirectstothemanagementbuildingshubsdisasterspage()
+~ Emergencybutton()
+~ ManagementIndividualsPage()
+~ ManagevictimsEMTassignmentsbutton()
+~ assignmentdetaildatabase()
+}
+
+class Hub {
+- ID:EAJava_void
+- Address:EAJava_void
+~ Hub()
+}
+
+class Supervisor {
+~ add Individual to List Users()
+~ Manage Users():EAJava_void
+~ Add building()
+~ Manage building()
+~ Add hub()
+~ Manage hub():EAJava_void
+~ Add EMT building Assignment()
+~ Track victims():EAJava_void
+~ Add disaster()
+~ Manage disaster()
+~ Manage emergency tables()
+~ Supervisorsemergencyhomepage()
+}
+
+class TransportCoordinator {
+~ Enter Victime Tracking Information()
+~ Update Victim Tracking Information()
+~ Unassign EMT from building()
+~ Insertthenewrecordintodb()
+~ Individualrecords()
+~ Transportcoordinatorshomepage()
+~ manageindividualsbutton()
+~ trackingrecorddatabase()
+}
+
+class User {
+- Name:EAJava_void
+- Designation:EAJava_void
+- Address:EAJava_void
+- EmailID:EAJava_void
+~ User()
+~ Usernameandpassworddb()
+~ querydatabase()
+}
+
+class Victim {
+- victimID:EAJava_int
+- disasterID:EAJava_void
+- barcode:EAJava_void
+- triage category:EAJava_void
+- location details:EAJava_void
+- medical details:EAJava_void
+- name:EAJava_void
+- age range:EAJava_void
+- sex:EAJava_void
+- ambulance number:EAJava_void
+- hospital:EAJava_void
+~ Victim()
+~ Printsoutthelistofvictims()
+~ sendotdevice()
+~ Categorizesthevictim()
+~ addnewvictimrecordtodb()
+~ TrackVictimsbutton()
+~ updatevictimtrackingformpage()
+}
+
+class Volunteer {
+- OTP:EAJava_void
+- deviceID:EAJava_void
+- building:EAJava_void
+- Status:EAJava_void
+~ OTP Login()
+~ Checkin()
+~ Enter victim Data()
+~ Retrieve victim data()
+~ volunteerhomepage()
+~ clearsdeviceIDofvolunteer()
+~ sendsOTPtovolunteersemailID()
+~ volunteerinfodatabase()
+}
+
+class WebUser {
+- Password:EAJava_void
+- Hub:EAJava_void
+~ Login()
+~ Logout()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ generateonetimepassOTPandsendittousers()
+~ Authenticatetheusernameandpassword()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+~ Checkuserandpasswordentered()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+~ Systemupdatesrecordinthedatabase()
+}
+
+class checkthebarcodeambulancenumberandhospitalinfo {
+~ checkthebarcodeambulancenumberandhospitalinfo()
+~ Hospitalinformation()
+~ Manageindividualsspagewithlistofindividualdetails()
+}
+
+class returnsaddEMTfrompage {
+~ returnsaddEMTfrompage(EAJava_void Name):EAJava_void
+~ EMTformpage()
+~ OTPemptyerrormessage()
+~ Respirationperfusionmetalstatuspage()
+~ MedFPShomepage()
+~ Individualdetailspage()
+~ Deleterecordsfromthedatabase()
+~ ResendOTPPage()
+~ SearchResultPage()
+}
+
+class ValidatesInput {
+~ ValidatesInput()
+~ nullinputinformaitonerror()
+~ validatetheatallfieldsarenonempty()
+~ Updateindividualsrecord()
+~ generatesuniquedeviceid()
+~ IndividualresendOTPpage()
+~ updatebutton()
+}
+
+class categoryspage {
+~ categoryspage()
+~ ishebreathingpage()
+~ Errormessage()
+~ Loginpage()
+~ DisplayMedFPShomepage()
+~ DeletePage()
+~ UpdateIndividualFormPage()
+~ OTPpage()
+~ authenticatetheOTP()
+~ checklocalstorage()
+~ EMTformpage()
+}
+
+class Redirectstorespirationperfusionmetalstatuspage {
+~ Redirectstorespirationperfusionmetalstatuspage()
+~ Hospitalinformation()
+~ RedirecttoMedFPSSupervisorcoordinatehomepage()
+~ Redirectstothemanagementindividusalpage()
+~ Redirecttodeletepage()
+~ Redirectstoupdatevictimassignmentformpage()
+~ authentificationfailuremessage()
+~ receiveandstoratedeviceidatlocalstorage()
+~ victiminformationinputandmedicalinformationinput()
+~ Victiminformationpageiwthlistofvictimdetails()
+~ listofindividualdetailspage()
+}
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor .. Building
+
+Supervisor <|-- WebUser
+
+TransportCoordinator <|-- WebUser
+
+Volunteer <|-- User
+
+WebUser <|-- User
+
+@enduml

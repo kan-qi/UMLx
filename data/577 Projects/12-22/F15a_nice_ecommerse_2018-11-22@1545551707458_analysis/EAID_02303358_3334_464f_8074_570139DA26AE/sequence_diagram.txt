@@ -1,0 +1,29 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Vendor
+participant "Buyer Profile" as 09
+participant "notifyuser" as 19
+participant "System Boundary" as 49
+
+Vendor -> 19: listofusers()
+activate 19
+
+19 -> 19: queryuseremail()
+19 -> 19: user()
+deactivate 19
+
+19 -> 49: sendemail()
+activate 49
+
+49 -> 09: Emailprotocol()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+@enduml

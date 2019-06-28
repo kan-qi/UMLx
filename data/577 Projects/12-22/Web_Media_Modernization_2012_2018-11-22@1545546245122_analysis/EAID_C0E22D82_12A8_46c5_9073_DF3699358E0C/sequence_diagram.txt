@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Event Image" as 09
+participant "Job Opening List" as 19
+participant "Job Application Form " as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Viewjoblistpage()
+activate 19
+
+19 -> 19: selectajoblist()
+19 -> 49: Showconfirmationpage()
+activate 49
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+49 -> 19: Viewjoblistpage()
+19 -> 19: selectajoblist()
+deactivate 19
+
+deactivate 49
+
+@enduml

@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "CreateFormTemplateView" as 09
+participant "EditSphereView" as 29
+participant "CreateSphereView" as 69
+participant "DatabaseAdapter" as 109
+
+User -> 09: Displayalistoftemplates()
+activate 09
+
+09 -> 69: createasphereindb()
+activate 69
+
+69 -> 29: Displaytheeditspherepage()
+activate 29
+
+29 -> 29: editspherepage()
+deactivate 29
+
+deactivate 69
+
+deactivate 09
+
+User -> 09: Createfromtemplatebutton()
+activate 09
+
+09 -> 09: queryavailabletemplates()
+09 -> 09: Disablecreatfromtemplatebutton()
+deactivate 09
+
+09 -> 09: Displayalistoftemplates()
+activate 09
+
+09 -> 69: createasphereindb()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+09 -> 109: templatesdatabase()
+activate 109
+
+deactivate 109
+
+User -> 29: editspherepage()
+activate 29
+
+deactivate 29
+
+User -> 09: Disablecreatfromtemplatebutton()
+activate 09
+
+deactivate 09
+
+@enduml

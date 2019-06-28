@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor guests
+participant "invitationlink" as 09
+participant "validateform" as 19
+participant "successmessage" as 39
+participant "UserSpecificContent" as 59
+participant "Groom" as 79
+
+guests -> 09: invitationlink()
+activate 09
+
+deactivate 09
+
+guests -> 19: registrationform()
+activate 19
+
+19 -> 19: validateform()
+19 -> 39: accountalreadyexistsmessage()
+activate 39
+
+deactivate 39
+
+19 -> 79: backgroundinfo()
+activate 79
+
+deactivate 79
+
+19 -> 09: sendregistrationlinktouser()
+activate 09
+
+09 -> 09: invitationlink()
+deactivate 09
+
+19 -> 19: validateformfailmessage()
+19 -> 19: redirecttoformpage()
+19 -> 59: Positionsandcontentinfo()
+activate 59
+
+deactivate 59
+
+19 -> 19: registrationform()
+19 -> 19: validateform()
+deactivate 19
+
+guests -> 19: validateformfailmessage()
+activate 19
+
+19 -> 19: redirecttoformpage()
+deactivate 19
+
+guests -> 39: accountalreadyexistsmessage()
+activate 39
+
+deactivate 39
+
+guests -> 39: savedesigndetailintodbsuccessmessage()
+activate 39
+
+deactivate 39
+
+@enduml

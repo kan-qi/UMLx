@@ -1,0 +1,9 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#Twilio API:notify acceptance from manager->Twilio API:notify acceptance from manager->notify acceptance from manager:Popup of manager's acceptance->Popup of manager's acceptance:autodialing list,Request Manager Conference,TRAN_NA,4,0,6,3,24
+2,stl#Twilio API:notify cancel request->Twilio API:notify cancel request->notify cancel request:conference cancel notification,Request Manager Conference,CTRL,3,0,7,2,21
+3,stl#Twilio API:Notify Manager->Twilio API:Notify Manager->Notify Manager:popup with request detail of the agent,Request Manager Conference,TRAN_NA,3,0,5,2,15
+4,stl#Manager:popup with request detail of the agent->Manager:popup with request detail of the agent,Request Manager Conference,CTRL,2,0,2,1,4
+5,stl#Manager:connect to ongoing call->Manager:connect to ongoing call->connect to ongoing call:Twilio API,Request Manager Conference,CTRL,3,0,1.5,2,4.5
+6,stl#Customer:conference cancel notification->Customer:conference cancel notification,Request Manager Conference,CTRL,2,0,7,1,14
+7,stl#Customer:Popup of manager's acceptance->Customer:Popup of manager's acceptance->Popup of manager's acceptance:autodialing list,Request Manager Conference,TRAN_NA,3,0,5,2,15
+8,stl#Customer:request manager conference button->Customer:request manager conference button->request manager conference button:send conference request->send conference request:Twilio API,Request Manager Conference,CTRL,4,1,5.333333333333333,3,21.333333333333332

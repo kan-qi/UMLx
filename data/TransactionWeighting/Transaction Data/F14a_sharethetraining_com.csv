@@ -1,0 +1,134 @@
+id,transaction,useCase,transactional, TL, DETs, TD, Arch_Diff
+1,stl#Admin:home page->Admin:home page,Add course,CTRL,2,1,3,6
+2,stl#Admin:home page->Admin:home page,Add course,EXTCLL,2,1,3,6
+3,stl#Admin:home page->Admin:home page,Add course,INT,2,1,3,6
+4,stl#Admin:Manage course page->Admin:Manage course page->Manage course page:redirect to home page->redirect to home page:home page,Add course,TRAN_NA,4,2,2.3333333333333335,9.333333333333334
+5,stl#Admin:Manage course page->Admin:Manage course page->Manage course page:Process course information->Process course information:save course information into database->save course information into database:course,Add course,TRAN_NA,5,0,1.5,7.5
+6,stl#Admin:Manage course page->Admin:Manage course page->Manage course page:Process course information->Process course information:Invalid entered information,Add course,TRAN_NA,4,1,1.6666666666666667,6.666666666666667
+7,stl#Admin:Invalid entered information->Admin:Invalid entered information,Add course,CTRL,2,1,2,4
+8,stl#Admin:Invalid entered information->Admin:Invalid entered information,Add course,EXTCLL,2,1,2,4
+9,stl#Admin:Invalid entered information->Admin:Invalid entered information,Add course,INT,2,1,2,4
+1,stl#Admin:Delete confirmation dialog->Admin:Delete confirmation dialog->Delete confirmation dialog:delete course->delete course:send email to attendees->send email to attendees:delete success message,Delete course,TRAN_NA,5,3,3.25,16.25
+2,stl#Admin:Delete confirmation dialog->Admin:Delete confirmation dialog->Delete confirmation dialog:delete course->delete course:course,Delete course,TRAN_NA,4,1,3.6666666666666665,14.666666666666666
+3,stl#Admin:delete success message->Admin:delete success message,Delete course,CTRL,2,1,3,6
+4,stl#Admin:delete course button->Admin:delete course button->delete course button:show delete confirmation box->show delete confirmation box:Delete confirmation dialog->Delete confirmation dialog:delete course->delete course:send email to attendees->send email to attendees:delete success message,Delete course,TRAN_NA,7,4,3.3333333333333335,23.333333333333336
+5,stl#Admin:delete course button->Admin:delete course button->delete course button:show delete confirmation box->show delete confirmation box:Delete confirmation dialog->Delete confirmation dialog:delete course->delete course:course,Delete course,TRAN_NA,6,2,3.6,21.6
+1,stl#User:Login page->User:Login page->Login page:Redirect to home page->Redirect to home page:Home page,Login,TRAN_NA,4,3,4,16
+2,stl#User:Login page->User:Login page->Login page:verify login information->verify login information:user,Login,CTRL,4,2,4.333333333333333,17.333333333333332
+3,stl#User:Login page->User:Login page->Login page:verify login information->verify login information:update role->update role:cache,Login,CTRL,5,2,3.5,17.5
+4,stl#User:Login page->User:Login page->Login page:verify login information->verify login information:update role->update role:Login success information,Login,CTRL,5,3,4.75,23.75
+5,stl#User:Login page->User:Login page->Login page:verify login information->verify login information:Login invalid message,Login,CTRL,4,3,6,24
+6,stl#User:Login invalid message->User:Login invalid message,Login,CTRL,2,1,6,12
+7,stl#User:Login success information->User:Login success information,Login,CTRL,2,1,6,12
+8,stl#User:course detail page->User:course detail page,Login,CTRL,2,0,1,2
+9,stl#User:Home page->User:Home page,Login,CTRL,2,1,3,6
+10,stl#User:Home page->User:Home page,Login,EXTCLL,2,1,3,6
+11,stl#User:Home page->User:Home page,Login,INT,2,1,3,6
+1,stl#Admin:Course management page->Admin:Course management page->Course management page:verify course information->verify course information:save course info->save course info:course,Modify course,CTRL,5,0,4.75,23.75
+2,stl#Admin:Course management page->Admin:Course management page->Course management page:verify course information->verify course information:Invalid course information->Invalid course information:delete course->delete course:course,Modify course,TRAN_NA,6,0,4.2,25.200000000000003
+3,stl#Admin:Course management page->Admin:Course management page->Course management page:verify course information->verify course information:Invalid course information->Invalid course information:delete course->delete course:Redirect to home page->Redirect to home page:home page,Modify course,TRAN_NA,7,2,4.166666666666667,29.166666666666668
+4,stl#Admin:Course management page->Admin:Course management page->Course management page:Redirect to home page->Redirect to home page:home page,Modify course,TRAN_NA,4,2,3.6666666666666665,14.666666666666666
+5,stl#Admin:home page->Admin:home page,Modify course,CTRL,2,1,5,10
+6,stl#Admin:home page->Admin:home page,Modify course,EXTCLL,2,1,5,10
+7,stl#Admin:home page->Admin:home page,Modify course,INT,2,1,5,10
+8,stl#Admin:Invalid course information->Admin:Invalid course information->Invalid course information:delete course->delete course:course,Modify course,TRAN_NA,4,0,4.666666666666667,18.666666666666668
+9,stl#Admin:Invalid course information->Admin:Invalid course information->Invalid course information:delete course->delete course:Redirect to home page->Redirect to home page:home page,Modify course,TRAN_NA,5,2,4.5,22.5
+1,stl#EventBrite:bring up payment page->EventBrite:bring up payment page->bring up payment page:Payment page->Payment page:make payment,Register course,TRAN_NA,4,3,11,44
+2,stl#EventBrite:receive payment result->EventBrite:receive payment result->receive payment result:Send out confirmation email->Send out confirmation email:registration success,Register course,TRAN_NA,4,3,8,32
+3,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:Redirect to home page->Redirect to home page:Home page,Register course,TRAN_NA,4,2,7.666666666666667,30.666666666666668
+4,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:setupPayment->setupPayment:course,Register course,TRAN_NA,4,1,4.333333333333333,17.333333333333332
+5,stl#Attendee:registration success->Attendee:registration success,Register course,CTRL,2,1,2,4
+6,stl#Attendee:registration success->Attendee:registration success,Register course,EXTCLL,2,1,2,4
+7,stl#Attendee:registration success->Attendee:registration success,Register course,INT,2,1,2,4
+8,stl#Attendee:Payment page->Attendee:Payment page->Payment page:make payment,Register course,TRAN_NA,3,2,11,33
+9,stl#Attendee:Home page->Attendee:Home page,Register course,CTRL,2,1,11,22
+10,stl#Attendee:Home page->Attendee:Home page,Register course,EXTCLL,2,1,11,22
+11,stl#Attendee:Home page->Attendee:Home page,Register course,INT,2,1,11,22
+1,stl#User:course information is no t valid message->User:course information is no t valid message,Request new course,CTRL,2,0,2,4
+2,stl#User:course information is no t valid message->User:course information is no t valid message,Request new course,EXTCLL,2,0,2,4
+3,stl#User:course information is no t valid message->User:course information is no t valid message,Request new course,INT,2,0,2,4
+4,stl#User:Log out button->User:Log out button->Log out button:clear local cache->clear local cache:home page->home page:save course information for review->save course information for review:send email to trianer,Request new course,TRAN_NA,6,3,1.4,8.399999999999999
+5,stl#User:Log out button->User:Log out button->Log out button:clear local cache->clear local cache:home page->home page:save course information for review->save course information for review:course information is no t valid message,Request new course,TRAN_NA,6,3,1.6,9.600000000000001
+6,stl#User:Log out button->User:Log out button->Log out button:clear local cache->clear local cache:cache,Request new course,CTRL,4,2,1,4
+7,stl#User:home page->User:home page->home page:save course information for review->save course information for review:send email to trianer,Request new course,TRAN_NA,4,1,1.6666666666666667,6.666666666666667
+8,stl#User:home page->User:home page->home page:save course information for review->save course information for review:course information is no t valid message,Request new course,TRAN_NA,4,1,2,8
+1,stl#EventBrite:receive payment result->EventBrite:receive payment result->receive payment result:Send out confirmation email->Send out confirmation email:registration success,Review course,TRAN_NA,4,3,6.666666666666667,26.666666666666668
+2,stl#EventBrite:Update cours information in db->EventBrite:Update cours information in db->Update cours information in db:Course,Review course,CTRL,3,1,4,12
+3,stl#EventBrite:Update cours information in db->EventBrite:Update cours information in db->Update cours information in db:Cours information update success message->Cours information update success message:make payment,Review course,CTRL,4,3,7,28
+4,stl#EventBrite:Update cours information in db->EventBrite:Update cours information in db->Update cours information in db:Cours information update success message->Cours information update success message:make payment,Review course,EXTCLL,4,3,7,28
+5,stl#EventBrite:Update cours information in db->EventBrite:Update cours information in db->Update cours information in db:Cours information update success message->Cours information update success message:make payment,Review course,INT,4,3,7,28
+6,stl#Attendee:Cours information update success message->Attendee:Cours information update success message->Cours information update success message:make payment,Review course,CTRL,3,2,7.5,22.5
+7,stl#Attendee:Cours information update success message->Attendee:Cours information update success message->Cours information update success message:make payment,Review course,EXTCLL,3,2,7.5,22.5
+8,stl#Attendee:Cours information update success message->Attendee:Cours information update success message->Cours information update success message:make payment,Review course,INT,3,2,7.5,22.5
+9,stl#Attendee:registration success->Attendee:registration success,Review course,CTRL,2,1,2,4
+10,stl#Attendee:registration success->Attendee:registration success,Review course,EXTCLL,2,1,2,4
+11,stl#Attendee:registration success->Attendee:registration success,Review course,INT,2,1,2,4
+12,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:Display review page->Display review page:Review page->Review page:Update cours information in db->Update cours information in db:Course,Review course,TRAN_NA,6,3,3,18
+13,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:Display review page->Display review page:Review page->Review page:Update cours information in db->Update cours information in db:Cours information update success message->Cours information update success message:make payment,Review course,TRAN_NA,7,5,4.666666666666667,32.66666666666667
+14,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:Display review page->Display review page:Review page->Review page:Redirect to home page->Redirect to home page:Home page,Review course,TRAN_NA,6,4,5,30
+15,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:setupPayment,Review course,CTRL,3,1,5,15
+16,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:setupPayment,Review course,EXTCLL,3,1,5,15
+17,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:setupPayment,Review course,INT,3,1,5,15
+18,stl#Attendee:Home page->Attendee:Home page,Review course,CTRL,2,1,9,18
+19,stl#Attendee:Home page->Attendee:Home page,Review course,EXTCLL,2,1,9,18
+20,stl#Attendee:Home page->Attendee:Home page,Review course,INT,2,1,9,18
+21,stl#Attendee:Review page->Attendee:Review page->Review page:Update cours information in db->Update cours information in db:Course,Review course,TRAN_NA,4,2,3.6666666666666665,14.666666666666666
+22,stl#Attendee:Review page->Attendee:Review page->Review page:Update cours information in db->Update cours information in db:Cours information update success message->Cours information update success message:make payment,Review course,TRAN_NA,5,4,6,30
+23,stl#Attendee:Review page->Attendee:Review page->Review page:Redirect to home page->Redirect to home page:Home page,Review course,TRAN_NA,4,3,7,28
+1,stl#User:course list->User:course list,Search course,CTRL,2,0,4,8
+2,stl#User:home page->User:home page,Search course,CTRL,2,1,4,8
+3,stl#User:home page->User:home page,Search course,EXTCLL,2,1,4,8
+4,stl#User:home page->User:home page,Search course,INT,2,1,4,8
+5,stl#User:Search page->User:Search page->Search page:redirect to home page->redirect to home page:home page,Search course,TRAN_NA,4,3,3.3333333333333335,13.333333333333334
+6,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:course,Search course,CTRL,4,2,2.6666666666666665,10.666666666666666
+7,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:course list,Search course,CTRL,4,2,2.6666666666666665,10.666666666666666
+8,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:Save sign up information->Save sign up information:home page,Search course,CTRL,5,4,2.25,11.25
+9,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:Save sign up information->Save sign up information:home page,Search course,EXTCLL,5,4,2.25,11.25
+10,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:Save sign up information->Save sign up information:home page,Search course,INT,5,4,2.25,11.25
+11,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:Save sign up information->Save sign up information:course,Search course,CTRL,5,3,2.25,11.25
+12,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:No matched results,Search course,CTRL,4,2,2,8
+13,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:No matched results,Search course,EXTCLL,4,2,2,8
+14,stl#User:Search page->User:Search page->Search page:Search course by keywords->Search course by keywords:No matched results,Search course,INT,4,2,2,8
+15,stl#User:No matched results->User:No matched results,Search course,CTRL,2,0,2,4
+16,stl#User:No matched results->User:No matched results,Search course,EXTCLL,2,0,2,4
+17,stl#User:No matched results->User:No matched results,Search course,INT,2,0,2,4
+1,stl#User:home page->User:home page,Setup account,CTRL,2,1,2,4
+2,stl#User:home page->User:home page,Setup account,EXTCLL,2,1,2,4
+3,stl#User:home page->User:home page,Setup account,INT,2,1,2,4
+4,stl#User:Sign up page->User:Sign up page->Sign up page:verify sign up information->verify sign up information:invalid sign up informatin,Setup account,CTRL,4,3,5,20
+5,stl#User:Sign up page->User:Sign up page->Sign up page:verify sign up information->verify sign up information:Save sign up information->Save sign up information:user,Setup account,CTRL,5,3,4,20
+6,stl#User:Sign up page->User:Sign up page->Sign up page:verify sign up information->verify sign up information:Save sign up information->Save sign up information:home page,Setup account,CTRL,5,4,4.25,21.25
+7,stl#User:Sign up page->User:Sign up page->Sign up page:verify sign up information->verify sign up information:Save sign up information->Save sign up information:home page,Setup account,EXTCLL,5,4,4.25,21.25
+8,stl#User:Sign up page->User:Sign up page->Sign up page:verify sign up information->verify sign up information:Save sign up information->Save sign up information:home page,Setup account,INT,5,4,4.25,21.25
+9,stl#User:invalid sign up informatin->User:invalid sign up informatin,Setup account,CTRL,2,1,5,10
+1,stl#User:course list button->User:course list button->course list button:load course list->load course list:user,Share course,CTRL,4,0,3,12
+2,stl#User:course list button->User:course list button->course list button:load course list->load course list:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:send course information to users->send course information to users:Notification,Share course,TRAN_NA,8,1,3.2857142857142856,26.285714285714285
+3,stl#User:course list button->User:course list button->course list button:load course list->load course list:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:Redirect to login page->Redirect to login page:Login page,Share course,TRAN_NA,8,2,4,32
+4,stl#User:Share menu->User:Share menu->Share menu:send course information to users->send course information to users:Notification,Share course,TRAN_NA,4,1,2.3333333333333335,9.333333333333334
+5,stl#User:Share menu->User:Share menu->Share menu:Redirect to login page->Redirect to login page:Login page,Share course,TRAN_NA,4,2,4,16
+6,stl#User:Course list->User:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:send course information to users->send course information to users:Notification,Share course,TRAN_NA,6,1,3,18
+7,stl#User:Course list->User:Course list->Course list:Open course share menu->Open course share menu:Share menu->Share menu:Redirect to login page->Redirect to login page:Login page,Share course,TRAN_NA,6,2,4,24
+8,stl#User:Login page->User:Login page,Share course,CTRL,2,1,4,8
+1,stl#Trainer:load schedule button->Trainer:load schedule button->load schedule button:query schedule info->query schedule info:schedule,Update schedule,CTRL,4,3,15,60
+2,stl#Trainer:load schedule button->Trainer:load schedule button->load schedule button:query schedule info->query schedule info:schedule info page->schedule info page:display update schedule page->display update schedule page:schedule update page->schedule update page:validate updated schedule info->validate updated schedule info:save updated schedule->save updated schedule:schedule,Update schedule,CTRL,9,8,15,135
+3,stl#Trainer:load schedule button->Trainer:load schedule button->load schedule button:query schedule info->query schedule info:schedule info page->schedule info page:display update schedule page->display update schedule page:schedule update page->schedule update page:validate updated schedule info->validate updated schedule info:Invalid input schedule info,Update schedule,CTRL,8,7,15,120
+4,stl#Trainer:Invalid input schedule info->Trainer:Invalid input schedule info,Update schedule,CTRL,2,1,15,30
+5,stl#Trainer:schedule info page->Trainer:schedule info page->schedule info page:display update schedule page->display update schedule page:schedule update page->schedule update page:validate updated schedule info->validate updated schedule info:save updated schedule->save updated schedule:schedule,Update schedule,CTRL,7,6,15,105
+6,stl#Trainer:schedule info page->Trainer:schedule info page->schedule info page:display update schedule page->display update schedule page:schedule update page->schedule update page:validate updated schedule info->validate updated schedule info:Invalid input schedule info,Update schedule,CTRL,6,5,15,90
+7,stl#Trainer:schedule update page->Trainer:schedule update page->schedule update page:validate updated schedule info->validate updated schedule info:save updated schedule->save updated schedule:schedule,Update schedule,CTRL,5,4,15,75
+8,stl#Trainer:schedule update page->Trainer:schedule update page->schedule update page:validate updated schedule info->validate updated schedule info:Invalid input schedule info,Update schedule,CTRL,4,3,15,60
+1,stl#Admin:course informaton->Admin:course informaton->course informaton:save the acceptance information->save the acceptance information:send email to trianer,Verify new course,CTRL,4,1,3.3333333333333335,13.333333333333334
+2,stl#Admin:course informaton->Admin:course informaton->course informaton:save the acceptance information->save the acceptance information:course information is no t valid message,Verify new course,CTRL,4,1,3.6666666666666665,14.666666666666666
+3,stl#Admin:course informaton->Admin:course informaton->course informaton:save the acceptance information->save the acceptance information:course information is no t valid message,Verify new course,EXTCLL,4,1,3.6666666666666665,14.666666666666666
+4,stl#Admin:course informaton->Admin:course informaton->course informaton:save the acceptance information->save the acceptance information:course information is no t valid message,Verify new course,INT,4,1,3.6666666666666665,14.666666666666666
+5,stl#Admin:course informaton->Admin:course informaton->course informaton:save the acceptance information->save the acceptance information:acceptance,Verify new course,CTRL,4,2,3.3333333333333335,13.333333333333334
+6,stl#Admin:course list->Admin:course list->course list:load course information->load course information:save course info->save course info:course,Verify new course,CTRL,5,0,7,35
+7,stl#Admin:course list->Admin:course list->course list:load course information->load course information:course informaton->course informaton:save the acceptance information->save the acceptance information:send email to trianer,Verify new course,CTRL,6,1,4.8,28.799999999999997
+8,stl#Admin:course list->Admin:course list->course list:load course information->load course information:course informaton->course informaton:save the acceptance information->save the acceptance information:course information is no t valid message,Verify new course,CTRL,6,1,5,30
+9,stl#Admin:course list->Admin:course list->course list:load course information->load course information:course informaton->course informaton:save the acceptance information->save the acceptance information:course information is no t valid message,Verify new course,EXTCLL,6,1,5,30
+10,stl#Admin:course list->Admin:course list->course list:load course information->load course information:course informaton->course informaton:save the acceptance information->save the acceptance information:course information is no t valid message,Verify new course,INT,6,1,5,30
+11,stl#Admin:course list->Admin:course list->course list:load course information->load course information:course informaton->course informaton:save the acceptance information->save the acceptance information:acceptance,Verify new course,CTRL,6,2,4.8,28.799999999999997
+12,stl#Admin:course list->Admin:course list->course list:load course information->load course information:course,Verify new course,CTRL,4,0,7,28
+13,stl#Admin:course information is no t valid message->Admin:course information is no t valid message,Verify new course,CTRL,2,0,2,4
+14,stl#Admin:course information is no t valid message->Admin:course information is no t valid message,Verify new course,EXTCLL,2,0,2,4
+15,stl#Admin:course information is no t valid message->Admin:course information is no t valid message,Verify new course,INT,2,0,2,4

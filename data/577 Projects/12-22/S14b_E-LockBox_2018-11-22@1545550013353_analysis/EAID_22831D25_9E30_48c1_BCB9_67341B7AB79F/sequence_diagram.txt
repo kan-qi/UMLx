@@ -1,0 +1,83 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Use information" as 09
+participant "User management" as 19
+participant "validatetheentries" as 29
+participant "descriptionshouldnotbeblankmessage" as 39
+participant "User" as 69
+participant "Activity" as 89
+
+User -> 09: userinformationpage()
+activate 09
+
+09 -> 69: checkthestatusofuser()
+activate 69
+
+69 -> 89: activateuserstatus()
+activate 89
+
+89 -> 69: userinfo()
+deactivate 69
+
+89 -> 39: statuschagesuccessmessage()
+activate 39
+
+deactivate 39
+
+deactivate 89
+
+69 -> 39: wrongactionmessage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 19: UseManagementbutton()
+activate 19
+
+19 -> 29: validatetheroleofuser()
+activate 29
+
+29 -> 09: returntotheuserinformationpage()
+activate 09
+
+09 -> 09: userinformationpage()
+09 -> 69: checkthestatusofuser()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+29 -> 29: rolevalidationfailedmessage()
+deactivate 29
+
+29 -> 69: userinfo()
+activate 69
+
+deactivate 69
+
+deactivate 19
+
+User -> 29: rolevalidationfailedmessage()
+activate 29
+
+deactivate 29
+
+User -> 39: wrongactionmessage()
+activate 39
+
+deactivate 39
+
+User -> 39: statuschagesuccessmessage()
+activate 39
+
+deactivate 39
+
+@enduml

@@ -1,0 +1,14 @@
+./tools/scripts/IterationScript.sh "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Rufuslabs"
+
+./tools/scripts/CountingScript.sh "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Rufuslabs"
+
+cmd dir /s /b /a > filelist.txt
+
+1. create a list of projects in the repositories
+cmd dir /s /b /a
+
+for /f "tokens=*" %a in (repsitories.txt) do (echo "C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Repositories\rufus_labs"%a) >> output.txt
+
+java -classpath ./bin repo.AnalysisKit "analyse-sloc" "C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Repositories\Rufuslabs\repositories.txt" "C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Repositories\Rufuslabs\sloc"
+
+tools\cloc\cloc-1.64.exe --list-file="C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Research Projects\UMLx\data\RufusLabs\sloc\itories_Rufuslabs_abc123\filelist.txt" --report-file="C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Research Projects\UMLx\data\RufusLabs\sloc\itories_Rufuslabs_abc123\cloc_report.txt"

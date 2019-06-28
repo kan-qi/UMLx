@@ -1,0 +1,30 @@
+div.model-display-box
+ if calibrationResult
+  div.model-plot-container
+   div.column
+    div.model-plot-box
+     img(src=calibrationResult.accessDir+"/"+calibrationResult.svgFileName+"?ver="+ver)
+   div.column
+    div.model-statistics
+     h3 Model Statistics:
+     p MMRE: #{calibrationResult.MMRE}
+     p PRED25: #{calibrationResult.PRED25}
+     p PRED50: #{calibrationResult.PRED50}
+    div.parameter-statistics
+     h3 Paramter Statistics:
+     table
+      thead
+       tr
+        td Name
+        td Estimate
+        td Std. Error
+        td t-value
+        td p-value
+      tbody
+       each parameter in calibrationResult.parameters
+        tr
+         td #{parameter.name}
+         td #{parameter.estimate}
+         td #{parameter.stdError}
+         td #{parameter.tValue}
+         td #{parameter.pValue}

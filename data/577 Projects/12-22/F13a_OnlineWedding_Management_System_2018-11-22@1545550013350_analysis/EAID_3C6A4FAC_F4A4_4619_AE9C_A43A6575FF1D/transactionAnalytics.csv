@@ -1,0 +1,7 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:Save confirmation message->User:Save confirmation message,upload list of guests,2,1,0,0,0
+2,stl#User:Error message->User:Error message->Error message:redirect to invitation page->redirect to invitation page:invitation page,upload list of guests,4,1,0,2,0
+3,stl#User:invitation page->User:invitation page,upload list of guests,2,0,0,1,0
+4,stl#User:downloadable template page for filling data->User:downloadable template page for filling data->downloadable template page for filling data:parse uploaded file->parse uploaded file:save file into db->save file into db:Error message->Error message:redirect to invitation page->redirect to invitation page:invitation page,upload list of guests,7,2,1,3,0
+5,stl#User:downloadable template page for filling data->User:downloadable template page for filling data->downloadable template page for filling data:parse uploaded file->parse uploaded file:save file into db->save file into db:Save confirmation message,upload list of guests,5,2,1,1,0
+6,stl#User:downloadable template page for filling data->User:downloadable template page for filling data->downloadable template page for filling data:parse uploaded file->parse uploaded file:save file into db->save file into db:file db,upload list of guests,5,1,2,1,0

@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Neon CRMactor User
+participant "Check In Form" as 09
+participant "Registration Form" as 19
+participant "Feedback Form" as 99
+
+Neon CRM -> 09: Invalidcheckininformation()
+activate 09
+
+09 -> 09: savecheckininformation()
+09 -> 09: Checkininformation()
+deactivate 09
+
+User -> 09: Checkinbutton()
+activate 09
+
+09 -> 09: displaycheckinpage()
+09 -> 09: checkinpage()
+09 -> 09: Restcalforvalidatingcheckininformation()
+09 -> 19: NeonCRM()
+activate 19
+
+19 -> 09: Invalidcheckininformation()
+deactivate 09
+
+deactivate 19
+
+09 -> 99: Validatefeedbackdata()
+activate 99
+
+99 -> 19: NeonCRM()
+activate 19
+
+19 -> 09: Invalidcheckininformation()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+99 -> 09: savecheckininformation()
+activate 09
+
+09 -> 09: Checkininformation()
+deactivate 09
+
+deactivate 99
+
+User -> 09: Invalidcheckininformation()
+activate 09
+
+09 -> 09: savecheckininformation()
+deactivate 09
+
+User -> 09: checkinpage()
+activate 09
+
+09 -> 09: Restcalforvalidatingcheckininformation()
+deactivate 09
+
+@enduml

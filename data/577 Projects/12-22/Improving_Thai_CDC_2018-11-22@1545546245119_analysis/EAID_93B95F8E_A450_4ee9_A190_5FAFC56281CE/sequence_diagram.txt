@@ -1,0 +1,87 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Homepage" as 09
+participant "Clicksubmit" as 19
+participant "Contacts information profile" as 29
+participant "Approvalmanager��srequest" as 69
+participant "mass mailing template" as 99
+participant "Contacts list file" as 119
+
+User  -> 09: clickusertabinhisherhomepage()
+activate 09
+
+09 -> 119: Displayuserlist()
+activate 119
+
+119 -> 99: Displayatextfieldforinput()
+activate 99
+
+99 -> 69: Approvalmanager��srequest()
+activate 69
+
+69 -> 29: addcontactsintoSalesforce()
+activate 29
+
+29 -> 09: Homepage()
+deactivate 09
+
+deactivate 29
+
+deactivate 69
+
+deactivate 99
+
+deactivate 119
+
+User  -> 19: clicknewuserbutton()
+activate 19
+
+19 -> 99: Displayatextfieldforinput()
+activate 99
+
+99 -> 69: Approvalmanager��srequest()
+activate 69
+
+deactivate 69
+
+deactivate 99
+
+deactivate 19
+
+User  -> 29: typeininformationofnewuser()
+activate 29
+
+29 -> 69: Approvalmanager��srequest()
+activate 69
+
+69 -> 29: addcontactsintoSalesforce()
+deactivate 29
+
+deactivate 69
+
+User  -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User  -> 19: Clicksubmit()
+activate 19
+
+19 -> 69: Approvalmanager��srequest()
+activate 69
+
+69 -> 29: addcontactsintoSalesforce()
+activate 29
+
+deactivate 29
+
+deactivate 69
+
+deactivate 19
+
+@enduml

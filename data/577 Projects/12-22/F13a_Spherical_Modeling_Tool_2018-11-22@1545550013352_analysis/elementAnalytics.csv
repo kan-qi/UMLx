@@ -1,0 +1,333 @@
+id,element,useCase,type,component
+1,User:Display a list of templates,Create from template,control,CreateFormTemplateView
+2,User:Create from template button,Create from template,control,CreateFormTemplateView
+3,User:edit sphere page,Create from template,boundary,EditSphereView
+4,User:Disable creat from template button,Create from template,control,CreateFormTemplateView
+5,Create from template button:query available templates,Create from template,control,CreateFormTemplateView
+6,query available templates:Disable creat from template button,Create from template,control,CreateFormTemplateView
+7,Display a list of templates:create a sphere in db,Create from template,control,CreateSphereView
+8,query available templates:Display a list of templates,Create from template,control,CreateFormTemplateView
+9,Display the edit sphere page:edit sphere page,Create from template,boundary,EditSphereView
+10,create a sphere in db:Display the edit sphere page,Create from template,boundary,EditSphereView
+11,query available templates:templates database,Create from template,control,DatabaseAdapter
+12,stl#User:Display a list of templates,Create from template,Stimulus,undefined
+13,stl#User:Create from template button,Create from template,Stimulus,undefined
+14,stl#User:edit sphere page,Create from template,Stimulus,undefined
+15,stl#User:Disable creat from template button,Create from template,Stimulus,undefined
+16,User:Delete sphere button,Delete sphere,entity,SphereModel
+17,User:confirmation prompt,Delete sphere,control,VizualizationView
+18,User:Home page,Delete sphere,boundary,HomeView
+19,Delete sphere button:Display confirmation prompt,Delete sphere,control,CreateFormTemplateView
+20,Display confirmation prompt:builds a list of matches,Delete sphere,boundary,buildsalistofmatches
+21,Display confirmation prompt:confirmation prompt,Delete sphere,control,VizualizationView
+22,redirect user to home page:Home page,Delete sphere,boundary,HomeView
+23,builds a list of matches:confirmation prompt,Delete sphere,control,VizualizationView
+24,confirmation prompt:market as deleted in db,Delete sphere,control,main
+25,market as deleted in db:sphere,Delete sphere,entity,SphereModel
+26,market as deleted in db:redirect user to home page,Delete sphere,boundary,$help://usecasediagram.htm
+27,stl#User:Delete sphere button,Delete sphere,Stimulus,undefined
+28,stl#User:confirmation prompt,Delete sphere,Stimulus,undefined
+29,stl#User:Home page,Delete sphere,Stimulus,undefined
+30,User:node is not updated message,Edit nodes in table,boundary,CategoryModel
+31,User:Sphere overview,Edit nodes in table,boundary,EditSphereView
+32,User:success message,Edit nodes in table,boundary,ManageAccountView
+33,User:a list of ones,Edit nodes in table,boundary,buildsalistofmatches
+34,User:List of usrs with specific sphere,Edit nodes in table,boundary,EditSphereView
+35,List of usrs with specific sphere:add association in db,Edit nodes in table,control,VizualizationView
+36,update DB with new values:List of usrs with specific sphere,Edit nodes in table,boundary,EditSphereView
+37,Redirect to sphere overview:Sphere overview,Edit nodes in table,boundary,EditSphereView
+38,update DB with new values:Redirect to sphere overview,Edit nodes in table,boundary,EditSphereView
+39,a list of ones:update DB with new values,Edit nodes in table,control,DataValidator
+40,add association in db:sends notification to second user,Edit nodes in table,control,AuthorizationChecker
+41,update DB with new values:node is not updated message,Edit nodes in table,boundary,CategoryModel
+42,update DB with new values:nodes,Edit nodes in table,control,QuestionModel
+43,sends notification to second user:success message,Edit nodes in table,boundary,ManageAccountView
+44,stl#User:node is not updated message,Edit nodes in table,Stimulus,undefined
+45,stl#User:Sphere overview,Edit nodes in table,Stimulus,undefined
+46,stl#User:success message,Edit nodes in table,Stimulus,undefined
+47,stl#User:a list of ones,Edit nodes in table,Stimulus,undefined
+48,stl#User:List of usrs with specific sphere,Edit nodes in table,Stimulus,undefined
+49,User:editable table for sphere,Edit sphere properties,boundary,EditSphereView
+50,User:success message,Edit sphere properties,boundary,Displaysuccessmessage
+51,User:Edit sphere button,Edit sphere properties,boundary,EditSphereView
+52,User:Error message,Edit sphere properties,boundary,Displaysuccessmessage
+53,Display success message:success message,Edit sphere properties,boundary,Displaysuccessmessage
+54,updates db for new properties:Display success message,Edit sphere properties,boundary,Displaysuccessmessage
+55,Displays sphere properties in editable table:editable table for sphere,Edit sphere properties,boundary,EditSphereView
+56,Displays sphere properties in editable table:sphere,Edit sphere properties,entity,SphereModel
+57,Edit sphere button:Displays sphere properties in editable table,Edit sphere properties,boundary,EditSphereView
+58,updates db for new properties:Error message,Edit sphere properties,boundary,Displaysuccessmessage
+59,editable table for sphere:validate input on sphere change,Edit sphere properties,control,CreateSphereView
+60,updates db for new properties:sphere,Edit sphere properties,entity,SphereModel
+61,validate input on sphere change:updates db for new properties,Edit sphere properties,control,CreateSphereView
+62,stl#User:editable table for sphere,Edit sphere properties,Stimulus,undefined
+63,stl#User:success message,Edit sphere properties,Stimulus,undefined
+64,stl#User:Edit sphere button,Edit sphere properties,Stimulus,undefined
+65,stl#User:Error message,Edit sphere properties,Stimulus,undefined
+66,User:2D view of selected sphere,Open existing shpere,boundary,EditSphereView
+67,User:"create sectors and nodes" page,Open existing shpere,control,CreateSphereView
+68,User:"Open a saved sphere" button,Open existing shpere,boundary,OpenSphereView
+69,User:Displays a list of saved spheres,Open existing shpere,boundary,Displaysuccessmessage
+70,"Open a saved sphere" button:Requests a sphere list o the user from database,Open existing shpere,control,DatabaseAdapter
+71,display 2d view of selected sphere:"create sectors and nodes" page,Open existing shpere,control,CreateSphereView
+72,display 2d view of selected sphere:2D view of selected sphere,Open existing shpere,boundary,EditSphereView
+73,Displays a list of saved spheres:Displays a list of saved spheres,Open existing shpere,boundary,Displaysuccessmessage
+74,Requests a sphere list o the user from database:Displays a list of saved spheres,Open existing shpere,boundary,Displaysuccessmessage
+75,Displays a list of saved spheres:display 2d view of selected sphere,Open existing shpere,boundary,EditSphereView
+76,Requests a sphere list o the user from database:sphere,Open existing shpere,entity,SphereModel
+77,stl#User:2D view of selected sphere,Open existing shpere,Stimulus,undefined
+78,stl#User:"create sectors and nodes" page,Open existing shpere,Stimulus,undefined
+79,stl#User:"Open a saved sphere" button,Open existing shpere,Stimulus,undefined
+80,stl#User:Displays a list of saved spheres,Open existing shpere,Stimulus,undefined
+81,User:Show message for storing the info.,Save as template,boundary,Displaysuccessmessage
+82,User:"open a sphere template",Save as template,boundary,OpenSphereView
+83,User:List of questions and nodes,Save as template,control,QuestionModel
+84,"open a sphere template":display a list of questions and nodes page,Save as template,control,QuestionModel
+85,List of questions and nodes:save template,Save as template,control,CreateFormTemplateView
+86,display a list of questions and nodes page:List of questions and nodes,Save as template,control,QuestionModel
+87,save template:Show message for storing the info.,Save as template,boundary,Displaysuccessmessage
+88,save template:template info,Save as template,control,CreateFormTemplateView
+89,stl#User:Show message for storing the info.,Save as template,Stimulus,undefined
+90,stl#User:"open a sphere template",Save as template,Stimulus,undefined
+91,stl#User:List of questions and nodes,Save as template,Stimulus,undefined
+92,User:"start a new sphere" page,Set sphere title,boundary,EditSphereView
+93,User:"create sectors and nodes" page,Set sphere title,control,CreateSphereView
+94,User:"open or create sphere" page,Set sphere title,control,CreateSphereView
+95,update title of the sphere to database:"create sectors and nodes" page,Set sphere title,control,CreateSphereView
+96,"open or create sphere" page:update title of the sphere to database,Set sphere title,control,DatabaseAdapter
+97,display "open or create sphere" page:"open or create sphere" page,Set sphere title,control,CreateSphereView
+98,"start a new sphere" page:display "open or create sphere" page,Set sphere title,control,CreateSphereView
+99,update title of the sphere to database:sphere,Set sphere title,entity,SphereModel
+100,stl#User:"start a new sphere" page,Set sphere title,Stimulus,undefined
+101,stl#User:"create sectors and nodes" page,Set sphere title,Stimulus,undefined
+102,stl#User:"open or create sphere" page,Set sphere title,Stimulus,undefined
+103,User:2D page with 3d button,Toggle 2d/3d viz,boundary,2Dpagewith3dbutton
+104,User:Disable creat from template button,Toggle 2d/3d viz,control,CreateFormTemplateView
+105,User:sphere edit page,Toggle 2d/3d viz,boundary,EditSphereView
+106,User:3d page,Toggle 2d/3d viz,boundary,2Dpagewith3dbutton
+107,User:In app notification,Toggle 2d/3d viz,control,VizualizationView
+108,2D page with 3d button:display 3d page,Toggle 2d/3d viz,boundary,2Dpagewith3dbutton
+109,display 2d page:2D page with 3d button,Toggle 2d/3d viz,boundary,2Dpagewith3dbutton
+110,3d page:display 2d page,Toggle 2d/3d viz,boundary,2Dpagewith3dbutton
+111,display 3d page:3d page,Toggle 2d/3d viz,boundary,2Dpagewith3dbutton
+112,display 3d page:Disable creat from template button,Toggle 2d/3d viz,control,CreateFormTemplateView
+113,adds notification record in DB:sphere,Toggle 2d/3d viz,entity,SphereModel
+114,display 2d page:redirect to sphere edit page,Toggle 2d/3d viz,boundary,EditSphereView
+115,redirect to sphere edit page:sphere edit page,Toggle 2d/3d viz,boundary,EditSphereView
+116,stl#User:2D page with 3d button,Toggle 2d/3d viz,Stimulus,undefined
+117,stl#User:Disable creat from template button,Toggle 2d/3d viz,Stimulus,undefined
+118,stl#User:sphere edit page,Toggle 2d/3d viz,Stimulus,undefined
+119,stl#User:3d page,Toggle 2d/3d viz,Stimulus,undefined
+120,stl#User:In app notification,Toggle 2d/3d viz,Stimulus,undefined
+121,User:3D sphere view page,View 3D Viz,boundary,EditSphereView
+122,User:sector label of the questions is updated,View 3D Viz,control,QuestionModel
+123,User:"2D Chart View" page,View 3D Viz,boundary,2dView
+124,"2D Chart View" page:query sphere data from db and display 3d sphere view page,View 3D Viz,control,CreateSphereView
+125,3D sphere view page:update questions into database,View 3D Viz,control,DatabaseAdapter
+126,query sphere data from db and display 3d sphere view page:3D sphere view page,View 3D Viz,boundary,EditSphereView
+127,update questions into database:sector label of the questions is updated,View 3D Viz,control,QuestionModel
+128,update questions into database:sphere,View 3D Viz,entity,SphereModel
+129,stl#User:3D sphere view page,View 3D Viz,Stimulus,undefined
+130,stl#User:sector label of the questions is updated,View 3D Viz,Stimulus,undefined
+131,stl#User:"2D Chart View" page,View 3D Viz,Stimulus,undefined
+132,User:"start a new sphere" page,add categories,boundary,EditSphereView
+133,User:sector label of the questions is updated,add categories,control,QuestionModel
+134,User:"create sectors and nodes" page with fields of nodes,add categories,control,CreateSphereView
+135,"create sectors and nodes" page with fields of nodes:update questions into database,add categories,control,DatabaseAdapter
+136,display "create sectors and nodes" page:"create sectors and nodes" page with fields of nodes,add categories,control,CreateSphereView
+137,"start a new sphere" page:display "create sectors and nodes" page,add categories,control,CreateFormTemplateView
+138,update questions into database:sector label of the questions is updated,add categories,control,QuestionModel
+139,update questions into database:sphere,add categories,entity,SphereModel
+140,stl#User:"start a new sphere" page,add categories,Stimulus,undefined
+141,stl#User:sector label of the questions is updated,add categories,Stimulus,undefined
+142,stl#User:"create sectors and nodes" page with fields of nodes,add categories,Stimulus,undefined
+143,User:success message to user,assign permissions,entity,UserModel
+144,User:Share button,assign permissions,boundary,Sharebutton
+145,User:List of users with their permissions,assign permissions,entity,UserModel
+146,Display success message to user:success message to user,assign permissions,entity,UserModel
+147,compute average of a given subset of user:Display success message to user,assign permissions,control,Displaysuccessmessagetouser
+148,Updates DB with new permission info:Display success message to user,assign permissions,control,Displaysuccessmessagetouser
+149,remove permission in database:Display success message to user,assign permissions,control,Displaysuccessmessagetouser
+150,List of users with their permissions:compute average of a given subset of user,assign permissions,control,Displaysuccessmessagetouser
+151,List of users with their permissions:remove permission in database,assign permissions,control,DatabaseAdapter
+152,List of users with their permissions:Updates DB with new permission info,assign permissions,control,CreateSphereView
+153,display a list of users with their permission:List of users with their permissions,assign permissions,entity,UserModel
+154,Share button:display a list of users with their permission,assign permissions,control,Displaysuccessmessagetouser
+155,display a list of users with their permission:User,assign permissions,entity,UserModel
+156,remove permission in database:db,assign permissions,entity,db
+157,stl#User:success message to user,assign permissions,Stimulus,undefined
+158,stl#User:Share button,assign permissions,Stimulus,undefined
+159,stl#User:List of users with their permissions,assign permissions,Stimulus,undefined
+160,User:2D view of selected sphere,overlay data,boundary,EditSphereView
+161,User:a list of users panel,overlay data,entity,UserModel
+162,User:"Compare" button,overlay data,boundary,Sharebutton
+163,"Compare" button:Displays list of users that have entered data of this spheres,overlay data,control,Displaysuccessmessagetouser
+164,Overlay on 2D chart:2D view of selected sphere,overlay data,boundary,EditSphereView
+165,Displays list of users that have entered data of this spheres:Users,overlay data,entity,UserModel
+166,Displays list of users that have entered data of this spheres:a list of users panel,overlay data,entity,UserModel
+167,Renders a different data set for each user:Overlay on 2D chart,overlay data,boundary,Sharebutton
+168,render data for only selected users:Overlay on 2D chart,overlay data,boundary,Sharebutton
+169,a list of users panel:Renders a different data set for each user,overlay data,control,DatabaseAdapter
+170,a list of users panel:render data for only selected users,overlay data,control,DatabaseAdapter
+171,stl#User:2D view of selected sphere,overlay data,Stimulus,undefined
+172,stl#User:a list of users panel,overlay data,Stimulus,undefined
+173,stl#User:"Compare" button,overlay data,Stimulus,undefined
+174,User:In-app notification,prompt other users,control,VizualizationView
+175,User:List of notifications,prompt other users,control,VizualizationView
+176,User:Share sphere button,prompt other users,boundary,Sharebutton
+177,User:sphere edit page,prompt other users,boundary,EditSphereView
+178,Adds notification record in DB:Notification record,prompt other users,control,AuthorizationChecker
+179,Adds notification record in DB:db,prompt other users,entity,db
+180,sends email notification to second user:Adds notification record in DB,prompt other users,control,AuthorizationChecker
+181,Display success message to user:In-app notification,prompt other users,control,VizualizationView
+182,display in-app notificaiton:Display success message to user,prompt other users,control,Displaysuccessmessagetouser
+183,In-app notification:redirect to sphere edit,prompt other users,boundary,EditSphereView
+184,In-app notification:Log out app,prompt other users,control,Router
+185,display in-app notificaiton:In-app notification,prompt other users,control,VizualizationView
+186,List of notifications:display in-app notificaiton,prompt other users,control,Displaysuccessmessagetouser
+187,Log out app:List of notifications,prompt other users,control,VizualizationView
+188,Share sphere button:sends email notification to second user,prompt other users,control,EmailSender
+189,redirect to sphere edit:sphere edit page,prompt other users,boundary,EditSphereView
+190,stl#User:In-app notification,prompt other users,Stimulus,undefined
+191,stl#User:List of notifications,prompt other users,Stimulus,undefined
+192,stl#User:Share sphere button,prompt other users,Stimulus,undefined
+193,stl#User:sphere edit page,prompt other users,Stimulus,undefined
+194,User:User has already exist in the database,register in system,control,DatabaseAdapter
+195,User:Open or create sphere page,register in system,control,CreateSphereView
+196,User:"create sectors and nodes" page,register in system,control,CreateSphereView
+197,User:error message,register in system,control,Displaysuccessmessagetouser
+198,User:"start a new sphere" page,register in system,boundary,EditSphereView
+199,"create sectors and nodes" page:update the node names into database,register in system,control,DatabaseAdapter
+200,display "create sectors and nodes" page:"create sectors and nodes" page,register in system,control,CreateSphereView
+201,"start a new sphere" page:display "create sectors and nodes" page,register in system,control,Displaysuccessmessagetouser
+202,add username and password into user database:Open or create sphere page,register in system,control,CreateSphereView
+203,validate the duplicity of username:User has already exist in the database,register in system,control,DatabaseAdapter
+204,add username and password into user database:sphere,register in system,entity,SphereModel
+205,validate the duplicity of username:add username and password into user database,register in system,control,DatabaseAdapter
+206,update the node names into database:error message,register in system,control,Displaysuccessmessagetouser
+207,update the node names into database:sphere,register in system,entity,SphereModel
+208,update the node names into database:validate the duplicity of username,register in system,control,DataValidator
+209,stl#User:User has already exist in the database,register in system,Stimulus,undefined
+210,stl#User:Open or create sphere page,register in system,Stimulus,undefined
+211,stl#User:"create sectors and nodes" page,register in system,Stimulus,undefined
+212,stl#User:error message,register in system,Stimulus,undefined
+213,stl#User:"start a new sphere" page,register in system,Stimulus,undefined
+214,User:password dialog,reset passowrd,boundary,ForgotPasswordView
+215,User:email is sent message,reset passowrd,control,EmailSender
+216,User:invalid input,reset passowrd,control,DataValidator
+217,User:Forgot password link,reset passowrd,boundary,ForgotPasswordView
+218,User:email address prompts,reset passowrd,control,EmailSender
+219,Forgot password link:prompts for email address,reset passowrd,control,EmailSender
+220,check security token validity:invalid input,reset passowrd,control,DataValidator
+221,check security token validity:prompts user to enter new password,reset passowrd,boundary,ForgotPasswordView
+222,display email send message to user:check security token validity,reset passowrd,control,DataValidator
+223,display email send message to user:email is sent message,reset passowrd,control,EmailSender
+224,sends email to user containing reset link and security token:display email send message to user,reset passowrd,control,Displaysuccessmessagetouser
+225,email address prompts:generate security token,reset passowrd,control,AuthorizationChecker
+226,prompts for email address:email address prompts,reset passowrd,control,EmailSender
+227,generate security token:sends email to user containing reset link and security token,reset passowrd,control,EmailSender
+228,store new password in database:password database,reset passowrd,control,DatabaseAdapter
+229,password dialog:store new password in database,reset passowrd,boundary,ForgotPasswordView
+230,prompts user to enter new password:password dialog,reset passowrd,boundary,ForgotPasswordView
+231,prompts for email address:user info,reset passowrd,entity,UserModel
+232,stl#User:password dialog,reset passowrd,Stimulus,undefined
+233,stl#User:email is sent message,reset passowrd,Stimulus,undefined
+234,stl#User:invalid input,reset passowrd,Stimulus,undefined
+235,stl#User:Forgot password link,reset passowrd,Stimulus,undefined
+236,stl#User:email address prompts,reset passowrd,Stimulus,undefined
+237,User:no  matches message,search spheres,boundary,buildsalistofmatches
+238,User:list of matches,search spheres,boundary,buildsalistofmatches
+239,User:search page,search spheres,boundary,ManageAccountView
+240,Display success information message:no  matches message,search spheres,boundary,buildsalistofmatches
+241,display no metchs message:Display success information message,search spheres,control,Displaysuccessmessagetouser
+242,builds a list of matches:list of matches,search spheres,boundary,buildsalistofmatches
+243,search sphere title or owner fro db:builds a list of matches,search spheres,boundary,buildsalistofmatches
+244,display no metchs message:no  matches message,search spheres,boundary,buildsalistofmatches
+245,search sphere title or owner fro db:display no metchs message,search spheres,control,Displaysuccessmessagetouser
+246,search page:search sphere title or owner fro db,search spheres,boundary,EditSphereView
+247,search sphere title or owner fro db:sphere,search spheres,entity,SphereModel
+248,stl#User:no  matches message,search spheres,Stimulus,undefined
+249,stl#User:list of matches,search spheres,Stimulus,undefined
+250,stl#User:search page,search spheres,Stimulus,undefined
+251,User:Error message,share sphere,control,Displaysuccessmessagetouser
+252,User:List of usrs with specific sphere,share sphere,boundary,EditSphereView
+253,User:success message,share sphere,control,Displaysuccessmessagetouser
+254,User:Share button,share sphere,boundary,Sharebutton
+255,Display a list of usres with a specific sphere:List of usrs with specific sphere,share sphere,boundary,EditSphereView
+256,Display a list of usres with a specific sphere:Notification record,share sphere,control,AuthorizationChecker
+257,Share button:Display a list of usres with a specific sphere,share sphere,boundary,EditSphereView
+258,Display error message if email is not in system:Error message,share sphere,control,Displaysuccessmessagetouser
+259,List of usrs with specific sphere:Display error message if email is not in system,share sphere,control,Displaysuccessmessagetouser
+260,List of usrs with specific sphere:add association in db,share sphere,control,VizualizationView
+261,add association in db:sends notification to second user,share sphere,control,AuthorizationChecker
+262,sends notification to second user:success message,share sphere,control,Displaysuccessmessagetouser
+263,stl#User:Error message,share sphere,Stimulus,undefined
+264,stl#User:List of usrs with specific sphere,share sphere,Stimulus,undefined
+265,stl#User:success message,share sphere,Stimulus,undefined
+266,stl#User:Share button,share sphere,Stimulus,undefined
+267,User:filter data button,taggle data sets,boundary,Sharebutton
+268,User:List of users,taggle data sets,entity,UserModel
+269,User:success information message,taggle data sets,control,Displaysuccessmessagetouser
+270,Display list of users with checkbox:List of users,taggle data sets,entity,UserModel
+271,queries users and answered questions:Display list of users with checkbox,taggle data sets,control,Displaysuccessmessagetouser
+272,Display success information message:success information message,taggle data sets,control,Displaysuccessmessagetouser
+273,updates the chart with only the data for checked users:Display success information message,taggle data sets,control,Displaysuccessmessagetouser
+274,List of users:updates the chart with only the data for checked users,taggle data sets,control,AuthorizationChecker
+275,filter data button:queries users and answered questions,taggle data sets,control,QuestionModel
+276,queries users and answered questions:sphere,taggle data sets,entity,SphereModel
+277,updates the chart with only the data for checked users:sphere,taggle data sets,entity,SphereModel
+278,stl#User:filter data button,taggle data sets,Stimulus,undefined
+279,stl#User:List of users,taggle data sets,Stimulus,undefined
+280,stl#User:success information message,taggle data sets,Stimulus,undefined
+281,User:error message,update display name,control,Displaysuccessmessagetouser
+282,User:Home page,update display name,boundary,HomeView
+283,User:new name input diagram,update display name,boundary,$help://usecasediagram.htm
+284,User:display success info,update display name,control,Displaysuccessmessagetouser
+285,redirect user to home page:Home page,update display name,boundary,HomeView
+286,display error message:error message,update display name,control,Displaysuccessmessagetouser
+287,update user info:display error message,update display name,control,Displaysuccessmessagetouser
+288,display success info:market as deleted in db,update display name,control,main
+289,update user info:display success info,update display name,control,Displaysuccessmessagetouser
+290,market as deleted in db:user info,update display name,entity,UserModel
+291,market as deleted in db:redirect user to home page,update display name,control,Displaysuccessmessagetouser
+292,new name input diagram:update user info,update display name,control,DatabaseAdapter
+293,update user info:user info,update display name,entity,UserModel
+294,stl#User:error message,update display name,Stimulus,undefined
+295,stl#User:Home page,update display name,Stimulus,undefined
+296,stl#User:new name input diagram,update display name,Stimulus,undefined
+297,stl#User:display success info,update display name,Stimulus,undefined
+298,User:a list of accessible spheres,view 2D chat,control,Displaysuccessmessagetouser
+299,User:2D polar chart,view 2D chat,boundary,Sharebutton
+300,User:List of usrs with specific sphere,view 2D chat,boundary,EditSphereView
+301,User:success message,view 2D chat,control,Displaysuccessmessagetouser
+302,User:textual message,view 2D chat,control,Displaysuccessmessagetouser
+303,render 2D polar chat:2D polar chart,view 2D chat,boundary,Sharebutton
+304,List of usrs with specific sphere:add association in db,view 2D chat,control,VizualizationView
+305,List of usrs with specific sphere:render 2D polar chat,view 2D chat,control,EmailSender
+306,a list of accessible spheres:query for the latest sphere data,view 2D chat,control,CreateSphereView
+307,add association in db:sends notification to second user,view 2D chat,control,AuthorizationChecker
+308,query for the latest sphere data:sphere data,view 2D chat,entity,SphereModel
+309,query for the latest sphere data:render 2D polar chat,view 2D chat,control,EmailSender
+310,query for the latest sphere data:textual message,view 2D chat,control,Displaysuccessmessagetouser
+311,sends notification to second user:success message,view 2D chat,control,Displaysuccessmessagetouser
+312,stl#User:a list of accessible spheres,view 2D chat,Stimulus,undefined
+313,stl#User:2D polar chart,view 2D chat,Stimulus,undefined
+314,stl#User:List of usrs with specific sphere,view 2D chat,Stimulus,undefined
+315,stl#User:success message,view 2D chat,Stimulus,undefined
+316,stl#User:textual message,view 2D chat,Stimulus,undefined
+317,User:average value in the sphere,view data averages,entity,SphereModel
+318,User:answers list page,view data averages,boundary,AnswerView
+319,User:list of sphere data,view data averages,entity,SphereModel
+320,User:success message,view data averages,control,Displaysuccessmessagetouser
+321,answers list page:display sphere data for each user,view data averages,control,CreateSphereView
+322,display values to user:average value in the sphere,view data averages,entity,SphereModel
+323,compute average of a given subset of user:display values to user,view data averages,control,Displaysuccessmessagetouser
+324,list of sphere data:compute average of a given subset of user,view data averages,control,Displaysuccessmessagetouser
+325,compute average of all users in sphere:display values to user,view data averages,control,Displaysuccessmessagetouser
+326,list of sphere data:compute average of all users in sphere,view data averages,control,CreateSphereView
+327,display sphere data for each user:list of sphere data,view data averages,entity,SphereModel
+328,display sphere data for each user:sphere,view data averages,entity,SphereModel
+329,stl#User:average value in the sphere,view data averages,Stimulus,undefined
+330,stl#User:answers list page,view data averages,Stimulus,undefined
+331,stl#User:list of sphere data,view data averages,Stimulus,undefined
+332,stl#User:success message,view data averages,Stimulus,undefined

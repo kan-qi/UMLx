@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#florist:information is invalid->florist:information is invalid,Manage Catalog,CTRL,2,0,4,1,8
+2,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:save uploaded information to db->save uploaded information to db:category,Manage Catalog,TRAN_NA,5,0,2.5,4,12.5
+3,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:information is invalid,Manage Catalog,TRAN_NA,4,1,2,3,8
+4,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:exceeded limit error message,Manage Catalog,TRAN_NA,4,0,1.3333333333333333,3,5.333333333333333
+5,stl#florist:exceeded limit error message->florist:exceeded limit error message,Manage Catalog,CTRL;EXTCLL;INT,2,0,2,1,4

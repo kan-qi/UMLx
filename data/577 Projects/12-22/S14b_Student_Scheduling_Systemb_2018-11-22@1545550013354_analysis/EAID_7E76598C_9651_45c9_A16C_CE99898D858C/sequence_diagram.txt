@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "DesiredCoursesSelectionPage" as 09
+participant "SemesterSelectionPlage" as 19
+participant "additionfails" as 29
+participant "Course" as 49
+
+User -> 09: inputisincorrect()
+activate 09
+
+deactivate 09
+
+User -> 19: deletebutton()
+activate 19
+
+19 -> 09: checkcorrectnessoftheinput()
+activate 09
+
+09 -> 49: course()
+activate 49
+
+deactivate 49
+
+09 -> 49: deletecourse()
+activate 49
+
+49 -> 49: course()
+deactivate 49
+
+49 -> 29: deletionfails()
+activate 29
+
+deactivate 29
+
+49 -> 09: showconfirmationcourseisdeleted()
+09 -> 09: deletesuccessmessage()
+deactivate 09
+
+09 -> 09: inputisincorrect()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: deletionfails()
+activate 29
+
+deactivate 29
+
+User -> 09: deletesuccessmessage()
+activate 09
+
+deactivate 09
+
+@enduml

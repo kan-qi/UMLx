@@ -1,0 +1,93 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Message" as 09
+participant "$help://actor.htm" as 19
+participant "User_Profile" as 29
+participant "AdditionalInfo" as 39
+
+User -> 09: invalidfilesizeerrormessage()
+activate 09
+
+deactivate 09
+
+User -> 19: Imageselectorfield()
+activate 19
+
+19 -> 09: saveimage()
+activate 09
+
+09 -> 39: invalidfilename()
+activate 39
+
+deactivate 39
+
+09 -> 09: invalidfilesizeerrormessage()
+deactivate 09
+
+09 -> 09: pictureformaterrormessage()
+activate 09
+
+deactivate 09
+
+09 -> 29: profile()
+activate 29
+
+deactivate 29
+
+09 -> 29: redirecttoprofilepage()
+activate 29
+
+29 -> 29: profilepage()
+deactivate 29
+
+deactivate 19
+
+User -> 29: profilepage()
+activate 29
+
+deactivate 29
+
+User -> 39: invalidfilename()
+activate 39
+
+deactivate 39
+
+User -> 09: pictureformaterrormessage()
+activate 09
+
+deactivate 09
+
+User -> 29: profileeditpage()
+activate 29
+
+29 -> 19: popupimageselectorfield()
+activate 19
+
+19 -> 19: Imageselectorfield()
+19 -> 09: saveimage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+deactivate 29
+
+User -> 29: profileediticon()
+activate 29
+
+29 -> 29: popupprofileeditpage()
+29 -> 29: profileeditpage()
+29 -> 19: popupimageselectorfield()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+@enduml

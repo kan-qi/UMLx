@@ -1,0 +1,193 @@
+id,element,useCase,type,component
+id,element,useCase,type,component
+1,User: Student course list,approve course preference,control,student data
+2,User:Homepage,approve course preference,boundary,school name
+3, Student course list:Review course and approve,approve course preference,control,course type
+4,Update status in database: Student course list,approve course preference,control,student data
+5,Update status in database:Database,approve course preference,entity,counselor data
+6,Update status in database:Homepage,approve course preference,boundary,school name
+7,Review course and approve:Update status in database,approve course preference,control,student data
+8,stl#User: Student course list,approve course preference,Stimulus,undefined
+9,stl#User:Homepage,approve course preference,Stimulus,undefined
+10,User:assign student,assign counselor,control,student data
+11,User:Homepage,assign counselor,boundary,school name
+12,User:counselor student assignment menu,assign counselor,entity,counselor data
+13,Allocate a counselor :Display updated counselor,assign counselor,entity,counselor data
+14,Show list of stuedents:Allocate a counselor ,assign counselor,entity,counselor data
+15,Display updated counselor:Homepage,assign counselor,boundary,school name
+16,Display updated counselor:counselor student assignment menu,assign counselor,entity,counselor data
+17,counselor student assignment menu:Show list of stuedents,assign counselor,control,student data
+18,stl#User:assign student,assign counselor,Stimulus,undefined
+19,stl#User:Homepage,assign counselor,Stimulus,undefined
+20,stl#User:counselor student assignment menu,assign counselor,Stimulus,undefined
+21,User:Homepage,assign teacher to course,boundary,school name
+22,User:Teacher select page,assign teacher to course,control,teacher data
+23,Confirmation message:Homepage,assign teacher to course,boundary,school name
+24,Update database:Confirmation message,assign teacher to course,control,course section
+25,Update database:Database,assign teacher to course,entity,counselor data
+26,Save information:Update database,assign teacher to course,control,teacher data
+27,Teacher select page:Save information,assign teacher to course,control,course section
+28,stl#User:Homepage,assign teacher to course,Stimulus,undefined
+29,stl#User:Teacher select page,assign teacher to course,Stimulus,undefined
+30,User:Homepage,authenticate,boundary,school name
+31,User:Input user name and password,authenticate,boundary,semester
+32,Check if the id exists:Database,authenticate,entity,counselor data
+33,Check if the id exists:Display confirmation,authenticate,control,course section
+34,Validate usename and password:Check if the id exists,authenticate,control,other requirements
+35,Display confirmation:Homepage,authenticate,boundary,school name
+36,Display confirmation:Input user name and password,authenticate,boundary,semester
+37,Input user name and password:Validate usename and password,authenticate,control,calendar year
+38,stl#User:Homepage,authenticate,Stimulus,undefined
+39,stl#User:Input user name and password,authenticate,Stimulus,undefined
+40,User:Homepage,export activity info,boundary,school name
+41,User:Export button,export activity info,control,Exportbutton
+42,User:Export button,export activity info,control,Exportbutton
+43,Display confirmation page:Database,export activity info,entity,counselor data
+44,Display confirmation page:Homepage,export activity info,boundary,school name
+45,Display confirmation page:Export button,export activity info,control,Exportbutton
+46,Generate Csv file:Display confirmation page,export activity info,control,course section
+47,Export button:Generate Csv file,export activity info,control,teacher data
+48,stl#User:Homepage,export activity info,Stimulus,undefined
+49,stl#User:Export button,export activity info,Stimulus,undefined
+50,stl#User:Export button,export activity info,Stimulus,undefined
+51,User:Click button,generate course section,control,Exportbutton
+52,User:Homepage,generate course section,boundary,school name
+53,User:Course list menu,generate course section,boundary,menu list
+54,Calcuate course data:Display course list,generate course section,control,course type
+55,Course list menu:Calcuate course data,generate course section,control,course detail
+56,Click button:Display course list,generate course section,control,course type
+57,Display course list:Database,generate course section,entity,counselor data
+58,Display confirmation page:Homepage,generate course section,boundary,school name
+59,Display course list:Display confirmation page,generate course section,control,course section
+60,stl#User:Click button,generate course section,Stimulus,undefined
+61,stl#User:Homepage,generate course section,Stimulus,undefined
+62,stl#User:Course list menu,generate course section,Stimulus,undefined
+63,User:Input course page,import district course list,boundary,pair course
+64,User:Homepage,import district course list,boundary,school name
+65,User:Control1,import district course list,boundary,course constraints
+66,Display comfirm information:Homepage,import district course list,boundary,school name
+67,Display comfirm information:Input course page,import district course list,boundary,pair course
+68,Intert all data at database:Display comfirm information,import district course list,control,course section
+69,Input course page:Intert all data at database,import district course list,control,teacher data
+70,Intert all data at database:database,import district course list,entity,counselor data
+71,stl#User:Input course page,import district course list,Stimulus,undefined
+72,stl#User:Homepage,import district course list,Stimulus,undefined
+73,stl#User:Control1,import district course list,Stimulus,undefined
+74,User:Students course menu,input course preference,boundary,course constraints
+75,User:Homepage,input course preference,boundary,Displaypage
+76,User:Select prefer course,input course preference,control,course section
+77,User:send students detail,input course preference,control,student data
+78,Confirmation page:Database,input course preference,entity,counselor data
+79,Confirmation page:Homepage,input course preference,boundary,Displaypage
+80,Select prefer course:Confirmation page,input course preference,control,course section
+81,Display page:Confirmation page,input course preference,control,course section
+82,Request students detail:Display page,input course preference,boundary,Displaypage
+83,send students detail:Display page,input course preference,boundary,Displaypage
+84,Students course menu:Request students detail,input course preference,control,student data
+85,stl#User:Students course menu,input course preference,Stimulus,undefined
+86,stl#User:Homepage,input course preference,Stimulus,undefined
+87,stl#User:Select prefer course,input course preference,Stimulus,undefined
+88,stl#User:send students detail,input course preference,Stimulus,undefined
+89,User:Homepage,insert course detail,boundary,Displaypage
+90,User:Course detail page,insert course detail,control,course detail
+91,User:Make some changes,insert course detail,boundary,semester
+92,Course detail page:course profie page,insert course detail,boundary,pair course
+93,Display comfirmation page:Homepage,insert course detail,boundary,Displaypage
+94,course profie page:Display comfirmation page,insert course detail,boundary,Displaypage
+95,Make some changes:course profie page,insert course detail,boundary,pair course
+96,course profie page:database,insert course detail,entity,counselor data
+97,stl#User:Homepage,insert course detail,Stimulus,undefined
+98,stl#User:Course detail page,insert course detail,Stimulus,undefined
+99,stl#User:Make some changes,insert course detail,Stimulus,undefined
+100,User:Homepage,set constraints,boundary,Displaypage
+101,User:Constraints management page,set constraints,boundary,course constraints
+102,User:Make some changes,set constraints,boundary,semester
+103,Confirm button:Update changed information,set constraints,control,teacher data
+104,Make some changes:Confirm button,set constraints,boundary,pair course
+105,Constraints management page:Display constraint details,set constraints,boundary,course constraints
+106,Display constraint details:Update changed information,set constraints,control,teacher data
+107,Display information:Homepage,set constraints,boundary,Displaypage
+108,Update changed information:Display information,set constraints,boundary,Displaypage
+109,stl#User:Homepage,set constraints,Stimulus,undefined
+110,stl#User:Constraints management page,set constraints,Stimulus,undefined
+111,stl#User:Make some changes,set constraints,Stimulus,undefined
+112,User:Lock button,set current semester course,boundary,Lockbutton
+113,User:Homepage,set current semester course,boundary,Displaymessagepage
+114,User:Save button,set current semester course,boundary,Lockbutton
+115,User:Current semeter page,set current semester course,boundary,semester
+116,Confirmation page:Homepage,set current semester course,boundary,Displaymessagepage
+117,Updae lock status:Confirmation page,set current semester course,control,course section
+118,Current semeter page:Display message page,set current semester course,boundary,Displaymessagepage
+119,Updae lock status:Database,set current semester course,entity,counselor data
+120,Save selected course:Database,set current semester course,entity,counselor data
+121,Display message page:Save selected course,set current semester course,control,course section
+122,Save button:Display message page,set current semester course,boundary,Displaymessagepage
+123,Lock button:Updae lock status,set current semester course,control,student data
+124,Save selected course:Updae lock status,set current semester course,control,student data
+125,stl#User:Lock button,set current semester course,Stimulus,undefined
+126,stl#User:Homepage,set current semester course,Stimulus,undefined
+127,stl#User:Save button,set current semester course,Stimulus,undefined
+128,stl#User:Current semeter page,set current semester course,Stimulus,undefined
+129,User:Student course page,update course preference,boundary,pair course
+130,User:Send student detail,update course preference,control,student data
+131,User:Homepage,update course preference,boundary,Displaymessagepage
+132,User:Confirm information,update course preference,control,course section
+133,Confirm information:Display confirmation ,update course preference,boundary,Displaymessagepage
+134,Display confirmation :Database,update course preference,entity,counselor data
+135,Display confirmation :Homepage,update course preference,boundary,Displaymessagepage
+136,Display detail:Display confirmation ,update course preference,boundary,Displaymessagepage
+137,Send student detail:Display detail,update course preference,control,course detail
+138,Request student detail:Display detail,update course preference,control,course detail
+139,Student course page:Request student detail,update course preference,control,student data
+140,stl#User:Student course page,update course preference,Stimulus,undefined
+141,stl#User:Send student detail,update course preference,Stimulus,undefined
+142,stl#User:Homepage,update course preference,Stimulus,undefined
+143,stl#User:Confirm information,update course preference,Stimulus,undefined
+144,User:Send student detail,view enrolled students,control,student data
+145,User:Homepage,view enrolled students,boundary,Displaymessagepage
+146,User:Course link button,view enrolled students,boundary,course constraints
+147,Course link button:Get  enrolled students list,view enrolled students,control,student final schedule
+148,Display page:Homepage,view enrolled students,boundary,Displaymessagepage
+149,Send student detail:Display page,view enrolled students,boundary,Displaymessagepage
+150,Request students data:Display page,view enrolled students,boundary,Displaymessagepage
+151,Get  enrolled students list:Request students data,view enrolled students,control,student data
+152,stl#User:Send student detail,view enrolled students,Stimulus,undefined
+153,stl#User:Homepage,view enrolled students,Stimulus,undefined
+154,stl#User:Course link button,view enrolled students,Stimulus,undefined
+155,User:Click button,view final student schedule,boundary,Lockbutton
+156,User:Send student detail,view final student schedule,control,student data
+157,User:Homepage,view final student schedule,boundary,Displaymessagepage
+158,Click button:Request student detail,view final student schedule,control,student data
+159,Display page:Homepage,view final student schedule,boundary,Displaymessagepage
+160,Send student detail:Display page,view final student schedule,boundary,Displaymessagepage
+161,Request student detail:Display page,view final student schedule,boundary,Displaymessagepage
+162,stl#User:Click button,view final student schedule,Stimulus,undefined
+163,stl#User:Send student detail,view final student schedule,Stimulus,undefined
+164,stl#User:Homepage,view final student schedule,Stimulus,undefined
+165,User:Select  year and semester page,view final teacher schedule,boundary,semester
+166,User:Homepage,view final teacher schedule,boundary,Displaymessagepage
+167,User:Send teacher detail,view final teacher schedule,control,teacher data
+168,Display page:Homepage,view final teacher schedule,boundary,Displaymessagepage
+169,Request teacher detail:Display page,view final teacher schedule,boundary,Displaymessagepage
+170,Send teacher detail:Request teacher detail,view final teacher schedule,control,teacher data
+171,Select  year and semester page:Request teacher detail,view final teacher schedule,control,teacher data
+172,stl#User:Select  year and semester page,view final teacher schedule,Stimulus,undefined
+173,stl#User:Homepage,view final teacher schedule,Stimulus,undefined
+174,stl#User:Send teacher detail,view final teacher schedule,Stimulus,undefined
+175,User:Send students detail,view registered students,control,student data
+176,User:Homepage,view registered students,boundary,Displaymessagepage
+177,User:Course reigister page,view registered students,boundary,pair course
+178,Course reigister page:Section conflicts page,view registered students,control,course section
+179,Display page:Homepage,view registered students,boundary,Displaymessagepage
+180,Send students detail:Display page,view registered students,boundary,Displaymessagepage
+181,Request student detail data:Display page,view registered students,boundary,Displaymessagepage
+182,Section conflicts page:Request student detail data,view registered students,control,student data
+183,stl#User:Send students detail,view registered students,Stimulus,undefined
+184,stl#User:Homepage,view registered students,Stimulus,undefined
+185,stl#User:Course reigister page,view registered students,Stimulus,undefined
+186,User:Student preference menu,view student progress,boundary,student preference
+187,User:Homepage,view student progress,boundary,Displaymessagepage
+188,Display progress:Homepage,view student progress,boundary,Displaymessagepage
+189,Student preference menu:Display progress,view student progress,control,Student Progress
+190,stl#User:Student preference menu,view student progress,Stimulus,undefined
+191,stl#User:Homepage,view student progress,Stimulus,undefined

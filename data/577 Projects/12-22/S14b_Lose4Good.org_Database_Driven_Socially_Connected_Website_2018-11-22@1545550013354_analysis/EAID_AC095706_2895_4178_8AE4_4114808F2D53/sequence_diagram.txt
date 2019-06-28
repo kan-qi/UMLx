@@ -1,0 +1,198 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Sponsor
+participant "GoalPage" as 09
+participant "InvitationLinkPage" as 39
+participant "PledgeMoneyView" as 49
+participant "DonationPage" as 59
+participant "RegistrationPage" as 89
+participant "Transaction" as 99
+participant "ProfileManagementView" as 109
+participant "Sponsor" as 119
+participant "TransactionDetailView" as 139
+participant "Charity" as 179
+participant "TransactionResultPage" as 199
+participant "Goal" as 229
+participant "$help://use_case_model_pattern.htm" as 239
+participant "exceedthetimelimite" as 269
+participant "Link" as 319
+
+Sponsor -> 09: Paypalpage()
+activate 09
+
+09 -> 139: storethetransactiondetails()
+activate 139
+
+139 -> 99: Invalidtransactionmessage()
+activate 99
+
+deactivate 99
+
+139 -> 49: asktheremainingmoneyoptions()
+activate 49
+
+49 -> 119: sponsors()
+activate 119
+
+deactivate 119
+
+49 -> 49: remainingmoneyoptions()
+49 -> 199: displaythankyoumessage()
+activate 199
+
+199 -> 109: emailprotocol()
+activate 109
+
+deactivate 109
+
+199 -> 89: thankyoumessageandaskforregistration()
+activate 89
+
+89 -> 239: invoketheregisterusecase()
+activate 239
+
+deactivate 239
+
+deactivate 89
+
+deactivate 199
+
+49 -> 59: udpatethegoalwithdonation()
+activate 59
+
+59 -> 179: charity()
+activate 179
+
+deactivate 179
+
+59 -> 59: errorintheamountofmoneytodonate()
+deactivate 59
+
+deactivate 49
+
+139 -> 139: transactiondetails()
+deactivate 139
+
+139 -> 99: transaction()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+Sponsor -> 39: errorinreceivinginformationfrompaypal()
+activate 39
+
+deactivate 39
+
+Sponsor -> 49: pledgemoneypage()
+activate 49
+
+49 -> 269: validatesthedetails()
+activate 269
+
+269 -> 119: redirectstothesponsorstoPaypal()
+activate 119
+
+119 -> 09: Paypal()
+activate 09
+
+deactivate 09
+
+119 -> 09: Paypal()
+activate 09
+
+deactivate 09
+
+119 -> 09: Paypalpage()
+activate 09
+
+09 -> 139: storethetransactiondetails()
+activate 139
+
+deactivate 139
+
+deactivate 09
+
+119 -> 39: errorinreceivinginformationfrompaypal()
+activate 39
+
+deactivate 39
+
+deactivate 119
+
+269 -> 99: transaction()
+activate 99
+
+deactivate 99
+
+deactivate 269
+
+deactivate 49
+
+Sponsor -> 59: errorintheamountofmoneytodonate()
+activate 59
+
+deactivate 59
+
+Sponsor -> 39: thelinkforinvitation()
+activate 39
+
+39 -> 319: validatethelink()
+activate 319
+
+319 -> 229: goalinfo()
+activate 229
+
+deactivate 229
+
+319 -> 49: openthepledgemoneypage()
+activate 49
+
+49 -> 49: pledgemoneypage()
+49 -> 269: validatesthedetails()
+activate 269
+
+deactivate 269
+
+deactivate 49
+
+deactivate 319
+
+deactivate 39
+
+Sponsor -> 49: remainingmoneyoptions()
+activate 49
+
+49 -> 199: displaythankyoumessage()
+activate 199
+
+deactivate 199
+
+49 -> 59: udpatethegoalwithdonation()
+activate 59
+
+deactivate 59
+
+deactivate 49
+
+Sponsor -> 89: thankyoumessageandaskforregistration()
+activate 89
+
+89 -> 239: invoketheregisterusecase()
+activate 239
+
+deactivate 239
+
+deactivate 89
+
+Sponsor -> 99: Invalidtransactionmessage()
+activate 99
+
+deactivate 99
+
+@enduml

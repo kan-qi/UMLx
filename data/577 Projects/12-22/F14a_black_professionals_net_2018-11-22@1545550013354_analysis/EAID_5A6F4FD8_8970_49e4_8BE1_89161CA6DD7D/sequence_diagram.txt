@@ -1,0 +1,83 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor BlackProfessionals.net checking systemactor User
+participant "Message" as 09
+participant "LinkedIn API" as 19
+participant "SearchEngine" as 29
+participant "Attachment" as 39
+participant "Email" as 49
+participant "Connection" as 59
+participant "UserRecommender" as 69
+participant "SearchResult" as 109
+
+BlackProfessionals.net checking system -> 09: loginfailanddisplayerrormesssage()
+activate 09
+
+09 -> 59: Connectionrequestbutton()
+activate 59
+
+59 -> 69: sendrequest()
+activate 69
+
+69 -> 29: BlackProfessionalsnetcheckingsystem()
+activate 29
+
+29 -> 09: loginfailanddisplayerrormesssage()
+deactivate 09
+
+29 -> 19: redirecttomainpage()
+activate 19
+
+19 -> 49: Mainpage()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+deactivate 29
+
+69 -> 39: buttonstatechange()
+activate 39
+
+deactivate 39
+
+69 -> 109: request()
+activate 109
+
+deactivate 109
+
+deactivate 69
+
+deactivate 59
+
+BlackProfessionals.net checking system -> 19: redirecttomainpage()
+activate 19
+
+deactivate 19
+
+User -> 39: buttonstatechange()
+activate 39
+
+deactivate 39
+
+User -> 49: Mainpage()
+activate 49
+
+deactivate 49
+
+User -> 59: Connectionrequestbutton()
+activate 59
+
+59 -> 69: sendrequest()
+activate 69
+
+deactivate 69
+
+deactivate 59
+
+@enduml

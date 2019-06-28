@@ -1,0 +1,22 @@
+id,element,useCase,type,component
+1,send an activation link to user's email:Email protocol,Register,actor,ProfileManagementView
+2,Weight loser:login page,Register,boundary,LoginPage
+3,Weight loser:error message,Register,boundary,ResetFormPage
+4,Weight loser:account creation page,Register,control,DonationPage
+5,Weight loser:Confirmation message,Register,control,DonationPage
+6,Weight loser:redundant registration error,Register,boundary,RegistrationPage
+7,redirect to the account creation page:facebook,Register,control,facebook
+8,show confirmation message:Confirmation message,Register,control,DonationPage
+9,account creation page:validate the entered information for redundancy,Register,boundary,InvitationLinkPage
+10,redirect to the account creation page:account creation page,Register,control,DonationPage
+11,validate the entered information for redundancy:error message,Register,boundary,ResetFormPage
+12,login page:redirect to the account creation page,Register,boundary,TransactionResultPage
+13,validate the entered information for redundancy:redundant registration error,Register,boundary,RegistrationPage
+14,send an activation link to user's email:user,Register,control,User
+15,send an activation link to user's email:show confirmation message,Register,control,PasswordResetConfirmPage
+16,validate the entered information for redundancy:send an activation link to user's email,Register,control,TransactionDetailView
+17,stl#Weight loser:login page,Register,Stimulus,undefined
+18,stl#Weight loser:error message,Register,Stimulus,undefined
+19,stl#Weight loser:account creation page,Register,Stimulus,undefined
+20,stl#Weight loser:Confirmation message,Register,Stimulus,undefined
+21,stl#Weight loser:redundant registration error,Register,Stimulus,undefined

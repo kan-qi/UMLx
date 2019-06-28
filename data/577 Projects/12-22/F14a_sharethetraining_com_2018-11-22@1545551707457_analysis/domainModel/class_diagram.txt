@@ -1,0 +1,269 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+}
+
+class Course {
+- ID:EAJava_int
+- Name:EAJava_char__
+- Price:EAJava_int
+- Type:EAJava_int
+- undefined:EAID_5AE7E3A1_217B_4fa2_9B9E_89D754AED7C5
+- undefined:EAID_85351E65_4C20_404c_BBF5_8AB39CE52DC4
+- undefined:EAID_4E61C77D_3BB1_4a7b_81E1_3569BEBECAF5
+- undefined:EAID_6D56194C_64B4_4918_911C_47A56AEC0A27
+~ Course()
+~ deletecoursebutton()
+~ verifycourseinformation()
+}
+
+class CourseReviewPage {
+- review:EAJava_string
+~ rate():EAJava_int
+~ review():EAJava_int
+}
+
+class Courseattendeeeprofilepage {
+- Attended Course:EAJava_String
+- DOB:EAJava_Char__
+- Email:EAJava_String
+- FirstName:EAJava_String
+- LastName:EAJava_String
+- MiddelName:EAJava_String
+- Occupation:EAJava_String
+~ Cancel():EAJava_int
+~ Modify():EAJava_int
+~ Save():EAJava_int
+~ Deleteconfirmationdialog()
+~ sendemailtoattendees()
+~ updaterole()
+}
+
+class Coursedetailpage {
+- Category:EAJava_char__
+- city:EAJava_char__
+- Course name:EAJava_String
+- End date:EAJava_int
+- Keypoints:EAJava_int
+- maplocations:EAJava_list
+- maximum attendees:EAJava_int
+- minimum attendees:EAJava_int
+- price:EAJava_int
+- Start date:EAJava_int
+~ Coursedetailpage()
+}
+
+class Courseprovidingrecords {
+- CourseID:EAJava_int
+- UserID:EAJava_int
+~ Courseprovidingrecords()
+~ Processcourseinformation()
+}
+
+class Courserequestpage {
+- Category:EAJava_String
+- City:EAJava_String
+- CourseName:EAJava_String
+- EndDate:EAJava_String
+- KeyPoints:EAJava_String
+- MapLocation:EAJava_String
+- MaximumAttendees:EAJava_int
+- MinimumAttendees:EAJava_int
+- Price:EAJava_float
+- StartDate:EAJava_String
+~ Cancel():EAJava_int
+~ Submit():EAJava_int
+~ courseinformationisnotvalidmessage()
+}
+
+class Coursereviewrecords {
+- Comments:EAJava_char__
+- Course ID:EAJava_int
+- User ID:EAJava_int
+~ Coursereviewrecords()
+}
+
+class Coursesearchpage {
+- Category:EAJava_String
+- City:EAJava_String
+- Keywords:EAJava_String
+- Price:EAJava_Float
+~ Search():EAJava_int
+~ Searchcoursebykeywords()
+}
+
+class Dashboardcoursemanagementpage {
+- CourseList:EAJava_int
+- CreateCourse:EAJava_int
+- DeleteCourse:EAJava_int
+- ModifyCourse:EAJava_int
+~ Dashboardcoursemanagementpage()
+~ savecourseinformationintodatabase()
+}
+
+class Dashboardordermanagementpage {
+- OrderList:EAJava_int
+~ modify():EAJava_int
+~ show():EAJava_int
+~ Invalidenteredinformation()
+}
+
+class Dashboardprocessrequestpage {
+- course request list:EAJava_int
+~ ApproveCourse():EAJava_int
+~ DisapproveCourse():EAJava_int
+~ deletesuccessmessage()
+~ registrationsuccess()
+}
+
+class Dashboardreviewmanagementpage {
+- ReviewList:EAJava_int
+~ show():EAJava_int
+~ sort():EAJava_int
+}
+
+class Dashboardusermanagementpage {
+- Administrators:EAJava_int
+- CourseAttendees:EAJava_int
+- Trainers:EAJava_int
+~ ApproveTrainers():EAJava_int
+~ DisapproveTrainers():EAJava_int
+}
+
+class LoginPage {
+- password:EAJava_string
+- username:EAJava_string
+~ back():EAJava_int
+~ login():EAJava_int
+~ Loginsuccessinformation()
+~ Logininvalidmessage()
+~ Logoutbutton()
+~ Redirecttologinpage()
+}
+
+class Orderrecords {
+- Course ID:EAJava_int
+- Date:EAJava_date
+- UserID:EAJava_int
+~ Orderrecords()
+}
+
+class Orderrecordspage {
+- OrderList:EAJava_int
+~ show():EAJava_int
+~ sort():EAJava_int
+~ redirecttohomepage()
+}
+
+class Paymentpage {
+- course name:EAJava_int
+- price:EAJava_int
+~ confirm():EAJava_int
+~ homepage()
+~ Paymentpage()
+~ receivepaymentresult()
+~ EventBrite()
+}
+
+class Sharecourserecords {
+- Course ID:EAJava_int
+- Friends:EAJava_char__
+- Method:EAJava_char__
+- User ID:EAJava_int
+~ Sharecourserecords()
+~ Sharemenu()
+}
+
+class Signupcourseattendeepage {
+- DOB:EAJava_String
+- Email:EAJava_String
+- FirstName:EAJava_String
+- Last Name:EAJava_String
+- MiddelName:EAJava_String
+- Password:EAJava_String
+~ cancel():EAJava_int
+~ submit():EAJava_int
+~ Coursinformationupdatesuccessmessage()
+~ sendcourseinformationtousers()
+}
+
+class Signuptrainerpage {
+- DOB:EAJava_char__
+- Email:EAJava_String
+- First Name:EAJava_String
+- Last Name:EAJava_String
+- Middle Name:EAJava_String
+- occupation:EAJava_String
+- password:EAJava_String
+~ cancel():EAJava_int
+~ submit():EAJava_int
+~ Savesignupinformation()
+~ Signuppage()
+}
+
+class Trainerprofilepage {
+- DOB:EAJava_int
+- Email:EAJava_String
+- First Name:EAJava_String
+- Last Name:EAJava_String
+- Middle Name:EAJava_String
+- Occupation:EAJava_String
+- Teached Courses:EAJava_String
+- Teaching Courses:EAJava_String
+~ Cancel():EAJava_int
+~ Modify():EAJava_int
+~ Save():EAJava_int
+~ Emailprotocol()
+~ sendemailtotrianer()
+}
+
+class Trainerschedulepage {
+- End Date:EAJava_String
+- Is_occupated:EAJava_boolean
+- OccupedThing:EAJava_String
+- Start Date:EAJava_String
+~ Cancel():EAJava_int
+~ Modify():EAJava_int
+~ Save():EAJava_int
+~ Nomatchedresults()
+~ scheduleupdatepage()
+~ Invalidinputscheduleinfo()
+~ loadschedulebutton()
+}
+
+class User {
+- ID:EAJava_int
+- Name:EAJava_char__
+- Type:EAJava_int
+- undefined:EAID_6D56194C_64B4_4918_911C_47A56AEC0A27
+- undefined:EAID_4E61C77D_3BB1_4a7b_81E1_3569BEBECAF5
+- undefined:EAID_85351E65_4C20_404c_BBF5_8AB39CE52DC4
+- undefined:EAID_5AE7E3A1_217B_4fa2_9B9E_89D754AED7C5
+~ User()
+}
+
+class savetheacceptanceinformation {
+~ savetheacceptanceinformation()
+~ courseinformationisnotvalidmessage()
+~ acceptance()
+}
+
+@enduml

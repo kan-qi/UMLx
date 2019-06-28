@@ -1,0 +1,82 @@
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --generate-repo-analysis-report "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --analyse-xmi-model "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --recover-kdm "C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --recover-kdm "C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --analyse-xmi-model "C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --analyse-xmi-model "D:\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node -e 'require("./utils/AndroidLogUtil.js").parseAndroidLog("./data/GitAndroidAnalysis/android-demo-log.txt")'
+
+node -e 'require("./utils/AndroidLogUtil.js").identifyTransactions("./data/GitAndroidAnalysis/android-demo-log.txt", "./data/GitAndroidAnalysis/evaluated_model_example_demo-release-unsigned.json")'
+
+export ANDROID_SDK=/mnt/d/Android_SDK
+
+export GatorRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/demo-release-unsigned.apk -client GUIHierarchyPrinterClient
+
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/demo-release-unsigned/android-analysis-output.json" "./data/GitAndroidAnalysis/demo-release-unsigned/codeAnalysis" "demo-release-unsigned"
+
+node -e 'require("./utils/AndroidLogUtil.js").identifyTransactionsFile("./data/GitAndroidnAnalysis/android-demo-log.txt", "./data/GitAndroidAnalysis/dic_components_1_19.json")'
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/alltheapps.apk -client GUIHierarchyPrinterClient
+
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/alltheapps/android-analysis-output.json" "./data/GitAndroidAnalysis/alltheapps/codeAnalysis" "alltheapps"
+
+//run gator
+
+export ANDROID_SDK=/mnt/d/Android_SDK
+
+export GatorRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
+
+export UMLxRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-debug.apk -client GUIHierarchyPrinterClient
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient
+
+java -Xmx12G -cp /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/d/Android_SDK -listenerSpecFile /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /tmp/gator-awg1muop/res -manifestFile /tmp/gator-awg1muop/AndroidManifest.xml -project /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AnotherMonitor-release.apk -android /mnt/d/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient
+
+//run android analysis
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/AnotherMonitor-debug/android-analysis-output.json" "./data/GitAndroidAnalysis/AnotherMonitor-debug/codeAnalysis" "AnotherMonitor-debug"
+
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/AnotherMonitor-release/android-analysis-output.json" "./data/GitAndroidAnalysis/AnotherMonitor-release/codeAnalysis" "AnotherMonitor-release"
+
+java -Xmx12G -cp d:/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir d:/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir d:/Android_SDK -listenerSpecFile d:/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile d:/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /tmp/gator-awg1muop/res -manifestFile /tmp/gator-awg1muop/AndroidManifest.xml -project
+
+d:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AnotherMonitor-release.apk -android d:/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient
+
+./gator a -p /mnt/d/AndroidAnalysis/UMLxExperiment/APKs/PhotoAffix_v0.7.1.apk -client GUIHierarchyPrinterClient
+
+./gator a -p /mnt/d/AndroidAnalysis/UMLxExperiment/APKs/PhotoAffix_v0.7.1.apk -client GUIHierarchyPrinterClient
+
+./gator a -p /mnt/d/AndroidAnalysis/UMLxExperiment/APKs/PhotoAffix_v0.7.1.apk -client GUIHierarchyPrinterClient -outputDir /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/PhotoAffix_v0.7.1
+
+./gator a -p /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+./gator a -p /mnt/d/AndroidAnalysis/UMLxExperiment/APKs/PhotoAffix_v0.7.1.apk -client GUIHierarchyPrinterClient -outputDir /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/PhotoAffix_v0.7.1
+
+./gator a -p /mnt/d/AndroidAnalysis/UMLxExperiment/APKs/PhotoAffix_v0.7.1.apk -client GUIHierarchyPrinterClient -outputDir /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/PhotoAffix_v0.7.1
+
+wsl.exe java -Xmx12G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/c/Android_SDK -listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /tmp/gator-awg1muop/res -manifestFile /tmp/gator-awg1muop/AndroidManifest.xml -project /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AnotherMonitor-release.apk -android /mnt/c/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-2
+
+
+export ANDROID_SDK=/mnt/c/Android_SDK
+
+export GatorRoot=/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
+
+
+wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+wsl.exe ./gator a -p /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p "/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/bitcoin-wallet-debug.apk" -client GUIHierarchyPrinterClient -outputDir "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/bitcoin-wallet-debug"

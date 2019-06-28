@@ -1,0 +1,128 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:add to cart button->User:add to cart button->add to cart button:adding product in buying list->adding product in buying list:buying list,Add item to cart,4,2,0,0,1
+2,stl#Admin:list of vendors->Admin:list of vendors->list of vendors:query vendor email->query vendor email:send email->send email:Email protocol,Admin email vendor,5,0,3,0,1
+3,stl#Admin:list of vendors->Admin:list of vendors->list of vendors:query vendor email->query vendor email:vendor,Admin email vendor,4,0,3,0,0
+4,stl#Admin:Vendor approve page->Admin:Vendor approve page->Vendor approve page:add vendor into list->add vendor into list:vendor already exists message,Approve new vendors,4,0,3,0,0
+5,stl#Admin:Vendor approve page->Admin:Vendor approve page->Vendor approve page:add vendor into list->add vendor into list:vendor,Approve new vendors,4,0,3,0,0
+6,stl#Admin:Vendor approve page->Admin:Vendor approve page->Vendor approve page:add vendor into list->add vendor into list:send email with unique code->send email with unique code:Email protocol,Approve new vendors,5,0,4,0,0
+7,stl#Admin:vendor already exists message->Admin:vendor already exists message,Approve new vendors,2,0,1,0,0
+8,stl#Admin:update of product message->Admin:update of product message,Approve pending product,2,0,1,0,0
+9,stl#Admin:product list->Admin:product list->product list:query product detail->query product detail:product,Approve pending product,4,0,3,0,0
+10,stl#Admin:product list->Admin:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:product,Approve pending product,6,0,5,0,0
+11,stl#Admin:product list->Admin:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:notify update of product->notify update of product:update of product message,Approve pending product,7,0,6,0,0
+12,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product,Approve pending product,4,0,3,0,0
+13,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product list->product list:query product detail->query product detail:product,Approve pending product,6,0,5,0,0
+14,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:product,Approve pending product,8,0,7,0,0
+15,stl#Admin:products tab->Admin:products tab->products tab:redirect to all product lists->redirect to all product lists:product list->product list:query product detail->query product detail:product detail->product detail:change product status->change product status:notify update of product->notify update of product:update of product message,Approve pending product,9,0,8,0,0
+16,stl#Admin:product detail->Admin:product detail->product detail:change product status->change product status:product,Approve pending product,4,0,3,0,0
+17,stl#Admin:product detail->Admin:product detail->product detail:change product status->change product status:notify update of product->notify update of product:update of product message,Approve pending product,5,0,4,0,0
+18,stl#Admin:unshipped orders button->Admin:unshipped orders button->unshipped orders button:query list of unshipped orders->query list of unshipped orders:list of unshipped orders,Check order,4,0,3,0,0
+19,stl#Admin:unshipped orders button->Admin:unshipped orders button->unshipped orders button:query list of unshipped orders->query list of unshipped orders:orders,Check order,4,0,3,0,0
+20,stl#Admin:list of unshipped orders->Admin:list of unshipped orders,Check order,2,0,1,0,0
+21,stl#Buyer:order detail->Buyer:order detail,Check out,2,0,1,0,0
+22,stl#Buyer:payment method page->Buyer:payment method page->payment method page:redirect to third party payment page->redirect to third party payment page:payment info page->payment info page:finish payment->finish payment:payment info page->payment info page:finish payment,Check out,7,6,0,0,0
+23,stl#Buyer:payment method page->Buyer:payment method page->payment method page:redirect to third party payment page->redirect to third party payment page:payment info page->payment info page:finish payment->finish payment:third party payment,Check out,6,5,0,0,0
+24,stl#Buyer:payment info page->Buyer:payment info page->payment info page:finish payment->finish payment:payment info page->payment info page:finish payment,Check out,5,4,0,0,0
+25,stl#Buyer:payment info page->Buyer:payment info page->payment info page:finish payment->finish payment:third party payment,Check out,4,3,0,0,0
+26,stl#third party payment:receive receipt->third party payment:receive receipt->receive receipt:generate orders->generate orders:clear cart item->clear cart item:cart item,Check out,5,0,3,1,0
+27,stl#third party payment:receive receipt->third party payment:receive receipt->receive receipt:generate orders->generate orders:order,Check out,4,0,2,1,0
+28,stl#third party payment:receive receipt->third party payment:receive receipt->receive receipt:generate orders->generate orders:order detail,Check out,4,0,2,1,0
+29,stl#third party payment:receive receipt->third party payment:receive receipt,Check out,2,0,0,1,0
+30,stl#Admin:newsletter main page->Admin:newsletter main page->newsletter main page:redirect to select theme page->redirect to select theme page:newsletter them page->newsletter them page:redirect to newsletter creating page->redirect to newsletter creating page:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:newsletter,Create and email newsletter,8,6,1,0,0
+31,stl#Admin:newsletter main page->Admin:newsletter main page->newsletter main page:redirect to select theme page->redirect to select theme page:newsletter them page->newsletter them page:redirect to newsletter creating page->redirect to newsletter creating page:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:send notification->send notification:notification,Create and email newsletter,9,6,2,0,0
+32,stl#Admin:newsletter them page->Admin:newsletter them page->newsletter them page:redirect to newsletter creating page->redirect to newsletter creating page:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:newsletter,Create and email newsletter,6,5,0,0,0
+33,stl#Admin:newsletter them page->Admin:newsletter them page->newsletter them page:redirect to newsletter creating page->redirect to newsletter creating page:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:send notification->send notification:notification,Create and email newsletter,7,5,1,0,0
+34,stl#Admin:Newsletter tag->Admin:Newsletter tag->Newsletter tag:redirect to newsletter main page->redirect to newsletter main page:newsletter main page->newsletter main page:redirect to select theme page->redirect to select theme page:newsletter them page->newsletter them page:redirect to newsletter creating page->redirect to newsletter creating page:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:newsletter,Create and email newsletter,10,8,1,0,0
+35,stl#Admin:Newsletter tag->Admin:Newsletter tag->Newsletter tag:redirect to newsletter main page->redirect to newsletter main page:newsletter main page->newsletter main page:redirect to select theme page->redirect to select theme page:newsletter them page->newsletter them page:redirect to newsletter creating page->redirect to newsletter creating page:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:send notification->send notification:notification,Create and email newsletter,11,8,2,0,0
+36,stl#Admin:newsletter creating page->Admin:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:newsletter,Create and email newsletter,4,3,0,0,0
+37,stl#Admin:newsletter creating page->Admin:newsletter creating page->newsletter creating page:save newsletter information->save newsletter information:send notification->send notification:notification,Create and email newsletter,5,3,1,0,0
+38,stl#User:post blog button->User:post blog button->post blog button:redirect to blog page->redirect to blog page:blog page->blog page:save blog in db->save blog in db:blog,Create blog,6,5,0,0,0
+39,stl#User:blog page->User:blog page->blog page:save blog in db->save blog in db:blog,Create blog,4,3,0,0,0
+40,stl#Vendor:invalid information error->Vendor:invalid information error,Create product,2,1,0,0,0
+41,stl#Vendor:change unsaved dialog->Vendor:change unsaved dialog,Create product,2,1,0,0,0
+42,stl#Vendor:display "create success" dialog->Vendor:display "create success" dialog,Create product,2,1,0,0,0
+43,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:change unsaved dialog,Create product,6,4,1,0,0
+44,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:display "create success" dialog,Create product,6,4,1,0,0
+45,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:invalid information error,Create product,6,4,1,0,0
+46,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:product,Create product,6,4,1,0,0
+47,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:send "create success" dialog,Create product,6,4,1,0,0
+48,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:change unsaved dialog,Create product,4,3,0,0,0
+49,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:display "create success" dialog,Create product,4,3,0,0,0
+50,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:invalid information error,Create product,4,3,0,0,0
+51,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:product,Create product,4,3,0,0,0
+52,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:send "create success" dialog,Create product,4,3,0,0,0
+53,stl#User:Item quantity field in cart->User:Item quantity field in cart->Item quantity field in cart:redirect to cart page->redirect to cart page:Item quantity field in cart->Item quantity field in cart:redirect to cart page,Delete item in cart,5,4,0,0,0
+54,stl#User:Item quantity field in cart->User:Item quantity field in cart->Item quantity field in cart:redirect to cart page->redirect to cart page:notify user->notify user:user info,Delete item in cart,5,2,2,0,0
+55,stl#Vendor:delete failed dialog->Vendor:delete failed dialog,Delete product,2,1,0,0,0
+56,stl#Vendor:delete success message->Vendor:delete success message,Delete product,2,1,0,0,0
+57,stl#Vendor:delete product button->Vendor:delete product button->delete product button:open confirm dialog->open confirm dialog:Confirm dialog->Confirm dialog:delete product->delete product:delete failed dialog,Delete product,6,5,0,0,0
+58,stl#Vendor:delete product button->Vendor:delete product button->delete product button:open confirm dialog->open confirm dialog:Confirm dialog->Confirm dialog:delete product->delete product:product,Delete product,6,4,0,0,1
+59,stl#Vendor:delete product button->Vendor:delete product button->delete product button:open confirm dialog->open confirm dialog:Confirm dialog->Confirm dialog:delete product->delete product:delete success message,Delete product,6,5,0,0,0
+60,stl#Vendor:Confirm dialog->Vendor:Confirm dialog->Confirm dialog:delete product->delete product:delete failed dialog,Delete product,4,3,0,0,0
+61,stl#Vendor:Confirm dialog->Vendor:Confirm dialog->Confirm dialog:delete product->delete product:product,Delete product,4,2,0,0,1
+62,stl#Vendor:Confirm dialog->Vendor:Confirm dialog->Confirm dialog:delete product->delete product:delete success message,Delete product,4,3,0,0,0
+63,stl#Admin:vendor page->Admin:vendor page,Display vendors,2,0,1,0,0
+64,stl#Admin:vendor side bar->Admin:vendor side bar->vendor side bar:redirect to vendor page->redirect to vendor page:query vendors->query vendors:vendor,Display vendors,5,0,4,0,0
+65,stl#Admin:vendor side bar->Admin:vendor side bar->vendor side bar:redirect to vendor page->redirect to vendor page:vendor page,Display vendors,4,0,3,0,0
+66,stl#User:Item quantity field in cart->User:Item quantity field in cart->Item quantity field in cart:redirect to cart page->redirect to cart page:Item quantity field in cart->Item quantity field in cart:redirect to cart page,Edit cart,5,4,0,0,0
+67,stl#User:Item quantity field in cart->User:Item quantity field in cart->Item quantity field in cart:redirect to cart page->redirect to cart page:notify user->notify user:user info,Edit cart,5,2,0,2,0
+68,stl#Vendor:invalid information error->Vendor:invalid information error,Edit product,2,1,0,0,0
+69,stl#Vendor:change unsaved dialog->Vendor:change unsaved dialog,Edit product,2,1,0,0,0
+70,stl#Vendor:edit button for specific product->Vendor:edit button for specific product->edit button for specific product:redirect to product edit page->redirect to product edit page:product edit page->product edit page:update product information->update product information:display invalid information->display invalid information:invalid information error,Edit product,7,6,0,0,0
+71,stl#Vendor:edit button for specific product->Vendor:edit button for specific product->edit button for specific product:redirect to product edit page->redirect to product edit page:product edit page->product edit page:update product information->update product information:product,Edit product,6,4,0,0,1
+72,stl#Vendor:edit button for specific product->Vendor:edit button for specific product->edit button for specific product:redirect to product edit page->redirect to product edit page:product edit page->product edit page:update product information->update product information:redirect vendor when back button clicked->redirect vendor when back button clicked:change unsaved dialog,Edit product,7,5,1,0,0
+73,stl#Vendor:product edit page->Vendor:product edit page->product edit page:update product information->update product information:display invalid information->display invalid information:invalid information error,Edit product,5,4,0,0,0
+74,stl#Vendor:product edit page->Vendor:product edit page->product edit page:update product information->update product information:product,Edit product,4,2,0,0,1
+75,stl#Vendor:product edit page->Vendor:product edit page->product edit page:update product information->update product information:redirect vendor when back button clicked->redirect vendor when back button clicked:change unsaved dialog,Edit product,5,3,1,0,0
+76,stl#User:login information invalid box->User:login information invalid box,Login,2,1,0,0,0
+77,stl#User:login page->User:login page->login page:query user info->query user info:login information invalid box,Login,4,2,0,1,0
+78,stl#User:login page->User:login page->login page:query user info->query user info:main page,Login,4,1,0,2,0
+79,stl#User:login page->User:login page->login page:query user info->query user info:user info,Login,4,1,0,2,0
+80,stl#User:main page->User:main page,Login,2,0,0,1,0
+81,stl#User:message box->User:message box,Logout,2,1,0,0,0
+82,stl#User:Logout error message->User:Logout error message,Logout,2,1,0,0,0
+83,stl#User:Logout button->User:Logout button->Logout button:Clear cache data->Clear cache data:display a logout message->display a logout message:Logout error message,Logout,5,4,0,0,0
+84,stl#User:Logout button->User:Logout button->Logout button:Clear cache data->Clear cache data:display a logout message->display a logout message:message box,Logout,5,4,0,0,0
+85,stl#Admin:Edit setting button->Admin:Edit setting button->Edit setting button:redirect account information page->redirect account information page:Account information page->Account information page:check input information->check input information:Invalid input information,Manage account setting,6,4,0,1,0
+86,stl#Admin:Edit setting button->Admin:Edit setting button->Edit setting button:redirect account information page->redirect account information page:Account information page->Account information page:check input information->check input information:save setting changes->save setting changes:notify user->notify user:Notification,Manage account setting,8,4,0,3,0
+87,stl#Admin:Edit setting button->Admin:Edit setting button->Edit setting button:redirect account information page->redirect account information page:Account information page->Account information page:check input information->check input information:save setting changes->save setting changes:setting,Manage account setting,7,3,0,3,0
+88,stl#Admin:Invalid input information->Admin:Invalid input information,Manage account setting,2,1,0,0,0
+89,stl#Admin:Account information page->Admin:Account information page->Account information page:check input information->check input information:Invalid input information,Manage account setting,4,3,0,0,0
+90,stl#Admin:Account information page->Admin:Account information page->Account information page:check input information->check input information:save setting changes->save setting changes:notify user->notify user:Notification,Manage account setting,6,3,0,2,0
+91,stl#Admin:Account information page->Admin:Account information page->Account information page:check input information->check input information:save setting changes->save setting changes:setting,Manage account setting,5,2,0,2,0
+92,stl#Admin:User info updated message->Admin:User info updated message,Manage vendor,2,1,0,0,0
+93,stl#Admin:user list with edit and remove buttons->Admin:user list with edit and remove buttons->user list with edit and remove buttons:redirect to vendor details page->redirect to vendor details page:query vendor detail->query vendor detail:vendor,Manage vendor,5,0,4,0,0
+94,stl#Admin:user list with edit and remove buttons->Admin:user list with edit and remove buttons->user list with edit and remove buttons:redirect to vendor details page->redirect to vendor details page:vendor detail page->vendor detail page:update vendor info->update vendor info:notify amdin->notify amdin:User info updated message,Manage vendor,7,1,4,1,0
+95,stl#Admin:user list with edit and remove buttons->Admin:user list with edit and remove buttons->user list with edit and remove buttons:redirect to vendor details page->redirect to vendor details page:vendor detail page->vendor detail page:update vendor info->update vendor info:vendor,Manage vendor,6,0,5,0,0
+96,stl#Admin:user list with edit and remove buttons->Admin:user list with edit and remove buttons->user list with edit and remove buttons:remove vendor->remove vendor:vendor,Manage vendor,4,0,3,0,0
+97,stl#Admin:vendor detail page->Admin:vendor detail page->vendor detail page:update vendor info->update vendor info:notify amdin->notify amdin:User info updated message,Manage vendor,5,1,2,1,0
+98,stl#Admin:vendor detail page->Admin:vendor detail page->vendor detail page:update vendor info->update vendor info:vendor,Manage vendor,4,0,3,0,0
+99,stl#Admin:All vendors tab->Admin:All vendors tab->All vendors tab:redirect vendors page->redirect vendors page:vendor,Manage vendor,4,0,3,0,0
+100,stl#Admin:All vendors tab->Admin:All vendors tab->All vendors tab:redirect vendors page->redirect vendors page:user list with edit and remove buttons->user list with edit and remove buttons:redirect to vendor details page->redirect to vendor details page:query vendor detail->query vendor detail:vendor,Manage vendor,7,0,6,0,0
+101,stl#Admin:All vendors tab->Admin:All vendors tab->All vendors tab:redirect vendors page->redirect vendors page:user list with edit and remove buttons->user list with edit and remove buttons:redirect to vendor details page->redirect to vendor details page:vendor detail page->vendor detail page:update vendor info->update vendor info:notify amdin->notify amdin:User info updated message,Manage vendor,9,1,6,1,0
+102,stl#Admin:All vendors tab->Admin:All vendors tab->All vendors tab:redirect vendors page->redirect vendors page:user list with edit and remove buttons->user list with edit and remove buttons:redirect to vendor details page->redirect to vendor details page:vendor detail page->vendor detail page:update vendor info->update vendor info:vendor,Manage vendor,8,0,7,0,0
+103,stl#Admin:All vendors tab->Admin:All vendors tab->All vendors tab:redirect vendors page->redirect vendors page:user list with edit and remove buttons->user list with edit and remove buttons:remove vendor->remove vendor:vendor,Manage vendor,6,0,5,0,0
+104,stl#User:No result is found->User:No result is found,Search product,2,0,1,0,0
+105,stl#User:Search page->User:Search page->Search page:search by criteria->search by criteria:No result is found,Search product,4,0,3,0,0
+106,stl#User:Search page->User:Search page->Search page:search by criteria->search by criteria:list of product,Search product,4,0,2,0,1
+107,stl#User:Search page->User:Search page->Search page:search by criteria->search by criteria:product,Search product,4,0,2,0,1
+108,stl#User:list of product->User:list of product,Search product,2,0,0,0,1
+109,stl#User:newsletter subscription page->User:newsletter subscription page->newsletter subscription page:add email address into newsletter sending list->add email address into newsletter sending list:newsletter sending list,Signup for newsletter,4,0,3,0,0
+110,stl#User:newsletter subscription page->User:newsletter subscription page->newsletter subscription page:add email address into newsletter sending list->add email address into newsletter sending list:send confirmation email->send confirmation email:email protocol,Signup for newsletter,5,0,3,0,1
+111,stl#buyer:invalid info message->buyer:invalid info message,Submit buyer registration,2,1,0,0,0
+112,stl#buyer:registration page->buyer:registration page->registration page:verify user info->verify user info:add user info->add user info:main page,Submit buyer registration,5,1,0,3,0
+113,stl#buyer:registration page->buyer:registration page->registration page:verify user info->verify user info:add user info->add user info:user info,Submit buyer registration,5,1,0,3,0
+114,stl#buyer:registration page->buyer:registration page->registration page:verify user info->verify user info:invalid info message,Submit buyer registration,4,2,0,1,0
+115,stl#buyer:main page->buyer:main page,Submit buyer registration,2,0,0,1,0
+116,stl#vendor:registration page->vendor:registration page->registration page:verify user info->verify user info:add user info->add user info:main page,Submit vendor registration,5,1,0,3,0
+117,stl#vendor:registration page->vendor:registration page->registration page:verify user info->verify user info:add user info->add user info:user info,Submit vendor registration,5,1,0,3,0
+118,stl#vendor:registration page->vendor:registration page->registration page:verify user info->verify user info:invalid info message,Submit vendor registration,4,2,0,1,0
+119,stl#vendor:main page->vendor:main page,Submit vendor registration,2,0,0,1,0
+120,stl#vendor:invalid info message->vendor:invalid info message,Submit vendor registration,2,1,0,0,0
+121,stl#Vendor:list of users->Vendor:list of users->list of users:query user email->query user email:user,Vendor email customer,4,0,0,3,0
+122,stl#Vendor:list of users->Vendor:list of users->list of users:query user email->query user email:send email->send email:Email protocol,Vendor email customer,5,0,1,2,1
+123,stl#User:post page->User:post page,Write comment,2,1,0,0,0
+124,stl#User:invalid comment length->User:invalid comment length,Write comment,2,1,0,0,0
+125,stl#User:comment page->User:comment page->comment page:post->post:comment,Write comment,4,3,0,0,0
+126,stl#User:comment page->User:comment page->comment page:post->post:invalid comment length,Write comment,4,3,0,0,0
+127,stl#User:comment page->User:comment page->comment page:post->post:post page,Write comment,4,3,0,0,0

@@ -1,0 +1,48 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actoractor User
+participant "SignupScreen" as 09
+participant "photolist" as 29
+participant "Profile" as 89
+
+Actor -> 09: ProfilePhotoScreen()
+activate 09
+
+09 -> 29: DisplayavailablephotosonPhotosScreen()
+activate 29
+
+29 -> 09: PhotosScreen()
+09 -> 29: DisplaySelectedPhotoonProfilePhotoScreen()
+29 -> 09: ProfilePhotoScreen()
+09 -> 29: DisplayavailablephotosonPhotosScreen()
+deactivate 29
+
+09 -> 89: SaveProfilePhoto()
+activate 89
+
+89 -> 89: Profile()
+deactivate 89
+
+deactivate 09
+
+09 -> 89: SaveProfilePhoto()
+activate 89
+
+deactivate 89
+
+User -> 89: ProfilePhotoScreen()
+activate 89
+
+89 -> 29: DisplayavailablephotosonPhotosScreen()
+activate 29
+
+deactivate 29
+
+89 -> 89: SaveProfilePhoto()
+deactivate 89
+
+@enduml

@@ -1,0 +1,494 @@
+-var model_id = modelInfo._id
+-var modelName = modelInfo.Name
+-var repoID = repo_id
+-var filePath = modelInfo.AccessDir
+-var loadsPath = upLoadsPath
+input(type='hidden', value=model_id)#mymodelId
+input(type='hidden', value=repoID)#myrepoId
+//input(type='hidden', value=loadsPath)#myupLoadsPath	
+div.block.panel.panel-default
+  div.panel-heading
+   div.panel-title.analytics-title.pull-left
+    include breadcrumb
+   if modelInfo
+    div.model-analytics-ops.pull-right
+     div.dropdown
+      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Model
+        span.caret
+      ul.dropdown-menu
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
+     div.dropdown
+      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
+        span.caret
+      ul.dropdown-menu
+        li
+          a.dropdown-item(id='update-model' onclick="openDialogueBoxForModelFileUpdate('#{repoID}','#{model_id}');" href="javaScript:void(0);") Model Version
+     div.dropdown
+      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
+        span.caret
+      ul.dropdown-menu
+        li
+          a.dropdown-item(id='reanalyse-model' href='reanalyseModel?model_id=#{modelInfo._id}') Re-analyse Model
+        li
+          a.dropdown-item(href='deleteModel?model_id=#{modelInfo._id}') Delete Model
+    div.clearFix
+  div.panel-body(id="model-stats-chart")
+   div.model-info-content
+    ul.nav.nav-tabs
+     li.active
+      a(data-toggle='tab', href='#model-analytics') Overview
+     //li
+      //a(data-toggle='tab', href='#model-analysis') Analysis
+     //li
+      //a(data-toggle='tab', href='#model-empirical') Empirical
+     li
+      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Elements
+     li
+      a(data-toggle='tab', href='#model-evaluation', id="model-evaluation-tab") Model Info
+     li
+      a(data-toggle='tab', href='#project-properties') Project Info
+     li
+      a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="createDir(this);") Archive
+     li
+      a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="createDir(this);") Uploads
+
+     //li
+      //a(data-toggle='tab', href='#model-representation') Representation
+    div.tab-content
+     div.tab-pane.fade.in.active(id="model-analytics")
+        //div.col-sm-12.chart-row
+         //div.col-sm-6(id="chart-1") here should be distributions.
+        div.col-sm-12.chart-row
+          div(id="details" )
+     //div.tab-pane.fade(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
+      //div.stats-chart.col-md-12(id="chart-1")
+      //div.stats-chart.col-md-6(id="chart-8")
+      //div.stats-chart.col-md-6(id="chart-9")
+      //div.stats-chart.col-md-6(id="chart-10")
+      //div.stats-chart.col-md-6(id="chart-11")
+     div.tab-pane.fade(id="usecase-analysis")
+      div(id="model-usecase-analysis")
+       h3 loading...
+     //origin
+     //div.tab-pane.fade(id="model-evaluation")
+     // div.model-evaluation
+     //  div.eucp-evaluation
+     //   h4 EUCP
+     //   -var estimationResults = modelInfo['eucp_lm']
+     //   include estimationResultPane
+     //  div.excup-evaluation
+     //   h4 EXUCP
+     //   -var estimationResults = modelInfo['exucp_lm']
+     //   include estimationResultPane
+     //  div.ducp-evaluation
+     //   h4 DUCP
+     //   -var estimationResults = modelInfo['ducp_lm']
+     //   include estimationResultPane
+     //end of origin
+     // modified version issue #397, separate the model info page into three tabs
+     div.tab-pane.fade(id="model-evaluation")
+        div.model-evaluation
+         ul.nav.nav-pills
+             li.nav-item.active
+                a.nav-link(data-toggle="pill", href="#pills-EUCP")
+                 | EUCP
+             li.nav-item
+                a.nav-link(data-toggle="pill", href="#pills-EXUCP")
+                 | EXUCP
+             li.nav-link
+                a.nav-link(data-toggle="pill", href="#pills-DUCP")
+                 | DUCP
+         div.tab-content
+             div.tab-pane.fade.in.active(id="pills-EUCP")
+                 div.eucp-evaluation
+                     h4 EUCP
+                     -var estimationResults = modelInfo['eucp_lm']
+                     include estimationResultPane
+             div.tab-pane.fade(id="pills-EXUCP")
+                 div.excup-evaluation
+                     h4 EXUCP
+                     -var estimationResults = modelInfo['exucp_lm']
+                     include estimationResultPane
+             div.tab-pane.fade(id="pills-DUCP")
+                 div.ducp-evaluation
+                     h4 DUCP
+                     -var estimationResults = modelInfo['ducp_lm']
+                     include estimationResultPane
+        // end of modified version
+     div.tab-pane.fade(id="project-properties")
+       div.project-properties
+        div
+        h3 Upload Path
+        p #{modelInfo.umlFilePath}
+        h3 Output Path
+        p #{modelInfo.OutputDir}
+        h3 Evaluation
+         button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
+         table#dataTable.table.table-striped
+            tbody
+                tr
+                    td
+                     h4 Technical Complexity Factors
+                    td
+                tr
+                    td Distributed System
+                    td
+                        select(disabled='true').form-control#editNumber1
+                           - var temp = modelInfo.formInfo["distributed-system"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Response time or throughput performance objectives
+                    td
+                        select(disabled='true').form-control#editNumber2
+                          - var temp = modelInfo.formInfo["response-time"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td End user efficiency
+                    td
+                        select(disabled='true').form-control#editNumber3
+                          - var temp = modelInfo.formInfo["end-user-efficiency"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Complex internal processing
+                    td
+                        select(disabled='true').form-control#editNumber4
+                          - var temp = modelInfo.formInfo["complex-internal-processing"];
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Code must be reusable
+                    td
+                        select(disabled='true').form-control#editNumber5
+                          - var temp = modelInfo.formInfo["code-must-be-reusable"];
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Easy to install
+                    td
+                        select(disabled='true').form-control#editNumber6
+                          - var temp = modelInfo.formInfo["easy-to-install"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Easy to use
+                    td
+                        select(disabled='true').form-control#editNumber7
+                          - var temp = modelInfo.formInfo["easy-to-use"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Portable
+                    td
+                        select(disabled='true').form-control#editNumber8
+                          - var temp = modelInfo.formInfo["portable"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Easy to change
+                    td
+                        select(disabled='true').form-control#editNumber9
+                          - var temp = modelInfo.formInfo["easy-to-change"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Concurrent
+                    td
+                        select(disabled='true').form-control#editNumber10
+                          - var temp = modelInfo.formInfo["concurrent"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Includes special security objectives
+                    td
+                        select(disabled='true').form-control#editNumber11
+                          - var temp = modelInfo.formInfo["includes-special-security-objectives"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Provides direct access for third parties
+                    td
+                        select(disabled='true').form-control#editNumber12
+                          - var temp = modelInfo.formInfo["provides-direct-access-for-third-parties"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Special user training facilities are required
+                    td
+                        select(disabled='true').form-control#editNumber13
+                            - var temp = modelInfo.formInfo["provides-direct-access-for-third-parties"];
+                                option(value =temp, selected='') #{temp}
+                                if temp != 1
+                                    option 1
+                                if temp != 2
+                                    option 2
+                                if temp != 3
+                                    option 3
+                                if temp != 4
+                                    option 4
+                                if temp != 5
+                                    option 5
+                tr
+                    td
+                     h4 Environmental Complexity Factors
+                    td
+                tr
+                    td Familiar with the project model that is used
+                    td
+                        select(disabled='true').form-control#editNumber14
+                            - var temp = modelInfo.formInfo["familiar-with-the-project-model-that-is-used"];
+                                option(value =temp, selected='') #{temp}
+                                if temp != 1
+                                    option 1
+                                if temp != 2
+                                    option 2
+                                if temp != 3
+                                    option 3
+                                if temp != 4
+                                    option 4
+                                if temp != 5
+                                    option 5
+                tr
+                    td Application experience
+                    td
+                        select(disabled='true').form-control#editNumber15
+                          - var temp = modelInfo.formInfo["application-experience"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Object-oriented experience
+                    td
+                        select(disabled='true').form-control#editNumber16
+                          - var temp = modelInfo.formInfo["object-oriented-experience"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Lead analyst capability
+                    td
+                        select(disabled='true').form-control#editNumber17
+                          - var temp = modelInfo.formInfo["lead-analyst-capability"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Motivation
+                    td
+                        select(disabled='true').form-control#editNumber18
+                          - var temp = modelInfo.formInfo["motivation"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Stable requirements
+                    td
+                        select(disabled='true').form-control#editNumber19
+                          - var temp = modelInfo.formInfo["stable-requirements"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Part-time staff
+                    td
+                        select(disabled='true').form-control#editNumber20
+                          - var temp = modelInfo.formInfo["part-time-staff"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+                tr
+                    td Difficult programming language
+                    td
+                        select(disabled='true').form-control#editNumber21
+                          - var temp = modelInfo.formInfo["difficult-programming-language"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
+
+         button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
+         button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
+     div.tab-pane.fade(id="repo_archive")
+        div#displayArchive
+     div.tab-pane.fade(id="loadsPath")
+        div#displayUploads
+
+     //div.tab-pane.fade(id="model-evaluation")
+      div.model-evaluation-ops
+         div
+          a(id="dump-model-evaluation-for-use-cases-btn" href='evaluateModelForUseCases?model_id=#{modelInfo._id}') Dump Model Evaluation For Use Cases
+         div(id="model-evaluation-dump-display")

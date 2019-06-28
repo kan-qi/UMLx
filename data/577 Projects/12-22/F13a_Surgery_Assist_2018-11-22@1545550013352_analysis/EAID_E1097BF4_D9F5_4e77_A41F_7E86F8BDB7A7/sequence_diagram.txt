@@ -1,0 +1,83 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "Reservation" as 09
+participant "declinemessage" as 19
+participant "Loginbutton" as 39
+participant "requiredfieldsmissingprompt" as 49
+participant "ReservationController" as 109
+
+user -> 09: Invaliduserinformation()
+activate 09
+
+deactivate 09
+
+user -> 19: Profileinfopage()
+activate 19
+
+19 -> 39: disabletheusersprivilegetologin()
+activate 39
+
+deactivate 39
+
+19 -> 09: Validateinformationinput()
+activate 09
+
+09 -> 09: Invaliduserinformation()
+deactivate 09
+
+09 -> 109: Notifytheuserthatprofilehasbeenupdated()
+activate 109
+
+109 -> 09: Usernotification()
+activate 09
+
+deactivate 09
+
+109 -> 19: successmessage()
+deactivate 19
+
+deactivate 109
+
+09 -> 49: profileinfo()
+activate 49
+
+deactivate 49
+
+09 -> 49: profileinfo()
+activate 49
+
+deactivate 49
+
+user -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+user -> 39: ProfileButton()
+activate 39
+
+39 -> 49: Displaytheprofileinfo()
+activate 49
+
+49 -> 49: profileinfo()
+deactivate 49
+
+49 -> 19: Profileinfopage()
+activate 19
+
+19 -> 39: disabletheusersprivilegetologin()
+deactivate 39
+
+19 -> 09: Validateinformationinput()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+@enduml

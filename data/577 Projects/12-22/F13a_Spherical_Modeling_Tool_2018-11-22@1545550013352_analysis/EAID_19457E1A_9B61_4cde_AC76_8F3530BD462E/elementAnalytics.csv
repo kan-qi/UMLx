@@ -1,0 +1,24 @@
+id,element,useCase,type,component
+1,User:password dialog,reset passowrd,boundary,ForgotPasswordView
+2,User:email is sent message,reset passowrd,control,EmailSender
+3,User:invalid input,reset passowrd,control,DataValidator
+4,User:Forgot password link,reset passowrd,boundary,ForgotPasswordView
+5,User:email address prompts,reset passowrd,control,EmailSender
+6,Forgot password link:prompts for email address,reset passowrd,control,EmailSender
+7,check security token validity:invalid input,reset passowrd,control,DataValidator
+8,check security token validity:prompts user to enter new password,reset passowrd,boundary,ForgotPasswordView
+9,display email send message to user:check security token validity,reset passowrd,control,DataValidator
+10,display email send message to user:email is sent message,reset passowrd,control,EmailSender
+11,sends email to user containing reset link and security token:display email send message to user,reset passowrd,control,Displaysuccessmessagetouser
+12,email address prompts:generate security token,reset passowrd,control,AuthorizationChecker
+13,prompts for email address:email address prompts,reset passowrd,control,EmailSender
+14,generate security token:sends email to user containing reset link and security token,reset passowrd,control,EmailSender
+15,store new password in database:password database,reset passowrd,control,DatabaseAdapter
+16,password dialog:store new password in database,reset passowrd,boundary,ForgotPasswordView
+17,prompts user to enter new password:password dialog,reset passowrd,boundary,ForgotPasswordView
+18,prompts for email address:user info,reset passowrd,entity,UserModel
+19,stl#User:password dialog,reset passowrd,Stimulus,undefined
+20,stl#User:email is sent message,reset passowrd,Stimulus,undefined
+21,stl#User:invalid input,reset passowrd,Stimulus,undefined
+22,stl#User:Forgot password link,reset passowrd,Stimulus,undefined
+23,stl#User:email address prompts,reset passowrd,Stimulus,undefined

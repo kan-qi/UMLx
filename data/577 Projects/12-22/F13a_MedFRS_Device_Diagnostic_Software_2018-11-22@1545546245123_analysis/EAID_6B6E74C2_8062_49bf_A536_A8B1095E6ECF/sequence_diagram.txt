@@ -1,0 +1,88 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Supervisor
+participant "EMT Building Assignment" as 09
+participant "Transport Coordinator" as 29
+participant "ValidatesInput" as 49
+participant "Redirectstorespirationperfusionmetalstatuspage" as 59
+participant "Volunteer" as 69
+
+Supervisor -> 09: managementpagewithlistofindividualdetails()
+activate 09
+
+09 -> 59: Redirectstotheindividualresentotppage()
+activate 59
+
+59 -> 49: IndividualresendOTPpage()
+activate 49
+
+49 -> 69: clearsdeviceIDofvolunteerindb()
+activate 69
+
+69 -> 69: sendsOTPtovolunteeremailID()
+69 -> 59: Redirecttothemanageindividualspage()
+59 -> 29: ManageIndividualsPage()
+activate 29
+
+deactivate 29
+
+deactivate 59
+
+69 -> 69: volunteerdatabase()
+deactivate 69
+
+69 -> 69: volunteerdatabase()
+activate 69
+
+deactivate 69
+
+49 -> 29: ManageIndividualsPage()
+activate 29
+
+deactivate 29
+
+deactivate 49
+
+deactivate 09
+
+Supervisor -> 29: Manageindividualsbutton()
+activate 29
+
+29 -> 59: Redirecttothemanageindividualspagewithlistofindividualdetails()
+activate 59
+
+59 -> 09: managementpagewithlistofindividualdetails()
+activate 09
+
+09 -> 59: Redirectstotheindividualresentotppage()
+deactivate 59
+
+deactivate 09
+
+deactivate 29
+
+Supervisor -> 29: ManageIndividualsPage()
+activate 29
+
+deactivate 29
+
+Supervisor -> 49: IndividualresendOTPpage()
+activate 49
+
+49 -> 69: clearsdeviceIDofvolunteerindb()
+activate 69
+
+deactivate 69
+
+49 -> 29: ManageIndividualsPage()
+activate 29
+
+deactivate 29
+
+deactivate 49
+
+@enduml

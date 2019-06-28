@@ -1,0 +1,50 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "student data" as 09
+participant "Displaymessagepage" as 19
+participant "course constraints" as 29
+participant "student final schedule" as 39
+
+User -> 09: Sendstudentdetail()
+activate 09
+
+09 -> 19: Displaypage()
+activate 19
+
+19 -> 19: Homepage()
+deactivate 19
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Courselinkbutton()
+activate 29
+
+29 -> 39: Getenrolledstudentslist()
+activate 39
+
+39 -> 09: Requeststudentsdata()
+activate 09
+
+09 -> 19: Displaypage()
+activate 19
+
+19 -> 19: Homepage()
+deactivate 19
+
+deactivate 09
+
+deactivate 39
+
+deactivate 29
+
+@enduml

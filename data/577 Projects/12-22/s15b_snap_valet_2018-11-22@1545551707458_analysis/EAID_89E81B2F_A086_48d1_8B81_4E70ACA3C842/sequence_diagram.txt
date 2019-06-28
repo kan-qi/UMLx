@@ -1,0 +1,129 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "systemerrorwhenconnectingserver" as 09
+participant "venue" as 19
+participant "Location" as 49
+participant "Valet Request" as 69
+participant "GooglePlacesAPI" as 159
+
+Valet -> 09: servererror()
+activate 09
+
+deactivate 09
+
+Valet -> 19: venuelist()
+activate 19
+
+19 -> 49: displayconfirmationprompt()
+activate 49
+
+49 -> 49: confirmationprompt()
+49 -> 69: Redirecttovehiclerequestscreen()
+activate 69
+
+69 -> 69: Vehiclerequestscreen()
+69 -> 159: Saveacceptance()
+activate 159
+
+159 -> 19: venue()
+deactivate 19
+
+159 -> 09: displayservererrormessage()
+activate 09
+
+09 -> 09: Servererrormessage()
+deactivate 09
+
+deactivate 159
+
+69 -> 09: pulladvertisementforrandomvenue()
+activate 09
+
+09 -> 09: Advertisementforrandomvenue()
+deactivate 09
+
+09 -> 19: venue()
+activate 19
+
+deactivate 19
+
+69 -> 69: navigatetoqueuescreen()
+69 -> 09: Advertisementforrandomvenue()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+49 -> 19: Redirecttovenuelist()
+activate 19
+
+19 -> 19: venuelist()
+19 -> 49: displayconfirmationprompt()
+49 -> 09: inactiveemployee()
+activate 09
+
+deactivate 09
+
+49 -> 09: servererror()
+activate 09
+
+deactivate 09
+
+49 -> 19: venue()
+deactivate 19
+
+deactivate 49
+
+Valet -> 09: Servererrormessage()
+activate 09
+
+deactivate 09
+
+Valet -> 09: inactiveemployee()
+activate 09
+
+deactivate 09
+
+Valet -> 49: confirmationprompt()
+activate 49
+
+49 -> 69: Redirecttovehiclerequestscreen()
+activate 69
+
+deactivate 69
+
+49 -> 19: Redirecttovenuelist()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+Valet -> 09: Advertisementforrandomvenue()
+activate 09
+
+deactivate 09
+
+Valet -> 69: Vehiclerequestscreen()
+activate 69
+
+69 -> 159: Saveacceptance()
+activate 159
+
+deactivate 159
+
+69 -> 09: pulladvertisementforrandomvenue()
+activate 09
+
+deactivate 09
+
+69 -> 69: navigatetoqueuescreen()
+deactivate 69
+
+@enduml

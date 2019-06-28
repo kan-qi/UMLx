@@ -1,0 +1,52 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Volunteer Couch Details" as 09
+participant "User Details" as 19
+participant "Team Information" as 39
+
+User -> 19: Useraddpage()
+activate 19
+
+19 -> 39: saveuserinformation()
+activate 39
+
+39 -> 19: Userinfo()
+deactivate 19
+
+39 -> 39: saveuserinformationsuccessmessage()
+deactivate 39
+
+19 -> 19: sendresetlinkbyemail()
+activate 19
+
+19 -> 09: EmailProtocol()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 19: Useraddbutton()
+activate 19
+
+19 -> 19: displayuseraddpage()
+19 -> 19: Useraddpage()
+19 -> 39: saveuserinformation()
+activate 39
+
+deactivate 39
+
+19 -> 19: sendresetlinkbyemail()
+deactivate 19
+
+User -> 39: saveuserinformationsuccessmessage()
+activate 39
+
+deactivate 39
+
+@enduml

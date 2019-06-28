@@ -1,0 +1,181 @@
+html
+    head
+        title UMLx
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src='js/scripts.js')
+        link(href='css/style.css', rel='stylesheet')
+        style.
+            td{
+                text-align: center;
+            }
+        script.
+            var JSONData = "";
+            var header = [
+                "Name", "Email", "Description", "Duration",
+                "Organization/Personal Name", "Distributed System",
+                "Response time or throughput performance objectives",
+                "End user efficiency", "Complex internal processing",
+                "Code must be reusable", "Easy to install",
+                "Easy to use", "Portable", "Easy to change",
+                "Concurrent", "Includes special security objectives",
+                "Provides direct access for third parties", "Special user training facilities are required",
+                "Familiar with the project model that is used","Application experience",
+                "Object-oriented experience", "Lead analyst capability",
+                "Motivation", "Stable requirements", "Part-time staff",
+                "Difficult programming language", "UML Model File","Other Documents"
+            ];
+            var lineEnd = '\r\n';
+            function downloadCSV() {
+                var response = JSONData;
+                var CSV = '';
+                // header row
+                var row = "";
+                for (var i=0; i<header.length; i++){
+                    row += header[i] + ',';
+                }
+                row = row.slice(0, -1);
+                CSV += row + lineEnd;
+                var len = JSONData.length;
+                for(var i=0; i<len; i++){
+                    row = response[i].uml_model_name + ',' +
+                        response[i].email +',' +
+                        response[i].project_desc + ',' +
+                        response[i].project_duration + ',' +
+                        response[i].organization_name + ',' +
+                        response[i].distributed_system + ',' +
+                        response[i].response_time + ',' +
+                        response[i].end_user_efficiency + ',' +
+                        response[i].complex_internal_processing + ',' +
+                        response[i].code_must_be_reusable + ',' +
+                        response[i].easy_to_install + ',' +
+                        response[i].easy_to_use + ',' +
+                        response[i].portable + ',' +
+                        response[i].easy_to_change + ',' +
+                        response[i].concurrent + ',' +
+                        response[i].includes_special_security_objectives + ',' +
+                        response[i].provides_direct_access_for_third_parties + ',' +
+                        response[i].special_user_training_facilities_are_required + ',' +
+                        response[i].familiar_with_the_project_model_that_is_used + ',' +
+                        response[i].application_experience + ',' +
+                        response[i].object_oriented_experience + ',' +
+                        response[i].lead_analyst_capability + ',' +
+                        response[i].motivation + ',' +
+                        response[i].stable_requirements + ','+
+                        response[i].part_time_staff + ',' +
+                        response[i].difficult_programming_language + ',' +
+                        response[i].uml_file + ',' +
+                        response[i].uml_other;
+                    row = row.replace(/\r+/g, "");
+                    row = row.replace(/\n+/g, " ");
+                    CSV += row + lineEnd;
+                }
+                //Generate a file name
+                var fileName = "SurveyReport";
+
+
+                var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+                var link = document.createElement("a");
+                link.href = uri;
+                //set the visibility hidden so it will not effect on your web-layout
+                link.style = "visibility:hidden";
+                link.download = fileName + ".csv";
+                //this part will append the anchor tag and remove it after automatic click
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+
+            function getSurveyData(){
+                $.ajax({
+                    type:'GET',
+                    url: 'getSubmittedSurveyList',
+                    success: function(response){
+                        JSONData = response;
+                        var tableData = "";
+                        var len = response.length;
+                        for(var i=0; i<len; i++){
+                            tableData = tableData +
+                                '<tr>' +
+                                '<th scope="row">' + (i+1) + '</th>' +
+                                '<td>' + response[i].uml_model_name + '</td>' +
+                                '<td>' + response[i].email + '</td>'+
+                                '<td>' + response[i].survey_date + '</td>'+
+                                '<td><button class="btn btn-default" onclick="getSingleSurveyData(\'' + response[i]._id + '\')"> More Info </button></td>' +
+                            '</tr>';
+                        }
+                        document.getElementById("dataBody").innerHTML = tableData;
+                        // TODO: details pending
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                })
+            };
+            function getSingleSurveyData(o_id){
+                $.ajax({
+                    type:'GET',
+                    url: 'getSubmittedSurveyList',
+                    data:{
+                        id: o_id
+                    },
+                    success: function(response){
+                        var tableData = "";
+                        var len = response.length;
+                        for(var i=0; i<len; i++){
+                            tableData = tableData +
+                                '<tr><td>Name</td> <td>' + response[i].uml_model_name + '</td></tr>' +
+                                '<tr><td>Email</td> <td>' + response[i].email + '</td></tr>' +
+                                '<tr><td>Description</td> <td>' + response[i].project_desc + '</td></tr>' +
+                                '<tr><td>Duration</td> <td>' + response[i].project_duration + '</td></tr>' +
+                                '<tr><td>Organization/Personal Name</td> <td>' + response[i].organization_name + '</td></tr>' +
+                                '<tr><td>Distributed System</td> <td>' + response[i].distributed_system + '</td></tr>' +
+                                '<tr><td>Response time or throughput performance objectives</td> <td>' + response[i].response_time + '</td></tr>' +
+                                '<tr><td>End user efficiency</td> <td>' + response[i].end_user_efficiency + '</td></tr>' +
+                                '<tr><td>Complex internal processing</td> <td>' + response[i].complex_internal_processing + '</td></tr>' +
+                                '<tr><td>Code must be reusable</td> <td>' + response[i].code_must_be_reusable + '</td></tr>' +
+                                '<tr><td>Easy to install</td> <td>' + response[i].easy_to_install + '</td></tr>' +
+                                '<tr><td>Easy to use</td> <td>' + response[i].easy_to_use + '</td></tr>' +
+                                '<tr><td>Portable</td> <td>' + response[i].portable + '</td></tr>' +
+                                '<tr><td>Easy to change</td> <td>' + response[i].easy_to_change + '</td></tr>' +
+                                '<tr><td>Concurrent</td> <td>' + response[i].concurrent + '</td></tr>' +
+                                '<tr><td>Includes special security objectives</td> <td>' + response[i].includes_special_security_objectives + '</td></tr>' +
+                                '<tr><td>Provides direct access for third parties</td> <td>' + response[i].provides_direct_access_for_third_parties + '</td></tr>' +
+                                '<tr><td>Special user training facilities are required</td> <td>' + response[i].special_user_training_facilities_are_required + '</td></tr>' +
+                                '<tr><td>Familiar with the project model that is used</td> <td>' + response[i].familiar_with_the_project_model_that_is_used + '</td></tr>' +
+                                '<tr><td>Application experience</td> <td>' + response[i].application_experience + '</td></tr>' +
+                                '<tr><td>Object-oriented experience</td> <td>' + response[i].object_oriented_experience + '</td></tr>' +
+                                '<tr><td>Lead analyst capability</td> <td>' + response[i].lead_analyst_capability + '</td></tr>' +
+                                '<tr><td>Motivation</td> <td>' + response[i].motivation + '</td></tr>' +
+                                '<tr><td>Stable requirements</td> <td>' + response[i].stable_requirements + '</td></tr>' +
+                                '<tr><td>Part-time staff</td> <td>' + response[i].part_time_staff + '</td></tr>' +
+                                '<tr><td>Difficult programming language</td> <td>' + response[i].difficult_programming_language + '</td></tr>' +
+                                '<tr><td>UML Model File</td> <td>' + response[i].uml_file + '</td></tr>' +
+                                '<tr><td>Other Documents</td> <td>' + response[i].uml_other + '</td></tr>' +
+                                '<tr></tr>' +
+                                '<tr colspan="2"><input class="btn btn-default" type="button" value="Go Back" onClick="window.location.reload()"></tr>';
+                        }
+                        document.getElementById("dataTable").innerHTML = tableData;
+                        // TODO: details pending
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                })
+            }
+    body#surveyData(onload='getSurveyData()')
+         include banner
+        div
+            button.btn.btn-primary.pull-right(onclick='downloadCSV()') Download all Data
+        table#dataTable.table.table-striped
+            thead
+                tr
+                    th(scope='col') #
+                    th(scope='col') Project Name
+                    th(scope='col') Contributor
+                    th(scope='col') Date
+                    th(scope='col')
+            tbody#dataBody

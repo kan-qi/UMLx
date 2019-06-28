@@ -1,0 +1,8 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:Search bar->User:Search bar->Search bar:check validity of input search string->check validity of input search string:Input message invalidty,General Search Functionality,4,0,2,0,1
+2,stl#User:Search bar->User:Search bar->Search bar:check validity of input search string->check validity of input search string:sql injection protection->sql injection protection:list of random recommendations,General Search Functionality,5,1,2,0,1
+3,stl#User:Search bar->User:Search bar->Search bar:check validity of input search string->check validity of input search string:sql injection protection->sql injection protection:query matched users->query matched users:No matched results found,General Search Functionality,6,1,2,1,1
+4,stl#User:Search bar->User:Search bar->Search bar:check validity of input search string->check validity of input search string:sql injection protection->sql injection protection:query matched users->query matched users:recommendations,General Search Functionality,6,1,3,0,1
+5,stl#User:list of random recommendations->User:list of random recommendations,General Search Functionality,2,0,1,0,0
+6,stl#User:No matched results found->User:No matched results found,General Search Functionality,2,0,0,1,0
+7,stl#User:Input message invalidty->User:Input message invalidty,General Search Functionality,2,0,1,0,0

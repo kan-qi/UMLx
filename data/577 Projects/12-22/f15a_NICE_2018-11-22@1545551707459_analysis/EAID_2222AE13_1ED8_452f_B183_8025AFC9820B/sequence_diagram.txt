@@ -1,0 +1,27 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Vender Registration Form" as 19
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Checkemailinformationforthecustomerandsendtheemailmanually()
+activate 19
+
+19 -> 09: showconfirmationpage()
+activate 09
+
+09 -> 09: Homepage()
+deactivate 09
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ConfirmDialog" as 09
+participant "SuspendUser" as 19
+
+User -> 09: ConfirmDialog()
+activate 09
+
+09 -> 19: SuspendUser()
+activate 19
+
+19 -> 19: User()
+deactivate 19
+
+19 -> 19: UserList()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: UserList()
+activate 19
+
+deactivate 19
+
+User -> 19: Clickusersuspendbutton()
+activate 19
+
+19 -> 09: Promptconfirmdialog()
+activate 09
+
+09 -> 09: ConfirmDialog()
+09 -> 19: SuspendUser()
+deactivate 19
+
+deactivate 09
+
+@enduml

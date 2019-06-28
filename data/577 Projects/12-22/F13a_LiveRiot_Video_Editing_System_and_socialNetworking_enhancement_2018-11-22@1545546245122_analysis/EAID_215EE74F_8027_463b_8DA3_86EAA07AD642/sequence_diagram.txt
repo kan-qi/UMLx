@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "pdfformatisnotvalidmessage" as 09
+participant "createaccountbutton" as 19
+participant "MicroWebsiteManagementPage" as 29
+participant "checktherequiredfieldsarefilled" as 109
+
+User -> 09: Updatedpage()
+activate 09
+
+deactivate 09
+
+User -> 19: EditPagebutton()
+activate 19
+
+19 -> 29: RedirecttoEidtableWebsitecontentform()
+activate 29
+
+29 -> 29: updatethewebsitecontent()
+29 -> 29: Editablewebsitecontentform()
+deactivate 29
+
+29 -> 19: capturehtmlcontentcorrupterror()
+19 -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+29 -> 109: redirecttotheupdatedpage()
+activate 109
+
+109 -> 09: Updatedpage()
+activate 09
+
+deactivate 09
+
+deactivate 109
+
+29 -> 29: websitecontent()
+activate 29
+
+deactivate 29
+
+User -> 29: Editablewebsitecontentform()
+activate 29
+
+deactivate 29
+
+User -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+@enduml

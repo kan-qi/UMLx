@@ -1,0 +1,82 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor supervisor
+participant "Transport Coordinator" as 09
+participant "categoryspage" as 19
+participant "Redirectstorespirationperfusionmetalstatuspage" as 29
+participant "Volunteer" as 149
+
+supervisor -> 09: Manageindividualsbutton()
+activate 09
+
+09 -> 29: Redirectstothemanageindividualspage()
+activate 29
+
+29 -> 29: listofindividualdetailspage()
+29 -> 29: RedirectstotheindividualresendOTPpage()
+29 -> 19: ResendOTPpage()
+activate 19
+
+19 -> 29: redirecttothemanageindividualspage()
+29 -> 29: listofindividualdetailspage()
+29 -> 29: RedirectstotheindividualresendOTPpage()
+29 -> 29: redirectstothemanageindividualspage()
+deactivate 29
+
+19 -> 149: clearsdeviceidofvolunteer()
+activate 149
+
+149 -> 09: Transportcoordinatepage()
+deactivate 09
+
+149 -> 149: sendsOTPtovolunteersemailID()
+149 -> 29: Redirecttomanagementindivisualspage()
+activate 29
+
+29 -> 09: Transportcoordinatepage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+149 -> 09: trackingrecorddatabase()
+activate 09
+
+deactivate 09
+
+deactivate 149
+
+deactivate 19
+
+supervisor -> 19: ResendOTPpage()
+activate 19
+
+19 -> 29: redirecttothemanageindividualspage()
+activate 29
+
+deactivate 29
+
+19 -> 149: clearsdeviceidofvolunteer()
+activate 149
+
+deactivate 149
+
+deactivate 19
+
+supervisor -> 29: listofindividualdetailspage()
+activate 29
+
+29 -> 29: RedirectstotheindividualresendOTPpage()
+deactivate 29
+
+supervisor -> 09: Transportcoordinatepage()
+activate 09
+
+deactivate 09
+
+@enduml

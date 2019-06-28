@@ -1,0 +1,98 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Timeractor User
+participant "idlefor30ormoreminutes" as 09
+participant "ProxyConnector" as 19
+participant "createaccountbutton" as 29
+participant "pdfformatisnotvalidmessage" as 39
+participant "UserInfo" as 149
+
+Timer -> 09: idlefor30ormoreminutes()
+activate 09
+
+09 -> 29: Redicttoanemptymarketingdirectoraccountform()
+activate 29
+
+29 -> 29: createaccountbutton()
+29 -> 29: Redicttoanemptymarketingdirectoraccountform()
+29 -> 29: createaccountbutton()
+deactivate 29
+
+29 -> 29: MarketingDirectorAccountform()
+activate 29
+
+29 -> 09: checkinputformatandrecordredundancy()
+09 -> 29: Addnewmarketingdirectoraccounttodb()
+29 -> 29: RedirecttoViewMarketdirectoraccountspage()
+29 -> 29: DirectAccountDB()
+deactivate 29
+
+29 -> 29: ViewMarketDirectorAccountsPage()
+activate 29
+
+deactivate 29
+
+09 -> 09: Checkinputformatandrecordredundancy()
+deactivate 09
+
+09 -> 39: Usernameexistsmessage()
+activate 39
+
+deactivate 39
+
+09 -> 39: usernameexistsmessage()
+activate 39
+
+deactivate 39
+
+29 -> 149: UserInfo()
+activate 149
+
+deactivate 149
+
+29 -> 29: MarketingDirectorAccountform()
+activate 29
+
+deactivate 29
+
+29 -> 149: UserInfo()
+activate 149
+
+deactivate 149
+
+User -> 19: MarketingDirectorAccountform()
+activate 19
+
+19 -> 09: checkinputformatandrecordredundancy()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: createaccountbutton()
+activate 29
+
+29 -> 29: Redicttoanemptymarketingdirectoraccountform()
+deactivate 29
+
+User -> 39: Usernameexistsmessage()
+activate 39
+
+deactivate 39
+
+User -> 39: usernameexistsmessage()
+activate 39
+
+deactivate 39
+
+User -> 29: ViewMarketDirectorAccountsPage()
+activate 29
+
+deactivate 29
+
+@enduml

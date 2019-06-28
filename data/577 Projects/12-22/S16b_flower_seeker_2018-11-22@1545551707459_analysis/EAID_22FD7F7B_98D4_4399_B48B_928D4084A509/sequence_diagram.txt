@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor customer
+participant "location" as 09
+participant "successfulchangemessage" as 19
+participant "CustomerController" as 39
+participant "PayPalInstance" as 49
+
+customer -> 09: chatbutton()
+activate 09
+
+09 -> 49: displaychatpanel()
+activate 49
+
+49 -> 39: commentandconcernspanel()
+activate 39
+
+39 -> 39: savecommentsconcerns()
+39 -> 19: message()
+activate 19
+
+deactivate 19
+
+39 -> 19: successfulcommunicationmessage()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+deactivate 49
+
+deactivate 09
+
+customer -> 19: successfulcommunicationmessage()
+activate 19
+
+deactivate 19
+
+customer -> 19: exceededlimiterrormessage()
+activate 19
+
+deactivate 19
+
+customer -> 39: commentandconcernspanel()
+activate 39
+
+39 -> 39: savecommentsconcerns()
+deactivate 39
+
+@enduml

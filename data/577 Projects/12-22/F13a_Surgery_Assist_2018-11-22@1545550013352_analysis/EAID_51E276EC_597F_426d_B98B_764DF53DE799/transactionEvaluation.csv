@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#user:no submitted rerservation message->user:no submitted rerservation message,View Submitted Reservation,CTRL;EXTCLL;INT,2,0,8,1,16
+2,stl#user:List of all submitted reservations->user:List of all submitted reservations,View Submitted Reservation,CTRL;EXTCLL;INT,2,0,8,1,16
+3,stl#user:"view submitted reservation" button->user:"view submitted reservation" button->"view submitted reservation" button:Display a list of all submitted reservation->Display a list of all submitted reservation:List of all submitted reservations,View Submitted Reservation,TRAN_NA,4,0,8,3,32
+4,stl#user:"view submitted reservation" button->user:"view submitted reservation" button->"view submitted reservation" button:Display a list of all submitted reservation->Display a list of all submitted reservation:display a message "no submitted reservation"->display a message "no submitted reservation":no submitted rerservation message,View Submitted Reservation,TRAN_NA,5,1,8,4,40
+5,stl#user:"view submitted reservation" button->user:"view submitted reservation" button->"view submitted reservation" button:Display a list of all submitted reservation->Display a list of all submitted reservation:Surgical reservation info,View Submitted Reservation,TRAN_NA,4,0,8,3,32

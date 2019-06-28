@@ -1,0 +1,59 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actoractor User
+participant "Searchbox" as 09
+participant "event" as 19
+participant "Adminpage" as 29
+participant "photolist" as 79
+
+Actor -> 09: Searchbox()
+activate 09
+
+deactivate 09
+
+Actor -> 19: Eventlist()
+activate 19
+
+19 -> 79: Getphotolist()
+activate 79
+
+79 -> 79: photo()
+79 -> 79: Popupphotoconnectionerror()
+79 -> 19: Eventlist()
+19 -> 79: Getphotolist()
+79 -> 79: displayphotolist()
+79 -> 79: Photolist()
+deactivate 79
+
+deactivate 19
+
+Actor -> 29: Adminpage()
+activate 29
+
+deactivate 29
+
+User -> 29: Adminpage()
+activate 29
+
+deactivate 29
+
+User -> 19: Eventlist()
+activate 19
+
+19 -> 79: Getphotolist()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+User -> 09: Searchbox()
+activate 09
+
+deactivate 09
+
+@enduml

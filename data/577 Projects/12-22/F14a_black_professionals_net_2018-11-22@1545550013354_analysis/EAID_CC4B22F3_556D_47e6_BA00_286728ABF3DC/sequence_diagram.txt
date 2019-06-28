@@ -1,0 +1,212 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "SaveaddedAd" as 09
+participant "Advertisement" as 19
+participant "Recommendation Letter" as 29
+participant "AdditionalInfo" as 39
+participant "Email" as 69
+participant "ConnectionUpdate" as 149
+participant "Admin" as 239
+participant "Connection" as 299
+
+User -> 09: Adaddpage()
+activate 09
+
+09 -> 39: Checkinputinformation()
+activate 39
+
+39 -> 39: Checkinputinformation()
+39 -> 39: Invalidinputinformation()
+deactivate 39
+
+39 -> 09: SaveaddedAd()
+09 -> 239: ads()
+activate 239
+
+deactivate 239
+
+deactivate 09
+
+39 -> 149: Updateaddescription()
+activate 149
+
+149 -> 19: Admanagementpanel()
+activate 19
+
+19 -> 69: ShowAddetailpage()
+activate 69
+
+69 -> 69: Addetailpage()
+69 -> 39: Checkinputinformation()
+activate 39
+
+39 -> 39: Checkinputinformation()
+deactivate 39
+
+39 -> 09: SaveaddedAd()
+activate 09
+
+deactivate 09
+
+39 -> 149: Updateaddescription()
+149 -> 299: Redirecttoconnectionlist()
+activate 299
+
+299 -> 09: Adaddpage()
+activate 09
+
+09 -> 39: Checkinputinformation()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 299
+
+149 -> 239: ads()
+activate 239
+
+deactivate 239
+
+deactivate 149
+
+deactivate 69
+
+69 -> 239: ads()
+activate 239
+
+deactivate 239
+
+19 -> 09: ShowAdAddpage()
+activate 09
+
+09 -> 09: Adaddpage()
+09 -> 39: Checkinputinformation()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+19 -> 149: Cancelupdatingandredirectto()
+activate 149
+
+149 -> 39: Existingadslist()
+activate 39
+
+39 -> 19: Popupmanagementpanel()
+19 -> 19: Admanagementpanel()
+19 -> 69: ShowAddetailpage()
+activate 69
+
+deactivate 69
+
+19 -> 09: ShowAdAddpage()
+activate 09
+
+deactivate 09
+
+19 -> 149: Cancelupdatingandredirectto()
+deactivate 149
+
+19 -> 29: displaydeleteconfirmationdialog()
+activate 29
+
+29 -> 29: Deleteconfirmationdialog()
+29 -> 29: DeleteAd()
+29 -> 239: ads()
+activate 239
+
+deactivate 239
+
+deactivate 29
+
+deactivate 19
+
+deactivate 39
+
+19 -> 29: displaydeleteconfirmationdialog()
+activate 29
+
+deactivate 29
+
+User -> 19: Admanagementpanel()
+activate 19
+
+19 -> 69: ShowAddetailpage()
+activate 69
+
+deactivate 69
+
+19 -> 09: ShowAdAddpage()
+activate 09
+
+deactivate 09
+
+19 -> 149: Cancelupdatingandredirectto()
+activate 149
+
+deactivate 149
+
+19 -> 29: displaydeleteconfirmationdialog()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+User -> 29: Deleteconfirmationdialog()
+activate 29
+
+29 -> 29: DeleteAd()
+deactivate 29
+
+User -> 39: Manageadslink()
+activate 39
+
+39 -> 19: showupexistingadspage()
+activate 19
+
+19 -> 39: Existingadslist()
+39 -> 19: Popupmanagementpanel()
+deactivate 19
+
+deactivate 39
+
+19 -> 239: ads()
+activate 239
+
+deactivate 239
+
+User -> 39: Invalidinputinformation()
+activate 39
+
+deactivate 39
+
+User -> 39: Existingadslist()
+activate 39
+
+39 -> 19: Popupmanagementpanel()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+User -> 69: Addetailpage()
+activate 69
+
+69 -> 39: Checkinputinformation()
+activate 39
+
+deactivate 39
+
+deactivate 69
+
+@enduml

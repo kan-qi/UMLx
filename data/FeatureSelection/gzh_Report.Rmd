@@ -1,0 +1,381 @@
+---
+title: "Report"
+author: "Atharva and Mohit"
+date: "April 25, 2018"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading data form the csv file
+
+```{r}
+data <- read.csv('./modelEvaluation_4_20_cleaned_1.csv',stringsAsFactors= T)
+summary(data)
+```
+
+## Preprocessing the data
+Replacing all the NaN with the mean value. 
+
+```{r}
+data$NUM = ifelse(is.na(data$NUM), ave(data$NUM, FUN = function(x) mean(x, na.rm = TRUE)),data$NUM)
+data$PROJ = ifelse(is.na(data$PROJ), ave(data$PROJ, FUN = function(x) mean(x, na.rm = TRUE)),data$PROJ)
+data$Effort_Norm = ifelse(is.na(data$Effort_Norm), ave(data$Effort_Norm, FUN = function(x) mean(x, na.rm = TRUE)),data$Effort_Norm)
+data$Norm_Factor = ifelse(is.na(data$Norm_Factor), ave(data$Norm_Factor, FUN = function(x) mean(x, na.rm = TRUE)),data$Norm_Factor)
+data$KSLOC = ifelse(is.na(data$KSLOC), ave(data$KSLOC, FUN = function(x) mean(x, na.rm = TRUE)),data$KSLOC)
+data$Effort = ifelse(is.na(data$Effort), ave(data$Effort, FUN = function(x) mean(x, na.rm = TRUE)),data$Effort)
+data$Effort_Norm_UCP = ifelse(is.na(data$Effort_Norm_UCP), ave(data$Effort_Norm_UCP, FUN = function(x) mean(x, na.rm = TRUE)),data$Effort_Norm_UCP)
+data$Path_Num = ifelse(is.na(data$Path_Num), ave(data$Path_Num, FUN = function(x) mean(x, na.rm = TRUE)),data$Path_Num)
+data$UseCase_Num = ifelse(is.na(data$UseCase_Num), ave(data$UseCase_Num, FUN = function(x) mean(x, na.rm = TRUE)),data$UseCase_Num)
+data$Total_Degree = ifelse(is.na(data$Total_Degree), ave(data$Total_Degree, FUN = function(x) mean(x, na.rm = TRUE)),data$Total_Degree)
+data$Element_Num = ifelse(is.na(data$Element_Num), ave(data$Element_Num, FUN = function(x) mean(x, na.rm = TRUE)),data$Element_Num)
+data$Entity_Num = ifelse(is.na(data$Entity_Num), ave(data$Entity_Num, FUN = function(x) mean(x, na.rm = TRUE)),data$Entity_Num)
+data$attribute_num = ifelse(is.na(data$attribute_num), ave(data$attribute_num, FUN = function(x) mean(x, na.rm = TRUE)),data$attribute_num)
+data$operation_num = ifelse(is.na(data$operation_num), ave(data$operation_num, FUN = function(x) mean(x, na.rm = TRUE)),data$operation_num)
+data$class_num = ifelse(is.na(data$class_num), ave(data$class_num, FUN = function(x) mean(x, na.rm = TRUE)),data$class_num)
+data$Top_Level_Classes = ifelse(is.na(data$Top_Level_Classes), ave(data$Top_Level_Classes, FUN = function(x) mean(x, na.rm = TRUE)),data$Top_Level_Classes)
+data$Average_Depth_Inheritance_Tree = ifelse(is.na(data$Average_Depth_Inheritance_Tree), ave(data$Average_Depth_Inheritance_Tree, FUN = function(x) mean(x, na.rm = TRUE)),data$Average_Depth_Inheritance_Tree)
+data$Average_Number_Of_Children_Per_Base_Class = ifelse(is.na(data$Average_Number_Of_Children_Per_Base_Class), ave(data$Average_Number_Of_Children_Per_Base_Class, FUN = function(x) mean(x, na.rm = TRUE)),data$Average_Number_Of_Children_Per_Base_Class)
+data$Number_Of_Inheritance_Relationships = ifelse(is.na(data$Number_Of_Inheritance_Relationships), ave(data$Number_Of_Inheritance_Relationships, FUN = function(x) mean(x, na.rm = TRUE)),data$Number_Of_Inheritance_Relationships)
+data$Number_Of_Derived_Classes = ifelse(is.na(data$Number_Of_Derived_Classes), ave(data$Number_Of_Derived_Classes, FUN = function(x) mean(x, na.rm = TRUE)),data$Number_Of_Derived_Classes)
+data$Number_Of_Classes_Inherited = ifelse(is.na(data$Number_Of_Classes_Inherited), ave(data$Number_Of_Classes_Inherited, FUN = function(x) mean(x, na.rm = TRUE)),data$Number_Of_Classes_Inherited)
+data$Number_Of_Classes_Inherited_From = ifelse(is.na(data$Number_Of_Classes_Inherited_From), ave(data$Number_Of_Classes_Inherited_From, FUN = function(x) mean(x, na.rm = TRUE)),data$Number_Of_Classes_Inherited_From)
+data$Number_Of_Children = ifelse(is.na(data$Number_Of_Children), ave(data$Number_Of_Children, FUN = function(x) mean(x, na.rm = TRUE)),data$Number_Of_Children)
+data$Depth_Inheritance_Tree = ifelse(is.na(data$Depth_Inheritance_Tree), ave(data$Depth_Inheritance_Tree, FUN = function(x) mean(x, na.rm = TRUE)),data$Depth_Inheritance_Tree)
+data$Coupling_Between_Objects = ifelse(is.na(data$Coupling_Between_Objects), ave(data$Coupling_Between_Objects, FUN = function(x) mean(x, na.rm = TRUE)),data$Coupling_Between_Objects)
+data$para_num = ifelse(is.na(data$para_num), ave(data$para_num, FUN = function(x) mean(x, na.rm = TRUE)),data$para_num)
+data$usage_num = ifelse(is.na(data$usage_num), ave(data$usage_num, FUN = function(x) mean(x, na.rm = TRUE)),data$usage_num)
+data$real_num = ifelse(is.na(data$real_num), ave(data$real_num, FUN = function(x) mean(x, na.rm = TRUE)),data$real_num)
+data$assoc_num = ifelse(is.na(data$assoc_num), ave(data$assoc_num, FUN = function(x) mean(x, na.rm = TRUE)),data$assoc_num)
+data$externaloper_num = ifelse(is.na(data$externaloper_num), ave(data$externaloper_num, FUN = function(x) mean(x, na.rm = TRUE)),data$externaloper_num)
+data$objectdata_num = ifelse(is.na(data$objectdata_num), ave(data$objectdata_num, FUN = function(x) mean(x, na.rm = TRUE)),data$objectdata_num)
+data$avg_operation = ifelse(is.na(data$avg_operation), ave(data$avg_operation, FUN = function(x) mean(x, na.rm = TRUE)),data$avg_operation)
+data$avg_attribute = ifelse(is.na(data$avg_attribute), ave(data$avg_attribute, FUN = function(x) mean(x, na.rm = TRUE)),data$avg_attribute)
+data$avg_parameter = ifelse(is.na(data$avg_parameter), ave(data$avg_parameter, FUN = function(x) mean(x, na.rm = TRUE)),data$avg_parameter)
+data$avg_instVar = ifelse(is.na(data$avg_instVar), ave(data$avg_instVar, FUN = function(x) mean(x, na.rm = TRUE)),data$avg_instVar)
+data$FUNC_NA = ifelse(is.na(data$FUNC_NA), ave(data$FUNC_NA, FUN = function(x) mean(x, na.rm = TRUE)),data$FUNC_NA)
+data$EI = ifelse(is.na(data$EI), ave(data$EI, FUN = function(x) mean(x, na.rm = TRUE)),data$EI)
+data$INT = ifelse(is.na(data$INT), ave(data$INT, FUN = function(x) mean(x, na.rm = TRUE)),data$INT)
+data$DM = ifelse(is.na(data$DM), ave(data$DM, FUN = function(x) mean(x, na.rm = TRUE)),data$DM)
+data$CTRL = ifelse(is.na(data$CTRL), ave(data$CTRL, FUN = function(x) mean(x, na.rm = TRUE)),data$CTRL)
+data$EXTCLL = ifelse(is.na(data$EXTCLL), ave(data$EXTCLL, FUN = function(x) mean(x, na.rm = TRUE)),data$EXTCLL)
+data$TRAN_NA = ifelse(is.na(data$TRAN_NA), ave(data$TRAN_NA, FUN = function(x) mean(x, na.rm = TRUE)),data$TRAN_NA)
+data$NT = ifelse(is.na(data$NT), ave(data$NT, FUN = function(x) mean(x, na.rm = TRUE)),data$NT)
+data$Complex_UC = ifelse(is.na(data$Complex_UC), ave(data$Complex_UC, FUN = function(x) mean(x, na.rm = TRUE)),data$Complex_UC)
+data$UEUCW = ifelse(is.na(data$UEUCW), ave(data$UEUCW, FUN = function(x) mean(x, na.rm = TRUE)),data$UEUCW)
+data$UEXUCW = ifelse(is.na(data$UEXUCW), ave(data$UEXUCW, FUN = function(x) mean(x, na.rm = TRUE)),data$UEXUCW)
+data$UDUCW = ifelse(is.na(data$UDUCW), ave(data$UDUCW, FUN = function(x) mean(x, na.rm = TRUE)),data$UDUCW)
+data$UAW = ifelse(is.na(data$UAW), ave(data$UAW, FUN = function(x) mean(x, na.rm = TRUE)),data$UAW)
+data$TCF = ifelse(is.na(data$TCF), ave(data$TCF, FUN = function(x) mean(x, na.rm = TRUE)),data$TCF)
+data$EF = ifelse(is.na(data$EF), ave(data$EF, FUN = function(x) mean(x, na.rm = TRUE)),data$EF)
+data$EUCP = ifelse(is.na(data$EUCP), ave(data$EUCP, FUN = function(x) mean(x, na.rm = TRUE)),data$EUCP)
+data$EXUCP = ifelse(is.na(data$EXUCP), ave(data$EXUCP, FUN = function(x) mean(x, na.rm = TRUE)),data$EXUCP)
+data$DUCP = ifelse(is.na(data$DUCP), ave(data$DUCP, FUN = function(x) mean(x, na.rm = TRUE)),data$DUCP)
+data$SWTI = ifelse(is.na(data$SWTI), ave(data$SWTI, FUN = function(x) mean(x, na.rm = TRUE)),data$SWTI)
+data$SWTII = ifelse(is.na(data$SWTII), ave(data$SWTII, FUN = function(x) mean(x, na.rm = TRUE)),data$SWTII)
+data$SWTIII = ifelse(is.na(data$SWTIII), ave(data$SWTIII, FUN = function(x) mean(x, na.rm = TRUE)),data$SWTIII)
+```
+
+## Preparing the independent variables
+1. Removing all the variables with zero value for all the observations. 
+2. Facorizing the type variable
+3. Calculating the corelation between all the independent and dependent variables.
+4. Choosing all the variables with highest corelation values. 
+
+```{r}
+x <-data[,7:56];
+x$Total_Degree<-NULL
+x$operation_num<-NULL
+x$usage_num<-NULL
+x$real_num<-NULL
+x$assoc_num<-NULL
+x$EI<-NULL
+x$INT<-NULL
+x$DM<-NULL
+
+y =data$Effort
+summary(x)
+```
+
+## Correlation 
+Calculating the correlation and choosing the independent variables with correlation higher than 0.6 with the dependent variable (Effort).
+
+``` {r}
+corr <- cor(x,y)
+plot(corr,xlim=c(0, 36))
+text(1:42,corr,row.names(corr),cex=0.4, pos=4, col="blue")
+abline(h=0.15,col="red")
+abline(h=-0.15,col="red")
+```
+
+Looking at the graph, following are the most correlated independent variables:  
+1. Effort_Norm_UCP
+2. UseCase_Num
+3. CTRL
+4. NT
+5. Complex_UC
+6. UEUCW
+7. TCF
+8. EUCP
+9. EXUCP
+10. DUCP
+11. Top_Level_Classes
+12. Number_Of_Inheritance_Relationships
+13. Number_Of_Derived_Classes
+14. Number_Of_Classes_Inherited
+15. Number_Of_Classes_Inherited_From
+16. Number_Of_Children
+17. Depth_Inheritance_Tree
+18. Coupling_Between_Objects
+19. FUNC_NA
+20. UAW
+  
+
+## Model Fitting
+
+Using all the above variables except UseCase_NUM and Diagram_Num for fitting the model.  
+
+```{r}
+independentVar <- data.frame(x$Effort_Norm_UCP, x$UseCase_Num, x$CTRL, x$NT, x$Complex_UC, x$UEUCW, x$TCF, x$EUCP, x$EXUCP, x$DUCP, x$Top_Level_Classes, x$Number_Of_Inheritance_Relationships, x$Number_Of_Derived_Classes, x$Number_Of_Classes_Inherited, x$Number_Of_Classes_Inherited_From, x$Number_Of_Children, x$Depth_Inheritance_Tree, x$Coupling_Between_Objects, x$FUNC_NA, x$UAW)
+
+names(independentVar)<- c("Effort_Norm_UCP","UseCase_Num","CTRL","NT","Complex_UC","UEUCW","TCF","EUCP","EXUCP","DUCP","Top_Level_Classes","Number_Of_Inheritance_Relationships","Number_Of_Derived_Classes","Number_Of_Classes_Inherited","Number_Of_Classes_Inherited_From","Number_Of_Children","Depth_Inheritance_Tree","Coupling_Between_Objects","FUNC_NA","UAW")
+
+#library(caret)
+#set.seed(30)
+#model <- train(y~.,data=independentVar,method="lm",trControl = trainControl(method = "cv", number=2,verboseIter = TRUE))
+
+fit <- lm(y~.,data=independentVar)
+summary(fit)
+```
+
+
+
+```{r}
+raw_data <- read.csv(file = "./modelEvaluation_4_20_cleaned_1.csv", stringsAsFactors = F)
+raw_data[is.na(raw_data[,"KSLOC"]), "KSLOC"] <- 0
+```
+
+
+```{r}
+X_data = subset(raw_data, select = c("KSLOC","Path_Num","UseCase_Num","Element_Num",                                "Entity_Num","attribute_num","operation_num","class_num","Top_Level_Classes",                    "Average_Depth_Inheritance_Tree","Average_Number_Of_Children_Per_Base_Class",             "Number_Of_Inheritance_Relationships","Number_Of_Derived_Classes","Number_Of_Classes_Inherited", "Number_Of_Classes_Inherited_From","Number_Of_Children","Depth_Inheritance_Tree","Coupling_Between_Objects","para_num",         "externaloper_num","objectdata_num","avg_operation",          "avg_attribute","avg_parameter","avg_instVar",                               "FUNC_NA","EI","INT","DM","CTRL","EXTCLL","TRAN_NA","NT","Complex_UC","UEUCW",                "UEXUCW","UDUCW","UAW","TCF","EF","EUCP","EXUCP","DUCP","SWTI","SWTII","SWTIII"))
+Y_data <- raw_data[,"Effort"]
+```
+
+
+```{r}
+library(glmnet)
+```
+
+
+```{r}
+lasso_lm <- glmnet(x = data.matrix(X_data), y = as.vector(Y_data), alpha = 1, standardize = T)
+```
+
+
+```{r}
+lasso_lm$lambda
+```
+
+
+```{r}
+plot(lasso_lm)
+```
+
+```{r}
+library(plotmo) # for plot_glmnet
+```
+
+```{r}
+ #for 10 biggest final features
+plot_glmnet(lasso_lm)                             # default colors
+#plot_glmnet(lasso_lm, label=10)
+```
+
+
+```{r}
+Lasso_range = function(x, y, k){
+  # inputs:
+      # x_matrix, a matrix containing independent variables
+      # y: vector of dependent varaibles
+      # k: the length of sequence
+  # output:
+      # seq: a sequence of lambdaa from high to low
+  
+  
+  # define my own scale function to simulate that in glmnet
+  myscale = function(x) sqrt(sum((x - mean(x)) ^ 2) / length(x))
+  
+  # normalize x
+  sx = as.matrix(scale(x, scale = apply(x, 2, myscale)))
+  # sy = as.vector(scale(y, scale = myscale(y)))
+  max_lambda = max(abs(colSums(sx * as.vector(y)))) / dim(sx)[1]
+  # The default depends on the sample size nobs relative to the number of variables nvars. 
+  # If nobs > nvars, the default is 0.0001, close to zero. 
+  
+  # If nobs < nvars, the default is 0.01. 
+  # A very small value of lambda.min.ratio will lead to a saturated fit in the nobs < nvars case. 
+  ratio = 0
+  if(dim(sx)[1] > dim(sx)[2]){
+    ratio = 0.0001
+  }else{
+    ratio = 0.01
+  }
+  min_lambda = max_lambda * ratio
+  log_seq = seq(from  = log(min_lambda), to = log(max_lambda), length.out = k)
+  seq = sort(exp(log_seq), decreasing = T)
+  return(seq)
+}
+
+```
+
+```{r}
+Lasso_range(as.matrix(X_data),Y_data, 100)
+```
+
+```{r}
+set.seed(2)
+lambda_list <- Lasso_range(as.matrix(X_data),as.vector(Y_data),100)
+percent = 50
+cvfit = cv.glmnet(data.matrix(X_data),as.vector(Y_data),
+                  standardize = T, type.measure = 'mse', nfolds = 5, alpha = 1)
+# # 5 fold cross validation
+ k <- 5
+# 
+# function to calculate MMRE
+calcMMRE <- function(testData,pred){
+  mmre <- abs(testData - pred)/testData
+  mean_value <- mean(mmre)
+  mean_value
+}
+# # function to calculate PRED
+calcPRED <- function(testData,pred,percent){
+  value <- abs(testData - pred)/testData
+  percent_value <- percent/100
+  pred_value <- value <= percent_value
+  mean(pred_value)
+}
+# 
+ folds <- cut(seq(1,nrow(X_data)),breaks=k,labels=FALSE)
+ mean_mmre <- vector("list",k)
+ mean_pred <- vector("list",k)
+ overall_mean_mmre <- vector("list",100)
+ overall_mean_pred <- vector("list",100)
+ for(iterator in seq(1,100)){
+   for(i in 1:k){
+     testIndexes <- which(folds==i,arr.ind=TRUE)
+     testData <- Y_data[testIndexes]
+     pred <- predict(cvfit,newx=as.matrix(X_data),s=lambda_list[[iterator]])
+     mean_mmre[[i]] <- calcMMRE(testData,pred[testIndexes])
+     mean_pred[[i]] <- calcPRED(testData,pred[testIndexes],percent)
+ }
+ overall_mean_mmre[[iterator]] <- mean(as.numeric(mean_mmre))
+ overall_mean_pred[[iterator]] <- mean(as.numeric(mean_pred))
+ }
+```
+
+```{r}
+plot(log(lambda_list),overall_mean_mmre,xlab="log(Lambda)",ylab="MMRE")
+lines(log(lambda_list),overall_mean_mmre,xlim=range(log(lambda_list)), ylim=range(overall_mean_mmre), pch=16)
+```
+
+```{r}
+plot(log(lambda_list),overall_mean_pred,xlab="log(Lambda)",ylab = "PRED")
+lines(log(lambda_list),overall_mean_pred,xlim=range(log(lambda_list)), ylim=range(overall_mean_pred), pch=16)
+```
+```{r}
+plot(cvfit)
+```
+## Feature ranking
+```{r}
+library(BayesFactor)
+features = c(
+  "Effort",
+  "KSLOC",
+  "Path_Num",
+  "UseCase_Num",
+  "Element_Num",
+  "Entity_Num",
+  "attribute_num",
+  "operation_num",
+  "class_num",
+  "Top_Level_Classes",
+  "Average_Depth_Inheritance_Tree",
+  "Average_Number_Of_Children_Per_Base_Class",
+  "Number_Of_Inheritance_Relationships",
+  "Number_Of_Derived_Classes",
+  "Number_Of_Classes_Inherited",
+  "Number_Of_Classes_Inherited_From",
+  "Number_Of_Children",
+  "Depth_Inheritance_Tree",
+  "Coupling_Between_Objects",
+  "para_num",
+  "externaloper_num",
+  "objectdata_num",
+  "avg_operation",
+  "avg_attribute",
+  "avg_parameter",
+  "avg_instVar",
+  "FUNC_NA",
+  "EI",
+  "INT",
+  "DM",
+  "CTRL",
+  "EXTCLL",
+  "TRAN_NA",
+  "NT",
+  "Complex_UC",
+  "UEUCW",
+  "UEXUCW",
+  "UDUCW",
+  "UAW",
+  "TCF",
+  "EF",
+  "EUCP",
+  "EXUCP",
+  "DUCP",
+  "SWTI",
+  "SWTII",
+  "SWTIII"
+  )
+model_data = subset(raw_data, select = features)
+stats <- data.frame(matrix(nrow = 0, ncol = 5))
+colnames(stats) <- c("var", "r2", "AIC", "BIC", "BF")
+for (var in features[2:47]) {
+  regression_formula <- as.formula(paste("Effort ~ ", var))
+  model <- lm(regression_formula, data = model_data)
+  r2 = summary(model)$r.squared
+  aic = AIC(model)
+  bic = BIC(model)
+  bf = lmBF(regression_formula, data = model_data)
+  stats[nrow(stats) + 1,] <- list(var, r2, aic, bic, bf)
+}
+```
+r�
+```{r}
+r2_data <- stats[, c("var", "r2")]
+r2_data.sort <- r2_data[order(-r2_data$r2), ]
+r2_data.sort
+```
+AIC
+```{r}
+aic_data <- stats[, c("var", "AIC")]
+aic_data.sort <- aic_data[order(aic_data$AIC), ]
+aic_data.sort
+```
+BIC
+```{r}
+bic_data <- stats[, c("var", "BIC")]
+bic_data.sort <- bic_data[order(bic_data$BIC), ]
+bic_data.sort
+```
+Bayes Factor
+```{r}
+bf_data <- stats[, c("var", "BF")]
+bf_data.sort <- bf_data[order(-bf_data$BF), ]
+bf_data.sort
+```

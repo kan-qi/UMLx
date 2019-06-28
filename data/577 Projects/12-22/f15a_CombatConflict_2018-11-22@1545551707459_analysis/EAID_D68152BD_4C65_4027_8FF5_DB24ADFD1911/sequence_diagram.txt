@@ -1,0 +1,150 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Application Server Component" as 09
+participant "readsquestion" as 19
+participant "clicksnext" as 29
+participant "Web server component" as 79
+participant "webpage update compenonet" as 109
+participant "System Boundary" as 169
+participant "Techinique Summary Generator component" as 219
+
+User -> 09: ClickContinuebutton()
+activate 09
+
+09 -> 19: loadsresponsestatisticspage()
+activate 19
+
+19 -> 219: loadsCommunicationTechnique()
+activate 219
+
+219 -> 169: Answerssubmittedtosystem()
+activate 169
+
+169 -> 19: Scenariolistloaded()
+deactivate 19
+
+deactivate 169
+
+deactivate 219
+
+deactivate 09
+
+User -> 19: readsscenariomemo()
+activate 19
+
+19 -> 109: Answersfrompagestoredascookie()
+activate 109
+
+109 -> 19: loadsresponsestatisticspage()
+19 -> 219: loadsCommunicationTechnique()
+activate 219
+
+deactivate 219
+
+deactivate 19
+
+deactivate 109
+
+User -> 29: clicksnext()
+activate 29
+
+29 -> 109: Answersfrompagestoredascookie()
+activate 109
+
+109 -> 19: loadsresponsestatisticspage()
+activate 19
+
+deactivate 19
+
+deactivate 109
+
+deactivate 29
+
+User -> 19: readsquestion()
+activate 19
+
+19 -> 109: Answersfrompagestoredascookie()
+activate 109
+
+109 -> 19: loadsresponsestatisticspage()
+deactivate 19
+
+deactivate 109
+
+User -> 29: clicksonradiobuttonsofanswers()
+activate 29
+
+29 -> 109: Answersfrompagestoredascookie()
+activate 109
+
+109 -> 19: loadsresponsestatisticspage()
+activate 19
+
+deactivate 19
+
+deactivate 109
+
+deactivate 29
+
+User -> 29: clickscontinuebutton()
+activate 29
+
+29 -> 109: Answersfrompagestoredascookie()
+activate 109
+
+109 -> 19: loadsresponsestatisticspage()
+activate 19
+
+deactivate 19
+
+deactivate 109
+
+deactivate 29
+
+User -> 09: ClickSelectanotherscenariobutton()
+activate 09
+
+09 -> 169: Answerssubmittedtosystem()
+activate 169
+
+169 -> 19: Scenariolistloaded()
+activate 19
+
+deactivate 19
+
+deactivate 169
+
+deactivate 09
+
+User -> 79: givetheirresponses()
+activate 79
+
+79 -> 169: Answerssubmittedtosystem()
+activate 169
+
+169 -> 19: Scenariolistloaded()
+activate 19
+
+deactivate 19
+
+deactivate 169
+
+deactivate 79
+
+User -> 19: readtask()
+activate 19
+
+19 -> 169: Answerssubmittedtosystem()
+activate 169
+
+169 -> 19: Scenariolistloaded()
+deactivate 19
+
+deactivate 169
+
+@enduml

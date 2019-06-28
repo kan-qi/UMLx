@@ -1,0 +1,291 @@
+id,element,useCase,type,component
+1,User:fill in  field as required,Add Employer Profile,boundary,fillinfieldasrequired
+2,User:Click on Add,Add Employer Profile,boundary,ClickonAdd
+3,User:Homepage,Add Employer Profile,boundary,Homepage
+4,User:Click on ��my profile�� link,Add Employer Profile,boundary,Administrator Profile
+5,Click on Add:Validates field,Add Employer Profile,boundary,fillinfieldasrequired
+6,Click on ��my profile�� link:Profile page displayed,Add Employer Profile,boundary,Employer Profile
+7,Notification displayed ��Add user profile��:Employer db,Add Employer Profile,boundary,Employer Profile
+8,Notification displayed ��Add user profile��:Homepage,Add Employer Profile,boundary,Homepage
+9,Validates field:Notification displayed ��Add user profile��,Add Employer Profile,boundary,Employer Profile
+10,Profile page displayed:Validates field,Add Employer Profile,boundary,fillinfieldasrequired
+11,fill in  field as required:Validates field,Add Employer Profile,boundary,fillinfieldasrequired
+12,stl#User:fill in  field as required,Add Employer Profile,Stimulus,undefined
+13,stl#User:Click on Add,Add Employer Profile,Stimulus,undefined
+14,stl#User:Homepage,Add Employer Profile,Stimulus,undefined
+15,stl#User:Click on ��my profile�� link,Add Employer Profile,Stimulus,undefined
+16,User:Click job seeker��,Add job-seeker profile,boundary,ClickonAdd
+17,User:fill in  field as required,Add job-seeker profile,boundary,fillinfieldasrequired
+18,User:Click on update,Add job-seeker profile,boundary,ClickonAdd
+19,User:Homepage,Add job-seeker profile,boundary,Homepage
+20,Click job seeker��:Open job seeker page,Add job-seeker profile,entity,Job Preference
+21,Click on update:Validates field,Add job-seeker profile,boundary,fillinfieldasrequired
+22,Notification displayed ��add job seeker profile��:Homepage,Add job-seeker profile,boundary,Homepage
+23,Notification displayed ��add job seeker profile��:job seeker db,Add job-seeker profile,entity,User
+24,Validates field:Notification displayed ��add job seeker profile��,Add job-seeker profile,boundary,Job Candidate Profile
+25,Open job seeker page:Validates field,Add job-seeker profile,boundary,fillinfieldasrequired
+26,fill in  field as required:Validates field,Add job-seeker profile,boundary,fillinfieldasrequired
+27,stl#User:Click job seeker��,Add job-seeker profile,Stimulus,undefined
+28,stl#User:fill in  field as required,Add job-seeker profile,Stimulus,undefined
+29,stl#User:Click on update,Add job-seeker profile,Stimulus,undefined
+30,stl#User:Homepage,Add job-seeker profile,Stimulus,undefined
+31,User:Click ��Sponsors��,Add sponser,boundary,Sponsor
+32,User:fill in  field as required,Add sponser,boundary,fillinfieldasrequired
+33,User:Homepage,Add sponser,boundary,Homepage
+34,User:Click on add ,Add sponser,boundary,ClickonAdd
+35,Click on add :Validates field,Add sponser,boundary,fillinfieldasrequired
+36,Click ��Sponsors��:Open sponsor page,Add sponser,boundary,Sponsor
+37,Notification displayed ��add  sponser profile��:Homepage,Add sponser,boundary,Homepage
+38,Notification displayed ��add  sponser profile��:sponser db,Add sponser,boundary,Sponsor
+39,Validates field:Notification displayed ��add  sponser profile��,Add sponser,boundary,Employer Profile
+40,Open sponsor page:Validates field,Add sponser,boundary,fillinfieldasrequired
+41,fill in  field as required:Validates field,Add sponser,boundary,fillinfieldasrequired
+42,stl#User:Click ��Sponsors��,Add sponser,Stimulus,undefined
+43,stl#User:fill in  field as required,Add sponser,Stimulus,undefined
+44,stl#User:Homepage,Add sponser,Stimulus,undefined
+45,stl#User:Click on add ,Add sponser,Stimulus,undefined
+46,User:Homepage,Browse Jobs,boundary,Homepage
+47,User:Click on ��Home��,Browse Jobs,boundary,ClickonAdd
+48,Click on ��Home��:Retrieve all job posts from database,Browse Jobs,boundary,Job Post
+49,Display all posts in most recent first order:Job db,Browse Jobs,boundary,Job Post
+50,Display all posts in most recent first order:Homepage,Browse Jobs,boundary,Homepage
+51,Retrieve all job posts from database:Display all posts in most recent first order,Browse Jobs,boundary,Administrator Profile
+52,stl#User:Homepage,Browse Jobs,Stimulus,undefined
+53,stl#User:Click on ��Home��,Browse Jobs,Stimulus,undefined
+54,User:click confirm ,Delete Employer Profile,boundary,ClickonAdd
+55,User:Homepage,Delete Employer Profile,boundary,Homepage
+56,User:Click delete employee  button,Delete Employer Profile,boundary,Employer Profile
+57,Click delete employee  button:pop delete confirm  information,Delete Employer Profile,boundary,Administrator Profile
+58,delete employeer:Homepage,Delete Employer Profile,boundary,Homepage
+59,click confirm :delete employeer,Delete Employer Profile,boundary,Employer Profile
+60,delete employeer:employeer db,Delete Employer Profile,boundary,Employer Profile
+61,pop delete confirm  information:delete employeer,Delete Employer Profile,boundary,Employer Profile
+62,stl#User:click confirm ,Delete Employer Profile,Stimulus,undefined
+63,stl#User:Homepage,Delete Employer Profile,Stimulus,undefined
+64,stl#User:Click delete employee  button,Delete Employer Profile,Stimulus,undefined
+65,User:click confirm ,Delete Sponser,boundary,ClickonAdd
+66,User:Click delete sponser button,Delete Sponser,boundary,ClickonAdd
+67,User:Homepage,Delete Sponser,boundary,Homepage
+68,Click delete sponser button:pop delete confirm  information,Delete Sponser,boundary,Administrator Profile
+69,delete sponser:Homepage,Delete Sponser,boundary,Homepage
+70,click confirm :delete sponser,Delete Sponser,boundary,Sponsor
+71,delete sponser:sponser db,Delete Sponser,boundary,Sponsor
+72,pop delete confirm  information:delete sponser,Delete Sponser,boundary,Sponsor
+73,stl#User:click confirm ,Delete Sponser,Stimulus,undefined
+74,stl#User:Click delete sponser button,Delete Sponser,Stimulus,undefined
+75,stl#User:Homepage,Delete Sponser,Stimulus,undefined
+76,User:click confirm ,Delete job-seeker profile,boundary,ClickonAdd
+77,User:Click delete job-seeker button,Delete job-seeker profile,boundary,ClickonAdd
+78,User:Homepage,Delete job-seeker profile,boundary,Homepage
+79,Click delete job-seeker button:pop delete confirm  information,Delete job-seeker profile,boundary,Administrator Profile
+80,delete job seeker:Homepage,Delete job-seeker profile,boundary,Homepage
+81,click confirm :delete job seeker,Delete job-seeker profile,boundary,Job Candidate Profile
+82,delete job seeker:sponser job seeker,Delete job-seeker profile,boundary,Sponsor
+83,pop delete confirm  information:delete job seeker,Delete job-seeker profile,boundary,Job Candidate Profile
+84,stl#User:click confirm ,Delete job-seeker profile,Stimulus,undefined
+85,stl#User:Click delete job-seeker button,Delete job-seeker profile,Stimulus,undefined
+86,stl#User:Homepage,Delete job-seeker profile,Stimulus,undefined
+87,User:Homepage,Provide Advertisement,boundary,Homepage
+88,User:Click on ��manage ads��,Provide Advertisement,boundary,ClickonAdd
+89,User:Change field as required,Provide Advertisement,boundary,fillinfieldasrequired
+90,User:Click on update,Provide Advertisement,boundary,ClickonAdd
+91,Change field as required:Validates field,Provide Advertisement,boundary,fillinfieldasrequired
+92,Click on update:Validates field,Provide Advertisement,boundary,fillinfieldasrequired
+93,Click on ��manage ads��:Profile update page displayed,Provide Advertisement,boundary,Job Candidate Profile
+94,Notification displayed ��Updated adviserment profile��:Homepage,Provide Advertisement,boundary,Homepage
+95,Notification displayed ��Updated adviserment profile��:adversitement db,Provide Advertisement,entity,Visitor
+96,Validates field:Notification displayed ��Updated adviserment profile��,Provide Advertisement,boundary,Job Candidate Profile
+97,Profile update page displayed:Validates field,Provide Advertisement,boundary,fillinfieldasrequired
+98,stl#User:Homepage,Provide Advertisement,Stimulus,undefined
+99,stl#User:Click on ��manage ads��,Provide Advertisement,Stimulus,undefined
+100,stl#User:Change field as required,Provide Advertisement,Stimulus,undefined
+101,stl#User:Click on update,Provide Advertisement,Stimulus,undefined
+102,User:Homepage,Provide feedback/testimonial,boundary,Homepage
+103,User:Fill the fields,Provide feedback/testimonial,boundary,fillinfieldasrequired
+104,User:Click on ��feedback/testimonials��,Provide feedback/testimonial,entity,Testimonial
+105,User:Click on post testimonial,Provide feedback/testimonial,entity,Testimonial
+106,Click on post testimonial:Validates field,Provide feedback/testimonial,boundary,fillinfieldasrequired
+107,Click on ��feedback/testimonials��:Testimonial page displayed,Provide feedback/testimonial,entity,Testimonial
+108,Display the testimonial page with the recent added first:Homepage,Provide feedback/testimonial,boundary,Homepage
+109,Saves in database:Display the testimonial page with the recent added first,Provide feedback/testimonial,entity,Testimonial
+110,Fill the fields:Validates field,Provide feedback/testimonial,boundary,fillinfieldasrequired
+111,Validates field:Saves in database,Provide feedback/testimonial,control,Savesindatabase
+112,Testimonial page displayed:Validates field,Provide feedback/testimonial,boundary,fillinfieldasrequired
+113,Validates field:feedback db,Provide feedback/testimonial,entity,feedbackdb
+114,stl#User:Homepage,Provide feedback/testimonial,Stimulus,undefined
+115,stl#User:Fill the fields,Provide feedback/testimonial,Stimulus,undefined
+116,stl#User:Click on ��feedback/testimonials��,Provide feedback/testimonial,Stimulus,undefined
+117,stl#User:Click on post testimonial,Provide feedback/testimonial,Stimulus,undefined
+118,User:Clicks Submit	,Register,boundary,ClickonAdd
+119,User:Click on register button,Register,boundary,ClickonAdd
+120,User:Homepage,Register,boundary,Homepage
+121,User:Fills out the registration form ,Register,boundary,Administrator Profile
+122,Click on register button:Register   information,Register,entity,Testimonial
+123,Clicks Submit	:Validates the form,Register,boundary,Job Candidate Profile
+124,Fills out the registration form :Validates the form,Register,boundary,Job Candidate Profile
+125,Sends and email notification of the new user account created:Homepage,Register,boundary,Homepage
+126,Logs in the user:Sends and email notification of the new user account created,Register,boundary,Job Candidate Profile
+127,Validates the form:Logs in the user,Register,entity,User
+128,Register   information:Validates the form,Register,boundary,Job Candidate Profile
+129,Validates the form:Register db,Register,entity,Testimonial
+130,stl#User:Clicks Submit	,Register,Stimulus,undefined
+131,stl#User:Click on register button,Register,Stimulus,undefined
+132,stl#User:Homepage,Register,Stimulus,undefined
+133,stl#User:Fills out the registration form ,Register,Stimulus,undefined
+134,User:Review jobs page,Review Jobs,boundary,Homepage
+135,User:Homepage,Review Jobs,boundary,Homepage
+136,Confirmation page:Advertisement db,Review Jobs,entity,User
+137,Choose  job  information:Confirmation page,Review Jobs,boundary,Homepage
+138,Review jobs page:Choose  job  information,Review Jobs,boundary,Job Post
+139,Confirmation page:Homepage,Review Jobs,boundary,Homepage
+140,Confirmation page:Review jobs page,Review Jobs,boundary,Homepage
+141,stl#User:Review jobs page,Review Jobs,Stimulus,undefined
+142,stl#User:Homepage,Review Jobs,Stimulus,undefined
+143,User:Homepage,Search Job candidates,boundary,Homepage
+144,User:Type Keyword,Search Job candidates,boundary,TypeKeyword
+145,User:Press Search Button,Search Job candidates,boundary,PressSearchButton
+146,Display Search Result:Homepage,Search Job candidates,boundary,Homepage
+147,Sort search result in categories as per given by employer:Display Search Result,Search Job candidates,boundary,PressSearchButton
+148,Validate keyword:Homepage,Search Job candidates,boundary,Homepage
+149,Press Search Button:Validate keyword,Search Job candidates,boundary,TypeKeyword
+150,Validate keyword:Sort search result in categories as per given by employer,Search Job candidates,boundary,Employer Profile
+151,Type Keyword:Validate keyword,Search Job candidates,boundary,TypeKeyword
+152,Type Keyword:Validate keyword,Search Job candidates,boundary,TypeKeyword
+153,Validate keyword:Type Keyword,Search Job candidates,boundary,TypeKeyword
+154,Validate keyword:Validate keyword,Search Job candidates,boundary,TypeKeyword
+155,stl#User:Homepage,Search Job candidates,Stimulus,undefined
+156,stl#User:Type Keyword,Search Job candidates,Stimulus,undefined
+157,stl#User:Press Search Button,Search Job candidates,Stimulus,undefined
+158,User:Provide email address,Subscribe Job Notification,boundary,Employer Profile
+159,User:Homepage,Subscribe Job Notification,boundary,Homepage
+160,User:Click subscribe or unsubscribe,Subscribe Job Notification,control,Subscription Log
+161,User:Click  ��subscription��,Subscribe Job Notification,control,Subscription Log
+162,Click  ��subscription��:Display subscription page,Subscribe Job Notification,control,Subscription Log
+163,Click subscribe or unsubscribe:Update records for the user in the subscription table,Subscribe Job Notification,control,Subscription Log
+164,Display notification saying subscribed or unsubscribed:Homepage,Subscribe Job Notification,boundary,Homepage
+165,Update records for the user in the subscription table:Display notification saying subscribed or unsubscribed,Subscribe Job Notification,control,Subscription Log
+166,Display subscription page:Update records for the user in the subscription table,Subscribe Job Notification,control,Subscription Log
+167,Provide email address:Update records for the user in the subscription table,Subscribe Job Notification,control,Subscription Log
+168,stl#User:Provide email address,Subscribe Job Notification,Stimulus,undefined
+169,stl#User:Homepage,Subscribe Job Notification,Stimulus,undefined
+170,stl#User:Click subscribe or unsubscribe,Subscribe Job Notification,Stimulus,undefined
+171,stl#User:Click  ��subscription��,Subscribe Job Notification,Stimulus,undefined
+172,User:Change field as required,Update Employer Profile,boundary,fillinfieldasrequired
+173,User:Click on ��my profile�� link,Update Employer Profile,boundary,Administrator Profile
+174,User:Homepage,Update Employer Profile,boundary,Homepage
+175,User:Click on update,Update Employer Profile,boundary,ClickonAdd
+176,Change field as required:Validates field,Update Employer Profile,boundary,fillinfieldasrequired
+177,Click on update:Validates field,Update Employer Profile,boundary,fillinfieldasrequired
+178,Click on ��my profile�� link:Profile update page displayed,Update Employer Profile,boundary,Job Candidate Profile
+179,Notification displayed ��update  user profile��:Employer db,Update Employer Profile,boundary,Employer Profile
+180,Notification displayed ��update  user profile��:Homepage,Update Employer Profile,boundary,Homepage
+181,Validates field:Notification displayed ��update  user profile��,Update Employer Profile,boundary,Job Candidate Profile
+182,Profile update page displayed:Validates field,Update Employer Profile,boundary,fillinfieldasrequired
+183,stl#User:Change field as required,Update Employer Profile,Stimulus,undefined
+184,stl#User:Click on ��my profile�� link,Update Employer Profile,Stimulus,undefined
+185,stl#User:Homepage,Update Employer Profile,Stimulus,undefined
+186,stl#User:Click on update,Update Employer Profile,Stimulus,undefined
+187,User:Update sponsor profile page,Update Sponser,boundary,Job Candidate Profile
+188,User:Homepage,Update Sponser,boundary,Homepage
+189,Confirmation page:Update sponsor profile page,Update Sponser,boundary,Job Candidate Profile
+190,Confirmation page:Homepage,Update Sponser,boundary,Homepage
+191,Confirmation page:Sponsor db,Update Sponser,boundary,Sponsor
+192,Update sponsor  information:Confirmation page,Update Sponser,boundary,Homepage
+193,Update sponsor profile page:Update sponsor  information,Update Sponser,boundary,Sponsor
+194,stl#User:Update sponsor profile page,Update Sponser,Stimulus,undefined
+195,stl#User:Homepage,Update Sponser,Stimulus,undefined
+196,User:Click on ��my profile�� link,Update job-seeker profile,boundary,Administrator Profile
+197,User:Click on update,Update job-seeker profile,boundary,ClickonAdd
+198,User:Change field as required,Update job-seeker profile,boundary,fillinfieldasrequired
+199,User:Homepage,Update job-seeker profile,boundary,Homepage
+200,Change field as required:Validates field,Update job-seeker profile,boundary,fillinfieldasrequired
+201,Click on update:Validates field,Update job-seeker profile,boundary,fillinfieldasrequired
+202,Click on ��my profile�� link:Profile update page displayed,Update job-seeker profile,boundary,Job Candidate Profile
+203,Notification displayed ��update job seeker profile��:Homepage,Update job-seeker profile,boundary,Homepage
+204,Notification displayed ��update job seeker profile��:job seeker db,Update job-seeker profile,entity,User
+205,Validates field:Notification displayed ��update job seeker profile��,Update job-seeker profile,boundary,Job Candidate Profile
+206,Profile update page displayed:Validates field,Update job-seeker profile,boundary,fillinfieldasrequired
+207,stl#User:Click on ��my profile�� link,Update job-seeker profile,Stimulus,undefined
+208,stl#User:Click on update,Update job-seeker profile,Stimulus,undefined
+209,stl#User:Change field as required,Update job-seeker profile,Stimulus,undefined
+210,stl#User:Homepage,Update job-seeker profile,Stimulus,undefined
+211,User:Homepage,View Sponser,boundary,Homepage
+212,User:Choose  sponser,View Sponser,boundary,Sponsor
+213,User:Click View sponser,View Sponser,boundary,ClickonAdd
+214,Choose  sponser:display  sponser detail information,View Sponser,boundary,Sponsor
+215,Click View sponser:diplay  sponser  list   profile,View Sponser,boundary,Employer Profile
+216,display  sponser detail information:Homepage,View Sponser,boundary,Homepage
+217,diplay  sponser  list   profile:display  sponser detail information,View Sponser,boundary,Sponsor
+218,stl#User:Homepage,View Sponser,Stimulus,undefined
+219,stl#User:Choose  sponser,View Sponser,Stimulus,undefined
+220,stl#User:Click View sponser,View Sponser,Stimulus,undefined
+221,User:Homepage,login,boundary,Homepage
+222,User:Login page,login,boundary,Homepage
+223,Confirmation page:Login page,login,boundary,Homepage
+224,Confirmation page:Homepage,login,boundary,Homepage
+225,Validate usename and password:Confirmation page,login,boundary,Homepage
+226,Login page:Validate usename and password,login,boundary,Job Candidate Profile
+227,stl#User:Homepage,login,Stimulus,undefined
+228,stl#User:Login page,login,Stimulus,undefined
+229,User:Logout  page,logout,boundary,Homepage
+230,User:Homepage,logout,boundary,Homepage
+231,Confirmation page:Homepage,logout,boundary,Homepage
+232,Confirmation page:Logout  page,logout,boundary,Homepage
+233,End session:Confirmation page,logout,boundary,Homepage
+234,Validate usename and password:End session,logout,control,Savesindatabase
+235,Logout  page:Validate usename and password,logout,boundary,Job Candidate Profile
+236,stl#User:Logout  page,logout,Stimulus,undefined
+237,stl#User:Homepage,logout,Stimulus,undefined
+238,User:Homepage,post a job,boundary,Homepage
+239,User:Fill all required fields (including expiration date),post a job,boundary,fillinfieldasrequired
+240,User:Click on ��Post Job��,post a job,boundary,Job Post
+241,User:Click on Post,post a job,boundary,ClickonAdd
+242,Click on Post:Validate entered fields,post a job,boundary,fillinfieldasrequired
+243,Click on ��Post Job��:Displays Post Job page,post a job,boundary,Job Post
+244,Displays Post Job page:Validate entered fields,post a job,boundary,fillinfieldasrequired
+245,Displays the job on the Jobs page:Sends email notification to the users ,post a job,boundary,Job Candidate Profile
+246,Posts the job on the website:Displays the job on the Jobs page,post a job,boundary,Homepage
+247,Fill all required fields (including expiration date):Validate entered fields,post a job,boundary,fillinfieldasrequired
+248,Sends email notification to the users :Homepage,post a job,boundary,Homepage
+249,Saves in database:Posts the job on the website,post a job,boundary,Job Post
+250,Validate entered fields:Saves in database,post a job,control,Savesindatabase
+251,Validate entered fields:job db,post a job,boundary,Job Post
+252,stl#User:Homepage,post a job,Stimulus,undefined
+253,stl#User:Fill all required fields (including expiration date),post a job,Stimulus,undefined
+254,stl#User:Click on ��Post Job��,post a job,Stimulus,undefined
+255,stl#User:Click on Post,post a job,Stimulus,undefined
+256,User:Apply filters,search jobs,boundary,Employer Profile
+257,User:Go on search,search jobs,boundary,PressSearchButton
+258,User:Homepage,search jobs,boundary,Homepage
+259,User:Click ��search��,search jobs,boundary,ClickonAdd
+260,Apply filters:Match filters to Job seeker profile,search jobs,boundary,Job Candidate Profile
+261,Click ��search��:Match filters to Job seeker profile,search jobs,boundary,Job Candidate Profile
+262,Display search page with filtering option:Match filters to Job seeker profile,search jobs,boundary,Job Candidate Profile
+263,Go on search:Display search page with filtering option,search jobs,boundary,PressSearchButton
+264,Display search result:job db,search jobs,boundary,Job Post
+265,Display search result:Homepage,search jobs,boundary,Homepage
+266,Match filters to Job seeker profile:Display search result,search jobs,boundary,PressSearchButton
+267,stl#User:Apply filters,search jobs,Stimulus,undefined
+268,stl#User:Go on search,search jobs,Stimulus,undefined
+269,stl#User:Homepage,search jobs,Stimulus,undefined
+270,stl#User:Click ��search��,search jobs,Stimulus,undefined
+271,User:Choose employer,view employer profile,boundary,Employer Profile
+272,User:Homepage,view employer profile,boundary,Homepage
+273,User:Click View empolyer ,view employer profile,boundary,ClickonAdd
+274,Choose employer:display employeer detail information,view employer profile,boundary,Employer Profile
+275,Click View empolyer :diplay employer  list   profile,view employer profile,boundary,Employer Profile
+276,display employeer detail information:Homepage,view employer profile,boundary,Homepage
+277,diplay employer  list   profile:display employeer detail information,view employer profile,boundary,Employer Profile
+278,stl#User:Choose employer,view employer profile,Stimulus,undefined
+279,stl#User:Homepage,view employer profile,Stimulus,undefined
+280,stl#User:Click View empolyer ,view employer profile,Stimulus,undefined
+281,User:Homepage,view job seeker profile,boundary,Homepage
+282,User:Choose  job seeker,view job seeker profile,boundary,Job Post
+283,User:Click View job seeker,view job seeker profile,boundary,ClickonAdd
+284,Choose  job seeker:display  job seeker detail information,view job seeker profile,boundary,Job Candidate Profile
+285,Click View job seeker:diplay  job seeker  list   profile,view job seeker profile,boundary,Job Candidate Profile
+286,display  job seeker detail information:Homepage,view job seeker profile,boundary,Homepage
+287,diplay  job seeker  list   profile:display  job seeker detail information,view job seeker profile,boundary,Job Candidate Profile
+288,stl#User:Homepage,view job seeker profile,Stimulus,undefined
+289,stl#User:Choose  job seeker,view job seeker profile,Stimulus,undefined
+290,stl#User:Click View job seeker,view job seeker profile,Stimulus,undefined

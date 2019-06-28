@@ -1,0 +1,48 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Instruction Panel" as 09
+participant "ProgramList" as 19
+participant "changetheparametersoftheelements" as 29
+participant "System Boundary" as 99
+
+User -> 09: soundinstructioncreatepanel()
+activate 09
+
+09 -> 09: displaythedraggedanddroppedinstructions()
+09 -> 29: popupparameterchangedialog()
+activate 29
+
+29 -> 29: parametersetdialog()
+29 -> 29: changetheparametersoftheelements()
+29 -> 29: saveparameters()
+29 -> 19: Programisupdatedmessage()
+activate 19
+
+deactivate 19
+
+29 -> 99: sound()
+activate 99
+
+deactivate 99
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: Programisupdatedmessage()
+activate 19
+
+deactivate 19
+
+User -> 29: parametersetdialog()
+activate 29
+
+29 -> 29: changetheparametersoftheelements()
+deactivate 29
+
+@enduml

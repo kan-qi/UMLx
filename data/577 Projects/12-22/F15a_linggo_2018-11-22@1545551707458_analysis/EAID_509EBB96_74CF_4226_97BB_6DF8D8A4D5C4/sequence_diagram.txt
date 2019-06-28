@@ -1,0 +1,78 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Language learner
+participant "Signupform" as 09
+participant "Message" as 19
+participant "LoginButton" as 29
+participant "Account" as 49
+participant "Object1" as 59
+participant "User" as 69
+participant "MatchService" as 119
+participant "CheckPassword" as 129
+
+Language learner -> 09: Signupform()
+activate 09
+
+deactivate 09
+
+Language learner -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+Language learner -> 29: Submitbutton()
+activate 29
+
+29 -> 119: checkusernameemailexist()
+activate 119
+
+119 -> 19: Signupmessage()
+activate 19
+
+deactivate 19
+
+119 -> 129: checksrequiredfields()
+activate 129
+
+129 -> 49: Createaccount()
+activate 49
+
+49 -> 49: Account()
+deactivate 49
+
+49 -> 59: Object1()
+activate 59
+
+deactivate 59
+
+49 -> 69: Loginuser()
+activate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 69
+
+129 -> 19: Signupmessage()
+activate 19
+
+deactivate 19
+
+deactivate 129
+
+deactivate 119
+
+deactivate 29
+
+Language learner -> 19: Signupmessage()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "product" as 09
+
+User -> 09: productsearchpage()
+activate 09
+
+09 -> 09: queryproductbycriteria()
+09 -> 09: Noproducterrormessage()
+deactivate 09
+
+09 -> 09: product()
+activate 09
+
+deactivate 09
+
+09 -> 09: productpage()
+activate 09
+
+deactivate 09
+
+User -> 09: productpage()
+activate 09
+
+deactivate 09
+
+User -> 09: Noproducterrormessage()
+activate 09
+
+deactivate 09
+
+@enduml

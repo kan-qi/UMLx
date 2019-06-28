@@ -1,0 +1,58 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Send Messagepage" as 09
+participant "Resource Input page" as 19
+participant "Notification message" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Inputmessage()
+activate 19
+
+19 -> 59: Displayconfirmationpage()
+activate 59
+
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+deactivate 19
+
+User -> 09: sendmessagepage()
+activate 09
+
+09 -> 59: Displayconfirmationpage()
+activate 59
+
+59 -> 09: Homepage()
+deactivate 09
+
+deactivate 59
+
+User -> 19: Inputmessage()
+activate 19
+
+19 -> 59: Displayconfirmationpage()
+activate 59
+
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+deactivate 19
+
+@enduml

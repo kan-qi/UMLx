@@ -1,0 +1,9 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#user:personal home page->user:personal home page,Login,2,1,0,0,0
+2,stl#user:not allowed to login message->user:not allowed to login message,Login,2,0,1,0,0
+3,stl#user:Invalid user information->user:Invalid user information,Login,2,1,0,0,0
+4,stl#user:Login button->user:Login button->Login button:Validate username and password->Validate username and password:Invalid user information,Login,4,2,1,0,0
+5,stl#user:Login button->user:Login button->Login button:Validate username and password->Validate username and password:User Info,Login,4,2,1,0,0
+6,stl#user:Login button->user:Login button->Login button:Validate username and password->Validate username and password:redirect the user to their personal home page->redirect the user to their personal home page:personal home page,Login,5,2,2,0,0
+7,stl#user:Login button->user:Login button->Login button:disable the user's privilege to login->disable the user's privilege to login:Notify administrator->Notify administrator:not allowed to login message,Login,5,3,1,0,0
+8,stl#user:Login button->user:Login button->Login button:disable the user's privilege to login->disable the user's privilege to login:Notify administrator->Notify administrator:administrator email box,Login,5,2,2,0,0

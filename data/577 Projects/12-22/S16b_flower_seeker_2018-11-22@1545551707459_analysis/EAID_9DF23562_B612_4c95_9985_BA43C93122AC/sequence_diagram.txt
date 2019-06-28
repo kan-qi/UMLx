@@ -1,0 +1,65 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor customer
+participant "successfulchangemessage" as 09
+participant "loginpage" as 19
+participant "PayPalInstance" as 69
+
+customer -> 09: unreadmessage()
+activate 09
+
+09 -> 69: displaycommentinputpanel()
+activate 69
+
+69 -> 09: message()
+deactivate 09
+
+69 -> 19: replyinputpanel()
+activate 19
+
+19 -> 09: saverepliedmessage()
+activate 09
+
+09 -> 09: message()
+deactivate 09
+
+deactivate 19
+
+deactivate 69
+
+customer -> 19: replyinputpanel()
+activate 19
+
+19 -> 09: saverepliedmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+customer -> 19: dashboardpage()
+activate 19
+
+19 -> 09: displayunreadmessage()
+activate 09
+
+09 -> 09: message()
+deactivate 09
+
+09 -> 09: unreadmessage()
+activate 09
+
+09 -> 69: displaycommentinputpanel()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+deactivate 19
+
+@enduml

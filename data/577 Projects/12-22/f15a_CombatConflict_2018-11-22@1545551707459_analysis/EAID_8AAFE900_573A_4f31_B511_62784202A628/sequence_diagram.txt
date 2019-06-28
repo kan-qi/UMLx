@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "webpage" as 09
+participant "Application Server Component" as 19
+participant "$help://usecasediagram.htm" as 29
+participant "clicksnext" as 39
+participant "User computer" as 49
+participant "webpage update compenonet" as 79
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: ClickContinuebutton()
+activate 19
+
+19 -> 49: imputusenameandpassword()
+activate 49
+
+49 -> 79: validateusenameandpassword()
+activate 79
+
+79 -> 19: showconfirmation()
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+deactivate 79
+
+deactivate 49
+
+User -> 29: Userdoesnotselectanyradiobutton()
+activate 29
+
+29 -> 79: validateusenameandpassword()
+activate 79
+
+79 -> 19: showconfirmation()
+activate 19
+
+deactivate 19
+
+deactivate 79
+
+deactivate 29
+
+User -> 39: Clickonlogininpage()
+activate 39
+
+39 -> 49: imputusenameandpassword()
+activate 49
+
+49 -> 79: validateusenameandpassword()
+activate 79
+
+deactivate 79
+
+deactivate 49
+
+deactivate 39
+
+@enduml

@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "User Error Log" as 09
+participant "Authentication" as 19
+participant "Google Map API" as 29
+participant "Homepage" as 39
+
+User -> 09: Enterusernameandpassword()
+activate 09
+
+09 -> 09: Displayerrormessagetouserslikeinvalidusernameorpassword()
+09 -> 39: RedirecttoLoginpage()
+activate 39
+
+39 -> 39: Homepage()
+deactivate 39
+
+deactivate 09
+
+User -> 19: ClickOKbutton()
+activate 19
+
+19 -> 39: RedirecttoLoginpage()
+activate 39
+
+39 -> 39: Homepage()
+deactivate 39
+
+deactivate 19
+
+User -> 29: Clicklogout()
+activate 29
+
+29 -> 09: Displayerrormessagetouserslikeinvalidusernameorpassword()
+activate 09
+
+09 -> 39: RedirecttoLoginpage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 29
+
+User -> 39: Homepage()
+activate 39
+
+deactivate 39
+
+@enduml

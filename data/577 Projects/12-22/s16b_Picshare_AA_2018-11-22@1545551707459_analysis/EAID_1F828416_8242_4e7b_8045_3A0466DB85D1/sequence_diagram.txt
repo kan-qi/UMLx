@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "User" as 09
+
+User -> 09: userlistfilterbox()
+activate 09
+
+09 -> 09: Filterusers()
+09 -> 09: FilteredListofUsers()
+deactivate 09
+
+User -> 09: FilteredListofUsers()
+activate 09
+
+deactivate 09
+
+User -> 09: QueryUsersListButton()
+activate 09
+
+09 -> 09: queryuserlist()
+09 -> 09: User()
+deactivate 09
+
+09 -> 09: userlistfilterbox()
+activate 09
+
+09 -> 09: Filterusers()
+deactivate 09
+
+@enduml

@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Login screen->User:Login screen,Disallow user to login for wrong credentials,CTRL;EXTCLL;INT,2,0,5,1,10
+2,stl#User:enter credentials page->User:enter credentials page->enter credentials page:check credentials->check credentials:credential info,Disallow user to login for wrong credentials,TRAN_NA,4,1,4,3,16
+3,stl#User:enter credentials page->User:enter credentials page->enter credentials page:check credentials->check credentials:redirect to login screen->redirect to login screen:enter credentials page->enter credentials page:check credentials,Disallow user to login for wrong credentials,TRAN_NA,6,3,3.8,5,22.799999999999997
+4,stl#User:enter credentials page->User:enter credentials page->enter credentials page:check credentials->check credentials:Error message for wrong credentials,Disallow user to login for wrong credentials,TRAN_NA,4,1,3,3,12
+5,stl#User:Error message for wrong credentials->User:Error message for wrong credentials,Disallow user to login for wrong credentials,CTRL;EXTCLL;INT,2,0,2,1,4

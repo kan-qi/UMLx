@@ -1,0 +1,77 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor User
+participant "Business Claim" as 09
+participant "Question Form" as 89
+
+Admin -> 09: listofclaims()
+activate 09
+
+09 -> 09: Queryclaimdetail()
+09 -> 09: ClaimDetail()
+09 -> 09: savetheapprovalstatusofclaim()
+09 -> 89: claiminformation()
+activate 89
+
+deactivate 89
+
+09 -> 89: removeclaiminformation()
+activate 89
+
+89 -> 89: claiminformation()
+deactivate 89
+
+deactivate 09
+
+09 -> 89: claiminformation()
+activate 89
+
+deactivate 89
+
+Admin -> 09: ClaimDetail()
+activate 09
+
+09 -> 09: savetheapprovalstatusofclaim()
+deactivate 09
+
+Admin -> 09: loadclaimsbutton()
+activate 09
+
+09 -> 09: displayclaimsrequests()
+09 -> 89: claiminformation()
+activate 89
+
+deactivate 89
+
+09 -> 09: listofclaims()
+09 -> 09: Queryclaimdetail()
+deactivate 09
+
+User -> 09: Claimbutton()
+activate 09
+
+09 -> 09: displayclaimpage()
+09 -> 09: claimpage()
+09 -> 89: saveclaiminformationforverification()
+activate 89
+
+89 -> 89: claiminformation()
+deactivate 89
+
+deactivate 09
+
+User -> 09: claimpage()
+activate 09
+
+09 -> 89: saveclaiminformationforverification()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+@enduml

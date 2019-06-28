@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Revenue assumptions" as 09
+participant "Budget Report" as 19
+participant "User" as 29
+participant "Inverstment Information" as 39
+participant "Interaction" as 49
+
+User -> 09: Exceptionalphasespage()
+activate 09
+
+09 -> 49: EntersexceptionalphasesintotheGUI()
+activate 49
+
+49 -> 29: Phasedb()
+activate 29
+
+deactivate 29
+
+49 -> 39: Showconfirmation()
+activate 39
+
+39 -> 09: Exceptionalphasespage()
+09 -> 49: EntersexceptionalphasesintotheGUI()
+deactivate 49
+
+deactivate 09
+
+deactivate 39
+
+User -> 19: Homepage()
+activate 19
+
+19 -> 39: Showconfirmation()
+activate 39
+
+39 -> 09: Exceptionalphasespage()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 19
+
+@enduml

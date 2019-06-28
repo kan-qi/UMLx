@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Language Learner
+participant "LoginButton" as 09
+participant "MessageService" as 19
+participant "ProfileInformation" as 39
+participant "CheckPassword" as 49
+
+Language Learner -> 09: LoginButton()
+activate 09
+
+09 -> 49: CheckPassword()
+activate 49
+
+49 -> 19: Loginsuccessfulmessage()
+activate 19
+
+deactivate 19
+
+49 -> 39: ProfileInformation()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+deactivate 09
+
+Language Learner -> 19: Loginsuccessfulmessage()
+activate 19
+
+deactivate 19
+
+@enduml

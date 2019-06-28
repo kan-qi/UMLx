@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "EMT Building Assignment" as 09
+participant "Disaster" as 19
+participant "ValidatesInput" as 59
+
+User -> 09: Emergencybutton()
+activate 09
+
+09 -> 19: SystemredirectstoDisastepage()
+activate 19
+
+19 -> 19: Disasterpage()
+19 -> 59: validatetheatallfieldsarenonempty()
+activate 59
+
+59 -> 19: Supervisersemergencydisasterhomepage()
+deactivate 19
+
+59 -> 19: Systeminsertsthedisasterrecordinthedatabase()
+activate 19
+
+19 -> 19: Disasterrecorddb()
+deactivate 19
+
+19 -> 19: Supervisersemergencydisasterhomepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: Disasterpage()
+activate 19
+
+19 -> 59: validatetheatallfieldsarenonempty()
+activate 59
+
+deactivate 59
+
+deactivate 19
+
+User -> 19: Supervisersemergencydisasterhomepage()
+activate 19
+
+deactivate 19
+
+@enduml

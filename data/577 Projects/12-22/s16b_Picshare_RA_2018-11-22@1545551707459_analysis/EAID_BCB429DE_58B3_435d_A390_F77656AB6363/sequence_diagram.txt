@@ -1,0 +1,64 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actoractor User
+participant "event" as 09
+participant "Validatehashtaguniqueness" as 19
+
+Actor -> 09: CreateEventScreen()
+activate 09
+
+09 -> 19: Validatehashtagcontaintsalphanumedashunderscore()
+activate 19
+
+19 -> 19: HandleValidateError()
+19 -> 09: EventCollection()
+deactivate 09
+
+deactivate 19
+
+19 -> 19: Validatehashtaguniqueness()
+activate 19
+
+19 -> 09: EventCollection()
+activate 09
+
+deactivate 09
+
+19 -> 19: HandleValidateError()
+19 -> 09: EventCollection()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+09 -> 19: HandleValidateError()
+activate 19
+
+19 -> 09: EventCollection()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 09: CreateEventScreen()
+activate 09
+
+09 -> 19: Validatehashtagcontaintsalphanumedashunderscore()
+activate 19
+
+deactivate 19
+
+09 -> 19: HandleValidateError()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+@enduml

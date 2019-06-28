@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:search page->User:search page->search page:search sphere title or owner fro db->search sphere title or owner fro db:sphere,search spheres,TRAN_NA,4,1,1,3,4
+2,stl#User:search page->User:search page->search page:search sphere title or owner fro db->search sphere title or owner fro db:display no metchs message->display no metchs message:no  matches message,search spheres,TRAN_NA,5,1,2.5,4,12.5
+3,stl#User:search page->User:search page->search page:search sphere title or owner fro db->search sphere title or owner fro db:display no metchs message->display no metchs message:Display success information message->Display success information message:no  matches message,search spheres,TRAN_NA,6,2,2.4,5,14.399999999999999
+4,stl#User:search page->User:search page->search page:search sphere title or owner fro db->search sphere title or owner fro db:builds a list of matches->builds a list of matches:list of matches,search spheres,TRAN_NA,5,0,3.5,4,17.5
+5,stl#User:list of matches->User:list of matches,search spheres,CTRL;EXTCLL;INT,2,0,6,1,12
+6,stl#User:no  matches message->User:no  matches message,search spheres,CTRL;EXTCLL;INT,2,0,6,1,12

@@ -1,0 +1,6 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#user:List of all submitted reservations->user:List of all submitted reservations,Cancel submitted reservation,2,1,0,0,0
+2,stl#user:"cancel" button->user:"cancel" button->"cancel" button:cancel message->cancel message:List of all submitted reservations,Cancel submitted reservation,4,1,2,0,0
+3,stl#user:"cancel" button->user:"cancel" button->"cancel" button:cancel message->cancel message:reservation info,Cancel submitted reservation,4,1,2,0,0
+4,stl#user:"cancel" button->user:"cancel" button->"cancel" button:cancel message->cancel message:display a message about cancel reservation->display a message about cancel reservation:confirmation message,Cancel submitted reservation,5,2,2,0,0
+5,stl#user:confirmation message->user:confirmation message,Cancel submitted reservation,2,1,0,0,0

@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Displayconfirmation" as 49
+participant "Progress Report" as 59
+participant "Authenticatetheanswer" as 69
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Taketestpage()
+activate 09
+
+09 -> 69: Recordsanswers()
+activate 69
+
+69 -> 59: Generatescoresreports()
+activate 59
+
+59 -> 49: Displayconfirmationpage()
+activate 49
+
+49 -> 09: Taketestpage()
+09 -> 69: Recordsanswers()
+deactivate 69
+
+deactivate 09
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 59
+
+@enduml

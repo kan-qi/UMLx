@@ -1,0 +1,84 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "HomePageAdmin" as 09
+participant "siteslink" as 19
+participant "MessageController" as 29
+participant "MessageManage Page" as 49
+participant "checkconflictsituation" as 79
+
+User -> 09: addsitepage()
+activate 09
+
+09 -> 79: checkexistingsituationforthenewsite()
+activate 79
+
+79 -> 79: addsiteinformationdb()
+79 -> 49: successmessage()
+activate 49
+
+deactivate 49
+
+79 -> 79: siteinformation()
+deactivate 79
+
+79 -> 29: existingsiteerrormessage()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: sitelist()
+activate 19
+
+19 -> 09: displaytheaddsiteinfopage()
+activate 09
+
+09 -> 09: addsitepage()
+09 -> 79: checkexistingsituationforthenewsite()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+09 -> 79: siteinformation()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+User -> 29: existingsiteerrormessage()
+activate 29
+
+deactivate 29
+
+User -> 19: siteslink()
+activate 19
+
+19 -> 19: redirecttoapagewiththecurerntsiteslist()
+19 -> 79: siteinformation()
+activate 79
+
+deactivate 79
+
+19 -> 19: sitelist()
+19 -> 09: displaytheaddsiteinfopage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 49: successmessage()
+activate 49
+
+deactivate 49
+
+@enduml

@@ -1,0 +1,20 @@
+id,element,useCase,type,component
+1,Actor:Event Screen,Delete Photos in Event if Owner,boundary,event
+2,Actor:Delete Photo Model,Delete Photos in Event if Owner,control,canceldeletion
+3,Delete Photo Model:Handle Photo Deletion,Delete Photos in Event if Owner,control,canceldeletion
+4,Delete Photo Model:Dismiss Delete Photo Model,Delete Photos in Event if Owner,boundary,photolist
+5,Handle Deletion Error:Delete Photo Model,Delete Photos in Event if Owner,control,canceldeletion
+6,User:Delete Photo Model,Delete Photos in Event if Owner,control,canceldeletion
+7,Display Deelete Photo Model:Delete Photo Model,Delete Photos in Event if Owner,control,canceldeletion
+8,Event Screen:Dismiss Delete Photo Model,Delete Photos in Event if Owner,boundary,photolist
+9,Toggle Delete Mode:Display Deelete Photo Model,Delete Photos in Event if Owner,boundary,photolist
+10,Handle Photo Deletion:Event,Delete Photos in Event if Owner,boundary,event
+11,Event Screen:Toggle Delete Mode,Delete Photos in Event if Owner,control,canceldeletion
+12,User:Event Screen,Delete Photos in Event if Owner,boundary,event
+13,Toggle Off Delete Mode:Event Screen,Delete Photos in Event if Owner,boundary,event
+14,Handle Photo Deletion:Handle Deletion Error,Delete Photos in Event if Owner,control,canceldeletion
+15,Handle Photo Deletion:Photo Collection,Delete Photos in Event if Owner,boundary,photolist
+16,stl#Actor:Event Screen,Delete Photos in Event if Owner,Stimulus,undefined
+17,stl#Actor:Delete Photo Model,Delete Photos in Event if Owner,Stimulus,undefined
+18,stl#User:Delete Photo Model,Delete Photos in Event if Owner,Stimulus,undefined
+19,stl#User:Event Screen,Delete Photos in Event if Owner,Stimulus,undefined

@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Manager
+participant "Lead/customer with agent mapping" as 09
+participant "Create agent form" as 19
+participant "TwilioAPI" as 39
+participant "Agent manager mapping" as 89
+
+Manager -> 09: listofagentswithstatus()
+activate 09
+
+09 -> 39: connecttoTwilioAPIforagentscall()
+activate 39
+
+39 -> 39: TwilioAPI()
+deactivate 39
+
+39 -> 19: softphonescreen()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Manager -> 19: viewagentactivitesbutton()
+activate 19
+
+19 -> 89: queryagent()
+activate 89
+
+89 -> 19: agent()
+deactivate 19
+
+89 -> 09: listofagentswithstatus()
+activate 09
+
+09 -> 39: connecttoTwilioAPIforagentscall()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 89
+
+Manager -> 19: softphonescreen()
+activate 19
+
+deactivate 19
+
+@enduml

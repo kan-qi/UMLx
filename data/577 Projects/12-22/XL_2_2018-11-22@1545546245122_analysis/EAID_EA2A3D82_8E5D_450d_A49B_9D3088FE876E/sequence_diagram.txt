@@ -1,0 +1,50 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "XL2 Model" as 09
+participant "Budget Report" as 19
+participant "Inverstment Information" as 29
+participant "opensthealreadyexistingfileandupdatesit" as 69
+
+User -> 09: Updateamodelpage()
+activate 09
+
+09 -> 69: opensthealreadyexistingfileandupdatesit()
+activate 69
+
+69 -> 09: Modeldb()
+deactivate 09
+
+69 -> 29: Showconfirmation()
+activate 29
+
+29 -> 09: Updateamodelpage()
+activate 09
+
+09 -> 69: opensthealreadyexistingfileandupdatesit()
+deactivate 69
+
+deactivate 09
+
+deactivate 29
+
+User -> 19: Homepage()
+activate 19
+
+19 -> 29: Showconfirmation()
+activate 29
+
+29 -> 09: Updateamodelpage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 19
+
+@enduml

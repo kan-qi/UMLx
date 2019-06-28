@@ -1,0 +1,48 @@
+id,element,useCase,type,component
+1,Weight loser:redirect to login page,Login,boundary,LoginPage
+2,Weight loser:credential already exist,Login,boundary,createGoalPage
+3,Weight loser:Home page,Login,boundary,GoalPage
+4,Weight loser:exceed the time limite,Login,control,exceedthetimelimite
+5,Weight loser:"URL expired" message,Login,control,PasswordResetConfirmPage
+6,Weight loser:invlid pattern,Login,boundary,InvitationLinkPage
+7,Weight loser:login page,Login,boundary,LoginPage
+8,Weight loser:new password page,Login,control,PasswordResetConfirmPage
+9,Weight loser:email doesn't exist,Login,boundary,emaildoesntexist
+10,Weight loser:forgot password page,Login,control,PasswordResetConfirmPage
+11,check url validity:"URL expired" message,Login,control,PasswordResetConfirmPage
+12,redirect the user to homepage:Home page,Login,boundary,GoalPage
+13,check email and password valid:invlid pattern,Login,boundary,InvitationLinkPage
+14,check email and password valid:check time limit,Login,control,exceedthetimelimite
+15,check email and password valid:user info,Login,control,User
+16,login page:check email and password valid,Login,control,PasswordResetConfirmPage
+17,check if password matches:update the user's password,Login,control,PasswordResetConfirmPage
+18,check if password matches:user info,Login,control,User
+19,check if password matches:redirect to login page,Login,boundary,LoginPage
+20,new password page:check if password matches,Login,control,PasswordResetConfirmPage
+21,check if supplied credentials exist:user info,Login,control,User
+22,check if supplied credentials exist:redirect the user to homepage,Login,boundary,ResetFormPage
+23,check if supplied credentials exist:credential already exist,Login,boundary,emaildoesntexist
+24,check time limit:check if supplied credentials exist,Login,boundary,emaildoesntexist
+25,check time limit:exceed the time limite,Login,control,exceedthetimelimite
+26,check time limit:user info,Login,control,User
+27,check time limit:goal,Login,entity,Goal
+28,check url validity:email doesn't exist,Login,boundary,emaildoesntexist
+29,check url validity:redirect to new password page,Login,control,PasswordResetConfirmPage
+30,check url validity:user info,Login,control,User
+31,forgot password page:check url validity,Login,boundary,Charity
+32,generate a url with random token:forgot password page,Login,control,PasswordResetConfirmPage
+33,redirect to forgot password page:generate a url with random token,Login,control,generateaurlwithrandomtoken
+34,login page:redirect to forgot password page,Login,control,PasswordResetConfirmPage
+35,redirect to new password page:new password page,Login,control,PasswordResetConfirmPage
+36,update the user's password:redirect to login page,Login,boundary,LoginPage
+37,update the user's password:user info,Login,control,User
+38,stl#Weight loser:redirect to login page,Login,Stimulus,undefined
+39,stl#Weight loser:credential already exist,Login,Stimulus,undefined
+40,stl#Weight loser:Home page,Login,Stimulus,undefined
+41,stl#Weight loser:exceed the time limite,Login,Stimulus,undefined
+42,stl#Weight loser:"URL expired" message,Login,Stimulus,undefined
+43,stl#Weight loser:invlid pattern,Login,Stimulus,undefined
+44,stl#Weight loser:login page,Login,Stimulus,undefined
+45,stl#Weight loser:new password page,Login,Stimulus,undefined
+46,stl#Weight loser:email doesn't exist,Login,Stimulus,undefined
+47,stl#Weight loser:forgot password page,Login,Stimulus,undefined
