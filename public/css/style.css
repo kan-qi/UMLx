@@ -6,6 +6,8 @@
 }
 .menu{
 	margin-right: 50px;
+	border: none;
+	font: 20px;
 }
 .padding{
 	padding-top: 5px;
@@ -30,11 +32,15 @@
 }
 
 .login-button{
-	color: black;
-	font-size: 16px;
+	color: white;
+	font-size: 20px;
 	border-radius: 5px;
+	/**
 	padding: 5 15px;
 	margin-right: 30px;
+	**/
+	background: black;
+	padding: auto auto;
 
 }
 
@@ -473,7 +479,7 @@ select.sEstimator.form-control {
 }
 
 .form-blank{
-	width : 600px !important; 
+	width : 400px !important; 
 	height: 52px !important; 
 	font-size: 14px;
 	background-color: #F8F8FF !important;
@@ -533,12 +539,14 @@ input[type=file] {
 
 .signUp {
 	width: 100%;
+	/**
 	margin-top: 5px;
 	margin-bottom: 15px;
 	min-height: 34px;
 	padding: 6px 8px;
 	border: 1px solid #d1d5da;
 	border-radius: 3px;
+	**/
 	font-size: 14px;
 }
 
@@ -552,7 +560,7 @@ input[type=file] {
 }
 
 .formLabel {
-	font-size: 14px;
+	font-size: 24px;
 	color: #586069;
 	margin-bottom: 0px;
 	font-weight: normal;
@@ -598,10 +606,19 @@ input[type=file] {
 	background-color: #000000;
 	color: rgba(255, 255, 255, 0.75);
 	height:10%;
+	/**.
+	new
+	**/
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	/**
 	padding-top: 20px;
+	**/
 }
 
 .content-flex {
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	margin-left: 20px;
@@ -622,6 +639,7 @@ input[type=file] {
 .banner a {
 	text-decoration: none;
 	color: rgba(255, 255, 255, 0.75);
+	line-height: 42px;
 }
 
 .banner .popover a {
@@ -968,6 +986,8 @@ label. control-label. col-md-4 {
 }
 .menu{
 	margin-right: 50px;
+	background: black;
+	color: white;
 }
 .padding{
 	padding-top: 5px;
@@ -1284,7 +1304,7 @@ width: 35px;
 .repo-info-content .tab-pane, .model-info-content {
 	min-height: 80%;
 	margin: 0 auto;
-	width: 80%;
+	width: 100%;
 	border: 0;
 }
 
@@ -1293,6 +1313,7 @@ width: 35px;
 	margin: 0 auto;
 	width: 100%;
 	border: 0;
+	height: 100%;
 }
 
 .nav-tabs>li>a {
@@ -1421,7 +1442,7 @@ input[type=file] {
 
 .signUp {
 	width: 100%;
-	margin-top: 5px;
+	margin-top: 15px;
 	margin-bottom: 15px;
 	min-height: 34px;
 	padding: 6px 8px;
@@ -1440,8 +1461,8 @@ input[type=file] {
 }
 
 .formLabel {
-	font-size: 14px;
-	color: #586069;
+	font-size: 20px;
+	color: darkgray;
 	margin-bottom: 0px;
 	font-weight: normal;
 }
@@ -1486,7 +1507,9 @@ input[type=file] {
 	background-color: #000000;
 	color: rgba(255, 255, 255, 0.75);
 	height:10%;
+	/**
 	padding-top: 20px;
+	**/
 }
 
 .content-flex {
@@ -1608,7 +1631,7 @@ input[type=file] {
 	height: 100%;
 }
 .image-box img {
-	opacity: 0.4;
+	opacity: 0.8;
 	width: 40px;
 }
 .blue-card {
@@ -1848,3 +1871,53 @@ label. control-label. col-md-4 {
 .home-button{
 	font-size: 30px;
 }
+
+.dropdown-menu {
+	background: black;
+}
+
+.dropdown-menu li a {
+	color: white;
+}
+
+#menu-button {
+	background: black;
+	color: white;
+}
+
+#login-button {
+	background: black;
+	color: white;
+}
+
+#create-account {
+	color: grey;
+}
+
+#processing {
+	font-size: 20px;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+	background: black;
+}
+
+.pagination>li>a, .pagination>li>span {
+	color: black;
+}
+
+.file-link {
+	color: #aba7a7;
+}
+/* 
+.project-link:visited {
+	color: black;
+}
+
+.project-link:hover {
+	color: black;
+}
+
+.project-link:active {
+	color: black;
+} */

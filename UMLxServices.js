@@ -697,13 +697,15 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	                    modelInfo[estimationModel] = estimationResults;
 						modelInfo.repo_id = repoInfo._id;
 
-	                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
-
-	                    	currentModel = modelInfo;
-	                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
-
-	                    });
-
+						umlModelInfoManager.saveModelInfo(modelInfo, repoID, function(modelInfo2){
+							umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+								currentModel = modelInfo;
+								umlModelInfoManager.queryModelNumByRepoID(repoID, function(modelNum){
+								// res.send({modelNum: modelNum});
+								res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
+								})
+							});
+						})
 	                });
 
 				});
@@ -1732,7 +1734,7 @@ app.get('/', function(req, res){
     });
 	
 	var repoId = req.userInfo.repoId;
-	
+
 //    if(req.param('step') != undefined && req.param('page') != undefined){
 //        var repID = req.param('repId');
 //        //var stepSize = parseInt(req.param('step'));
@@ -1760,7 +1762,7 @@ app.get('/', function(req, res){
 	  umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
 	
 		  console.log("==========================sfsdfsdfs==============");
-		  //console.log(repoInfo);
+		  console.log(repoInfo);
 	
 		  umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
 			  repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
@@ -1789,6 +1791,23 @@ app.get('/', function(req, res){
 				res.send("error");
 				return;
 			}
+
+			var profileInfo = {};
+			var userID = req.userInfo._id;
+			var profileRep = {}
+			profileInfo.userName = req.userInfo.userName;
+			profileInfo.email = req.userInfo.email;
+			profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+
+			umlModelInfoManager.getGitData(req.userInfo._id, function(gitData, success, msg){
+				if(success==true){
+					profileInfo.gitData = gitData;
+	 			}
+
+				umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
+					profileRep = result.Repos[0]
+				});
+			});
 				if(req.userInfo.isEnterprise){
 					// get the repoinfo for all the repo that are part of this enterprise account
 					umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
@@ -1804,9 +1823,11 @@ app.get('/', function(req, res){
 							}
 							
 							repoInfo.requestUUID = requestUUID;
+							console.log(repoInfo);
 							res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
 								repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
-								pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+								pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, 
+								profileInfo: profileInfo, profileRep: profileRep});
 						});
 					});
 				} else {
@@ -1814,11 +1835,14 @@ app.get('/', function(req, res){
 					if (req.userInfo.isTempUser) {
 						res.render('index_login', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
-							pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+							pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, 
+							profileInfo: profileInfo, profileRep: profileRep});
 					} else {
+						console.log(repoInfo);
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
-							pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+							pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, 
+							profileInfo: profileInfo, profileRep: profileRep});
 					}
 				}
 	

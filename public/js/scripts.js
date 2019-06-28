@@ -360,14 +360,16 @@ function predict_project_effort_func(repoID, show_loading_screen = true) {
         //async: false,
         success: function (response) {
             // hide loading
-            document.getElementById("loadingScreen").classList.add("hidden");
 
-            console.log(response);
-            $("#estimation-result-panel-body").html(response);
-            var estimationModel = $(response).data("estimation-model");
-            // console.log(estimationModel);
-            console.log('#'+estimationModel+'-estimation-results-charts');
-            showEstimationChart('#'+estimationModel+'-estimation-results-charts');
+                document.getElementById("loadingScreen").classList.add("hidden");
+                console.log(response);
+                $("#estimation-result-panel-body").html(response);
+                $("#modelNum").text(Number($("#modelNum").text()) + 1);
+                var estimationModel = $(response).data("estimation-model");
+                // console.log(estimationModel);
+                console.log('#'+estimationModel+'-estimation-results-charts');
+                showEstimationChart('#'+estimationModel+'-estimation-results-charts');
+        
         },
         error: function () {
             // hide loading
@@ -1413,7 +1415,6 @@ $(document).ready(function () {
     $('form#invite-form').submit(inviteFormSubmit);
 
     $('[data-toggle="popover"]').popover({ 'html': true });
-    createCharts();
 });
 
 function openDialogueBox(repoId, type) {
@@ -1656,6 +1657,7 @@ function createTrendingLines() {
         dataType: "json",
 
         success: function (response) {
+            console.log(response);
             var series_data = {"SLOC":{}, "schedule":{}, "personnel":{}, "EUCP":{}, "EXUCP":{}, "DUCP":{}, "effort":{}, "estimatedEffort":{}, "NT":{}, "projectNum":{}, "UseCaseNum":{}, "EntityNum":{}}
 
             function updateChart() {
@@ -2707,9 +2709,8 @@ function buildTable(data) {
         //console.log(data);
         // console.log("out");
         //console.log(out);
-
         if(document.getElementById("displayArchive")){
-        document.getElementById("displayArchive").innerHTML = out;
+            document.getElementById("displayArchive").innerHTML = out;
         }
         
         if(document.getElementById("displayUploads")){
@@ -2830,7 +2831,8 @@ function buildTable2(data) {
     //     out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
     // }
 
-    out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
+    // out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
+    
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th><th>Submit</th></tr>";
 
@@ -2843,7 +2845,7 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "Folder") {
             var path = data[0].parent + "/" + newKeys[i];
             documentUrl = newKeys[i];
-            out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
+            out += "<tr><td style='float:left'><img style='width:30px; height:25px; margin-right: 10px;' src='../img/folder-icon.png'><a href='#' class='file-link' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
                 newKeys[i] +
                 "</a></td><td>folder</td>";
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
@@ -2859,27 +2861,27 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "File") {
             var path = data[0].parent + "/" + newKeys[i];
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;'  src='../img/csv.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/txt.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/svg.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/json.png'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/emptyfile.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
@@ -3320,4 +3322,36 @@ function setEstimationCookie(cname,cvalue,exdays){
     d.setTime(d.getTime()+(exdays*24*60*60*1000));
     var expires = "expires="+d.toGMTString();
     document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function overviewClicked() {
+    document.getElementById('repo_trending').style.display = "none";
+    document.getElementById('repo_archive').style.display = "none";
+    document.getElementById('displayRepoArchive').style.display = "none";
+}
+
+function trendingClicked() {
+    createCharts();
+    document.getElementById('repo_trending').style.display = "block";
+    document.getElementById('repo_archive').style.display = "none";
+    document.getElementById('displayRepoArchive').style.display = "none";
+}
+
+function projectClicked() {
+    document.getElementById('repo_trending').style.display = "none";
+    document.getElementById('repo_archive').style.display = "none";
+    document.getElementById('displayRepoArchive').style.display = "none";
+}
+
+function archiveClicked(get) {
+    document.getElementById('repo_trending').style.display = "none";
+    console.log('get: ' + get);
+    walkRepoDir(get);
+    document.getElementById('repo_archive').style.display = "none";
+    document.getElementById('displayRepoArchive').style.display = "block";
+}
+
+function profileClicked() {
+    document.getElementById('repo_archive').style.display = "none";
+    document.getElementById('displayRepoArchive').style.display = "none";
 }

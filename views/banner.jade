@@ -4,17 +4,19 @@ div.banner
             a.home-button(href='/') UMLx
           ul.nav.nav-tabs.no-border.dropdown-style
             li.dropdown
-                button.btn.btn-secondary.dropdown-toggle.menu-font.menu.btn-default(data-toggle='dropdown',role='button',aria-haspopup="true",aria-expanded="false") Menu
+                button.btn.btn-dark.dropdown-toggle.menu-font.menu.btn-default(id='menu-button', data-toggle='dropdown',role='button',aria-haspopup="true",aria-expanded="false") Menu
                     span.caret
                 ul.dropdown-menu.dropdown-menu-right(style = "margin-top : 2px; width: 100px; border-radius : 5px;")
                     li.padding
-                        a.dropdown-item.btn-menu.menu-font(role="tab", data-toggle="tab", href='#main_page' aria-expanded="true") Overview
+                        a.dropdown-item.btn-menu.menu-font(role="tab", data-toggle="tab", href='#main_page' aria-expanded="true", onclick='overviewClicked()') Overview
                     li.padding
-                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_trending') Trending
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_trending', onclick='trendingClicked()') Trending
                     li.padding
-                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#project_list') Projects 
-                            span(class="badge") #{modelAllNum}
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#project_list', onclick='projectClicked()') Projects 
+                            span(id="modelNum", class="badge") #{modelAllNum}
                     li.padding
-                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", id='modelArchive', href='#repo_archive', data-url='#{repoInfo.OutputDir}', onclick='walkRepoDir(this)') Archives
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", id='modelArchive', href='#repo_archive', data-url='#{repoInfo.OutputDir}', onclick='archiveClicked(this)') Archives
                     li.padding
-                        a.dropdown-item.btn-menu.menu-font(role="tab", href='/logout') Log Out       
+                        a.dropdown-item.btn-menu.menu-font(role="tab", data-toggle="tab", href="#profile", onclick='profileClicked()') Profile
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab", href='/logout') Log Out
