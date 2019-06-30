@@ -34,9 +34,13 @@ Combined Data Effort Values
 #The current dataset
 #modelData <- selectData("dsets/android_dataset_6_4.csv")
 #modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
-modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv")
-rownames(modelData) <- modelData$Project
-modelData$Project <- NULL
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
+
+modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("initialDate", "late"))
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type", "Tools"))
 
 #data set exploratory statistics, eg, correlation statistics, marginal distributions, etc.
 ```
@@ -92,7 +96,7 @@ models = append(models, size_models)
 ```
 
 ```{r model attributes, warning = FALSE}
-#using the entire dataset to train the models
+#using the entire dataset to train the models and evaluate some of the properties of the trained parameters.
 #currentModels = models
 #models = currentModels
 
@@ -281,13 +285,35 @@ round_df <- function(df, digits) {
 
   (df)
 }
-sig_bs_f = sig_bs[which(sig_bs$bonferroni_p_value < 0.05),]
-sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "pred15", "pred25", "pred50")),]
+sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25", "mae")),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
 sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
 sig_bs_f = round_df(sig_bs_f, 2)
 print(sig_bs_f)
 
 # filter for 
+
+```
+
+```{r stratified analysis, warning = FALSE}
+projectCategories <- as.matrix(read.csv("./project_categorization.csv"))
+print(projectCategories)
+nCategories <- nrow(projectCategories)
+benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
+categorizedBenchmarkResults = list()
+
+i=7
+for(i in 1:nCategories){
+  #print(projectCategories[i, ])
+  categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=projectCategories[i,])
+
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
+  
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Game"))
+  
+  print(categorizedDataset)
+  categorizedBenchmarkResults[[benchmarkLabels[i]]] <- modelBenchmark(models, categorizedDataset)
+}
 
 ```
