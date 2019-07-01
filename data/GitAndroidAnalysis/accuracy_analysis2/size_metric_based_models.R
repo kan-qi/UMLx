@@ -77,7 +77,7 @@ m_predict.sloc <- function(sloc, testData){
 #define the ln_sloc model
 #the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
 m_fit.ln_sloc <- function(ln_sloc, dataset){
-  #dataset <- modelData
+  #dataset <- categorizedDataset
   #ln_sloc <- list()
   dataset <- dataset[dataset$SLOC!=0 & dataset$Effort != 0,]
   dataset$log_effort = log(dataset$Effort)
