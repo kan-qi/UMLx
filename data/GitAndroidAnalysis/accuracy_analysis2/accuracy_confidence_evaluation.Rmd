@@ -262,6 +262,19 @@ for (i in 1:length(accuracy_metrics)){
   cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
 }
 
+#make a total rank(rank*) base on the ranki
+rank_sum <- vector(mode = "integer",length = length(models))
+for (i in 1:length(models)){
+  selectedData <- cvRankResults[i,]
+  for(j in 1:length(accuracy_metrics)){
+    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
+  }
+}
+rank_sum <- rank(rank_sum, ties.method = "min")
+cvRankResults["rank*"] <- rank_sum
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
+
 #change the first line as the row name
 rownames(cvRankResults) = cvRankResults[,1]
 cvRankResults <- cvRankResults[,-1]
@@ -291,6 +304,43 @@ sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c
 sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
 sig_bs_f = round_df(sig_bs_f, 2)
 print(sig_bs_f)
+
+
+# Using the "sig_bs" results, create a graph to represent the direct graph for the models.
+library(igraph)
+for(metric_i in 1:length(accuracy_metrics)){
+  selectedData <- sig_bs[sig_bs$metric == metric_labels[metric_i],]
+  m <- matrix(0, nrow = length(models), ncol = length(models), byrow = FALSE)
+  colnames(m) <- names(models)
+  rownames(m) <- names(models)
+  for(i in 1:nrow(selectedData)){
+    if(selectedData$BH_p_value[i] < 0.05){
+    if(selectedData$direction[i] == "+"){
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = 1
+    }else if(selectedData$direction[i] == "-"){
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = 1
+    }
+    }
+  }
+  # if A -> B -> C, remove edge A -> C
+  for(i in 1:length(models)){
+    for(j in 1:length(models)){
+      if(m[i,j] == 1){
+        for(k in 1:length(models)){
+          if(m[j,k] == 1)
+            m[i,k] = 0
+        }
+      }
+    }
+  }
+  #plot the directed graph
+  net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
+  plot.igraph(net,vertex.label=V(net)$name, layout=layout.fruchterman.reingold, 
+              vertex.color="white", vertex.label.color="black", vertex.size=25, 
+              edge.color="black",edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  title(main = metric_labels[metric_i])
+}
+
 
 # filter for 
 
