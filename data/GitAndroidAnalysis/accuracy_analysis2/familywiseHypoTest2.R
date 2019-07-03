@@ -132,7 +132,7 @@ for (k in 1:(nmodels-1)){
             n2 = length(y)
             s1_squared = sum((x-mu_1)^2)/(n1-1)
             s2_squared = sum((y-mu_2)^2)/(n2-1)
-            s = sqrt(((n1-1)*s1_squared+(n2-1)*s2_squared))/(n1+n2-2)
+            s = sqrt(((n1-1)*s1_squared+(n2-1)*s2_squared)/(n1+n2-2))
             cohen_d <- (mu_1-mu_2)/s
             
             d <- mu_1 - mu_2
