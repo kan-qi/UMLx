@@ -229,6 +229,8 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=F) {
                                   fudge=.2,
                                   numUnique=3)
   
+  neuralnet$pca <- preprocessed_data
+  
   if (verbose) print(preprocessed_data)
   data_train <- predict(preprocessed_data, data[, names(data) != "Effort"])
   data_train$Effort <- data$Effort
@@ -279,21 +281,22 @@ m_predict.neuralnet <- function(neuralnet, testData, verbose=F) {
   dims <- neuralnet$hyperparameters$dims
   data <- data[,dims]
   pcaComp <- neuralnet$hyperparameters$pcaComp
+  pca <- neuralnet$pca
   
-  methods <- c("center", "scale", "YeoJohnson", "nzv", "pca", "knnImpute", "corr")
-  meta.data.preProcess <- preProcess(data[, names(data) != "Effort"],
-                                     method=methods,
-                                     na.remove=F,
-                                     pcaComp=pcaComp,
-                                     k=5,
-                                     knnSummary=mean,
-                                     outcome=NULL,
-                                     fudge=0.2,
-                                     numUnique=3)
+  # methods <- c("center", "scale", "YeoJohnson", "nzv", "pca", "knnImpute", "corr")
+  # meta.data.preProcess <- preProcess(data[, names(data) != "Effort"],
+  #                                    method=methods,
+  #                                    na.remove=F,
+  #                                    pcaComp=pcaComp,
+  #                                    k=5,
+  #                                    knnSummary=mean,
+  #                                    outcome=NULL,
+  #                                    fudge=0.2,
+  #                                    numUnique=3)
   
-  if (verbose) print(meta.data.preProcess)
+  if (verbose) print(pca)
   
-  data_test <- predict(meta.data.preProcess, data[, names(data) != "Effort"])
+  data_test <- predict(pca, data[, names(data) != "Effort"])
   data_test$Effort <- data$Effort
   predictions <- as.integer(predict(neuralnet$m, data_test))
   names(predictions) <- rownames(testData)
