@@ -74,3 +74,25 @@ corrplot(tran_cor, type = "upper", order = "hclust",
          tl.col = "black", tl.srt = 45)
 ```
 
+```{r}
+shilhavy <- read.csv("UCP_Dataset_OnlineV1.1.csv")
+cor(shilhavy$Real_Effort_Person_Hours, shilhavy$Simple_UC+shilhavy$Average_UC+shilhavy$Complex_UC)
+cor.test(shilhavy$Real_Effort_Person_Hours, shilhavy$Simple_UC+shilhavy$Average_UC+shilhavy$Complex_UC)
+
+albrecht <- read.csv("albrecht.csv")
+cor(albrecht$Effort, albrecht$Input+albrecht$Output+albrecht$Inquiry)
+cor.test(albrecht$Effort, albrecht$Input+albrecht$Output+albrecht$Inquiry)
+
+china <- read.csv("china.csv")
+cor(china$Effort, china$Input+china$Output+china$Enquiry)
+cor.test(china$Effort, china$Input+china$Output+china$Enquiry)
+
+kemerer <- read.csv("kemerer.csv")
+cor(kemerer$EffortMM, kemerer$KSLOC)
+cor.test(kemerer$EffortMM, kemerer$KSLOC)
+
+miyazaki94 <- read.csv("miyazaki94.csv")
+cor(miyazaki94$KLOC, miyazaki94$MM)
+cor.test(miyazaki94$KLOC, miyazaki94$MM)
+```
+
