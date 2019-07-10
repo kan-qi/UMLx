@@ -11,6 +11,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 
 source("lasso_model.R")
+
+modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
+
+plot(log(lambda_list),cvfit$cvm,xlab="log(Lambda)",ylab="MSE")
+lines(log(lambda_list),cvfit$cvm,xlim=range(log(lambda_list)), ylim=range(cvfit$cvm), pch=16)
 ```
 
 ```{r}
