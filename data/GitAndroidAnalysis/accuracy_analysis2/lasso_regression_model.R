@@ -41,6 +41,7 @@ Lasso_range = function(x, y, k){
 
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
+  #lasso = list()
   
   ind_variables = c("Activity_Num", "Component_Num", "Precedence_Num",	"Stimulus_Num",	"Response_Num",	"Tran_Num",	"Boundary_Num")
   x_data <- data.matrix(dataset[ind_variables])
@@ -55,9 +56,6 @@ m_fit.lasso <- function(lasso,dataset){
                     standardize = T, lambda = lambda_list, type.measure = 'mse', nfolds = 5, alpha = 1)
   
   lasso_lm = cvfit$glmnet.fit
-  lasso = list()
-  lasso$cv_lambda = cvfit$lamda[min(cvfit$cvm)]
-  lasso$cvfit = cvfit
   
   #print(lasso_lm$lambda)
   #plot(lasso_lm)
@@ -65,12 +63,22 @@ m_fit.lasso <- function(lasso,dataset){
   #plot_glmnet(lasso_lm)                             # default colors
   #plot_glmnet(lasso_lm, label=10)
   lasso$m = lasso_lm
+  lasso$m$cv_lambda = min(cvfit$cvm)
+  lasso$m$cvfit = cvfit
+  lasso$m$lambda_list = lambda_list
+  lasso$m$ind_variables = ind_variables
   lasso
   
 }
 
 m_predict.lasso <- function(lasso, testData){
-  pred <- predict(lasso$m,newx=testData,s=lasso$cv_lambda)
+  #testData <- modelData
+  predicted <- predict(lasso$m,newx=as.matrix(testData[,lasso$m$ind_variables]),s=lasso$m$cv_lambda)
+  predicted_names <- rownames(predicted)
+  predicted <- as.vector(predicted[,1])
+  names(predicted) <- predicted_names
+  predicted
+  #print(predicted)
 }
 
 lasso_model <- function(dataset){

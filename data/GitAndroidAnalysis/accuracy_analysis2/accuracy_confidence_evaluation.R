@@ -79,9 +79,10 @@ modelBenchmark <- function(models, dataset){
 }
 
 evalFit <- function(models, dataset, fit_metrics){
-  dataset = modelData
+  #dataset = modelData
   
   modelNames = names(models)
+  #print(modelNames)
   
   nmodels <- length(modelNames)
   
@@ -90,12 +91,12 @@ evalFit <- function(models, dataset, fit_metrics){
   eval_metric_results = list()
   
   for(j in 1:nmodels){
-    modelName <- modelNames[j]
+    #modelName <- modelNames[j]
     
-    print(modelName)
+    print(modelNames[j])
     
     model = fit(dataset, modelNames[j], models[[j]])
-    
+    #model = structure(model, class="klasso_lnr")
     predicted = m_predict(model, dataset)
     
     #print(predicted)
@@ -104,6 +105,7 @@ evalFit <- function(models, dataset, fit_metrics){
     #print(actual)
     
     intersectNames <- intersect(names(predicted), names(actual))
+    #print(intersectNames)
     
     model_eval_fit = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
     #print(model_eval_predict)
@@ -141,7 +143,7 @@ evalFit <- function(models, dataset, fit_metrics){
   
 cv <- function(models, dataset, accuracy_metrics){
 
-#dataset = modelData
+dataset = modelData
 
 nfold = 2
 
