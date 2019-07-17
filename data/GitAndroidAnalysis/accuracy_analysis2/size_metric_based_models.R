@@ -12,6 +12,10 @@ m_predict.ucp <- function(ucp, testData){
   predict(ucp$m, testData)
 }
 
+m_profile.ucp <- function(ucp, dataset){
+  profileData <- data.frame(UUCP=dataset$UUCP, row.names=rownames(dataset))
+}
+
 #define the cocomo model
 #m_fit.cocomo <- function(cocomo,dataset){
 #  print("cocomo fit")
@@ -31,6 +35,10 @@ m_fit.fp <- function(fp,dataset){
 
 m_predict.fp <- function(fp, testData){
   predict(fp$m, testData)
+}
+
+m_profile.fp <- function(fp, dataset){
+  profileData <- data.frame(AFP=dataset$IFPUG, row.names=rownames(dataset))
 }
 
 #define the cocomo apriori model
@@ -54,6 +62,10 @@ m_predict.cosmic <- function(cosmic, testData){
   predict(cosmic$m, testData)
 }
 
+m_profile.cosmic <- function(cosmic, dataset){
+  profileData <- data.frame(COSMIC=dataset$COSMIC, row.names=rownames(dataset))
+}
+
 #define the mkii model
 #m_fit.mkii <- function(mkii,dataset){
 #  mkii$m = lm(Effort~MKII, data=dataset)
@@ -72,6 +84,10 @@ m_fit.sloc <- function(sloc,dataset){
 
 m_predict.sloc <- function(sloc, testData){
   predict(sloc$m, testData)
+}
+
+m_profile.sloc <- function(sloc,dataset){
+  profileData <- data.frame(SLOC=dataset$SLOC, row.names=rownames(dataset))
 }
 
 #define the ln_sloc model
@@ -95,6 +111,11 @@ m_predict.ln_sloc <- function(ln_sloc, testData){
   predicted
 }
 
+m_profile.ln_sloc <- function(ln_sloc, dataset){
+  #testData <- modelData
+  profileData <- data.frame(LOG_SLOC=dataset$LN_SLOC, row.names=rownames(dataset))
+}
+
 #the baseline model which only takes the average of the output traning dataset.
 m_fit.baseline_model <- function(baseline_model, dataset){
   baseline_model$m = list(mean_value = mean(dataset$Effort))
@@ -103,7 +124,6 @@ m_fit.baseline_model <- function(baseline_model, dataset){
 m_predict.baseline_model <- function(baseline_model, testData){
   baseline_model$m$mean_value
 }
-
 
 size_metric_models <- function(dataset){
   

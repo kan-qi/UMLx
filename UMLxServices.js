@@ -67,7 +67,7 @@ var storage = multer.diskStorage({
     }
 })
 
-console.l = console.log;
+//console.l = console.log;
 //console.log = function() {};
 
 var fileDestination = null;

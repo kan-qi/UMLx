@@ -45,14 +45,14 @@ modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 
 #data set exploratory statistics, eg, correlation statistics, marginal distributions, etc.
 
-ggplot2.scatterplot(data=modelData, xName='SLOC',
-                    yName='Effort',
-                    groupName="Organization")
+#ggplot2.scatterplot(data=modelData, xName='SLOC',
+#                    yName='Effort',
+#                    groupName="Organization")
 
-ggplot(modelData,aes(SLOC, Effort, color=Organization)) + 
-  geom_point() + 
-  scale_color_manual(values = c('#999999','#E69F00')) + 
-  theme(legend.position=c(0,1), legend.justification=c(0,1))
+#ggplot(modelData,aes(SLOC, Effort, color=Organization)) + 
+#  geom_point() + 
+#  scale_color_manual(values = c('#999999','#E69F00')) + 
+#  theme(legend.position=c(0,1), legend.justification=c(0,1))
 
 
 ```
@@ -73,15 +73,15 @@ ggplot(modelData,aes(SLOC, Effort, color=Organization)) +
 
 models = list()
 #register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
-#transaction_models <- trainsaction_based_model(modelData)
-#models = append(models, transaction_models)
+transaction_models <- trainsaction_based_model(modelData)
+models = append(models, transaction_models)
 
 #models$tm3 <- trainsaction_based_model3(modelData)
 
 #initialize the size metric based models
-#size_models <- size_metric_models(modelData)
+size_models <- size_metric_models(modelData)
 #register the list of the size metric based models. 
-#models = append(models, size_models)
+models = append(models, size_models)
 
 #intialize the step-wise learning model
 models$step_lnr <- stepwise_linear_model(modelData)
@@ -111,32 +111,25 @@ models$lasso = lasso_model(modelData)
   
 ```
 
-```{r model attributes, warning = FALSE}
+```{r evaluate the effectiveness of the size metrics, warning = FALSE}
 #using the entire dataset to train the models and evaluate some of the properties of the trained parameters.
 #currentModels = models
 #models = currentModels
 
-fitEval = evalFit(models, modelData, c("R2", "eta-squared"))
+#fitEval = evalFit(models, modelData, c("R2", "eta-squared"))
 
 trainedModels <-modelTrain(models, modelData)
-outputData <- profileData(trainedModels, modelData)
+outputData <- modelProfile(trainedModels, modelData)
 
+#evaluate the models for their size metrics
 sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
 sizeMeasures <- data.frame(matrix(nrow=nrow(outputData), ncol=length(sizeMetricLabels)))
 rownames(sizeMeasures) <- rownames(outputData)
 colnames(sizeMeasures) <- sizeMetricLabels
 outputData$LOG_SLOC <- log(outputData$SLOC)
-#sizeMeasures$SWTI <- outputData$SWTI
-#sizeMeasures$SWTII <- outputData$SWTII
-#sizeMeasures$SWTIII <- outputData$SWTIII
-#sizeMeasures$UUCP <- outputData$UUCP
-#sizeMeasures$AFP <- outputData$AFP
-#sizeMeasures$COSMIC <- outputData$COSMIC
-#sizeMeasures$SLOC <- outputData$SLOC
-#sizeMeasures$LOG_SLOC <- log(outputData$SLOC)
 sizeMeasures[,sizeMetricLabels] <- outputData[,sizeMetricLabels]
 sizeMeasures <- na.omit(sizeMeasures)
-effortData <- outputData[rownames(sizeMeasures), 'Effort']
+effortData <- modelData[rownames(sizeMeasures), 'Effort']
 
 #run the correlation analysis of the size metrics
 sizeCor <- cor(sizeMeasures)
@@ -144,11 +137,8 @@ print(round(sizeCor, digits=2))
   
 #run the correlation analysis of size metrics and project effort
 effortCor <- apply(sizeMeasures, 2, function(x) {
-    #print(x)
-    d <- cbind(x, effortData)
-    #print(d)
+    d <- data.frame(x=x, effortData)
     corT <- cor.test(d$x, d$Effort)
-    #corT$p.value
     c(corT$estimate, corT$p.value)
   })
 effortCor <- t(effortCor)
@@ -156,10 +146,20 @@ colnames(effortCor) <- c("r", "p-value")
 print(round(effortCor, 2))
 
 ```
-comparison between the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
-```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
+comparing the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
+```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
 benchmarkResults <- modelBenchmark(models, modelData)
 
+```
+
+```{r evaluate goodness of fit of the models}
+#evaluate goodness of fit
+fitReesults <- benchmarkResults$fitResults
+
+```
+
+```{r evaluate the out-of-sample accuracy of the models}
+#evaluate cross-validation
 model_names <- benchmarkResults$model_names
 accuracy_metrics <- benchmarkResults$accuracy_metrics
 #plot for the cross validation results
@@ -187,7 +187,52 @@ ggplot(meltAvgPreds) + theme_bw() +
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
-###plot for the bootstrapping results
+#rank the cv results of different metric
+
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$model_labels <- model_names
+cvAccuracyResults$metric_labels <- accuracy_metrics
+
+cvRankResults <- data.frame(names(models))
+names(cvRankResults)<-c("model_labels")
+
+for (i in 1:length(accuracy_metrics)){
+  g = accuracy_metrics[i]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  names(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#make a total rank(rank*) base on the ranki
+rank_sum <- vector(mode = "integer",length = length(models))
+for (i in 1:length(models)){
+  selectedData <- cvRankResults[i,]
+  for(j in 1:length(accuracy_metrics)){
+    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
+  }
+}
+rank_sum <- rank(rank_sum, ties.method = "min")
+cvRankResults["rank*"] <- rank_sum
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
+
+#change the first line as the row name
+rownames(cvRankResults) = cvRankResults[,1]
+cvRankResults <- cvRankResults[,-1]
+
+print(round(cvRankResults,2))
+
+```
+
+```{r evaluate overlapping of 84% confidence intervals}
+#evaluate bootstrap results
 bsRet <- benchmarkResults$bsResults
 #bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
 bsEstimations <- bsRet[['bsEstimations']]
@@ -225,6 +270,7 @@ df$metric_labels <- metric_labels
 
 print(metric_labels)
 
+# calculate non-overlapping intervals.
 nonOverlappingPairs <- list()
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
@@ -267,6 +313,8 @@ for (i in 1:length(accuracy_metrics)){
     print(p)
 }
 
+# draw a partially ordered graph based on non-overlapping pairs
+
 
 # for (i in 1:length(metric_labels)){
 #     g = metric_labels[i]
@@ -280,49 +328,9 @@ for (i in 1:length(accuracy_metrics)){
 #     ggtitle(g)
 #     print(p)
 # }
+```
 
-#rank the cv results of different metric
-
-cvAccuracyResults <- data.frame(cvResults$accuracyResults)
-cvAccuracyResults$model_labels <- model_labels
-cvAccuracyResults$metric_labels <- metric_labels
-
-cvRankResults <- data.frame(names(models))
-names(cvRankResults)<-c("model_labels")
-
-for (i in 1:length(accuracy_metrics)){
-  g = metric_labels[i]
-  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
-  selectedData <- selectedData[,-3]#delete the metric_labels
-  names(selectedData)<-c(g, "model_labels")
-  if(g == "mmre" || g == "mdmre" || g == "mae"){
-    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
-  }else{
-    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
-  }
-  
-  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
-}
-
-#make a total rank(rank*) base on the ranki
-rank_sum <- vector(mode = "integer",length = length(models))
-for (i in 1:length(models)){
-  selectedData <- cvRankResults[i,]
-  for(j in 1:length(accuracy_metrics)){
-    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
-  }
-}
-rank_sum <- rank(rank_sum, ties.method = "min")
-cvRankResults["rank*"] <- rank_sum
-
-cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
-
-#change the first line as the row name
-rownames(cvRankResults) = cvRankResults[,1]
-cvRankResults <- cvRankResults[,-1]
-
-print(round(cvRankResults,2))
-
+```{r evaluate the p-values under family-wise control}
 # family-wise hypothesis test
 source('familywiseHypoTest2.R')
 foldResults <- cvResults$foldResults
@@ -340,6 +348,7 @@ round_df <- function(df, digits) {
 
   (df)
 }
+
 sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25", "mae")),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
@@ -375,6 +384,7 @@ for(metric_i in 1:length(accuracy_metrics)){
       }
     }
   }
+  
   #plot the directed graph
   net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
   plot.igraph(net,vertex.label=V(net)$name, layout=layout.fruchterman.reingold, 
@@ -402,7 +412,7 @@ for(i in 1:nCategories){
 
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
   
-  categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
   
   print(categorizedDataset)
   categorizedBenchmarkResults[[benchmarkLabels[i]]] <- modelBenchmark(models, categorizedDataset)

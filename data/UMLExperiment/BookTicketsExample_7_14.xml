@@ -1,0 +1,2301 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_3F4259FF_581E_44c9_8F90_FCCF7C476F3D" name="Model" visibility="public">
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" name="Use Case Model" visibility="public">
+				<ownedComment xmi:type="uml:Comment" xmi:id="EAID_83B73F73_BDA0_4df3_ACF1_0E1E7A3F7525" body="Use Case: Estimating effort with COCOMO Early Design Model&#xA;&#xA;Primary Course:&#xA;1. The project manager lands on the decision factors page.&#xA;2. The system presents the tab for inputting decision factors.&#xA;3. The project manager specifies the decision factors for the project and click &quot;next button&quot;&#xA;4. The system presents the tab for inputting scale factors.&#xA;5. The project manager specifies the values for scale factors and click the &quot;next&quot; button&#xA;6. The system presents the tab for inputting early design model's cost drivers.&#xA;7. The project manager specifies the values for the cost drivers and click &quot;next&quot; button.&#xA;8. The system presents the tab for inputting the project sizes.&#xA;9. The project manager input the values for the project sizes and click &quot;estimate effort&quot; button.&#xA;10. The system presents the tab for a summary of the estimated effort.&#xA;11. The project manager views the estimation result and click &quot;start process&quot; to initiate an instance of the recommended process.&#xA;&#xA;Alternative Courses:&#xA;5A1: The project manager wants to go back to modify the project decision factors.&#xA;		1. The project manager click &quot;prev&quot; button.&#xA;		2. The system presents the tab for specifying the decision factors.&#xA;		3. The project manager modifies the values of decision factors.&#xA;&#xA;7A1: The project manager wants to go back to modify the scale factors.&#xA;		1. The project manager click &quot;prev&quot; button.&#xA;		2. The system presents the tab for specifying the scale factors.&#xA;		3. The project manager modifies the values of the scale factors.&#xA;&#xA;9A1: The project manager wants to go back to modify the cost drivers.&#xA;		1. The project manager click &quot;prev&quot; button.&#xA;		2. The system presents the tab for specifying the cost drivers.&#xA;		3. The project manager modifies the values of the cost drivers.&#xA;10A1: The project manager wants to view detailed report of the estimation results.&#xA;		1. The project manager click &quot;detailed results&quot; tab.&#xA;		2. The system presents the tab for detailed effort estimation results.&#xA;10A2: The project manager wants to adjust the factors after viewing the estimation result.&#xA;		1. The project manager click &quot;Prev&quot; button.&#xA;		2. The system presents the tab for specifying the project sizes."/>
+				<ownedComment xmi:type="uml:Comment" xmi:id="EAID_700FD05C_DA7D_4ab2_BE17_C784EBD2D480" body="This package contains use cases which define how an Actor will interact with the proposed system. &#xA;&#xA;Each interaction may be specified using scenarios, sequence diagrams, communication diagrams and other dynamic diagrams or textual descriptions which together describe how the system, when viewed as a &quot;black-box&quot;, interacts with a user.">
+					<annotatedElement xmi:idref="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738"/>
+				</ownedComment>
+				<ownedComment xmi:type="uml:Comment" xmi:id="EAID_00E2DED5_3EB0_45ea_BB08_4CD1EB99DAFA" body="Actors are the users of the system being modeled. Each Actor will have a well-defined role, and in the context of that role have useful interactions with the system.&#xA;&#xA;A person may perform the role of more than one Actor, although they will only assume one role during one use case interaction.&#xA;&#xA;An Actor role may be performed by a non-human system, such as another computer program.">
+					<annotatedElement xmi:idref="EAPK_B08C3057_72D6_4e17_828C_66330DFCAA30"/>
+				</ownedComment>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_7A6B2F43_766E_4197_B3AB_7518F2447A18" name="AddtionalInfo" visibility="public">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_8713F068_3CFD_4f18_A097_25C18B36F803" name="contactNum" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+						<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_3CFD_4f18_A097_25C18B36F803" value="1"/>
+						<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000002_3CFD_4f18_A097_25C18B36F803" value="1"/>
+						<type xmi:idref="EAJava_int"/>
+					</ownedAttribute>
+					<ownedOperation xmi:id="EAID_A91C9DEC_D640_4780_AD69_A063B1C30E68" name="addInfo" visibility="public" concurrency="sequential">
+						<ownedParameter xmi:id="EAID_RT000000_D640_4780_AD69_A063B1C30E68" name="return" direction="return" type="EAJava_void"/>
+					</ownedOperation>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_DB1C34DE_E1DA_4634_8454_B3E9A6E55224" name="BookTickets" visibility="public">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_227FD8D4_A5B5_4554_A6B8_9125313DD14B" name="BookTicketName" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+						<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_A5B5_4554_A6B8_9125313DD14B" value="1"/>
+						<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000004_A5B5_4554_A6B8_9125313DD14B" value="1"/>
+						<type xmi:idref="EAJava_int"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_755CC2E3_BF7C_4571_998E_CB58912AE524" name="Class1" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_A2005B87_8BE7_4869_9CC6_2F5C7E80F893" name="bookTicketInterface" visibility="public">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_5E083E53_EE05_4674_AC76_AD924AAA4DA3" name="BookTicketInput" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+						<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_EE05_4674_AC76_AD924AAA4DA3" value="1"/>
+						<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000006_EE05_4674_AC76_AD924AAA4DA3" value="1"/>
+						<type xmi:idref="EAJava_int"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_BA78D637_2FF8_42d4_B0CA_2B07F4EC5584" name="bookTicketsManagement" visibility="public">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_80BFE2B6_BEB1_4d06_95B2_878AB82DF406" name="ticketName" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+						<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000007_BEB1_4d06_95B2_878AB82DF406" value="1"/>
+						<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000008_BEB1_4d06_95B2_878AB82DF406" value="1"/>
+						<type xmi:idref="EAJava_String"/>
+					</ownedAttribute>
+					<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AD9D13C1_9EFC_4fd4_8630_E4E509A01C7F" name="tiketId" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+						<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000009_9EFC_4fd4_8630_E4E509A01C7F" value="1"/>
+						<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000010_9EFC_4fd4_8630_E4E509A01C7F" value="1"/>
+						<type xmi:idref="EAJava_int"/>
+					</ownedAttribute>
+					<ownedOperation xmi:id="EAID_715254E8_C0A3_427e_A29D_F75866125423" name="bookTicketsManagement" visibility="public" concurrency="sequential">
+						<ownedParameter xmi:id="EAID_371C4204_FB6D_47ac_88CE_77E27E6D1619" name="ticketId" direction="in" isStream="false" isException="false" isOrdered="false" isUnique="true" type="EAJava_int"/>
+						<ownedParameter xmi:id="EAID_RT000000_C0A3_427e_A29D_F75866125423" name="return" direction="return" type="EAJava_void"/>
+					</ownedOperation>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_0D1B06EE_3FCE_444a_A419_29CFE93B04E4" name="$help://use_case_model_pattern.htm" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_311155A1_FB1B_4feb_BC96_CD87139A6BA6" name="$help://actor.htm" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_A7311764_5D94_4ac8_8465_658EBE0F83B9" name="$help://usecasediagram.htm" visibility="public"/>
+				<packagedElement xmi:type="uml:Package" xmi:id="EAPK_B08C3057_72D6_4e17_828C_66330DFCAA30" name="Actors" visibility="public">
+					<packagedElement xmi:type="uml:Actor" xmi:id="EAID_2AAA8D64_1D74_4a6c_B5F7_BCC99B65A011" name="User" visibility="public"/>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Package" xmi:id="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" name="Primary Use Cases" visibility="public">
+					<ownedComment xmi:type="uml:Comment" xmi:id="EAID_94CA7A37_BBA7_402f_ACAF_6D6BEA9EEEAD" body="The System Boundary shows the logical interface between users and the system being described."/>
+					<packagedElement xmi:type="uml:UseCase" xmi:id="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" name="cancel ticket" visibility="public"/>
+					<packagedElement xmi:type="uml:Actor" xmi:id="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" name="user" visibility="public">
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst0BA824_1FC8_422e_86F8_F95C78893E1F" visibility="public" association="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstF9B0CA_341D_486e_AEB8_26AAC7C03A5B" visibility="public" association="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst21D727_7EC5_492c_B009_04394B774945" visibility="public" association="EAID_CE21D727_7EC5_492c_B009_04394B774945" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4"/>
+						</ownedAttribute>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F" visibility="public">
+						<memberEnd xmi:idref="EAID_dst0BA824_1FC8_422e_86F8_F95C78893E1F"/>
+						<memberEnd xmi:idref="EAID_src0BA824_1FC8_422e_86F8_F95C78893E1F"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src0BA824_1FC8_422e_86F8_F95C78893E1F" visibility="public" association="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B" visibility="public">
+						<memberEnd xmi:idref="EAID_dstF9B0CA_341D_486e_AEB8_26AAC7C03A5B"/>
+						<memberEnd xmi:idref="EAID_srcF9B0CA_341D_486e_AEB8_26AAC7C03A5B"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcF9B0CA_341D_486e_AEB8_26AAC7C03A5B" visibility="public" association="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_CE21D727_7EC5_492c_B009_04394B774945" visibility="public">
+						<memberEnd xmi:idref="EAID_dst21D727_7EC5_492c_B009_04394B774945"/>
+						<memberEnd xmi:idref="EAID_src21D727_7EC5_492c_B009_04394B774945"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src21D727_7EC5_492c_B009_04394B774945" visibility="public" association="EAID_CE21D727_7EC5_492c_B009_04394B774945" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4" name="cancel ticket interface" visibility="public">
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst443A16_4C36_42bd_88AA_D3DA430A4C77" visibility="public" association="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+						</ownedAttribute>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77" visibility="public">
+						<memberEnd xmi:idref="EAID_dst443A16_4C36_42bd_88AA_D3DA430A4C77"/>
+						<memberEnd xmi:idref="EAID_src443A16_4C36_42bd_88AA_D3DA430A4C77"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src443A16_4C36_42bd_88AA_D3DA430A4C77" visibility="public" association="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" name="store cancellation records" visibility="public">
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstA96DB4_0CDA_4b27_8CE2_B82098DE89FD" visibility="public" association="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" visibility="public" association="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+						</ownedAttribute>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD" visibility="public">
+						<memberEnd xmi:idref="EAID_dstA96DB4_0CDA_4b27_8CE2_B82098DE89FD"/>
+						<memberEnd xmi:idref="EAID_srcA96DB4_0CDA_4b27_8CE2_B82098DE89FD"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcA96DB4_0CDA_4b27_8CE2_B82098DE89FD" visibility="public" association="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" visibility="public">
+						<memberEnd xmi:idref="EAID_dstA2BCA1_F6FC_45cf_B498_CF9A218F1DA4"/>
+						<memberEnd xmi:idref="EAID_srcA2BCA1_F6FC_45cf_B498_CF9A218F1DA4"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" visibility="public" association="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80" name="ticket cancel fail" visibility="public"/>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A" visibility="public">
+						<memberEnd xmi:idref="EAID_dst9839DC_74EF_4e20_9365_5945E5C2E00A"/>
+						<memberEnd xmi:idref="EAID_src9839DC_74EF_4e20_9365_5945E5C2E00A"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src9839DC_74EF_4e20_9365_5945E5C2E00A" visibility="public" association="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519" visibility="public">
+						<memberEnd xmi:idref="EAID_dstB41124_8B33_4cf9_9434_F3BC588A1519"/>
+						<memberEnd xmi:idref="EAID_srcB41124_8B33_4cf9_9434_F3BC588A1519"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcB41124_8B33_4cf9_9434_F3BC588A1519" visibility="public" association="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_0023766B_1282_4083_A265_AF074826784D" name="ticket cancel success" visibility="public"/>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF" name="ticket db" visibility="public"/>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_6A914B14_4092_4327_A334_70D340F82113" visibility="public">
+						<memberEnd xmi:idref="EAID_dst914B14_4092_4327_A334_70D340F82113"/>
+						<memberEnd xmi:idref="EAID_src914B14_4092_4327_A334_70D340F82113"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src914B14_4092_4327_A334_70D340F82113" visibility="public" association="EAID_6A914B14_4092_4327_A334_70D340F82113" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF" visibility="public">
+						<memberEnd xmi:idref="EAID_dstC4A11F_8D09_4e55_8D52_6CB54423FEEF"/>
+						<memberEnd xmi:idref="EAID_srcC4A11F_8D09_4e55_8D52_6CB54423FEEF"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_srcC4A11F_8D09_4e55_8D52_6CB54423FEEF" visibility="public" association="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" name="validate ticket cancel time limit" visibility="public">
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst9839DC_74EF_4e20_9365_5945E5C2E00A" visibility="public" association="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstC4A11F_8D09_4e55_8D52_6CB54423FEEF" visibility="public" association="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+						</ownedAttribute>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Association" xmi:id="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4" visibility="public">
+						<memberEnd xmi:idref="EAID_dst629598_31E0_4316_ABAA_F7744CAB02F4"/>
+						<memberEnd xmi:idref="EAID_src629598_31E0_4316_ABAA_F7744CAB02F4"/>
+						<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src629598_31E0_4316_ABAA_F7744CAB02F4" visibility="public" association="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+						</ownedEnd>
+					</packagedElement>
+					<packagedElement xmi:type="uml:InstanceSpecification" xmi:id="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" name="validate ticket id" visibility="public">
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst629598_31E0_4316_ABAA_F7744CAB02F4" visibility="public" association="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst914B14_4092_4327_A334_70D340F82113" visibility="public" association="EAID_6A914B14_4092_4327_A334_70D340F82113" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dstB41124_8B33_4cf9_9434_F3BC588A1519" visibility="public" association="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false" aggregation="none">
+							<type xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+						</ownedAttribute>
+					</packagedElement>
+					<packagedElement xmi:type="uml:UseCase" xmi:id="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" name="purchase ticket" visibility="public">
+						<nestedClassifier xmi:type="uml:Collaboration" xmi:id="EAID_CB000000_75C_3E4F_4f25_B9C2_9AB2CF856B5" name="EA_Collaboration1" visibility="public">
+							<ownedBehavior xmi:type="uml:Interaction" xmi:id="EAID_IN000000_75C_3E4F_4f25_B9C2_9AB2CF856B5" name="EA_Interaction1" visibility="public">
+								<fragment xmi:type="uml:CombinedFragment" xmi:id="EAID_BAE39208_04E3_4d5a_997E_16C772C34FF2" visibility="public" interactionOperator="loop">
+									<covered xmi:idref="EAID_LL000000_2B60_42fb_9A53_3CAE4412A2F9"/>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000000_04E3_4d5a_997E_16C772C34FF2">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000000_04E3_4d5a_997E_16C772C34FF2">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000000_04E3_4d5a_997E_16C772C34FF2"/>
+										</guard>
+									</operand>
+								</fragment>
+								<fragment xmi:type="uml:CombinedFragment" xmi:id="EAID_74430AEA_6941_442f_B5A4_7D30E3F7A3C9" visibility="public" interactionOperator="break">
+									<covered xmi:idref="EAID_LL000000_2B60_42fb_9A53_3CAE4412A2F9"/>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000000_6941_442f_B5A4_7D30E3F7A3C9">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000000_6941_442f_B5A4_7D30E3F7A3C9">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000000_6941_442f_B5A4_7D30E3F7A3C9"/>
+										</guard>
+									</operand>
+								</fragment>
+								<fragment xmi:type="uml:CombinedFragment" xmi:id="EAID_B838AE70_49C3_4465_87C2_9FD5567F8989" visibility="public" interactionOperator="opt">
+									<covered xmi:idref="EAID_LL000000_2B60_42fb_9A53_3CAE4412A2F9"/>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000000_49C3_4465_87C2_9FD5567F8989">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000000_49C3_4465_87C2_9FD5567F8989">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000000_49C3_4465_87C2_9FD5567F8989"/>
+										</guard>
+									</operand>
+								</fragment>
+								<fragment xmi:type="uml:CombinedFragment" xmi:id="EAID_3D18BAB2_E613_453f_810F_BE8CC07F508A" visibility="public" interactionOperator="alt">
+									<covered xmi:idref="EAID_LL000000_2B60_42fb_9A53_3CAE4412A2F9"/>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000001_E613_453f_810F_BE8CC07F508A">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000001_E613_453f_810F_BE8CC07F508A">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000001_E613_453f_810F_BE8CC07F508A" body="yes"/>
+										</guard>
+									</operand>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000000_E613_453f_810F_BE8CC07F508A">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000000_E613_453f_810F_BE8CC07F508A">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000000_E613_453f_810F_BE8CC07F508A" body="no"/>
+										</guard>
+									</operand>
+								</fragment>
+								<lifeline xmi:type="uml:Lifeline" xmi:id="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02" name="Book Ticket Page" visibility="public" represents="EAID_AT000000_518B_4a9f_BBE3_06FD13DD8D02"/>
+								<lifeline xmi:type="uml:Lifeline" xmi:id="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631" name="Ticket Info Store" visibility="public" represents="EAID_AT000000_A6C4_4875_BA2E_63A3C4113631"/>
+								<lifeline xmi:type="uml:Lifeline" xmi:id="EAID_19994392_AF74_49a4_9465_EB1925772F89" name="Tickets  Info Validation" visibility="public" represents="EAID_AT000000_AF74_49a4_9465_EB1925772F89"/>
+								<lifeline xmi:type="uml:Lifeline" xmi:id="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" name="Tickets Management" visibility="public" represents="EAID_AT000000_4779_4d40_A335_BF341E9AA7F4"/>
+								<lifeline xmi:type="uml:Lifeline" xmi:id="EAID_LL000000_2B60_42fb_9A53_3CAE4412A2F9" name="User" visibility="public" represents="EAID_AT000000_000_2B60_42fb_9A53_3CAE4412A2F"/>
+								<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000000_2B60_42fb_9A53_3CAE4412A2F9" covered="EAID_LL000000_2B60_42fb_9A53_3CAE4412A2F9"/>
+								<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000000_518B_4a9f_BBE3_06FD13DD8D02" covered="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+								<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000001_518B_4a9f_BBE3_06FD13DD8D02" covered="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+								<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000000_AF74_49a4_9465_EB1925772F89" covered="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+								<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000003_AF74_49a4_9465_EB1925772F89" covered="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+								<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000000_A6C4_4875_BA2E_63A3C4113631" covered="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+								<fragment xmi:type="uml:CombinedFragment" xmi:id="EAID_3714857B_9264_4e55_ADFD_5681185A9CC3" name="is ticket validated?" visibility="public" interactionOperator="alt">
+									<covered xmi:idref="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+									<covered xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+									<covered xmi:idref="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"/>
+									<covered xmi:idref="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000001_9264_4e55_ADFD_5681185A9CC3">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000001_9264_4e55_ADFD_5681185A9CC3">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000001_9264_4e55_ADFD_5681185A9CC3" body="no"/>
+										</guard>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000001_AF74_49a4_9465_EB1925772F89" covered="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000002_518B_4a9f_BBE3_06FD13DD8D02" covered="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+									</operand>
+									<operand xmi:type="uml:InteractionOperand" xmi:id="EAID_OP000000_9264_4e55_ADFD_5681185A9CC3">
+										<guard xmi:type="uml:InteractionConstraint" xmi:id="EAID_IC000000_9264_4e55_ADFD_5681185A9CC3">
+											<specification xmi:type="uml:OpaqueExpression" xmi:id="EAID_OE000000_9264_4e55_ADFD_5681185A9CC3" body="yes"/>
+										</guard>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000004_AF74_49a4_9465_EB1925772F89" covered="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000000_4779_4d40_A335_BF341E9AA7F4" covered="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000001_4779_4d40_A335_BF341E9AA7F4" covered="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000001_A6C4_4875_BA2E_63A3C4113631" covered="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000002_4779_4d40_A335_BF341E9AA7F4" covered="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000005_AF74_49a4_9465_EB1925772F89" covered="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000002_AF74_49a4_9465_EB1925772F89" covered="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+										<fragment xmi:type="uml:OccurrenceSpecification" xmi:id="EAID_FR000003_518B_4a9f_BBE3_06FD13DD8D02" covered="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+									</operand>
+								</fragment>
+								<message xmi:type="uml:Message" xmi:id="EAID_23C4EFAF_C20A_467f_AF9E_ABA613186AB1" name="fill required information for tickets" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000000_2B60_42fb_9A53_3CAE4412A2F9" receiveEvent="EAID_FR000000_518B_4a9f_BBE3_06FD13DD8D02"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_7B04D550_0D7D_4b1c_A57A_811B0AD69AF4" name="validate tickt information" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000001_518B_4a9f_BBE3_06FD13DD8D02" receiveEvent="EAID_FR000000_AF74_49a4_9465_EB1925772F89"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2" name="request ticket information" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000003_AF74_49a4_9465_EB1925772F89" receiveEvent="EAID_FR000000_A6C4_4875_BA2E_63A3C4113631"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_06786B11_A327_4844_8501_C2A735F42E08" name="no tickets error" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000001_AF74_49a4_9465_EB1925772F89" receiveEvent="EAID_FR000002_518B_4a9f_BBE3_06FD13DD8D02"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_B733D818_C79D_4175_AA29_9E0EA5007392" name="save ticket purpase information" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000004_AF74_49a4_9465_EB1925772F89" receiveEvent="EAID_FR000000_4779_4d40_A335_BF341E9AA7F4"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_910BDAF0_EC5E_4348_8159_2368383551D7" name="save ticket purchase records" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000001_4779_4d40_A335_BF341E9AA7F4" receiveEvent="EAID_FR000001_A6C4_4875_BA2E_63A3C4113631"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_EB041E12_4A90_46f8_B54C_B063AE5A6DE3" name="save success" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000002_4779_4d40_A335_BF341E9AA7F4" receiveEvent="EAID_FR000005_AF74_49a4_9465_EB1925772F89"/>
+								<message xmi:type="uml:Message" xmi:id="EAID_3F4A7CED_F583_4c01_A3FB_4619B91A950E" name="sucess notice for saving ticket purchase" messageKind="complete" messageSort="synchCall" sendEvent="EAID_FR000002_AF74_49a4_9465_EB1925772F89" receiveEvent="EAID_FR000003_518B_4a9f_BBE3_06FD13DD8D02"/>
+							</ownedBehavior>
+							<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AT000000_518B_4a9f_BBE3_06FD13DD8D02"/>
+							<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AT000000_A6C4_4875_BA2E_63A3C4113631"/>
+							<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AT000000_AF74_49a4_9465_EB1925772F89"/>
+							<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AT000000_4779_4d40_A335_BF341E9AA7F4"/>
+							<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_AT000000_000_2B60_42fb_9A53_3CAE4412A2F">
+								<type xmi:idref="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9"/>
+							</ownedAttribute>
+						</nestedClassifier>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Actor" xmi:id="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9" name="User" visibility="public"/>
+					<packagedElement xmi:type="uml:UseCase" xmi:id="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB" name="ticket transfer" visibility="public">
+						<ownedBehavior xmi:type="uml:Activity" xmi:id="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE" name="save transfer records" visibility="public" isReadOnly="false" isSingleExecution="false">
+							<incoming xmi:idref="EAID_9E14B84F_FD16_4155_99F9_C92E4ACE54F1"/>
+							<outgoing xmi:idref="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B"/>
+						</ownedBehavior>
+						<edge xmi:type="uml:ControlFlow" xmi:id="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B" visibility="public" source="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE" target="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B"/>
+						<ownedBehavior xmi:type="uml:Activity" xmi:id="EAID_AC000001_31D0_4e58_B54E_3F0658851738" name="EA_Activity1" visibility="public">
+							<node xmi:type="uml:ActivityFinalNode" xmi:id="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B" name="end" visibility="public">
+								<incoming xmi:idref="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B"/>
+							</node>
+							<group xmi:type="uml:ActivityPartition" xmi:id="EAID_7940A824_A513_4d72_BEA2_D776EAEEE4B8" name="system" visibility="public">
+								<node xmi:idref="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6"/>
+								<node xmi:idref="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC"/>
+								<containedNode xmi:type="uml:DecisionNode" xmi:id="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" visibility="public">
+									<incoming xmi:idref="EAID_7BB8D96A_8AE3_40ae_886E_2AA21B1A77C0"/>
+									<outgoing xmi:idref="EAID_39B86C81_5A34_4393_AF8C_17961EAED2A7"/>
+									<outgoing xmi:idref="EAID_27009B2A_E39A_40a6_A291_8C094A905776"/>
+								</containedNode>
+								<containedEdge xmi:type="uml:ControlFlow" xmi:id="EAID_27009B2A_E39A_40a6_A291_8C094A905776" visibility="public" source="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" target="EAID_E12A6F48_6B28_452e_990F_0415E300DD64"/>
+								<containedEdge xmi:type="uml:ControlFlow" xmi:id="EAID_39B86C81_5A34_4393_AF8C_17961EAED2A7" visibility="public" source="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" target="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79"/>
+								<node xmi:idref="EAID_E12A6F48_6B28_452e_990F_0415E300DD64"/>
+								<containedNode xmi:type="uml:ActivityFinalNode" xmi:id="EAID_E12A6F48_6B28_452e_990F_0415E300DD64" name="end" visibility="public">
+									<incoming xmi:idref="EAID_27009B2A_E39A_40a6_A291_8C094A905776"/>
+								</containedNode>
+							</group>
+							<packagedElement xmi:type="uml:Activity" xmi:id="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6" name="query ticket record by id" visibility="public" isReadOnly="false" isSingleExecution="false"/>
+							<edge xmi:type="uml:ControlFlow" xmi:id="EAID_7BB8D96A_8AE3_40ae_886E_2AA21B1A77C0" visibility="public" source="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6" target="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC"/>
+							<group xmi:type="uml:ActivityPartition" xmi:id="EAID_8609EE2D_7B59_43c9_9BBE_4A68C5CDAE5D" name="user" visibility="public">
+								<node xmi:idref="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79"/>
+								<node xmi:idref="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49"/>
+								<node xmi:idref="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82"/>
+								<containedNode xmi:type="uml:InitialNode" xmi:id="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82" name="start" visibility="public">
+									<outgoing xmi:idref="EAID_B1846571_003C_4709_B17E_1FE007A3E54D"/>
+								</containedNode>
+								<containedEdge xmi:type="uml:ControlFlow" xmi:id="EAID_B1846571_003C_4709_B17E_1FE007A3E54D" visibility="public" source="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82" target="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49"/>
+							</group>
+							<packagedElement xmi:type="uml:Activity" xmi:id="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79" name="confirm transferring" visibility="public" isReadOnly="false" isSingleExecution="false"/>
+							<edge xmi:type="uml:ControlFlow" xmi:id="EAID_9E14B84F_FD16_4155_99F9_C92E4ACE54F1" visibility="public" source="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79" target="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE"/>
+							<packagedElement xmi:type="uml:Activity" xmi:id="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49" name="fill ticket id for transferring" visibility="public" isReadOnly="false" isSingleExecution="false"/>
+							<edge xmi:type="uml:ControlFlow" xmi:id="EAID_F30B6F03_CDA8_4863_B10A_8ADB2BAD479F" visibility="public" source="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49" target="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6"/>
+						</ownedBehavior>
+					</packagedElement>
+					<packagedElement xmi:type="uml:StateMachine" xmi:id="EAID_SM000001_31D0_4e58_B54E_3F0658851738" name="EA_StateMachine1" visibility="public">
+						<region xmi:type="uml:Region" xmi:id="EAID_SR000001_31D0_4e58_B54E_3F0658851738" name="EA_Region1" visibility="public">
+							<subvertex xmi:type="uml:Pseudostate" xmi:id="EAID_1786B25E_D00D_4594_921F_04BA17E27C67" name="fork" visibility="public" kind="fork"/>
+						</region>
+					</packagedElement>
+					<packagedElement xmi:type="uml:Class" xmi:id="EAID_2C50E985_4DED_4c35_A5CF_A18BB4D94F0D" name="System Boundary" visibility="public"/>
+				</packagedElement>
+			</packagedElement>
+		</packagedElement>
+		<thecustomprofile:boundary base_InstanceSpecification="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4"/>
+		<thecustomprofile:control base_InstanceSpecification="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D"/>
+		<thecustomprofile:boundary base_InstanceSpecification="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+		<thecustomprofile:boundary base_InstanceSpecification="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+		<thecustomprofile:entity base_InstanceSpecification="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+		<thecustomprofile:control base_InstanceSpecification="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4"/>
+		<thecustomprofile:control base_InstanceSpecification="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+		<thecustomprofile:entity base_Lifeline="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+	</uml:Model>
+	<xmi:Extension extender="Enterprise Architect" extenderID="6.5">
+		<elements>
+			<element xmi:idref="EAPK_3F4259FF_581E_44c9_8F90_FCCF7C476F3D">
+				<packageproperties/>
+				<paths/>
+				<times created="2012-04-17 00:00:00" modified="2012-04-17 00:00:00" lastloaddate="2017-02-07 17:03:49"/>
+				<flags iscontrolled="FALSE" isprotected="FALSE" usedtd="FALSE" logxml="FALSE" packageFlags="isModel=1;"/>
+			</element>
+			<element xmi:idref="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" xmi:type="uml:Package" name="Use Case Model" scope="public">
+				<model package2="EAID_9BB5B7FD_1278_467a_8BBF_B67C1422202B" package="EAPK_3F4259FF_581E_44c9_8F90_FCCF7C476F3D" tpos="3" ea_localid="2" ea_eleType="package"/>
+				<properties isSpecification="false" sType="Package" nType="0" scope="public"/>
+				<project phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Model"/>
+				<packageproperties tpos="3"/>
+				<paths/>
+				<times created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" lastloaddate="2017-02-07 17:03:48" lastsavedate="2017-02-07 17:03:48"/>
+				<flags iscontrolled="FALSE" isprotected="FALSE" batchsave="0" batchload="0" usedtd="FALSE" logxml="FALSE" packageFlags="isModel=1;VICON=1;"/>
+			</element>
+			<element xmi:idref="EAID_7A6B2F43_766E_4197_B3AB_7518F2447A18" xmi:type="uml:Class" name="AddtionalInfo" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="114" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2018-10-26 19:13:52" modified="2018-10-26 19:15:29" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+				<attributes>
+					<attribute xmi:idref="EAID_8713F068_3CFD_4f18_A097_25C18B36F803" name="contactNum" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="5" ea_guid="{8713F068-3CFD-4f18-A097-25C18B36F803}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<operations>
+					<operation xmi:idref="EAID_A91C9DEC_D640_4780_AD69_A063B1C30E68" name="addInfo" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{A91C9DEC-D640-4780-AD69-A063B1C30E68}" ea_localid="2"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_D640_4780_AD69_A063B1C30E68" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-D640-4780-AD69-A063B1C30E68}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+			</element>
+			<element xmi:idref="EAID_DB1C34DE_E1DA_4634_8454_B3E9A6E55224" xmi:type="uml:Class" name="BookTickets" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="77" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-03 00:07:41" modified="2017-12-03 00:07:49" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+				<attributes>
+					<attribute xmi:idref="EAID_227FD8D4_A5B5_4554_A6B8_9125313DD14B" name="BookTicketName" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="4" ea_guid="{227FD8D4-A5B5-4554-A6B8-9125313DD14B}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+			</element>
+			<element xmi:idref="EAID_755CC2E3_BF7C_4571_998E_CB58912AE524" xmi:type="uml:Class" name="Class1" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="75" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-02 23:25:03" modified="2017-12-02 23:25:03" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+			</element>
+			<element xmi:idref="EAID_A2005B87_8BE7_4869_9CC6_2F5C7E80F893" xmi:type="uml:Class" name="bookTicketInterface" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="76" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-03 00:07:19" modified="2017-12-03 00:07:38" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+				<attributes>
+					<attribute xmi:idref="EAID_5E083E53_EE05_4674_AC76_AD924AAA4DA3" name="BookTicketInput" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="3" ea_guid="{5E083E53-EE05-4674-AC76-AD924AAA4DA3}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+			</element>
+			<element xmi:idref="EAID_BA78D637_2FF8_42d4_B0CA_2B07F4EC5584" xmi:type="uml:Class" name="bookTicketsManagement" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="34" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Kan Qi" version="1.0" phase="1.0" created="2017-12-01 13:37:03" modified="2017-12-03 00:10:16" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+				<attributes>
+					<attribute xmi:idref="EAID_80BFE2B6_BEB1_4d06_95B2_878AB82DF406" name="ticketName" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="1" ea_guid="{80BFE2B6-BEB1-4d06-95B2-878AB82DF406}"/>
+						<properties type="String" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_AD9D13C1_9EFC_4fd4_8630_E4E509A01C7F" name="tiketId" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="2" ea_guid="{AD9D13C1-9EFC-4fd4-8630-E4E509A01C7F}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="1"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<operations>
+					<operation xmi:idref="EAID_715254E8_C0A3_427e_A29D_F75866125423" name="bookTicketsManagement" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{715254E8-C0A3-427e-A29D-F75866125423}" ea_localid="1"/>
+						<type type="void" const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<parameters>
+							<parameter xmi:idref="EAID_RETURNID_C0A3_427e_A29D_F75866125423" visibility="public">
+								<properties pos="0" type="void" const="false" ea_guid="{RETURNID-C0A3-427e-A29D-F75866125423}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+							<parameter xmi:idref="EAID_371C4204_FB6D_47ac_88CE_77E27E6D1619" visibility="public">
+								<properties pos="0" type="int" const="false" ea_guid="{371C4204-FB6D-47ac-88CE-77E27E6D1619}"/>
+								<style/>
+								<styleex/>
+								<documentation/>
+								<tags/>
+								<xrefs/>
+							</parameter>
+						</parameters>
+						<xrefs/>
+					</operation>
+				</operations>
+			</element>
+			<element xmi:idref="EAID_00E2DED5_3EB0_45ea_BB08_4CD1EB99DAFA" xmi:type="uml:Note" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="2" ea_eleType="element"/>
+				<properties documentation="Actors are the users of the system being modeled. Each Actor will have a well-defined role, and in the context of that role have useful interactions with the system.&#xA;&#xA;A person may perform the role of more than one Actor, although they will only assume one role during one use case interaction.&#xA;&#xA;An Actor role may be performed by a non-human system, such as another computer program." isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model" eventflags="LNK=b0e5;"/>
+				<links>
+					<NoteLink xmi:id="EAID_9197388F_1B0D_47da_9588_A0B11FC33DB0" start="EAID_B08C3057_72D6_4e17_828C_66330DFCAA30" end="EAID_00E2DED5_3EB0_45ea_BB08_4CD1EB99DAFA"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_0D1B06EE_3FCE_444a_A419_29CFE93B04E4" xmi:type="uml:Text" name="$help://use_case_model_pattern.htm" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="3" ea_eleType="element" name="$help://use_case_model_pattern.htm"/>
+				<properties isSpecification="false" sType="Text" nType="19" alias="Read about Use Case Modeling" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+			</element>
+			<element xmi:idref="EAID_311155A1_FB1B_4feb_BC96_CD87139A6BA6" xmi:type="uml:Text" name="$help://actor.htm" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="4" ea_eleType="element" name="$help://actor.htm"/>
+				<properties isSpecification="false" sType="Text" nType="19" alias="Read about Actors" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+			</element>
+			<element xmi:idref="EAID_700FD05C_DA7D_4ab2_BE17_C784EBD2D480" xmi:type="uml:Note" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="5" ea_eleType="element"/>
+				<properties documentation="This package contains use cases which define how an Actor will interact with the proposed system. &#xA;&#xA;Each interaction may be specified using scenarios, sequence diagrams, communication diagrams and other dynamic diagrams or textual descriptions which together describe how the system, when viewed as a &quot;black-box&quot;, interacts with a user." isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model" eventflags="LNK=bcdd;"/>
+				<links>
+					<NoteLink xmi:id="EAID_1A8F8957_CF34_493c_AF86_B37426DC6877" start="EAID_4112AB1B_31D0_4e58_B54E_3F0658851738" end="EAID_700FD05C_DA7D_4ab2_BE17_C784EBD2D480"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_83B73F73_BDA0_4df3_ACF1_0E1E7A3F7525" xmi:type="uml:Note" name="Note" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="6" ea_eleType="element" name="Note"/>
+				<properties documentation="Use Case: Estimating effort with COCOMO Early Design Model&#xA;&#xA;Primary Course:&#xA;1. The project manager lands on the decision factors page.&#xA;2. The system presents the tab for inputting decision factors.&#xA;3. The project manager specifies the decision factors for the project and click &quot;next button&quot;&#xA;4. The system presents the tab for inputting scale factors.&#xA;5. The project manager specifies the values for scale factors and click the &quot;next&quot; button&#xA;6. The system presents the tab for inputting early design model's cost drivers.&#xA;7. The project manager specifies the values for the cost drivers and click &quot;next&quot; button.&#xA;8. The system presents the tab for inputting the project sizes.&#xA;9. The project manager input the values for the project sizes and click &quot;estimate effort&quot; button.&#xA;10. The system presents the tab for a summary of the estimated effort.&#xA;11. The project manager views the estimation result and click &quot;start process&quot; to initiate an instance of the recommended process.&#xA;&#xA;Alternative Courses:&#xA;5A1: The project manager wants to go back to modify the project decision factors.&#xA;		1. The project manager click &quot;prev&quot; button.&#xA;		2. The system presents the tab for specifying the decision factors.&#xA;		3. The project manager modifies the values of decision factors.&#xA;&#xA;7A1: The project manager wants to go back to modify the scale factors.&#xA;		1. The project manager click &quot;prev&quot; button.&#xA;		2. The system presents the tab for specifying the scale factors.&#xA;		3. The project manager modifies the values of the scale factors.&#xA;&#xA;9A1: The project manager wants to go back to modify the cost drivers.&#xA;		1. The project manager click &quot;prev&quot; button.&#xA;		2. The system presents the tab for specifying the cost drivers.&#xA;		3. The project manager modifies the values of the cost drivers.&#xA;10A1: The project manager wants to view detailed report of the estimation results.&#xA;		1. The project manager click &quot;detailed results&quot; tab.&#xA;		2. The system presents the tab for detailed effort estimation results.&#xA;10A2: The project manager wants to adjust the factors after viewing the estimation result.&#xA;		1. The project manager click &quot;Prev&quot; button.&#xA;		2. The system presents the tab for specifying the project sizes." isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:15:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+			</element>
+			<element xmi:idref="EAID_A7311764_5D94_4ac8_8465_658EBE0F83B9" xmi:type="uml:Text" name="$help://usecasediagram.htm" scope="public">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="7" ea_eleType="element" name="$help://usecasediagram.htm"/>
+				<properties isSpecification="false" sType="Text" nType="19" alias="View Further Examples" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model"/>
+			</element>
+			<element xmi:idref="EAPK_B08C3057_72D6_4e17_828C_66330DFCAA30" xmi:type="uml:Package" name="Actors" scope="public">
+				<model package2="EAID_B08C3057_72D6_4e17_828C_66330DFCAA30" package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="3" ea_eleType="package"/>
+				<properties isSpecification="false" sType="Package" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model" eventflags="LNK=b0db;"/>
+				<packageproperties/>
+				<paths/>
+				<times created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" lastloaddate="2017-02-07 17:03:48" lastsavedate="2017-02-07 17:03:48"/>
+				<flags iscontrolled="FALSE" isprotected="FALSE" batchsave="0" batchload="0" usedtd="FALSE" logxml="FALSE"/>
+			</element>
+			<element xmi:idref="EAID_2AAA8D64_1D74_4a6c_B5F7_BCC99B65A011" xmi:type="uml:Actor" name="User" scope="public">
+				<model package="EAPK_B08C3057_72D6_4e17_828C_66330DFCAA30" tpos="0" ea_localid="10" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Actors" eventflags="LNK=7938;"/>
+			</element>
+			<element xmi:idref="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" xmi:type="uml:Package" name="Primary Use Cases" scope="public">
+				<model package2="EAID_4112AB1B_31D0_4e58_B54E_3F0658851738" package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" tpos="0" ea_localid="4" ea_eleType="package"/>
+				<properties isSpecification="false" sType="Package" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Use Case Model" eventflags="LNK=bcdd;"/>
+				<packageproperties/>
+				<paths/>
+				<times created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" lastloaddate="2017-12-02 15:33:10" lastsavedate="2017-02-07 17:03:48"/>
+				<flags iscontrolled="FALSE" isprotected="FALSE" batchsave="0" batchload="0" usedtd="FALSE" logxml="FALSE"/>
+			</element>
+			<element xmi:idref="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" xmi:type="uml:UseCase" name="cancel ticket" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" tpos="0" ea_localid="119" ea_eleType="element"/>
+				<properties isSpecification="false" sType="UseCase" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:55:15" modified="2019-07-14 07:55:15" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" xmi:type="uml:Actor" name="user" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="120" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:55:37" modified="2019-07-14 07:55:40" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F" start="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" end="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+					<Association xmi:id="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B" start="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" end="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+					<Association xmi:id="EAID_CE21D727_7EC5_492c_B009_04394B774945" start="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" end="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4" xmi:type="uml:Object" name="cancel ticket interface" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="121" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="boundary" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:55:44" modified="2019-07-14 07:55:57" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={11423957-0043-4017-B847-7EE66B17ACE4}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=boundary;GUID={1B69B104-74EC-45ed-BE42-2BD32F390BE2};@ENDSTEREO;$DES;$CLT={EA5AD6CE-3FB4-4b5c-A873-027F26F866C4}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77" start="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4" end="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+					<Association xmi:id="EAID_CE21D727_7EC5_492c_B009_04394B774945" start="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" end="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" xmi:type="uml:Object" name="store cancellation records" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="127" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="control" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:57:52" modified="2019-07-14 07:58:02" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={D66596D3-DFDE-436d-8291-3D6CFC616921}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=control;GUID={0EB3B47B-F37A-4d8b-9879-24DD21700ED4};@ENDSTEREO;$DES;$CLT={B7164378-FDF2-421e-B68C-20E1B67B063D}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD" start="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" end="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+					<Association xmi:id="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" start="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" end="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80" xmi:type="uml:Object" name="ticket cancel fail" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="125" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="boundary" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:56:42" modified="2019-07-14 07:56:51" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={99E9A8B4-766A-45ac-8B1E-E56F65BFD178}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=boundary;GUID={1B69B104-74EC-45ed-BE42-2BD32F390BE2};@ENDSTEREO;$DES;$CLT={6F313E2B-EBD9-446c-A5B8-8AAAA3F2DD80}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A" start="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" end="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+					<Association xmi:id="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F" start="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" end="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+					<Association xmi:id="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519" start="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" end="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_0023766B_1282_4083_A265_AF074826784D" xmi:type="uml:Object" name="ticket cancel success" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="126" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="boundary" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:56:55" modified="2019-07-14 07:57:09" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={22D455BF-7E46-48eb-9281-592AFE7CFDF0}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=boundary;GUID={1B69B104-74EC-45ed-BE42-2BD32F390BE2};@ENDSTEREO;$DES;$CLT={0023766B-1282-4083-A265-AF074826784D}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B" start="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" end="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+					<Association xmi:id="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" start="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" end="EAID_0023766B_1282_4083_A265_AF074826784D"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF" xmi:type="uml:Object" name="ticket db" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="124" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="entity" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:56:30" modified="2019-07-14 07:56:38" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={0D5084E0-813F-4572-9884-9EFB335FE8AF}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=entity;GUID={DB3D5203-9F39-4f9f-BD4A-2D3F0C818D59};@ENDSTEREO;$DES;$CLT={BEEC285A-7437-4e6e-99B4-EBE75AE423BF}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD" start="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" end="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+					<Association xmi:id="EAID_6A914B14_4092_4327_A334_70D340F82113" start="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" end="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+					<Association xmi:id="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF" start="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" end="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" xmi:type="uml:Object" name="validate ticket cancel time limit" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="123" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="control" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:56:12" modified="2019-07-14 07:56:21" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={3CF83522-6680-424c-9315-36A0AFBD46A7}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=control;GUID={0EB3B47B-F37A-4d8b-9879-24DD21700ED4};@ENDSTEREO;$DES;$CLT={9B093309-F6D1-4526-9D4E-8990A08321E4}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A" start="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" end="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+					<Association xmi:id="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF" start="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" end="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+					<Association xmi:id="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4" start="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" end="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" xmi:type="uml:Object" name="validate ticket id" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E" tpos="0" ea_localid="122" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Object" nType="0" scope="public" stereotype="control" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:56:02" modified="2019-07-14 07:56:08" complexity="1" status="Proposed"/>
+				<code gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={6821023C-14B1-4a0b-9114-85F82B6AE01B}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=control;GUID={0EB3B47B-F37A-4d8b-9879-24DD21700ED4};@ENDSTEREO;$DES;$CLT={C94E9E3F-6B54-4cb6-A1B4-1D9CA6409F7A}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Association xmi:id="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4" start="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" end="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4"/>
+					<Association xmi:id="EAID_6A914B14_4092_4327_A334_70D340F82113" start="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" end="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF"/>
+					<Association xmi:id="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519" start="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" end="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80"/>
+					<Association xmi:id="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77" start="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4" end="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" xmi:type="uml:UseCase" name="purchase ticket" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" tpos="0" ea_localid="95" ea_eleType="element"/>
+				<properties isSpecification="false" sType="UseCase" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:03" modified="2019-07-14 07:52:44" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;" object_style="MDoc=1;"/>
+				<modelDocument/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9" xmi:type="uml:Actor" name="User" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="96" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project version="1.0" phase="1.0" created="2017-12-19 23:59:40" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases" eventflags="LNK=7938;"/>
+				<links>
+					<Sequence xmi:id="EAID_23C4EFAF_C20A_467f_AF9E_ABA613186AB1" start="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9" end="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_BAE39208_04E3_4d5a_997E_16C772C34FF2" xmi:type="uml:InteractionFragment" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="103" ea_eleType="element"/>
+				<properties isSpecification="false" sType="InteractionFragment" nType="4" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:41" modified="2017-12-19 23:09:59" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_74430AEA_6941_442f_B5A4_7D30E3F7A3C9" xmi:type="uml:InteractionFragment" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="102" ea_eleType="element"/>
+				<properties isSpecification="false" sType="InteractionFragment" nType="2" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:41" modified="2017-12-19 23:04:59" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_B838AE70_49C3_4465_87C2_9FD5567F8989" xmi:type="uml:InteractionFragment" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="101" ea_eleType="element"/>
+				<properties isSpecification="false" sType="InteractionFragment" nType="1" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:41" modified="2017-12-16 21:42:34" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_3D18BAB2_E613_453f_810F_BE8CC07F508A" xmi:type="uml:InteractionFragment" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="100" ea_eleType="element"/>
+				<properties isSpecification="false" sType="InteractionFragment" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:41" modified="2017-12-15 22:23:32" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={F7833E09-1A79-4760-9BD8-A2538CB6741B}$XID;$NAM=Partitions$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@PAR;Name=no;Size=228;GUID={58A1344C-1690-410c-B840-09C478F59149};@ENDPAR;@PAR;Name=yes;Size=103;GUID={A87DA2C3-E743-4567-8991-992D49623B0C};@ENDPAR;$DES;$CLT={3D18BAB2-E613-453f-810F-BE8CC07F508A}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02" xmi:type="uml:Sequence" name="Book Ticket Page" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="97" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Sequence" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-12-19 23:59:40" modified="2019-07-14 07:42:14" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases" eventflags="LNK=7938;"/>
+				<links>
+					<Sequence xmi:id="EAID_7B04D550_0D7D_4b1c_A57A_811B0AD69AF4" start="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02" end="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+					<Sequence xmi:id="EAID_06786B11_A327_4844_8501_C2A735F42E08" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+					<Sequence xmi:id="EAID_23C4EFAF_C20A_467f_AF9E_ABA613186AB1" start="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9" end="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+					<Sequence xmi:id="EAID_3F4A7CED_F583_4c01_A3FB_4619B91A950E" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631" xmi:type="uml:Sequence" name="Ticket Info Store" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="113" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Sequence" nType="0" scope="public" stereotype="entity"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2018-02-10 00:34:44" modified="2019-07-14 07:43:00" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={890CECA6-D75F-4603-8B7B-9BB94EC87093}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=entity;GUID={48EA4F09-35F2-4e5a-96B6-80031409810F};@ENDSTEREO;$DES;$CLT={1F0A847A-A6C4-4875-BA2E-63A3C4113631}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Sequence xmi:id="EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+					<Sequence xmi:id="EAID_910BDAF0_EC5E_4348_8159_2368383551D7" start="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" end="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89" xmi:type="uml:Sequence" name="Tickets  Info Validation" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="98" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Sequence" nType="0" scope="public"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:40" modified="2019-07-14 07:43:24" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Sequence xmi:id="EAID_06786B11_A327_4844_8501_C2A735F42E08" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+					<Sequence xmi:id="EAID_3F4A7CED_F583_4c01_A3FB_4619B91A950E" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02"/>
+					<Sequence xmi:id="EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+					<Sequence xmi:id="EAID_B733D818_C79D_4175_AA29_9E0EA5007392" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"/>
+					<Sequence xmi:id="EAID_7B04D550_0D7D_4b1c_A57A_811B0AD69AF4" start="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02" end="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+					<Sequence xmi:id="EAID_EB041E12_4A90_46f8_B54C_B063AE5A6DE3" start="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" end="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" xmi:type="uml:Sequence" name="Tickets Management" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="99" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Sequence" nType="0" scope="public"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-19 23:59:40" modified="2019-07-14 07:43:30" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<Sequence xmi:id="EAID_910BDAF0_EC5E_4348_8159_2368383551D7" start="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" end="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"/>
+					<Sequence xmi:id="EAID_EB041E12_4A90_46f8_B54C_B063AE5A6DE3" start="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" end="EAID_19994392_AF74_49a4_9465_EB1925772F89"/>
+					<Sequence xmi:id="EAID_B733D818_C79D_4175_AA29_9E0EA5007392" start="EAID_19994392_AF74_49a4_9465_EB1925772F89" end="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_3714857B_9264_4e55_ADFD_5681185A9CC3" xmi:type="uml:InteractionFragment" name="is ticket validated?" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C" tpos="0" ea_localid="118" ea_eleType="element"/>
+				<properties isSpecification="false" sType="InteractionFragment" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 07:50:34" modified="2019-07-14 07:51:05" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={2F9DE01F-0719-4f4b-8A76-06E5A78B7E01}$XID;$NAM=Partitions$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@PAR;Name=yes;Size=157;GUID={4DBD127F-8026-4462-9A77-ECEF99AF6027};@ENDPAR;@PAR;Name=no;Size=47;GUID={533E7D15-AAA5-4873-8A06-9BB89916A1D6};@ENDPAR;$DES;$CLT={3714857B-9264-4e55-ADFD-5681185A9CC3}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF"/>
+			</element>
+			<element xmi:idref="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB" xmi:type="uml:UseCase" name="ticket transfer" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" tpos="0" ea_localid="128" ea_eleType="element"/>
+				<properties isSpecification="false" sType="UseCase" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:01:22" modified="2019-07-14 08:01:26" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE" xmi:type="uml:Activity" name="save transfer records" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB" tpos="0" ea_localid="136" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Activity" nType="0" scope="public" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:04:50" modified="2019-07-14 08:05:04" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B" start="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE" end="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B"/>
+					<ControlFlow xmi:id="EAID_9E14B84F_FD16_4155_99F9_C92E4ACE54F1" start="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79" end="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B" xmi:type="uml:StateNode" name="end" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB" tpos="0" ea_localid="138" ea_eleType="element"/>
+				<properties isSpecification="false" sType="StateNode" nType="101" scope="public"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:05:21" modified="2019-07-14 08:05:23" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B" start="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE" end="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_7940A824_A513_4d72_BEA2_D776EAEEE4B8" xmi:type="uml:ActivityPartition" name="system" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB" tpos="0" ea_localid="129" ea_eleType="element"/>
+				<properties isSpecification="false" sType="ActivityPartition" nType="0" scope="public"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:01:55" modified="2019-07-14 08:01:58" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6" xmi:type="uml:Activity" name="query ticket record by id" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7940A824_A513_4d72_BEA2_D776EAEEE4B8" tpos="0" ea_localid="133" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Activity" nType="0" scope="public" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:02:56" modified="2019-07-14 08:03:07" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_7BB8D96A_8AE3_40ae_886E_2AA21B1A77C0" start="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6" end="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC"/>
+					<ControlFlow xmi:id="EAID_F30B6F03_CDA8_4863_B10A_8ADB2BAD479F" start="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49" end="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" xmi:type="uml:Decision" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7940A824_A513_4d72_BEA2_D776EAEEE4B8" tpos="0" ea_localid="134" ea_eleType="element"/>
+				<properties documentation="is ticket exist?&#xA;" isSpecification="false" sType="Decision" nType="0" scope="public"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:03:21" modified="2019-07-14 08:03:39" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_27009B2A_E39A_40a6_A291_8C094A905776" start="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" end="EAID_E12A6F48_6B28_452e_990F_0415E300DD64"/>
+					<ControlFlow xmi:id="EAID_39B86C81_5A34_4393_AF8C_17961EAED2A7" start="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" end="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79"/>
+					<ControlFlow xmi:id="EAID_7BB8D96A_8AE3_40ae_886E_2AA21B1A77C0" start="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6" end="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_E12A6F48_6B28_452e_990F_0415E300DD64" xmi:type="uml:StateNode" name="end" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_7940A824_A513_4d72_BEA2_D776EAEEE4B8" tpos="0" ea_localid="137" ea_eleType="element"/>
+				<properties isSpecification="false" sType="StateNode" nType="101" scope="public"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:05:12" modified="2019-07-14 08:05:21" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_27009B2A_E39A_40a6_A291_8C094A905776" start="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" end="EAID_E12A6F48_6B28_452e_990F_0415E300DD64"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_8609EE2D_7B59_43c9_9BBE_4A68C5CDAE5D" xmi:type="uml:ActivityPartition" name="user" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB" tpos="0" ea_localid="130" ea_eleType="element"/>
+				<properties isSpecification="false" sType="ActivityPartition" nType="0" scope="public"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:02:02" modified="2019-07-14 08:02:05" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=3;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79" xmi:type="uml:Activity" name="confirm transferring" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_8609EE2D_7B59_43c9_9BBE_4A68C5CDAE5D" tpos="0" ea_localid="135" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Activity" nType="0" scope="public" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:03:52" modified="2019-07-14 08:04:09" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_9E14B84F_FD16_4155_99F9_C92E4ACE54F1" start="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79" end="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE"/>
+					<ControlFlow xmi:id="EAID_39B86C81_5A34_4393_AF8C_17961EAED2A7" start="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" end="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49" xmi:type="uml:Activity" name="fill ticket id for transferring" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_8609EE2D_7B59_43c9_9BBE_4A68C5CDAE5D" tpos="0" ea_localid="132" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Activity" nType="0" scope="public" isAbstract="false"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:02:26" modified="2019-07-14 08:02:45" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_F30B6F03_CDA8_4863_B10A_8ADB2BAD479F" start="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49" end="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6"/>
+					<ControlFlow xmi:id="EAID_B1846571_003C_4709_B17E_1FE007A3E54D" start="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82" end="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82" xmi:type="uml:StateNode" name="start" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" owner="EAID_8609EE2D_7B59_43c9_9BBE_4A68C5CDAE5D" tpos="0" ea_localid="131" ea_eleType="element"/>
+				<properties isSpecification="false" sType="StateNode" nType="100" scope="public"/>
+				<project author="UMLxUser" version="1.0" phase="1.0" created="2019-07-14 08:02:14" modified="2019-07-14 08:02:26" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+				<links>
+					<ControlFlow xmi:id="EAID_B1846571_003C_4709_B17E_1FE007A3E54D" start="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82" end="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_1786B25E_D00D_4594_921F_04BA17E27C67" xmi:type="uml:Synchronization" name="fork" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" tpos="0" ea_localid="107" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Synchronization" nType="0" scope="public"/>
+				<project author="flyqk" version="1.0" phase="1.0" created="2017-12-20 02:17:13" modified="2017-12-20 02:17:22" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases"/>
+			</element>
+			<element xmi:idref="EAID_2C50E985_4DED_4c35_A5CF_A18BB4D94F0D" xmi:type="uml:Boundary" name="System Boundary" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" tpos="0" ea_localid="15" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Boundary" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=0;HSwimLanes=0;BorderStyle=3;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases" eventflags="LNK=c65f;"/>
+				<links>
+					<NoteLink xmi:id="EAID_A2362B52_A066_492c_991A_CE8697C239DD" start="EAID_94CA7A37_BBA7_402f_ACAF_6D6BEA9EEEAD" end="EAID_2C50E985_4DED_4c35_A5CF_A18BB4D94F0D"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_94CA7A37_BBA7_402f_ACAF_6D6BEA9EEEAD" xmi:type="uml:Note" name="Note" scope="public">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" tpos="0" ea_localid="11" ea_eleType="element" name="Note"/>
+				<properties documentation="The System Boundary shows the logical interface between users and the system being described." isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project version="1.0" phase="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Primary Use Cases" eventflags="LNK=c605;"/>
+				<links>
+					<NoteLink xmi:id="EAID_A2362B52_A066_492c_991A_CE8697C239DD" start="EAID_94CA7A37_BBA7_402f_ACAF_6D6BEA9EEEAD" end="EAID_2C50E985_4DED_4c35_A5CF_A18BB4D94F0D"/>
+				</links>
+			</element>
+		</elements>
+		<connectors>
+			<connector xmi:idref="EAID_9197388F_1B0D_47da_9588_A0B11FC33DB0">
+				<source xmi:idref="EAID_B08C3057_72D6_4e17_828C_66330DFCAA30">
+					<model ea_localid="9" type="Package" name="Actors"/>
+					<role visibility="Public"/>
+					<type aggregation="none"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_00E2DED5_3EB0_45ea_BB08_4CD1EB99DAFA">
+					<model ea_localid="2" type="Note"/>
+					<role visibility="Public"/>
+					<type aggregation="none"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="3"/>
+				<properties ea_type="NoteLink"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="0" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_1A8F8957_CF34_493c_AF86_B37426DC6877">
+				<source xmi:idref="EAID_4112AB1B_31D0_4e58_B54E_3F0658851738">
+					<model ea_localid="8" type="Package" name="Primary Use Cases"/>
+					<role visibility="Public"/>
+					<type aggregation="none"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_700FD05C_DA7D_4ab2_BE17_C784EBD2D480">
+					<model ea_localid="5" type="Note"/>
+					<role visibility="Public"/>
+					<type aggregation="none"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="2"/>
+				<properties ea_type="NoteLink"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="0" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F">
+				<source xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27">
+					<model ea_localid="120" type="Actor" name="user"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80">
+					<model ea_localid="125" type="Object" name="ticket cancel fail"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="110"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B">
+				<source xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27">
+					<model ea_localid="120" type="Actor" name="user"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_0023766B_1282_4083_A265_AF074826784D">
+					<model ea_localid="126" type="Object" name="ticket cancel success"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="111"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_CE21D727_7EC5_492c_B009_04394B774945">
+				<source xmi:idref="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27">
+					<model ea_localid="120" type="Actor" name="user"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4">
+					<model ea_localid="121" type="Object" name="cancel ticket interface"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="101"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77">
+				<source xmi:idref="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4">
+					<model ea_localid="121" type="Object" name="cancel ticket interface"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A">
+					<model ea_localid="122" type="Object" name="validate ticket id"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="102"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD">
+				<source xmi:idref="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D">
+					<model ea_localid="127" type="Object" name="store cancellation records"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF">
+					<model ea_localid="124" type="Object" name="ticket db"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="107"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4">
+				<source xmi:idref="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D">
+					<model ea_localid="127" type="Object" name="store cancellation records"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_0023766B_1282_4083_A265_AF074826784D">
+					<model ea_localid="126" type="Object" name="ticket cancel success"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="109"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A">
+				<source xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4">
+					<model ea_localid="123" type="Object" name="validate ticket cancel time limit"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80">
+					<model ea_localid="125" type="Object" name="ticket cancel fail"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="105"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519">
+				<source xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A">
+					<model ea_localid="122" type="Object" name="validate ticket id"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80">
+					<model ea_localid="125" type="Object" name="ticket cancel fail"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="112"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_6A914B14_4092_4327_A334_70D340F82113">
+				<source xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A">
+					<model ea_localid="122" type="Object" name="validate ticket id"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF">
+					<model ea_localid="124" type="Object" name="ticket db"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="108"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF">
+				<source xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4">
+					<model ea_localid="123" type="Object" name="validate ticket cancel time limit"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF">
+					<model ea_localid="124" type="Object" name="ticket db"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="104"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4">
+				<source xmi:idref="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A">
+					<model ea_localid="122" type="Object" name="validate ticket id"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Unspecified;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4">
+					<model ea_localid="123" type="Object" name="validate ticket cancel time limit"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="103"/>
+				<properties ea_type="Association" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_23C4EFAF_C20A_467f_AF9E_ABA613186AB1">
+				<source xmi:idref="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9">
+					<model ea_localid="96" type="Actor" name="User"/>
+					<role visibility="Public"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style value="Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02">
+					<model ea_localid="97" type="Sequence" name="Book Ticket Page"/>
+					<role visibility="Public"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="true"/>
+					<style value="Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="73"/>
+				<properties name="fill required information for tickets" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="1" headStyle="0" lineStyle="0"/>
+				<labels mt="fill required information for tickets()"/>
+				<extendedProperties stateflags="Activation=0;ExtendActivationUp=0;" virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="$LLB=;LLT=;LMT=CX=130:CY=26:OX=17:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=194;PtStartY=-135;PtEndX=377;PtEndY=-135;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_7B04D550_0D7D_4b1c_A57A_811B0AD69AF4">
+				<source xmi:idref="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02">
+					<model ea_localid="97" type="Sequence" name="Book Ticket Page"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89">
+					<model ea_localid="98" type="Sequence" name="Tickets  Info Validation"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="75"/>
+				<properties name="validate tickt information" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="2" headStyle="0" lineStyle="0"/>
+				<labels mt="validate tickt information()"/>
+				<extendedProperties stateflags="Activation=0;" virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=-3;EX=0;EY=0;$LLB=;LLT=;LMT=CX=120:CY=26:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=387;PtStartY=-173;PtEndX=552;PtEndY=-173;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_06786B11_A327_4844_8501_C2A735F42E08">
+				<source xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89">
+					<model ea_localid="98" type="Sequence" name="Tickets  Info Validation"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02">
+					<model ea_localid="97" type="Sequence" name="Book Ticket Page"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="96"/>
+				<properties name="no tickets error" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="4" headStyle="0" lineStyle="0"/>
+				<labels mt="no tickets error()"/>
+				<extendedProperties virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=0;EX=0;EY=0;$LLB=;LLT=;LMT=CX=78:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=552;PtStartY=-243;PtEndX=392;PtEndY=-243;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_3F4A7CED_F583_4c01_A3FB_4619B91A950E">
+				<source xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89">
+					<model ea_localid="98" type="Sequence" name="Tickets  Info Validation"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02">
+					<model ea_localid="97" type="Sequence" name="Book Ticket Page"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="100"/>
+				<properties name="sucess notice for saving ticket purchase" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="8" headStyle="0" lineStyle="0"/>
+				<labels mt="sucess notice for saving ticket purchase()"/>
+				<extendedProperties virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=0;EX=0;EY=0;$LLB=;LLT=;LMT=CX=142:CY=26:OX=24:OY=-2:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=552;PtStartY=-398;PtEndX=392;PtEndY=-398;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2">
+				<source xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89">
+					<model ea_localid="98" type="Sequence" name="Tickets  Info Validation"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631">
+					<model ea_localid="113" type="Sequence" name="Ticket Info Store"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="94"/>
+				<properties name="request ticket information" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="3" headStyle="0" lineStyle="0"/>
+				<labels mt="request ticket information()"/>
+				<extendedProperties stateflags="Activation=0;" virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=0;EX=0;EY=0;$LLB=;LLT=;LMT=CX=130:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=562;PtStartY=-208;PtEndX=834;PtEndY=-208;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_910BDAF0_EC5E_4348_8159_2368383551D7">
+				<source xmi:idref="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4">
+					<model ea_localid="99" type="Sequence" name="Tickets Management"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631">
+					<model ea_localid="113" type="Sequence" name="Ticket Info Store"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="98"/>
+				<properties name="save ticket purchase records" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="6" headStyle="0" lineStyle="0"/>
+				<labels mt="save ticket purchase records()"/>
+				<extendedProperties stateflags="Activation=0;" virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=0;EX=0;EY=0;$LLB=;LLT=;LMT=CX=141:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=716;PtStartY=-328;PtEndX=834;PtEndY=-328;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_B733D818_C79D_4175_AA29_9E0EA5007392">
+				<source xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89">
+					<model ea_localid="98" type="Sequence" name="Tickets  Info Validation"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4">
+					<model ea_localid="99" type="Sequence" name="Tickets Management"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="97"/>
+				<properties name="save ticket purpase information" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="5" headStyle="0" lineStyle="0"/>
+				<labels mt="save ticket purpase information()"/>
+				<extendedProperties virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=-15;EX=0;EY=0;$LLB=;LLT=;LMT=CX=156:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=562;PtStartY=-293;PtEndX=706;PtEndY=-293;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_EB041E12_4A90_46f8_B54C_B063AE5A6DE3">
+				<source xmi:idref="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4">
+					<model ea_localid="99" type="Sequence" name="Tickets Management"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_19994392_AF74_49a4_9465_EB1925772F89">
+					<model ea_localid="98" type="Sequence" name="Tickets  Info Validation"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="99"/>
+				<properties name="save success" ea_type="Sequence" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="1" linecolor="-1" linewidth="0" seqno="7" headStyle="0" lineStyle="0"/>
+				<labels mt="save success()"/>
+				<extendedProperties virtualInheritance="0" diagram="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF" privatedata1="Synchronous" privatedata2="retval=void;" privatedata3="Call" privatedata4="0" privatedata5="SX=0;SY=0;EX=0;EY=0;$LLB=;LLT=;LMT=CX=67:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;" sequence_points="PtStartX=706;PtStartY=-363;PtEndX=567;PtEndY=-363;"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B">
+				<source xmi:idref="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE">
+					<model ea_localid="136" type="Activity" name="save transfer records"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B">
+					<model ea_localid="138" type="StateNode" name="end"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="119"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_9E14B84F_FD16_4155_99F9_C92E4ACE54F1">
+				<source xmi:idref="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79">
+					<model ea_localid="135" type="Activity" name="confirm transferring"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE">
+					<model ea_localid="136" type="Activity" name="save transfer records"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="118"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_7BB8D96A_8AE3_40ae_886E_2AA21B1A77C0">
+				<source xmi:idref="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6">
+					<model ea_localid="133" type="Activity" name="query ticket record by id"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC">
+					<model ea_localid="134" type="Decision"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="115"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_F30B6F03_CDA8_4863_B10A_8ADB2BAD479F">
+				<source xmi:idref="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49">
+					<model ea_localid="132" type="Activity" name="fill ticket id for transferring"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6">
+					<model ea_localid="133" type="Activity" name="query ticket record by id"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="114"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_27009B2A_E39A_40a6_A291_8C094A905776">
+				<source xmi:idref="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC">
+					<model ea_localid="134" type="Decision"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_E12A6F48_6B28_452e_990F_0415E300DD64">
+					<model ea_localid="137" type="StateNode" name="end"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="116"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_39B86C81_5A34_4393_AF8C_17961EAED2A7">
+				<source xmi:idref="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC">
+					<model ea_localid="134" type="Decision"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79">
+					<model ea_localid="135" type="Activity" name="confirm transferring"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="117"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_B1846571_003C_4709_B17E_1FE007A3E54D">
+				<source xmi:idref="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82">
+					<model ea_localid="131" type="StateNode" name="start"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49">
+					<model ea_localid="132" type="Activity" name="fill ticket id for transferring"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="113"/>
+				<properties ea_type="ControlFlow" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_A2362B52_A066_492c_991A_CE8697C239DD">
+				<source xmi:idref="EAID_94CA7A37_BBA7_402f_ACAF_6D6BEA9EEEAD">
+					<model ea_localid="11" type="Note" name="Note"/>
+					<role visibility="Public"/>
+					<type aggregation="none"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_2C50E985_4DED_4c35_A5CF_A18BB4D94F0D">
+					<model ea_localid="15" type="Boundary" name="System Boundary"/>
+					<role visibility="Public"/>
+					<type aggregation="none"/>
+					<constraints/>
+					<modifiers isOrdered="false" isNavigable="false"/>
+					<style/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="1"/>
+				<properties ea_type="NoteLink"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="0" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+		</connectors>
+		<primitivetypes>
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPrimitiveTypesPackage" name="EA_PrimitiveTypes_Package" visibility="public">
+				<packagedElement xmi:type="uml:Package" xmi:id="EAJavaTypesPackage" name="EA_Java_Types_Package" visibility="public">
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_int" name="int" visibility="public">
+						<generalization xmi:type="uml:Generalization" xmi:id="EAJava_int_General">
+							<general href="http://schema.omg.org/spec/UML/2.1/uml.xml#Integer"/>
+						</generalization>
+					</packagedElement>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_void" name="void" visibility="public"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_String" name="String" visibility="public"/>
+				</packagedElement>
+			</packagedElement>
+		</primitivetypes>
+		<profiles>
+			<uml:Profile xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1/" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmi:id="thecustomprofile" nsPrefix="thecustomprofile" name="thecustomprofile" metamodelReference="mmref01">
+				<ownedComment xmi:type="uml:Comment" xmi:id="comment01" annotatedElement="thecustomprofile">
+					<body> Version:1.0</body>
+				</ownedComment>
+				<packageImport xmi:id="mmref01">
+					<importedPackage href="http://schema.omg.org/spec/UML/2.1/"/>
+				</packageImport>
+				<packagedElement xmi:type="uml:Stereotype" xmi:id="control" name="control">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="control-base_InstanceSpecification" name="base_InstanceSpecification" association="InstanceSpecification_control">
+						<type href="http://schema.omg.org/spec/UML/2.1/InstanceSpecification"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Extension" xmi:id="InstanceSpecification_control" name="A_InstanceSpecification_control" memberEnd="extension_control control-base_InstanceSpecification">
+					<ownedEnd xmi:id="extension_control" name="extension_control" type="control" isComposite="true" lower="0" upper="1" memberEnd="extension_control control-base_InstanceSpecification"/>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Stereotype" xmi:id="boundary" name="boundary">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="boundary-base_InstanceSpecification" name="base_InstanceSpecification" association="InstanceSpecification_boundary">
+						<type href="http://schema.omg.org/spec/UML/2.1/InstanceSpecification"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Extension" xmi:id="InstanceSpecification_boundary" name="A_InstanceSpecification_boundary" memberEnd="extension_boundary boundary-base_InstanceSpecification">
+					<ownedEnd xmi:id="extension_boundary" name="extension_boundary" type="boundary" isComposite="true" lower="0" upper="1" memberEnd="extension_boundary boundary-base_InstanceSpecification"/>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Stereotype" xmi:id="entity" name="entity">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="entity-base_InstanceSpecification" name="base_InstanceSpecification" association="InstanceSpecification_entity">
+						<type href="http://schema.omg.org/spec/UML/2.1/InstanceSpecification"/>
+					</ownedAttribute>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Extension" xmi:id="InstanceSpecification_entity" name="A_InstanceSpecification_entity" memberEnd="extension_entity entity-base_InstanceSpecification">
+					<ownedEnd xmi:id="extension_entity" name="extension_entity" type="entity" isComposite="true" lower="0" upper="1" memberEnd="extension_entity entity-base_InstanceSpecification"/>
+				</packagedElement>
+			</uml:Profile>
+		</profiles>
+		<diagrams>
+			<diagram xmi:id="EAID_5BCF58D0_0EA0_41d7_859E_519D6D86CA32">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" localID="1" owner="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B"/>
+				<properties name="Use Case Model" type="Use Case"/>
+				<project author="flyqk" version="1.0" created="2017-02-07 17:03:48" modified="2017-12-05 11:40:59"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=0;HighlightForeign=0;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.0;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.0;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=68A6CE6C;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=537;Top=294;Right=725;Bottom=464;" subject="EAID_700FD05C_DA7D_4ab2_BE17_C784EBD2D480" seqno="1" style="DUID=188A4B56;"/>
+					<element geometry="Left=537;Top=26;Right=728;Bottom=235;" subject="EAID_00E2DED5_3EB0_45ea_BB08_4CD1EB99DAFA" seqno="2" style="DUID=19FB7FE2;"/>
+					<element geometry="Left=47;Top=333;Right=257;Bottom=359;" subject="EAID_A7311764_5D94_4ac8_8465_658EBE0F83B9" seqno="3" style="HideIcon=0;DUID=4D83E88E;"/>
+					<element geometry="Left=47;Top=275;Right=257;Bottom=305;" subject="EAID_0D1B06EE_3FCE_444a_A419_29CFE93B04E4" seqno="4" style="HideIcon=0;DUID=6FAE7F32;"/>
+					<element geometry="Left=47;Top=305;Right=257;Bottom=335;" subject="EAID_311155A1_FB1B_4feb_BC96_CD87139A6BA6" seqno="5" style="HideIcon=0;DUID=BA633CDA;"/>
+					<element geometry="Left=336;Top=295;Right=476;Bottom=387;" subject="EAID_4112AB1B_31D0_4e58_B54E_3F0658851738" seqno="6" style="DUID=9E8CC544;"/>
+					<element geometry="Left=336;Top=34;Right=476;Bottom=124;" subject="EAID_B08C3057_72D6_4e17_828C_66330DFCAA30" seqno="7" style="DUID=54B02F27;"/>
+					<element geometry="Left=21;Top=35;Right=285;Bottom=258;" subject="EAID_83B73F73_BDA0_4df3_ACF1_0E1E7A3F7525" seqno="8" style="LCol=8355711;BCol=14745599;BFol=2631720;LWth=1;DUID=6244368E;"/>
+					<element geometry="EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;Path=;" subject="EAID_9197388F_1B0D_47da_9588_A0B11FC33DB0" style="Mode=3;EOID=10F4B602;SOID=C898EFE4;Hidden=0;"/>
+					<element geometry="EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;Path=;" subject="EAID_1A8F8957_CF34_493c_AF86_B37426DC6877" style="Mode=3;EOID=B5334E7F;SOID=74ED1616;Hidden=0;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_5843FD6B_FCDA_4f65_9A32_E1DA55F6D065">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" localID="6" owner="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B"/>
+				<properties name="Domain Model" type="Logical"/>
+				<project author="Kan Qi" version="1.0" created="2017-12-01 13:36:58" modified="2017-12-15 13:02:56"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=1;DocSize.cx=850;DocSize.cy=1098;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=1;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=6325B359;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=141;Top=191;Right=265;Bottom=261;" subject="EAID_DB1C34DE_E1DA_4634_8454_B3E9A6E55224" seqno="1" style="DUID=CA12BE35;"/>
+					<element geometry="Left=309;Top=74;Right=430;Bottom=144;" subject="EAID_A2005B87_8BE7_4869_9CC6_2F5C7E80F893" seqno="2" style="DUID=ED5EDF78;"/>
+					<element geometry="Left=40;Top=21;Right=230;Bottom=101;" subject="EAID_BA78D637_2FF8_42d4_B0CA_2B07F4EC5584" seqno="3" style="DUID=7DD3359F;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_D55A2811_2E32_442d_ACDF_565ED8CA6DE6">
+				<model package="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B" localID="24" owner="EAPK_9BB5B7FD_1278_467a_8BBF_B67C1422202B"/>
+				<properties name="Use Case Model" type="Logical"/>
+				<project author="flyqk" version="1.0" created="2018-10-26 19:13:48" modified="2018-10-26 19:15:39"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=1;DocSize.cx=850;DocSize.cy=1098;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=1;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=17A00981;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-13,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=54;Top=46;Right=157;Bottom=116;" subject="EAID_7A6B2F43_766E_4197_B3AB_7518F2447A18" seqno="1" style="DUID=72C4E553;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_169988F5_31C4_4dbd_9DA3_68FA41D12F12">
+				<model package="EAPK_B08C3057_72D6_4e17_828C_66330DFCAA30" localID="2" owner="EAPK_B08C3057_72D6_4e17_828C_66330DFCAA30"/>
+				<properties name="Actors" type="Use Case"/>
+				<project version="1.0" created="2017-02-07 17:03:48" modified="2017-02-07 17:03:48"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=0;HighlightForeign=0;PackageContents=0;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="SaveTag=60919E1C;ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=0;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=1;ufh=0;cls=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=160;Top=130;Right=210;Bottom=230;" subject="EAID_2AAA8D64_1D74_4a6c_B5F7_BCC99B65A011" seqno="1" style="DUID=E4A4A0F7;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_9F211BFD_043A_400c_A60F_F1909FC3B4C3">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" localID="3" owner="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738"/>
+				<properties name="Primary Use Cases" type="Use Case"/>
+				<project author="flyqk" version="1.0" created="2017-02-07 17:03:48" modified="2017-12-05 11:42:23"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=0;HighlightForeign=0;PackageContents=0;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=EFA0E90E;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=573;Top=48;Right=736;Bottom=130;" subject="EAID_94CA7A37_BBA7_402f_ACAF_6D6BEA9EEEAD" seqno="1" style="DUID=7538E724;"/>
+					<element geometry="Left=77;Top=162;Right=127;Bottom=262;" subject="EAID_2AAA8D64_1D74_4a6c_B5F7_BCC99B65A011" seqno="2" style="DUID=2E2016B3;"/>
+					<element geometry="Left=236;Top=96;Right=501;Bottom=443;" subject="EAID_2C50E985_4DED_4c35_A5CF_A18BB4D94F0D" seqno="3" style="DUID=2B3B0983;"/>
+					<element geometry="SX=-14;SY=40;EX=-14;EY=44;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_A2362B52_A066_492c_991A_CE8697C239DD" style="Mode=3;EOID=2B3B0983;SOID=7538E724;Color=-1;LWidth=0;Hidden=0;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_712C64FC_0D41_4fde_A0D8_1F1826B269CF">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" localID="23" owner="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" parent="EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C"/>
+				<properties name="purchace ticket" type="Sequence"/>
+				<project author="flyqk" version="1.0" created="2017-12-19 00:00:00" modified="2019-07-14 07:52:35"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=1;DocSize.cx=850;DocSize.cy=1098;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=1;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=0;INT_ARGS=;INT_RET=;INT_ATT=;SeqTopMargin=50;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=446018EA;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=329;Top=218;Right=862;Bottom=422;" subject="EAID_3714857B_9264_4e55_ADFD_5681185A9CC3" seqno="1" style="DUID=D31C8146;"/>
+					<element geometry="Left=814;Top=50;Right=864;Bottom=457;" subject="EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631" seqno="2" style="DUID=DFC37082;"/>
+					<element geometry="Left=666;Top=50;Right=756;Bottom=457;" subject="EAID_14839A14_4779_4d40_A335_BF341E9AA7F4" seqno="3" style="DUID=462FBBEC;ImageID=0;"/>
+					<element geometry="Left=496;Top=50;Right=619;Bottom=457;" subject="EAID_19994392_AF74_49a4_9465_EB1925772F89" seqno="4" style="DUID=64D2A90F;ImageID=0;"/>
+					<element geometry="Left=333;Top=50;Right=431;Bottom=457;" subject="EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02" seqno="5" style="DUID=579380B8;ImageID=0;"/>
+					<element geometry="Left=144;Top=50;Right=234;Bottom=457;" subject="EAID_0BC8C2F9_2B60_42fb_9A53_3CAE4412A2F9" seqno="6" style="DUID=7ADCEBAB;ImageID=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_23C4EFAF_C20A_467f_AF9E_ABA613186AB1" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_7B04D550_0D7D_4b1c_A57A_811B0AD69AF4" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_06786B11_A327_4844_8501_C2A735F42E08" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_B733D818_C79D_4175_AA29_9E0EA5007392" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_910BDAF0_EC5E_4348_8159_2368383551D7" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_EB041E12_4A90_46f8_B54C_B063AE5A6DE3" style=";Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;Path=;" subject="EAID_3F4A7CED_F583_4c01_A3FB_4619B91A950E" style=";Hidden=0;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_CDE5E0F6_642C_44e7_A42D_677619C0D391">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" localID="26" owner="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" parent="EAID_7D4F528B_4BD5_4c5d_855C_DE5189E6812E"/>
+				<properties name="cancel ticket" type="Analysis"/>
+				<project author="UMLxUser" version="1.0" created="2019-07-14 07:55:30" modified="2019-07-14 07:58:53"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=1;DocSize.cx=752;DocSize.cy=1000;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=1;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=891B5F03;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=416;Top=271;Right=466;Bottom=344;" subject="EAID_B7164378_FDF2_421e_B68C_20E1B67B063D" seqno="1" style="DUID=05448428;"/>
+					<element geometry="Left=236;Top=288;Right=286;Bottom=348;" subject="EAID_0023766B_1282_4083_A265_AF074826784D" seqno="2" style="DUID=7EC30BE0;"/>
+					<element geometry="Left=225;Top=182;Right=275;Bottom=242;" subject="EAID_6F313E2B_EBD9_446c_A5B8_8AAAA3F2DD80" seqno="3" style="DUID=53C56F2A;"/>
+					<element geometry="Left=566;Top=66;Right=616;Bottom=126;" subject="EAID_BEEC285A_7437_4e6e_99B4_EBE75AE423BF" seqno="4" style="DUID=3C818EFE;"/>
+					<element geometry="Left=368;Top=164;Right=418;Bottom=237;" subject="EAID_9B093309_F6D1_4526_9D4E_8990A08321E4" seqno="5" style="DUID=45712B48;"/>
+					<element geometry="Left=336;Top=57;Right=386;Bottom=117;" subject="EAID_C94E9E3F_6B54_4cb6_A1B4_1D9CA6409F7A" seqno="6" style="DUID=B094307E;"/>
+					<element geometry="Left=226;Top=51;Right=276;Bottom=111;" subject="EAID_EA5AD6CE_3FB4_4b5c_A873_027F26F866C4" seqno="7" style="DUID=4BB0A00A;"/>
+					<element geometry="Left=116;Top=70;Right=161;Bottom=160;" subject="EAID_5DD15D17_5F21_4333_BC19_74B374B0EC27" seqno="8" style="DUID=6E105310;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_209839DC_74EF_4e20_9365_5945E5C2E00A" style="Mode=3;EOID=53C56F2A;SOID=45712B48;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_7CC4A11F_8D09_4e55_8D52_6CB54423FEEF" style="Mode=3;EOID=3C818EFE;SOID=45712B48;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_1F629598_31E0_4316_ABAA_F7744CAB02F4" style="Mode=3;EOID=45712B48;SOID=B094307E;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_83443A16_4C36_42bd_88AA_D3DA430A4C77" style="Mode=3;EOID=B094307E;SOID=4BB0A00A;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_CE21D727_7EC5_492c_B009_04394B774945" style="Mode=3;EOID=4BB0A00A;SOID=6E105310;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_C0B41124_8B33_4cf9_9434_F3BC588A1519" style="Mode=3;EOID=53C56F2A;SOID=B094307E;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_A3F9B0CA_341D_486e_AEB8_26AAC7C03A5B" style="Mode=3;EOID=7EC30BE0;SOID=6E105310;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_410BA824_1FC8_422e_86F8_F95C78893E1F" style="Mode=3;EOID=53C56F2A;SOID=6E105310;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_ADA2BCA1_F6FC_45cf_B498_CF9A218F1DA4" style="Mode=3;EOID=7EC30BE0;SOID=05448428;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_6A914B14_4092_4327_A334_70D340F82113" style="Mode=3;EOID=3C818EFE;SOID=B094307E;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_2AA96DB4_0CDA_4b27_8CE2_B82098DE89FD" style="Mode=3;EOID=3C818EFE;SOID=05448428;Color=-1;LWidth=0;Hidden=0;"/>
+				</elements>
+			</diagram>
+			<diagram xmi:id="EAID_465DF87C_A1D5_485f_9F47_A4A994FEFE98">
+				<model package="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" localID="27" owner="EAPK_4112AB1B_31D0_4e58_B54E_3F0658851738" parent="EAID_593A9D36_A4CE_4e18_8A07_CB46F8B196FB"/>
+				<properties name="ticket transfer" type="Activity"/>
+				<project author="UMLxUser" version="1.0" created="2019-07-14 08:01:47" modified="2019-07-14 08:05:58"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=1;PPgs.cy=1;DocSize.cx=752;DocSize.cy=1000;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=1;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=E54FAC21;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=0;ufh=0;cls=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=633;Top=157;Right=653;Bottom=177;" subject="EAID_6081359C_BE0A_4ecd_ACB6_9EE0059D2A0B" seqno="1" style="DUID=4DB80F81;LBL=CX=18:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:ALT=0:ROT=0;"/>
+					<element geometry="Left=371;Top=69;Right=391;Bottom=89;" subject="EAID_E12A6F48_6B28_452e_990F_0415E300DD64" seqno="2" style="DUID=65301FB6;LBL=CX=18:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:ALT=0:ROT=0;"/>
+					<element geometry="Left=454;Top=139;Right=557;Bottom=187;" subject="EAID_E05E509F_048B_487c_A2A6_3F23D62DE9AE" seqno="3" style="DUID=3A231FA8;"/>
+					<element geometry="Left=360;Top=289;Right=462;Bottom=330;" subject="EAID_1F30AC31_9695_4358_9DC5_1D0BB3B9BA79" seqno="4" style="DUID=86FAB9DB;"/>
+					<element geometry="Left=383;Top=137;Right=409;Bottom=171;" subject="EAID_B646FC6D_3B41_4568_86C9_1FE113DFC7AC" seqno="5" style="DUID=02C611ED;"/>
+					<element geometry="Left=219;Top=129;Right=326;Bottom=177;" subject="EAID_6651F33E_5766_46a2_8E40_B581A7080FD6" seqno="6" style="DUID=05D119BA;"/>
+					<element geometry="Left=217;Top=290;Right=320;Bottom=328;" subject="EAID_C87BB0F8_669F_4ee4_AEC2_B82DCE3EFF49" seqno="7" style="DUID=8DDA986B;"/>
+					<element geometry="Left=150;Top=294;Right=170;Bottom=314;" subject="EAID_E6FF6C1B_8862_4ce3_B802_A455029A4E82" seqno="8" style="DUID=F59AD316;LBL=CX=23:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:ALT=0:ROT=0;"/>
+					<element geometry="Left=111;Top=55;Right=481;Bottom=230;" subject="EAID_7940A824_A513_4d72_BEA2_D776EAEEE4B8" seqno="9" style="Dockable=on;DUID=06553AF4;"/>
+					<element geometry="Left=111;Top=230;Right=481;Bottom=405;" subject="EAID_8609EE2D_7B59_43c9_9BBE_4A68C5CDAE5D" seqno="10" style="Dockable=on;DUID=B514BD25;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_B1846571_003C_4709_B17E_1FE007A3E54D" style="Mode=3;EOID=8DDA986B;SOID=F59AD316;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_CA5E349E_A312_4fae_9B9F_95E168BCAF7B" style="Mode=3;EOID=4DB80F81;SOID=3A231FA8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_9E14B84F_FD16_4155_99F9_C92E4ACE54F1" style="Mode=3;EOID=3A231FA8;SOID=86FAB9DB;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_39B86C81_5A34_4393_AF8C_17961EAED2A7" style="Mode=3;EOID=86FAB9DB;SOID=02C611ED;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_27009B2A_E39A_40a6_A291_8C094A905776" style="Mode=3;EOID=65301FB6;SOID=02C611ED;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_7BB8D96A_8AE3_40ae_886E_2AA21B1A77C0" style="Mode=3;EOID=02C611ED;SOID=05D119BA;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_F30B6F03_CDA8_4863_B10A_8ADB2BAD479F" style="Mode=3;EOID=05D119BA;SOID=8DDA986B;Color=-1;LWidth=0;Hidden=0;"/>
+				</elements>
+			</diagram>
+		</diagrams>
+	</xmi:Extension>
+</xmi:XMI>
