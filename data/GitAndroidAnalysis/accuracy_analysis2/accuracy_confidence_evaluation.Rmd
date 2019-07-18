@@ -229,6 +229,45 @@ cvRankResults <- cvRankResults[,-1]
 
 print(round(cvRankResults,2))
 
+
+# draw histogram base on ranking
+library(ggplot2)
+modelsName = rownames(cvRankResults)
+p <- list()
+for(i in 1:length(accuracy_metrics)){
+  g = paste("rank", i, sep = "")
+  selectedData <- cvRankResults[names(cvRankResults) == g]
+  names(selectedData) <- c("rank");
+  p[[i]] <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+    geom_bar(stat="identity", colour = "black", width = 0.7) + 
+    #scale_y_discrete(expand = c(0, 0)) + 
+    guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
+    geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
+    #ggtitle(accuracy_metrics[i]) +
+    labs(caption=toupper(accuracy_metrics[i])) + 
+    theme(plot.caption = element_text(hjust=0.5, size=rel(1)),
+          #axis.line=element_blank(),
+          axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank())
+}
+
+library("cowplot")
+
+prow <- plot_grid( p[[1]] + theme(legend.position="none"),
+                   p[[2]] + theme(legend.position="none"),
+                   p[[3]] + theme(legend.position="none"),
+                   p[[4]] + theme(legend.position="none"),
+                   p[[5]] + theme(legend.position="none"),
+                   p[[6]] + theme(legend.position="none"),
+                   align = 'vh',
+                   hjust = -1,
+                   nrow = 1
+                  )
+legend_b <- get_legend(p[[1]] + theme(legend.position="bottom", legend.justification="center"))
+title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='bold')
+p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2 , 1, .1))
+p_cvRank
+
+
 ```
 
 ```{r evaluate overlapping of 84% confidence intervals}
@@ -367,18 +406,21 @@ for(metric_i in 1:length(accuracy_metrics)){
   for(i in 1:nrow(selectedData)){
     if(selectedData$BH_p_value[i] < 0.05){
     if(selectedData$direction[i] == "+"){
-      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = 1
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$bonferroni_p_value[i], 3)
     }else if(selectedData$direction[i] == "-"){
-      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = 1
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$bonferroni_p_value[i], 3)
     }
     }
   }
+  
+  edge_val <- c() 
   # if A -> B -> C, remove edge A -> C
   for(i in 1:length(models)){
     for(j in 1:length(models)){
-      if(m[i,j] == 1){
+      if(m[i,j] != 0){
+        edge_val <- c(edge_val, m[i,j]) 
         for(k in 1:length(models)){
-          if(m[j,k] == 1)
+          if(m[j,k] != 0)
             m[i,k] = 0
         }
       }
@@ -386,10 +428,20 @@ for(metric_i in 1:length(accuracy_metrics)){
   }
   
   #plot the directed graph
+  model_mean <- matrix(0, nrow = length(models), byrow = FALSE)
+  rownames(model_mean) <- names(models)
+  colnames(model_mean) <- "mean"
+  for(i in 1:nrow(selectedData)){
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$model1_mean, 3)
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model2)] = round(selectedData[i,]$model2_mean, 3)
+  }
+
   net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
-  plot.igraph(net,vertex.label=V(net)$name, layout=layout.fruchterman.reingold, 
-              vertex.color="white", vertex.label.color="black", vertex.size=25, 
-              edge.color="black",edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  
+  plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold,
+              vertex.color="white", vertex.label.color="black", vertex.size=25,
+              edge.color="black", edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  
   title(main = metric_labels[metric_i])
 }
 
