@@ -4,12 +4,34 @@ html
         link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
         link(href='css/style.css', rel='stylesheet')
     body
-        div.banner
-            div.content-flex
-                div.col-md-10.banner-title
-                    a.home-button(href='/') UMLx
-                a(href="/login")
-                    button.no-border.login-button Login
+        //- div.banner
+        //-     div.content-flex
+        //-         div.col-md-10.banner-title
+        //-             a.home-button(href='/') UMLx
+        //-         a(href="/login")
+        //-             button.no-border.login-button Login
+        nav.navbar.navbar-default
+            div.container-fluid
+                <!-- Brand and toggle get grouped for better mobile display -->
+                div.navbar-header
+                    button.navbar-toggle.collapse(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/") UMLx
+                
+                div.navbar-right
+                    ul.nav.navbar-nav
+                        li
+                            a.nav.navbar-nav.navbar-right(href='/login' aria-expanded="true", onclick='overviewClicked()') login
+                    //- li.dropdown
+                    //-     a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") Menu
+                    //-         span.caret
+                    //-     ul.dropdown-menu
+                    //-         li
+                    //-             a(role="tab", data-toggle="tab", href='/' aria-expanded="true", onclick='overviewClicked()') login
+
         if message
             div.message-box
             p.message-text message:#{message}

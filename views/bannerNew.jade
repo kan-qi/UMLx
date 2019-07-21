@@ -1,0 +1,29 @@
+nav.navbar.navbar-default
+  div.container-fluid
+    <!-- Brand and toggle get grouped for better mobile display -->
+    div.navbar-header
+      button.navbar-toggle.collapse(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href="/") UMLx
+
+    ul.nav.navbar-nav.navbar-right
+      li.dropdown
+        a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") Menu
+          span.caret
+        ul.dropdown-menu
+          li
+            a(role="tab", data-toggle="tab", href='#main_page' aria-expanded="true", onclick='overviewClicked()') Overview
+          li
+            a(role="tab",data-toggle="tab", href='#repo_trending', onclick='trendingClicked()') Trending
+          li
+            a(role="tab",data-toggle="tab", href='#project_list', onclick='projectClicked()') Projects 
+              span(id="modelNum", class="badge") #{modelAllNum}
+          li
+            a(role="tab",data-toggle="tab", id='modelArchive', href='#repo_archive', data-url='#{repoInfo.OutputDir}', onclick='archiveClicked(this)') Archives
+          li
+            a(role="tab", data-toggle="tab", href="#profile", onclick='profileClicked()') Profile
+          li
+            a(role="tab", href='/logout') Log Out

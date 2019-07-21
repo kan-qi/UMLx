@@ -723,12 +723,12 @@ app.get('/signup',function(req,res){
 	if(req.query.tk!=null && req.query.tk!=undefined){
 		res.render('signup', {tk:req.query.tk});
 	} else {
-	res.render('signup');
+	res.render('signupNew');
 	}
 });
 
 app.get('/login',function(req,res){
-	res.render('login');
+	res.render('loginNew');
 });
 
 app.get('/logout',function(req,res){

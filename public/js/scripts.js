@@ -37,8 +37,7 @@ function showLoading() {
     console.log(classList);
     classList.remove("hidden");
     console.log(classList);
-    console.log('a')
-    
+    console.log('a');
 }
 
 function setCookie(cname, cvalue, exdays) {
@@ -362,6 +361,7 @@ function predict_project_effort_func(repoID, show_loading_screen = true) {
             // hide loading
 
                 document.getElementById("loadingScreen").classList.add("hidden");
+                $(".form-container").css("padding-top", "80px");
                 console.log(response);
                 $("#estimation-result-panel-body").html(response);
                 $("#modelNum").text(Number($("#modelNum").text()) + 1);
@@ -2645,7 +2645,7 @@ function buildTable(data) {
                 // path = path.substring(7);
                 //console.log("path: " + path);
                 console.log(path);
-                out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=\"" + type[data[i].url] + "\" data-url=\"" + path + "\" onclick='walkDir(this)'>" +
+                out += "<tr><td><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=\"" + type[data[i].url] + "\" data-url=\"" + path + "\" onclick='walkDir(this)'>" +
                     newKeys[i] +
                     "</a></td><td>folder</td>";
                 out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
@@ -2668,27 +2668,27 @@ function buildTable(data) {
                 var path = parentUrl + "/" + newKeys[i];
                 // console.log("path: " + path);
                 if (newKeys[i].endsWith(".csv")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/csv.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/csv.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".txt")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/txt.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".svg")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/svg.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".json")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/json.png'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
@@ -2845,7 +2845,7 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "Folder") {
             var path = data[0].parent + "/" + newKeys[i];
             documentUrl = newKeys[i];
-            out += "<tr><td style='float:left'><img style='width:30px; height:25px; margin-right: 10px;' src='../img/folder-icon.png'><a href='#' class='file-link' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
+            out += "<tr><td><img style='width:30px; height:25px; margin-right: 10px;' src='../img/folder-icon.png'><a href='#' class='file-link' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
                 newKeys[i] +
                 "</a></td><td>folder</td>";
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
@@ -2861,27 +2861,27 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "File") {
             var path = data[0].parent + "/" + newKeys[i];
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;'  src='../img/csv.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
+                out += "<tr><td><img style='width:30px; height:30px; margin-right: 10px;'  src='../img/csv.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/txt.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
+                out += "<tr><td><img style='width:30px; height:30px; margin-right: 10px;' src='../img/txt.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/svg.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
+                out += "<tr><td><img style='width:30px; height:30px; margin-right: 10px;' src='../img/svg.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/json.png'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
+                out += "<tr><td><img style='width:30px; height:30px; margin-right: 10px;' src='../img/json.png'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:30px; height:30px; margin-right: 10px;' src='../img/emptyfile.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
+                out += "<tr><td><img style='width:30px; height:30px; margin-right: 10px;' src='../img/emptyfile.jpg'><a onclick='openFile(this)' class='file-link' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
@@ -2894,8 +2894,8 @@ function buildTable2(data) {
         }
     }
     out += "</table>";
-    out += "<div id='submitArchivesButton'><button class='btn btn-success' type='button' name='root' onclick='" + "submitSelectedArchives(this)" + "'>" + "Submit" + "</button>";
-    out += "<button class='btn btn-default' type='button' name='root' onclick='" + "clearSelectedArchives(this)" + "'>" + "Clear" + "</button></div>"
+    out += "<div id='submitArchivesButton'><button class='btn btn-primary' type='button' name='root' onclick='" + "submitSelectedArchives(this)" + "'>" + "Submit" + "</button>";
+    out += "<button class='btn btn-danger' type='button' name='root' onclick='" + "clearSelectedArchives(this)" + "'>" + "Clear" + "</button></div>"
     document.getElementById("displayRepoArchive").innerHTML = out;
 }
 
@@ -3352,6 +3352,7 @@ function archiveClicked(get) {
 }
 
 function profileClicked() {
+    document.getElementById('repo_trending').style.display = "none";
     document.getElementById('repo_archive').style.display = "none";
     document.getElementById('displayRepoArchive').style.display = "none";
 }
