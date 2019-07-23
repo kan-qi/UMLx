@@ -248,7 +248,7 @@ function generateSlocReport(repoListPath, repoRecordPath){
 var functionSelection = process.argv[2];
 var repoDesPath = process.argv[3];
 
-var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath));
+var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath).trim());
 
 //1. create a list of projects:
  		
