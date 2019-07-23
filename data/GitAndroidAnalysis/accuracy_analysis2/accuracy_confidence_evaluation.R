@@ -19,10 +19,87 @@ predR <- function(mre, predRange) {
   eval_pred
 }
 
+modelProfile <- function(models, dataset){
+  #dataset <- modelData
+  #models <- trainedModels
+  profileData <- matrix(nrow=nrow(dataset), ncol=0)
+  profileData <- as.data.frame(profileData)
+  rownames <-rownames(dataset)
+  rownames(profileData) <- rownames
+  
+  modelNames = names(models)
+  print(modelNames)
+  
+  nmodels <- length(modelNames)
+  
+  for(i in 1:nmodels){
+    modelName <- modelNames[i]
+    
+    print(modelName)
+    
+    model_profile_data = m_profile(models[[i]], dataset)
+    
+    colnames <- colnames(model_profile_data)
+    
+    for(j in 1:length(colnames)){
+     profileData[, colnames[j]] <- model_profile_data[, colnames[j]]
+    }
+    
+  }
+  
+  profileData
+}
+
+modelSave <- function(models){
+  
+}
+
+#the batch method to train the models.
+modelTrain <- function(models, dataset){
+  trainedModels = list()
+  
+  modelNames = names(models)
+  
+  nmodels <- length(modelNames)
+  
+  for(i in 1:nmodels){
+    modelName <- modelNames[i]
+    
+    print(modelName)
+    
+    model = fit(dataset, modelNames[i], models[[i]])
+    
+    trainedModels[[modelName]] = model
+  }
+  
+  trainedModels
+}
+
+#the batach method to predict with all the trained models
+modelPredict <- function(models, dataset){
+  predictions = list()
+  
+  modelNames = names(models)
+  
+  nmodels <- length(modelNames)
+  
+  for(i in 1:nmodels){
+    modelName <- modelNames[i]
+    
+    print(modelName)
+
+    
+    predictions[[modelName]] = m_predict(models[[modelName]], dataset)
+  }
+  
+  predictions
+}
+
 #modelBenchmark would preform both cross validation and bootrapping significance test
 modelBenchmark <- function(models, dataset){
   #evaluating the goodness of fit for the compared models: R^2 and Eta. Squared (for the standardized effect size)
-  goodness_fit_metrics <- c("R2", "eta-squared")
+  #dataset <- modelData
+  goodness_fit_metrics <- c("R2")
   fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
@@ -38,8 +115,10 @@ modelBenchmark <- function(models, dataset){
 }
 
 evalFit <- function(models, dataset, fit_metrics){
+  #dataset = modelData
   
   modelNames = names(models)
+  #print(modelNames)
   
   nmodels <- length(modelNames)
   
@@ -50,10 +129,12 @@ evalFit <- function(models, dataset, fit_metrics){
   for(j in 1:nmodels){
     modelName <- modelNames[j]
     
-    print(modelName)
+    print(modelNames[j])
+    
+    eval_metric_results[[modelName]] = list()
     
     model = fit(dataset, modelNames[j], models[[j]])
-    
+    #model = structure(model, class="klasso_lnr")
     predicted = m_predict(model, dataset)
     
     #print(predicted)
@@ -62,12 +143,41 @@ evalFit <- function(models, dataset, fit_metrics){
     #print(actual)
     
     intersectNames <- intersect(names(predicted), names(actual))
+    #print(intersectNames)
     
     model_eval_fit = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
     #print(model_eval_predict)
     
+    eval_metric_results[[modelName]]$model_eval_fit = model_eval_fit
+    
     #calculate R2 and Eta-squared based on the predicted and actual values.
-    #add the evaluationr esults to the "eval_metric_results"
+    #eta_squared may not be applicable
+    #npoints <- nrow(model_eval_fit)
+    #grouping <- c(1:npoints, 1:npoints)
+    #anova <- aov( c(model_eval_fit$predicted, model_eval_fit$actual) ~ grouping )
+    #eta_squared <- etaSquared(anova)[1,1]
+    #print(eta_squared)
+    
+    if("R2" %in% fit_metrics){
+    meanActual <- mean(model_eval_fit$actual)
+    eval_metric_results[[modelName]]$r_squared <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
+    #print(r_squared)
+    }
+    
+    #f-test
+    if("f-test" %in% fit_metrics){
+    eval_metric_results[[modelName]]$f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)
+    }
+    
+    #LM <- lm( c(model_eval_fit$predicted, model_eval_fit$actual) ~ grouping );
+    #r_squared <- summary(LM)$r.squared
+    #print(r_squared)
+    
+    #add the evaluation results to the "eval_metric_results"
+    #eval_metric_results[[modelName]] = list(eta_squared = eta_squared, 
+    #                                        r_squared = r_squared,
+    #                                        model_eval_fit = model_eval_fit,
+    #                                        f_test = f_test)
   }
   
   eval_metric_results
@@ -116,6 +226,7 @@ for(i in 1:nfold){
 	eval_pred = c()
 	print(i)
 	for(j in 1:nmodels){
+	  #j = 2
 	  modelName <- modelNames[j]
 	  
 	  print(modelName)
@@ -145,23 +256,42 @@ for(i in 1:nfold){
 	  model_eval_mre <- na.omit(model_eval_mre)
 	  #print(model_eval_mre)
 	  
-	  model_eval_mmre = mmre(model_eval_mre)
-	  model_eval_pred15 = pred15(model_eval_mre)
-	  model_eval_pred25 = pred25(model_eval_mre)
-	  model_eval_pred50 = pred50(model_eval_mre)
-	  model_eval_mdmre = mdmre(model_eval_mre)
-	  model_eval_mae = sum(model_eval_mre)/length(model_eval_predict)
-	  eval_metrics <- c(
-	    eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
-	  )
+	  if("mmre" %in% accuracy_metrics){
+	    foldResults[i, paste(modelName,"mmre", sep="_")] = mmre(model_eval_mre)
+	  }
+	  
+	  if("pred15" %in% accuracy_metrics){
+	    foldResults[i, paste(modelName, "pred15", sep="_")] = pred15(model_eval_mre)
+	  }
+	  
+	  if("pred25" %in% accuracy_metrics){
+	    foldResults[i, paste(modelName, "pred25", sep="_")] = pred25(model_eval_mre)
+	  }
+	  
+	  if("pred50" %in% accuracy_metrics){
+	    foldResults[i, paste(modelName, "pred50", sep="_")] = pred50(model_eval_mre)
+	  }
+	  
+	  if("mdmre" %in% accuracy_metrics){
+	    foldResults[i, paste(modelName, "mdmre", sep="_")] = mdmre(model_eval_mre)
+	  }
+	  
+	  if("mae" %in% accuracy_metrics){
+	    foldResults[i, paste(modelName, "mae", sep="_")] = sum(model_eval_mre)/length(model_eval_predict)
+	  }
+	  
+	  #eval_metrics <- c(
+	  #  eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
+	  #)
 	  
 	  #print(eval_metrics)
-	  
-	  eval_pred = c(eval_pred, predR(model_eval_mre, predRange))
+	  if("predRange" %in% accuracy_metrics){
+	    foldResults1[, j, i] = predR(model_eval_mre, predRange)
+	  }
 	}
 	
-	foldResults[i,] = eval_metrics
-	foldResults1[,,i] = eval_pred
+	#foldResults[i,] = eval_metrics
+	#foldResults1[,,i] = eval_pred
 }
 
 #print(foldResults)
@@ -186,7 +316,7 @@ for(i in 1:predRange)
 	
 }
 
-ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults)
+ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults, foldResults1 = foldResults1)
 
 }
 
@@ -213,7 +343,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   
   nmodels <- length(modelNames)
   
-  accuracy_metrics <- c('mmre','pred15','pred25','pred50', 'mdmre', 'mae')
+  #accuracy_metrics <- c('mmre','pred15','pred25','pred50', 'mdmre', 'mae')
   
   nmetrics <- length(accuracy_metrics)
   
@@ -230,16 +360,25 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   iterResults <- matrix(nrow=niters, ncol=nmodels*nmetrics)
   colnames(iterResults) <- model_accuracy_indice
   
-  iterResults1 <- array(0,dim=c(predRange,nmodels,niters))
+  iterResults1 <- array(0,dim=c(predRange,nmodels,niters+1))
 
   for (i in 1:niters){
-    sampleIndexes <- sample(1:N, size=sample_size)
+    
+    if(i == 1){
+      resample = dataset
+    }
+    else{
+      resampleIndexes <- sample(1:N, size=sample_size, replace=TRUE)
+      resample = dataset[resampleIndexes,]
+    }
+    
+    #sampleIndexes <- sample(1:N, size=sample_size)
     # train:test = 40:10
     train_data_size = as.integer(0.8*sample_size)
-    trainIndexes <- sample(sampleIndexes, size=train_data_size)
+    trainIndexes <- sample(1:N, size=train_data_size)
     
-    trainData <- dataset[trainIndexes, ]
-    testData <- dataset[-trainIndexes, ]
+    trainData <- resample[trainIndexes, ]
+    testData <- resample[-trainIndexes, ]
     
     eval_metrics = c()
     eval_pred = c()
@@ -273,29 +412,49 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
       model_eval_mre <- na.omit(model_eval_mre)
       #print(model_eval_mre)
       
-      model_eval_mmre = mmre(model_eval_mre)
-      model_eval_pred15 = pred15(model_eval_mre)
-      model_eval_pred25 = pred25(model_eval_mre)
-      model_eval_pred50 = pred50(model_eval_mre)
-      model_eval_mdmre = mdmre(model_eval_mre)
-      model_eval_mae = sum(model_eval_mre)/length(model_eval_predict)
+      if("mmre" %in% accuracy_metrics){
+        iterResults[i, paste(modelName,"mmre", sep="_")] = mmre(model_eval_mre)
+      }
       
-      eval_metrics <- c(
-        eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
-      )
+      if("pred15" %in% accuracy_metrics){
+        iterResults[i, paste(modelName, "pred15", sep="_")] = pred15(model_eval_mre)
+      }
+      
+      if("pred25" %in% accuracy_metrics){
+        iterResults[i, paste(modelName, "pred25", sep="_")] = pred25(model_eval_mre)
+      }
+      
+      if("pred50" %in% accuracy_metrics){
+        iterResults[i, paste(modelName, "pred50", sep="_")] = pred50(model_eval_mre)
+      }
+      
+      if("mdmre" %in% accuracy_metrics){
+        iterResults[i, paste(modelName, "mdmre", sep="_")] = mdmre(model_eval_mre)
+      }
+      
+      if("mae" %in% accuracy_metrics){
+        iterResults[i, paste(modelName, "mae", sep="_")] = sum(model_eval_mre)/length(model_eval_predict)
+      }
+      
+      #eval_metrics <- c(
+      #  eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
+      #)
       
       
       #print(eval_metrics)
       
-      eval_pred = c(eval_pred, predR(model_eval_mre, predRange))
+      if("predRange" %in% accuracy_metrics){
+        iterResults1[,j,i] = predR(model_eval_mre, predRange)
+      }
+    
     }
     
     if (i%%500 == 0){
       print(i)
     }
     
-    iterResults[i,] = eval_metrics
-    iterResults1[,,i] = eval_pred
+    #iterResults[i,] = eval_metrics
+    #iterResults1[,,i] = eval_pred
   }
   
   #confidence_interval <- 0.83
@@ -310,6 +469,6 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   colnames(bsEstimations) <- model_accuracy_indice
   rownames(bsEstimations) <- c('lower','mean','upper')
   
-  ret <- list(bsEstimations = bsEstimations, iterResults = iterResults)
+  ret <- list(bsEstimations = bsEstimations, iterResults = iterResults, iterResults1=iterResults1)
 }
 

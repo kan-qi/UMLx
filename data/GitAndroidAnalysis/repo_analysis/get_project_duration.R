@@ -83,6 +83,7 @@ for(project in 1:nrow(input_data)) {
     
   # append to output file
 	cat(project_name, file=output_filename, append=TRUE, sep="\n")
+	cat(url, file=output_filename, append=TRUE, sep="\n")
 	cat(diff_in_days, file=output_filename, append=TRUE)
 	cat(" days\n", file=output_filename, append=TRUE, sep="\n")
 }

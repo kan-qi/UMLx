@@ -10,3 +10,6 @@ fit <- function(dataset, label, params = list()){
 	
 m_predict <- function(x,...) UseMethod('m_predict', x)
 	
+m_profile <- function(x,...) UseMethod('m_profile', x)
+
+m_save <- function(x,...) UseMethod('m_save', x)

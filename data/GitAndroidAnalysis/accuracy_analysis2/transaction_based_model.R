@@ -651,19 +651,35 @@ predict.blm <- function(model, newdata) {
   #newdata = testData
   #model = bayesianModel
   #print(mean(model[, col]))
+	
+	size <- calculateSize(model, newdata)
+	adj <- mean(model[,"effortAdj"])
+	size*adj
+}
+
+calculateSize <- function(model, data){
+  # Args:
+  #   model: a bayes linear regression model
+  #   data: data to perform transaction based size calculation
+  #
+  # Returns:
+  #   Vector of calculated transaction based size measurements
+  #newdata <- subset(newdata, !colnames(newdata) %in% c("Effort"))
+  
+  #data = testData
+  #model = bayesianModel
+  #print(mean(model[, col]))
   
   `%ni%` <- Negate(`%in%`)
-  newdata <- subset(newdata,select = colnames(newdata) %ni% c("Effort"))
+  data <- subset(data,select = colnames(data) %ni% c("Effort"))
   
-	ret <- apply(newdata, 1, function(x) {
-				effort <- 0
-				for (col in colnames(newdata)) {
-					effort <- effort + (mean(model[, col]) * x[col])
-				}
-				effort
-			})
-	
-	ret*mean(model[,"effortAdj"])
+  ret <- apply(data, 1, function(x) {
+    size <- 0
+    for (col in colnames(data)) {
+      size <- size + (mean(model[, col]) * x[col])
+    }
+    size
+  })
 }
 
 calEffortAdj <- function(regressionData){
@@ -833,7 +849,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   # Returns:
   #   A list in which the ith index gives the results of the search for i bins.
   
-  #n = 1
+  #n = 6
   #dataset = modelData
   #parameters = c("TL", "TD", "DETs")
   #k = 5
@@ -945,7 +961,7 @@ predict.swt <- function(trainedModel, testData){
   predicted
 }
 
-m_fit.tm1 <- function(swtiii,dataset, profileData=FALSE){
+fit.swt <- function(swtiii,dataset){
   # the model fitting function which would be repeated called during the cross validation and bootstrapping function
   #
   # Args:
@@ -971,51 +987,57 @@ m_fit.tm1 <- function(swtiii,dataset, profileData=FALSE){
   bayesianModel$paramVals <- paramVals
   bayesianModel$cuts <- swtiii$cuts
   
-  if(profileData){
-    profileData <- matrix(nrow=nrow(dataset), ncol=12+ncol(regressionData))
-    profileData <- as.data.frame(profileData)
-    rownames(profileData) <- rownames(dataset)
-    colnames(profileData) <- c("Trans", "Stm", "Comp", 
-                               "TL", "TL_SE", "TD",
-                               "TD_SE", "DETs", "DETs_SE",colnames(regressionData)[!(colnames(regressionData) %in% c("Effort"))],"SWT", "UUCP", "AFP","ProjEff")
-    profileData$Trans <- dataset$Tran_Num
-    profileData$Stm <- dataset$Stimulus_Num
-    profileData$Comp <- dataset$Component_Num
-    attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
-    attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
-    profileData$TL <- attr_means$TL
-    profileData$TD <- attr_means$TD
-    profileData$DETs <- attr_means$DETs
-    profileData$TL_SE <- attr_sds$TL
-    profileData$TD_SE <- attr_sds$TD
-    profileData$DETs_SE <- attr_sds$DETs
-    profileData[,colnames(regressionData)[!(colnames(regressionData) %in% c("Effort"))]] <- regressionData[,colnames(regressionData)[!(colnames(regressionData) %in% c("Effort"))]]
-    profileData$SWT <- predict.blm(as.matrix(paramVals), newdata = regressionData) 
-    profileData$UUCP <- dataset$UUCP 
-    profileData$AFP <- dataset$IFPUG
-    profileData$ProjEff <- effortData
-    write.csv(format(profileData, digits=2, nsmall=2), file = "profileData.csv")
-  }
-  
   swtiii$cuts = NULL;
   swtiii$m = bayesianModel;
   swtiii
 }
 
+m_fit.tm3 <- function(swtiii,dataset){
+  
+  print("swtiii model training")
+  #swtiii <- models$tm1
+  #dataset <- modelData
+  fit.swt(swtiii, dataset)
+}
+
 # for model testing
-m_predict.tm1 <- function(swtiii, testData){
-  # the model fitting function which would be repeated called during the cross validation and bootstrapping function
-  #
-  # Args:
-  #   swtiii: a list of cut points, which are the hyper parameters of the transaction-based model.
-  #   dataset: the dataset based on which the model is fitted
-  #
-  # Returns:
-  #   the fitted transaction-based model
+m_predict.tm3 <- function(swtiii, testData){
   
   print("swtiii predict function")
   
   predict.swt(swtiii$m, testData)
+}
+
+m_fit.tm2 <- function(swtii,dataset){
+  
+  print("swtii model training")
+  #swtiii <- models$tm1
+  #dataset <- modelData
+  fit.swt(swtii, dataset)
+}
+
+# for model testing
+m_predict.tm2 <- function(swtii, testData){
+  
+  print("swtii predict function")
+  
+  predict.swt(swtii$m, testData)
+}
+
+m_fit.tm1 <- function(swti,dataset){
+  
+  print("swti model training")
+  #swtiii <- models$tm1
+  #dataset <- modelData
+  fit.swt(swti, dataset)
+}
+
+# for model testing
+m_predict.tm1 <- function(swti, testData){
+  
+  print("swti predict function")
+  
+  predict.swt(swti$m, testData)
 }
 
 trainsaction_based_model <- function(modelData){
@@ -1034,7 +1056,7 @@ trainsaction_based_model <- function(modelData){
  
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
   
-  swtiiiParams = list(
+  models$tm2 = list(
     cuts = modelParams$cuts,
     trainedModel = list(
       weights = lapply(modelParams$weights,Bayes.sum),
@@ -1043,5 +1065,194 @@ trainsaction_based_model <- function(modelData){
     ),
     SWTIIIresults = SWTIIIresults
   )
+  
+  SWTIIresults <- performSearch(6, modelData, c("TL", "TD"))
+  SWTIIModelSelector <- 4
+  modelParams = SWTIIresults[[SWTIIModelSelector]][["bayesModel"]]
+  
+  models$tm3 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIIresults = SWTIIresults
+  )
+  
+  #cachedTransactionFiles = list()
+  SWTIresults <- performSearch(6, modelData, c())
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  SWTIModelSelector <- 1
+  
+  modelParams = SWTIresults[[SWTIModelSelector]][["bayesModel"]]
+  
+  models$tm1 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIresults = SWTIresults
+  )
+  
+  models
+  
+}
+
+m_profile.tm1 <- function(model, dataset){
+  #model = trainedModels[['tm1']]
+  #dataset = modelData
+  
+  swti = model
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData1 <- generateRegressionData(projects, swti$m$cuts, effortData, transactionFiles)
+ 
+  regLevels1 <- colnames(regressionData1)[!(colnames(regressionData1) %in% c("Effort"))]
+
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(regLevels1)+1)
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swti_levels <- paste("swti_", regLevels1, sep="")
+  
+  colnames(profileData) <- c(swti_levels, "SWTI")
+  
+  regress1 <- as.matrix(regressionData1[,regLevels1])
+  rownames(regress1) <- rownames(regressionData1)
+  colnames(regress1) <- swti_levels
+  #print(regress1)
+  profileData[,swti_levels] <- regress1
+  
+  profileData$SWTI <- calculateSize(as.matrix(models$tm1$m$paramVals), regressionData1)
+ 
+  profileData
+}
+
+m_profile.tm2 <- function(model, dataset){
+  #model = trainedModels[["tm2"]]
+  #dataset = modelData
+  
+  swtii = model
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData2 <- generateRegressionData(projects, swtii$m$cuts, effortData, transactionFiles)
+ 
+  regLevels2 <- colnames(regressionData2)[!(colnames(regressionData2) %in% c("Effort"))]
+  
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(regLevels2)+1)
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swtii_levels <- paste("swtii_", regLevels2, sep="")
+  
+  colnames(profileData) <- c(swtii_levels, "SWTII")
+  
+  regress2 <- as.matrix(regressionData2[,regLevels2])
+  rownames(regress2) <- rownames(regressionData2)
+  colnames(regress2) <- swtii_levels
+  #print(regress1)
+  profileData[,swtii_levels] <- regress2
+  
+  profileData$SWTII <- calculateSize(as.matrix(models$tm2$m$paramVals), regressionData2) 
+
+  profileData
+}
+
+m_profile.tm3 <- function(model, dataset){
+  #models = trainedModels
+  #dataset = modelData
+  
+  swtiii = model
+  
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData3 <- generateRegressionData(projects, swtiii$m$cuts, effortData, transactionFiles)
+  
+  regLevels3 <- colnames(regressionData3)[!(colnames(regressionData3) %in% c("Effort"))]
+  
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(regLevels3)+1)
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swtiii_levels <- paste("swtiii_", regLevels3, sep="")
+  
+  colnames(profileData) <- c(swtiii_levels, "SWTIII")
+  
+  regress3 <- as.matrix(regressionData3[,regLevels3])
+  rownames(regress3) <- rownames(regressionData1)
+  colnames(regress3) <- swtiii_levels
+  #print(regress1)
+  profileData[,swtiii_levels] <- regress3
+  
+  profileData$SWTIII <- calculateSize(as.matrix(models$tm3$m$paramVals), regressionData3) 
+
+  profileData
+}
+
+
+trainsaction_based_model3 <- function(modelData){
+  # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
+  #
+  # Args:
+  #   modelData: a held-out dataset to search for the hyperparameter
+  #
+  # Returns:
+  #   the list of cuts points for the individual dimensions
+  
+  #cachedTransactionFiles = list()
+  SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  SWTIIIModelSelector <- 3
+  
+  modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
+  
+  tm3 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIIIresults = SWTIIIresults
+  )
+  
+ transaction_data_profile <- function(){
+   column_names <- c("Trans", "Stm", "Comp", 
+                     "TL", "TL_SE", "TD",
+                     "TD_SE", "DETs", "DETs_SE")
+   profileData <- matrix(nrow=nrow(dataset), ncol=length(column_names))
+   profileData <- as.data.frame(profileData)
+   rownames(profileData) <- rownames(dataset)
+   
+   colnames(profileData) <- column_names
+   profileData$Trans <- dataset$Tran_Num
+   profileData$Stm <- dataset$Stimulus_Num
+   profileData$Comp <- dataset$Component_Num
+   attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
+   attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
+   profileData$TL <- attr_means$TL
+   profileData$TD <- attr_means$TD
+   profileData$DETs <- attr_means$DETs
+   profileData$TL_SE <- attr_sds$TL
+   profileData$TD_SE <- attr_sds$TD
+   profileData$DETs_SE <- attr_sds$DETs
+   profileData
+ }
+  
 }
 

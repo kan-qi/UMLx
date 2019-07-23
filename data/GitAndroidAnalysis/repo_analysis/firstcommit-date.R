@@ -13,7 +13,7 @@ library(stringr)
 
 
 # Repository and github username/pw
-input_filename = "temp/test.xlsx"
+input_filename = "repos.xlsx"
 output_filename = "outfile.txt"
 
 user <- "flyqk"
@@ -75,6 +75,7 @@ for(project in 1:nrow(input_data)) {
 	
 	# append to output file
 	cat(project_name, file=output_filename, append=TRUE, sep="\n")
+	cat(url, file=output_filename, append=TRUE, sep="\n")
 	cat(oldest_date, file=output_filename, append=TRUE, sep="\n")
 	cat("\n", file=output_filename, append=TRUE)
 }
