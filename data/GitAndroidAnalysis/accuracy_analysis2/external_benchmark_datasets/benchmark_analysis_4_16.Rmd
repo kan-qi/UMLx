@@ -42,6 +42,9 @@ print(cor(ucp_data$uc_num, ucp_data$Real_Effort_Person_Hours))
 print(cor.test(ucp_data$uc_num,ucp_data$Real_Effort_Person_Hours))
 lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
 
+ucp.lm = lm(Real_Effort_Person_Hours ~ UCP, data=ucp_data)
+print(summary(ucp.lm)$r.squared)
+
 ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"EF"]*ucp_data[,"TCF"]
 ucp_data$UCP <- ucp
 print(cor(ucp_data$UCP, ucp_data$Real_Effort_Person_Hours))
@@ -55,6 +58,21 @@ fp_data$fp_num <- fp_num
 cor(fp_data$fp_num, fp_data$Effort)
 
 print(cor.test(fp_data$fp_num,fp_data$Effort))
+
+afp.lm = lm(AFP ~ Effort, data=fp_data)
+print(summary(afp.lm)$r.squared)
+
+albrecht_data <- read.csv("albrecht.csv")
+albrecht.lm = lm(AdjFP ~ Effort, data=albrecht_data)
+print(summary(albrecht.lm)$r.squared)
+
+kemerer_data <- read.csv("kemerer.csv")
+kemerer.lm = lm(AdjFP ~ EffortMM, data=kemerer_data)
+print(summary(kemerer.lm)$r.squared)
+
+miyazaki94_data <- read.csv("miyazaki94.csv")
+miyazaki94.lm = lm(KLOC ~ MM, data=miyazaki94_data)
+print(summary(miyazaki94.lm)$r.squared)
   
 ```
 

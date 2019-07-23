@@ -604,8 +604,8 @@ for(var i in repo.projectList){
 
 var onlineProjects = [];
 var onlineProjectsIndex = {};
-if(FileManagerUtils.existsSync(repo.repoDir+"/project_list_4_25.csv")){
-var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list_4_25.csv", true);
+if(FileManagerUtils.existsSync(repo.repoDir+"/project_list.csv")){
+var onlineProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/project_list.csv", true);
 for(var i in onlineProjectData){
     var onlineProject = onlineProjectData[i];
     onlineProjects.push(onlineProject.Project);

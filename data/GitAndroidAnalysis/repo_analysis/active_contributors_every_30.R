@@ -121,7 +121,7 @@ getAllCommits <- function(url) {
 }
 
 
-getActiveContributors <- function(url) {
+getActiveContributors <- function(commits) {
   # Gets a list of all active/inactive contributors every 30 active days for a project.
   #
   # Args:
@@ -131,7 +131,6 @@ getActiveContributors <- function(url) {
   #   A list of active/inactive users every 30 active days.
   
   active <- list()
-  commits <- getAllCommits(url)
   currentMonthActiveDays <- c()
   currentMonthCommitCounts <- c()
   lifetimeCommitsCounts <- c()
@@ -185,7 +184,8 @@ simEffort <- function(url) {
   # Returns:
   #   Effort in person-hours
   
-  activeContributors <- getActiveContributors(url)
+  commits <- getAllCommits(url)
+  activeContributors <- getActiveContributors(commits)
   effort <- 0
   if(length(activeContributors)>0){
     for (i in 1:length(activeContributors)) {
@@ -193,7 +193,7 @@ simEffort <- function(url) {
     }
   }
   
-  list(effort = effort, active_personnel = length(activeContributors))
+  list(effort = effort, active_personnel = length(activeContributors), commits = nrow(commits))
 }
 
 
@@ -210,6 +210,8 @@ for(i in 1:nrow(input_data)) {
   print(effortResult$effort)
   print("active personnel")
   print(effortResult$active_personnel)
+  print("commits")
+  print(effortResult$commits)
   active_personnel = c(active_personnel,effortResult$active_personnel)
   sink()
 }
