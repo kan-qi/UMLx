@@ -1,7 +1,4 @@
-#source("transaction_weights_calibration4.R")
-
-#adding two additional models: sloc and ln_sloc models.
-
+# the set of effort estimation accuracy measures
 mre <- function(x) abs(x[1] - x[2])/x[2]
 mmre <- function(mre) mean(mre)
 pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
@@ -19,15 +16,16 @@ predR <- function(mre, predRange) {
   eval_pred
 }
 
-modelProfile <- function(models, dataset){
+# the model profile function, which profiles intermediate analysis data.
+modelProfile <- function(trainedModels, dataset){
   #dataset <- modelData
-  #models <- trainedModels
+  
   profileData <- matrix(nrow=nrow(dataset), ncol=0)
   profileData <- as.data.frame(profileData)
   rownames <-rownames(dataset)
   rownames(profileData) <- rownames
   
-  modelNames = names(models)
+  modelNames = names(trainedModels)
   print(modelNames)
   
   nmodels <- length(modelNames)
@@ -37,7 +35,7 @@ modelProfile <- function(models, dataset){
     
     print(modelName)
     
-    model_profile_data = m_profile(models[[i]], dataset)
+    model_profile_data = m_profile(trainedModels[[i]], dataset)
     
     colnames <- colnames(model_profile_data)
     
@@ -47,15 +45,20 @@ modelProfile <- function(models, dataset){
     
   }
   
+  #attach the effort data
+  profileData[, "Effort"] = dataset$Effort
+  
   profileData
 }
 
+# the model save function, which saves trained models to files.
 modelSave <- function(models){
   
 }
 
-#the batch method to train the models.
+# the batch method to train the models. A list of trained models are generated.
 modelTrain <- function(models, dataset){
+  
   trainedModels = list()
   
   modelNames = names(models)
@@ -75,7 +78,7 @@ modelTrain <- function(models, dataset){
   trainedModels
 }
 
-#the batach method to predict with all the trained models
+#the batch method to predict using the trained models.
 modelPredict <- function(models, dataset){
   predictions = list()
   
@@ -95,14 +98,15 @@ modelPredict <- function(models, dataset){
   predictions
 }
 
-#modelBenchmark would preform both cross validation and bootrapping significance test
+#modelBenchmark would preform goodness of fit, cross validation, and bootrapping significance test
 modelBenchmark <- function(models, dataset){
-  #evaluating the goodness of fit for the compared models: R^2 and Eta. Squared (for the standardized effect size)
   #dataset <- modelData
-  goodness_fit_metrics <- c("R2")
+  
+  #evaluating the goodness of fit for the compared models using R^2
+  goodness_fit_metrics <- c("R2", "f-test")
   fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
-  accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae")
+  accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
   cvResults <- cv(models, dataset, accuracy_metrics)
   bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(
@@ -114,7 +118,7 @@ modelBenchmark <- function(models, dataset){
              )
 }
 
-evalFit <- function(models, dataset, fit_metrics){
+evalFit <- function(models, dataset, fit_metrics = c("R2", "f-test")){
   #dataset = modelData
   
   modelNames = names(models)
@@ -126,18 +130,17 @@ evalFit <- function(models, dataset, fit_metrics){
   
   eval_metric_results = list()
   
-  for(j in 1:nmodels){
-    modelName <- modelNames[j]
+  for(i in 1:nmodels){
+    modelName <- modelNames[i]
     
-    print(modelNames[j])
+    print(modelNames[i])
     
     eval_metric_results[[modelName]] = list()
     
-    model = fit(dataset, modelNames[j], models[[j]])
-    #model = structure(model, class="klasso_lnr")
+    model = fit(dataset, modelNames[i], models[[i]])
+    
     predicted = m_predict(model, dataset)
     
-    #print(predicted)
     actual = dataset$Effort
     names(actual) <- rownames(dataset)
     #print(actual)
@@ -150,14 +153,6 @@ evalFit <- function(models, dataset, fit_metrics){
     
     eval_metric_results[[modelName]]$model_eval_fit = model_eval_fit
     
-    #calculate R2 and Eta-squared based on the predicted and actual values.
-    #eta_squared may not be applicable
-    #npoints <- nrow(model_eval_fit)
-    #grouping <- c(1:npoints, 1:npoints)
-    #anova <- aov( c(model_eval_fit$predicted, model_eval_fit$actual) ~ grouping )
-    #eta_squared <- etaSquared(anova)[1,1]
-    #print(eta_squared)
-    
     if("R2" %in% fit_metrics){
     meanActual <- mean(model_eval_fit$actual)
     eval_metric_results[[modelName]]$r_squared <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
@@ -169,21 +164,13 @@ evalFit <- function(models, dataset, fit_metrics){
     eval_metric_results[[modelName]]$f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)
     }
     
-    #LM <- lm( c(model_eval_fit$predicted, model_eval_fit$actual) ~ grouping );
-    #r_squared <- summary(LM)$r.squared
-    #print(r_squared)
-    
-    #add the evaluation results to the "eval_metric_results"
-    #eval_metric_results[[modelName]] = list(eta_squared = eta_squared, 
-    #                                        r_squared = r_squared,
-    #                                        model_eval_fit = model_eval_fit,
-    #                                        f_test = f_test)
   }
   
   eval_metric_results
 }
-  
-cv <- function(models, dataset, accuracy_metrics){
+
+# The cross validation process to evaluate the out-of-sample accuracy
+cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
 
 #dataset = modelData
 
@@ -212,10 +199,10 @@ colnames(foldResults) <- model_accuracy_indice
 
 foldResults1 <- array(0,dim=c(predRange,nmodels,nfold))
 
+
 #Perform 10 fold cross validation
 for(i in 1:nfold){
-  print("iter:")
-  print(i)
+  print(paste("iter:", i, sep=""))
 	#Segement your data by fold using the which() function
 	testIndexes <- which(folds==i,arr.ind=TRUE)
 	
@@ -235,12 +222,12 @@ for(i in 1:nfold){
 	  
 	  predicted = as.vector(m_predict(model, testData))
 	  names(predicted) <- rownames(testData)
-	  print(predicted)
+	  #print(predicted)
 	  
 	  actual = testData$Effort
 	  names(actual) <- rownames(testData)
 	  
-	  print(actual)
+	  #print(actual)
 	  
 	  intersectNames <- intersect(names(predicted), names(actual))
 	  
@@ -250,8 +237,8 @@ for(i in 1:nfold){
 	  eval_metric_results = list()
 	  
 	  model_eval_mre = apply(model_eval_predict, 1, mre)
-	  print("mre")
-	  print(model_eval_mre)
+	  #("mre")
+	  #print(model_eval_mre)
 	  
 	  model_eval_mre <- na.omit(model_eval_mre)
 	  #print(model_eval_mre)
@@ -320,10 +307,9 @@ ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults =
 
 }
 
-bootstrappingSE <- function(models, dataset, accuracy_metrics){
-#bootstrapping the sample and run the run the output sample testing.
+#bootstrapping to evaluate the statistical significance of the accuracy improvements
+bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
 
-#bootstrappingSE <- function(SWTIIIModelData, otherSizeMetricsData, model, niters, confidence_interval){
   set.seed(42)
   # create 10000 samples of size 50
   N <- nrow(dataset)
@@ -333,7 +319,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
   
   niters <- 100
   
-  confidence_interval <- 0.83
+  confidence_level <- 0.83
   
   nfold = 2
   
@@ -390,9 +376,8 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
       model = fit(trainData, modelNames[j], models[[j]])
       
       predicted = m_predict(model, testData)
-      #print(predicted)
       names(predicted) <- rownames(testData)
-      print(predicted)
+      #print(predicted)
       
       actual = testData$Effort
       names(actual) <- rownames(testData)
@@ -401,7 +386,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
       intersectNames <- intersect(names(predicted), names(actual))
       
       model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames] )
-      print(model_eval_predict)
+      #print(model_eval_predict)
       
       eval_metric_results = list()
       
@@ -449,20 +434,19 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics){
     
     }
     
-    if (i%%500 == 0){
-      print(i)
-    }
+    #if (i%%500 == 0){
+    #  print(i)
+    #}
     
-    #iterResults[i,] = eval_metrics
-    #iterResults1[,,i] = eval_pred
   }
   
   #confidence_interval <- 0.83
-  t <- confidence_interval/2
+  #t <- confidence_interval/2
   
   # estimatied value falls in [mean(x) - t * se, mean(m) + t * se]
   calEstimation <- function(x){
-    return(c(mean(x)-t*sd(x), mean(x), mean(x)+t*sd(x)))
+    #return(c(mean(x)-t*sd(x), mean(x), mean(x)+t*sd(x)))
+    return(c(quantile(x, 0.5-confidence_level/2), mean(x), quantile(x, 0.5+confidence_level/2)))
   }
   
   bsEstimations <- apply(iterResults, 2, calEstimation)  # 3*54 matrix

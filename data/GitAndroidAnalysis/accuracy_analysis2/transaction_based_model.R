@@ -131,7 +131,7 @@ parametricKStest <- function(dist, shape, rate){
   parametric_test = sum(tests)/runs
   
   parametric_test
-
+  
 }
 
 chisqTest <- function(dist){
@@ -727,8 +727,11 @@ readTransactionData <- function(filePath){
   #
   # Returns:
   #   the fitted linear model using the prior weights
-  
-  if (!file.exists(filePath)) {
+  #filePath = "d:/AndroidAnalysis/GatorAnalysisResults4/S1W1L1_5_29/prey_S1W1L1_2019-4-28@1559052797326_analysis/filteredTransactionEvaluation.csv"
+  if(!is.null(cachedTransactionFiles[[filePath]])){
+    print("cache exits")
+    cachedTransactionFiles[[filePath]]
+  } else if (!file.exists(filePath)) {
     print(filePath)
     print("file doesn't exist")
     if(is.null(cachedTransactionFiles[[filePath]])){
@@ -736,9 +739,6 @@ readTransactionData <- function(filePath){
                                                         TD = numeric(), 
                                                         DETs = numeric())
     }
-    cachedTransactionFiles[[filePath]]
-  }
-  else if(!is.null(cachedTransactionFiles[[filePath]])){
     cachedTransactionFiles[[filePath]]
   }
   else {
@@ -792,6 +792,7 @@ loadTransactionData <- function(modelData){
   transactionFiles <- list()
   for (project in projects) {
     filePath <- transactionFileList[project, "transaction_file"]
+    #print(filePath)
     fileData <- readTransactionData(filePath)
     transactionFiles[[project]] <- fileData
     numOfTrans = numOfTrans + nrow(fileData)
@@ -1130,7 +1131,7 @@ m_profile.tm1 <- function(model, dataset){
   #print(regress1)
   profileData[,swti_levels] <- regress1
   
-  profileData$SWTI <- calculateSize(as.matrix(models$tm1$m$paramVals), regressionData1)
+  profileData$SWTI <- calculateSize(as.matrix(swti$m$paramVals), regressionData1)
  
   profileData
 }
@@ -1164,13 +1165,12 @@ m_profile.tm2 <- function(model, dataset){
   #print(regress1)
   profileData[,swtii_levels] <- regress2
   
-  profileData$SWTII <- calculateSize(as.matrix(models$tm2$m$paramVals), regressionData2) 
+  profileData$SWTII <- calculateSize(as.matrix(swtii$m$paramVals), regressionData2) 
 
   profileData
 }
 
 m_profile.tm3 <- function(model, dataset){
-  #models = trainedModels
   #dataset = modelData
   
   swtiii = model
@@ -1194,12 +1194,12 @@ m_profile.tm3 <- function(model, dataset){
   colnames(profileData) <- c(swtiii_levels, "SWTIII")
   
   regress3 <- as.matrix(regressionData3[,regLevels3])
-  rownames(regress3) <- rownames(regressionData1)
+  rownames(regress3) <- rownames(regressionData3)
   colnames(regress3) <- swtiii_levels
   #print(regress1)
   profileData[,swtiii_levels] <- regress3
   
-  profileData$SWTIII <- calculateSize(as.matrix(models$tm3$m$paramVals), regressionData3) 
+  profileData$SWTIII <- calculateSize(as.matrix(swtiii$m$paramVals), regressionData3) 
 
   profileData
 }
@@ -1231,28 +1231,34 @@ trainsaction_based_model3 <- function(modelData){
     SWTIIIresults = SWTIIIresults
   )
   
- transaction_data_profile <- function(){
-   column_names <- c("Trans", "Stm", "Comp", 
-                     "TL", "TL_SE", "TD",
-                     "TD_SE", "DETs", "DETs_SE")
-   profileData <- matrix(nrow=nrow(dataset), ncol=length(column_names))
-   profileData <- as.data.frame(profileData)
-   rownames(profileData) <- rownames(dataset)
-   
-   colnames(profileData) <- column_names
-   profileData$Trans <- dataset$Tran_Num
-   profileData$Stm <- dataset$Stimulus_Num
-   profileData$Comp <- dataset$Component_Num
-   attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
-   attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
-   profileData$TL <- attr_means$TL
-   profileData$TD <- attr_means$TD
-   profileData$DETs <- attr_means$DETs
-   profileData$TL_SE <- attr_sds$TL
-   profileData$TD_SE <- attr_sds$TD
-   profileData$DETs_SE <- attr_sds$DETs
-   profileData
- }
+}
+
+transaction_data_profile <- function(dataset){
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
   
+  column_names <- c("Trans", "Stm", "Comp", 
+                    "TL", "TL_SE", "TD",
+                    "TD_SE", "DETs", "DETs_SE")
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(column_names))
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  colnames(profileData) <- column_names
+  profileData$Trans <- dataset$Tran_Num
+  profileData$Stm <- dataset$Stimulus_Num
+  profileData$Comp <- dataset$Component_Num
+  attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
+  attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
+  profileData$TL <- attr_means$TL
+  profileData$TD <- attr_means$TD
+  profileData$DETs <- attr_means$DETs
+  profileData$TL_SE <- attr_sds$TL
+  profileData$TD_SE <- attr_sds$TD
+  profileData$DETs_SE <- attr_sds$DETs
+  profileData
 }
 

@@ -14,8 +14,9 @@ source("transaction_based_model.R")
 source("size_metric_based_models.R")
 source("neuralnet_model_1.R")
 source("stepwise_linear_model.R")
-source("lasso_regression_model.R")
+source("lasso_regression_model3.R")
 source("regression_tree_model_1.R")
+source('familywiseHypoTest2.R')
 library(jsonlite)
 library(reshape)
 library(tidyverse)
@@ -119,8 +120,10 @@ models$lasso = lasso_model(modelData)
 
 #fitEval = evalFit(models, modelData, c("R2", "eta-squared"))
 
-trainedModels <-modelTrain(models, modelData)
+trainedModels <- modelTrain(models, modelData)
 outputData <- modelProfile(trainedModels, modelData)
+transactionData <- transaction_data_profile(modelData)
+outputData <- merge(outputData, transactionData, by="row.names")
 
 #evaluate the models for their size metrics
 sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
@@ -146,11 +149,18 @@ effortCor <- t(effortCor)
 colnames(effortCor) <- c("r", "p-value")
 print(round(effortCor, 2))
 
+#draw scatter plot for the project description
+ggplot(outputData, aes(x=SLOC, y=Effort)) + geom_point()+theme_bw()
+ggplot(outputData, aes(x=Trans, y=Effort)) + geom_point()+theme_bw()
+
+ggplot(outputData, aes(x=SWTI, y=Effort)) + geom_point()+theme_bw()
+ggplot(outputData, aes(x=SWTII, y=Effort)) + geom_point()+theme_bw()
+ggplot(outputData, aes(x=SWTIII, y=Effort)) + geom_point()+theme_bw()
+
 ```
 comparing the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
 benchmarkResults <- modelBenchmark(models, modelData)
-
 ```
 
 ```{r evaluate goodness of fit of the models}
@@ -169,6 +179,19 @@ avgPreds <- cvResults[["avgPreds"]]
 avgPreds <- data.frame(avgPreds)
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+model_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, names(models)[i])
+  }
+}
+
+metric_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
 
 print("melt avg preds info")
 ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
@@ -191,7 +214,7 @@ ggplot(meltAvgPreds) + theme_bw() +
 #rank the cv results of different metric
 
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
-cvAccuracyResults$model_labels <- model_names
+cvAccuracyResults$model_labels <- model_labels
 cvAccuracyResults$metric_labels <- accuracy_metrics
 
 cvRankResults <- data.frame(names(models))
@@ -201,7 +224,7 @@ for (i in 1:length(accuracy_metrics)){
   g = accuracy_metrics[i]
   selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
   selectedData <- selectedData[,-3]#delete the metric_labels
-  names(selectedData)<-c(g, "model_labels", "metric")
+  colnames(selectedData)<-c(g, "model_labels")
   if(g == "mmre" || g == "mdmre" || g == "mae"){
     selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
   }else{
@@ -241,7 +264,7 @@ for(i in 1:length(accuracy_metrics)){
   selectedData <- cvRankResults[names(cvRankResults) == g]
   names(selectedData) <- c("rank");
   p[[i]] <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
-    geom_bar(stat="identity", colour = "black", width = 0.7) + 
+    geom_bar(stat="identity", colour = "black") + 
     #scale_y_discrete(expand = c(0, 0)) + 
     guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
     geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
@@ -249,7 +272,7 @@ for(i in 1:length(accuracy_metrics)){
     labs(caption=toupper(accuracy_metrics[i])) + 
     theme(plot.caption = element_text(hjust=0.5, size=rel(1)),
           #axis.line=element_blank(),
-          axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank())
+          axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
 }
 
 library("cowplot")
@@ -268,7 +291,6 @@ legend_b <- get_legend(p[[1]] + theme(legend.position="bottom", legend.justifica
 title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='bold')
 p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2 , 1, .1))
 p_cvRank
-
 
 ```
 
@@ -289,20 +311,6 @@ iterResults <- bsRet[['iterResults']]
 #iterResults <- read.csv('iterResults.csv')
 
 # plot bootstrapping results
-
-model_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    model_labels = c(model_labels, names(models)[i])
-  }
-}
-
-metric_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    metric_labels = c(metric_labels, accuracy_metrics[j])
-  }
-}
 
 df <- data.frame(t(bsEstimations))
 df$labels <- rownames(df)
@@ -351,7 +359,8 @@ for (i in 1:length(accuracy_metrics)){
     xlab('MODEL') +
     ylab(g_label) +
     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
-    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))
+    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))+
+    theme_bw()
     print(p)
 }
 
@@ -373,12 +382,8 @@ for (i in 1:length(accuracy_metrics)){
 ```
 
 ```{r evaluate the p-values under family-wise control}
-# family-wise hypothesis test
-source('familywiseHypoTest2.R')
-foldResults <- cvResults$foldResults
-# sig_cv <- familywiseHypoTest(iterationResults=foldResults, accuracy_metrics, model_names)
 
-# head(sig_cv)
+foldResults <- cvResults$foldResults
 
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
 
@@ -460,7 +465,6 @@ nCategories <- nrow(projectCategories)
 benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
 categorizedBenchmarkResults = list()
 
-#i=7
 for(i in 1:nCategories){
   #print(projectCategories[i, ])
   categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=projectCategories[i,])

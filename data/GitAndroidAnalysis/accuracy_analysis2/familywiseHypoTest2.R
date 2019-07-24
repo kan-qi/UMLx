@@ -1,13 +1,12 @@
 singleHypoTest <- function(x, y, method='boot'){
   #Args:
   #method: 'boot': bootstrap shift test (default); 
-  #        't_test': T Test
+  #        't_test': T Test;
   #Return:
   #p: p value
   
-  t_test <- t.test(x, y)
-  
   if (method == 't_test'){
+    t_test <- t.test(x, y)
     p <- t_test$p.value
   }
   else if (method == 'double boot'){
@@ -119,12 +118,13 @@ for (k in 1:(nmodels-1)){
             y <- iterationResults[,id2]
 
             if(method == 'cv'){
-            p <- singleHypoTest(x,y, 't_test')
+              p <- singleHypoTest(x,y, 't_test')
             }
             else {
               p <- singleHypoTest(x,y,'boot')
             }
             
+            #calculating cohen's d to report the effect size.
             mu_1 <- mean(x)
             mu_2 <- mean(y)
             
