@@ -12,7 +12,7 @@ source("utils/model_funcs.R")
 source("accuracy_confidence_evaluation.R")
 source("transaction_based_model.R")
 source("size_metric_based_models.R")
-source("neuralnet_model_1.R")
+source("neuralnet_model_2.R")
 source("stepwise_linear_model.R")
 source("lasso_regression_model3.R")
 source("regression_tree_model_1.R")
@@ -89,10 +89,10 @@ models = append(models, size_models)
 #models$step_lnr <- stepwise_linear_model(modelData)
 
 #initialize the neuralnet model
-##models$neuralnet = neuralnet_model(modelData)
+#models$neuralnet = neuralnet_model(modelData)
 
 #initialize the lasso regression model. having problems, need to debug
-models$lasso = lasso_model(modelData)
+#models$lasso = lasso_model(modelData)
 #fitted_model <- fit(modelData, "lasso", models$lasso)
 #print(fitted_model)
 #m_predict.lasso(fitted_model, modelData)
@@ -357,10 +357,10 @@ for (i in 1:length(accuracy_metrics)){
             selectedData[j,]$model_labels,
             selectedData[k,]$model_labels,
             g,
-            selectedData[j,]$mean,
-            selectedData[k,]$mean,
-            paste0("[", as.character(selectedData[j,]$lower), ", ", as.character(selectedData[j,]$upper), "]"),
-            paste0("[", as.character(selectedData[k,]$lower), ", ", as.character(selectedData[k,]$upper), "]")
+            round(selectedData[j,]$mean, 3),
+            round(selectedData[k,]$mean, 3),
+            paste0("[", as.character(round(selectedData[j,]$lower, 3)), ", ", as.character(round(selectedData[j,]$upper, 3)), "]"),
+            paste0("[", as.character(round(selectedData[k,]$lower, 3)), ", ", as.character(round(selectedData[k,]$upper, 3)), "]")
             )
           colnames(nonOverlap) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
           nonOverlappingPairs <- rbind(nonOverlappingPairs, nonOverlap)
@@ -368,6 +368,8 @@ for (i in 1:length(accuracy_metrics)){
       }
     }
 }
+
+nonOverlappingPairs = nonOverlappingPairs[which(nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1")),]
 
 print(nonOverlappingPairs)
 
