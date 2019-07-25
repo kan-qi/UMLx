@@ -165,7 +165,25 @@ benchmarkResults <- modelBenchmark(models, modelData)
 
 ```{r evaluate goodness of fit of the models}
 #evaluate goodness of fit
-fitReesults <- benchmarkResults$fitResults
+fitResults <- benchmarkResults$fitResults
+goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
+goodnessRankResults = data.frame(matrix(ncol=0, nrow=length(fitResults)))
+goodnessRankResults$model_labels = names(fitResults)
+for (i in 1:length(goodness_fit_metrics)){
+  g = goodness_fit_metrics[i]
+  g = "r_squared"
+  selectData = data.frame(matrix(ncol=0, nrow=length(fitResults)))
+  selectData$model_labels <- names(fitResults)
+  for(j in 1:length(fitResults)){
+  m = fitResults[[j]]
+  m_name = names(fitResults)[j]
+  selectData[which(selectData$model_labels == m_name), g] <- m[[g]]
+  }
+  selectData[paste("rank", i, sep = "")] <- rank(selectData[,g], ties.method = "min")
+  goodnessRankResults <- merge(goodnessRankResults, selectData, by = "model_labels", all=FALSE)
+}
+
+write.csv(goodnessRankResults, "goodness_rank_results.csv")
 
 ```
 
@@ -215,6 +233,7 @@ ggplot(meltAvgPreds) + theme_bw() +
 
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
 cvAccuracyResults$model_labels <- model_labels
+print(model_labels)
 cvAccuracyResults$metric_labels <- accuracy_metrics
 
 #calculate ranking results
@@ -254,6 +273,8 @@ rownames(cvRankResults) = cvRankResults[,1]
 cvRankResults <- cvRankResults[,-1]
 
 print(round(cvRankResults,2))
+
+write.csv(round(cvRankResults,2), "model_ranking_results.csv")
 
 
 # draw histogram base on ranking
@@ -300,7 +321,7 @@ p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) 
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
   guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
-  geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
+  geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
   ggtitle("Overall Ranking Result for Cross Validation") +
   #labs(caption=toupper("Total Rank")) + 
   theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
@@ -308,6 +329,7 @@ p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) 
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
 p_cvAllRank
+
 ```
 
 ```{r evaluate overlapping of 84% confidence intervals}
@@ -369,10 +391,12 @@ for (i in 1:length(accuracy_metrics)){
     }
 }
 
-nonOverlappingPairs = nonOverlappingPairs[which(nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1")),]
+# apply filters on the overlapping results.
+filteredNonOverlappingPairs = nonOverlappingPairs[which((nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1"))) & nonOverlappingPairs$Metric %in% c("mmre", "mdmre", "pred25"),]
+
+write.csv(filteredNonOverlappingPairs,'nonOverlappingPairs.csv')
 
 print(nonOverlappingPairs)
-
 
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
@@ -422,12 +446,23 @@ round_df <- function(df, digits) {
 }
 
 sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
-sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25", "mae")),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25")),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
 sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
 sig_bs_f = round_df(sig_bs_f, 2)
 print(sig_bs_f)
 
+#identify the parirs that are not identified from the 84% overlaps.
+nonOverlappingPairsIndices <- paste(nonOverlappingPairs$Model1, nonOverlappingPairs$Model2, nonOverlappingPairs$Metric, sep="-")
+print(nonOverlappingPairsIndices)
+
+sig_bs_f_indices <- paste(sig_bs_f$model1, sig_bs_f$model2, sig_bs_f$metric, sep="-")
+print(sig_bs_f_indices)
+sig_bs_f$index <- sig_bs_f_indices
+`%ni%` <- Negate(`%in%`)
+filtered_sig_bs_f = sig_bs_f[which(sig_bs_f$index %ni% nonOverlappingPairsIndices), ]
+
+write.csv(filtered_sig_bs_f,'sig_bs_f.csv')
 
 # Using the "sig_bs" results, create a graph to represent the direct graph for the models.
 library(igraph)
@@ -499,7 +534,70 @@ for(i in 1:nCategories){
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
   
   print(categorizedDataset)
-  categorizedBenchmarkResults[[benchmarkLabels[i]]] <- modelBenchmark(models, categorizedDataset)
+  benchmarkResults <- modelBenchmark(models, categorizedDataset)
+  categorizedBenchmarkResults[[benchmarkLabels[i]]] <- benchmarkResults
+  
+  # calculate the rank information
+  
+cvResults <- benchmarkResults$cvResults
+  
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$model_labels <- model_labels
+cvAccuracyResults$metric_labels <- accuracy_metrics
+
+#calculate ranking results
+cvRankResults <- data.frame(names(models))
+names(cvRankResults)<-c("model_labels")
+
+for (i in 1:length(accuracy_metrics)){
+  g = accuracy_metrics[i]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  colnames(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#make a total rank(rank*) base on the ranki
+rank_sum <- vector(mode = "integer",length = length(models))
+for (i in 1:length(models)){
+  selectedData <- cvRankResults[i,]
+  for(j in 1:length(accuracy_metrics)){
+    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
+  }
+}
+rank_sum <- rank(rank_sum, ties.method = "min")
+print(rank_sum)
+cvRankResults["rank*"] <- rank_sum
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
+
+#change the first line as the row name
+rownames(cvRankResults) = cvRankResults[,1]
+cvRankResults <- cvRankResults[,-1]
+
+#print(round(cvRankResults,2))
+
+# draw overall ranking histogram
+selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
+names(selectedData) <- c("rank");
+p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+  geom_bar(stat="identity", colour = "black", width = 0.7) + 
+  #scale_y_discrete(expand = c(0, 0)) + 
+  guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
+  geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
+  ggtitle("Overall Ranking Result for Cross Validation") +
+  #labs(caption=toupper("Total Rank")) + 
+  theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
+        plot.title = element_text(hjust = 0.5), 
+        #axis.line=element_blank(),
+        axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
+p_cvAllRank
 
 }
 

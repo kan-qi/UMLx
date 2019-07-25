@@ -114,7 +114,8 @@ modelBenchmark <- function(models, dataset){
              cvResults = cvResults, 
              bsResults = bsResults,
              model_names = names(models),
-             accuracy_metrics = accuracy_metrics
+             accuracy_metrics = accuracy_metrics,
+             goodness_fit_metrics = goodness_fit_metrics
              )
 }
 
@@ -155,7 +156,7 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f-test")){
     
     if("R2" %in% fit_metrics){
     meanActual <- mean(model_eval_fit$actual)
-    eval_metric_results[[modelName]]$r_squared <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
+    eval_metric_results[[modelName]]$R2 <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
     #print(r_squared)
     }
     
