@@ -122,6 +122,8 @@ clean <- function(dataset){
 
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
+  dataset = modelData
+  lasso = list()
   
   #ind_variables = c("Activity_Num", "Component_Num", "Precedence_Num",	"Stimulus_Num",	"Response_Num",	"Tran_Num",	"Boundary_Num")
   cleanData <- clean(dataset)

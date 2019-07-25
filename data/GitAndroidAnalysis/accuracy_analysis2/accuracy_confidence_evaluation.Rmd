@@ -217,6 +217,7 @@ cvAccuracyResults <- data.frame(cvResults$accuracyResults)
 cvAccuracyResults$model_labels <- model_labels
 cvAccuracyResults$metric_labels <- accuracy_metrics
 
+#calculate ranking results
 cvRankResults <- data.frame(names(models))
 names(cvRankResults)<-c("model_labels")
 
@@ -292,6 +293,21 @@ title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='
 p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2 , 1, .1))
 p_cvRank
 
+# draw overall ranking histogram
+selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
+names(selectedData) <- c("rank");
+p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+  geom_bar(stat="identity", colour = "black", width = 0.7) + 
+  #scale_y_discrete(expand = c(0, 0)) + 
+  guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
+  geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
+  ggtitle("Overall Ranking Result for Cross Validation") +
+  #labs(caption=toupper("Total Rank")) + 
+  theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
+        plot.title = element_text(hjust = 0.5), 
+        #axis.line=element_blank(),
+        axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
+p_cvAllRank
 ```
 
 ```{r evaluate overlapping of 84% confidence intervals}
@@ -347,6 +363,8 @@ for (i in 1:length(accuracy_metrics)){
     }
     nonOverlappingPairs[[g]] <- nonOverlap
 }
+
+head(nonOverlappingPairs)
 
 
 for (i in 1:length(accuracy_metrics)){
