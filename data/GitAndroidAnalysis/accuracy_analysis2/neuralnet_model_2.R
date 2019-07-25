@@ -139,7 +139,7 @@ neuralnet_model <- function(dataset, verbose=F) {
   
   # Clean dataset to keep features that we care about only
   data <- clean(dataset)
-  dims <- names(data)
+  #dims <- names(data)
   
   if (verbose) {
     cat("Dimentions used for training...\n")
@@ -210,8 +210,9 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=F) {
   set.seed(1984)  # set a seed
   
   data <- clean(dataset)
-  dims <- neuralnet$hyperparameters$dims
-  data <- data[, dims]
+  #dims <- neuralnet$hyperparameters$dims
+  #data <- data[, dims]
+  dims <- names(data)
   
   pcaComp <- neuralnet$hyperparameters$pcaComp
   size <- neuralnet$hyperparameters$bestTune$size
@@ -265,6 +266,10 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=F) {
   # Stop parallel processing
   stopParallelProcessing(cluster)
   neuralnet$m = nnet.model
+  
+  #
+  neuralnet$cols_removed =  dims;
+  
   if (verbose) cat("finished training\n")
   return(neuralnet)
 }
@@ -273,6 +278,10 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=F) {
 m_predict.neuralnet <- function(neuralnet, testData, verbose=F) {
   library(caret)
   library(dplyr)
+  
+  #
+  cols_removed = neuralnet$cols_removed;
+  testData = testData[-cols_removed, ];
   
   set.seed(1984)  # set a seed
   

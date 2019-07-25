@@ -1,4 +1,5 @@
 #Define the generic functions and classes for model calibration and evaluation
+#S3 and generic function...
 
 m_fit <- function(x,...) UseMethod('m_fit', x)
   

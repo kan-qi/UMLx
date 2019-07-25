@@ -86,7 +86,7 @@ size_models <- size_metric_models(modelData)
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-models$step_lnr <- stepwise_linear_model(modelData)
+#models$step_lnr <- stepwise_linear_model(modelData)
 
 #initialize the neuralnet model
 ##models$neuralnet = neuralnet_model(modelData)
@@ -335,10 +335,9 @@ df$metric_labels <- metric_labels
 
 print(metric_labels)
 
-# calculate non-overlapping intervals.
-nonOverlappingPairs <- list()
+nonOverlappingPairs <- data.frame(matrix(ncol = 7, nrow = 0))
+colnames(nonOverlappingPairs) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
 for (i in 1:length(accuracy_metrics)){
-    i = 1
     g = metric_labels[i]
     g_label <- toupper(g)
     selectedData <- df[df$metric_labels == g,]
@@ -350,21 +349,27 @@ for (i in 1:length(accuracy_metrics)){
     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
     ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))
     print(p)
-    ii <- 1
-    nonOverlap <- list()
     for (j in 1:(nrow(selectedData)-1)){
       for (k in (j+1):nrow(selectedData)){
         if(selectedData[j,]$lower>selectedData[k,]$upper | selectedData[j,]$upper<selectedData[k,]$lower){
           #selectedData[j,] and selectedData[k,] non-overlap
-          nonOverlap[[ii]] <- c(selectedData[j,]$model_labels, selectedData[k,]$model_labels)
-          ii <- ii+1
+          nonOverlap <- data.frame(
+            selectedData[j,]$model_labels,
+            selectedData[k,]$model_labels,
+            g,
+            selectedData[j,]$mean,
+            selectedData[k,]$mean,
+            paste0("[", as.character(selectedData[j,]$lower), ", ", as.character(selectedData[j,]$upper), "]"),
+            paste0("[", as.character(selectedData[k,]$lower), ", ", as.character(selectedData[k,]$upper), "]")
+            )
+          colnames(nonOverlap) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
+          nonOverlappingPairs <- rbind(nonOverlappingPairs, nonOverlap)
         }
       }
     }
-    nonOverlappingPairs[[g]] <- nonOverlap
 }
 
-head(nonOverlappingPairs)
+print(nonOverlappingPairs)
 
 
 for (i in 1:length(accuracy_metrics)){

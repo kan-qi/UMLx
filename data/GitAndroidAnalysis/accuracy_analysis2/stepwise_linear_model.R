@@ -5,10 +5,12 @@ m_fit.step_lnr <- function(step_lnr,dataset){
 	frm <- as.formula(str_frm)
     step_m <- lm(frm, data=dataset)
     step_lnr$m <- stepAIC(step_m, direction = "both", trace = FALSE)
+    step_lnr$cols_removed = c()
     step_lnr
 }
 
 m_predict.step_lnr <- function(step_lnr, testData){
+  cols_removed = step_lnr$cols_removed
   predicted <- predict(step_lnr$m, testData)
 }
 

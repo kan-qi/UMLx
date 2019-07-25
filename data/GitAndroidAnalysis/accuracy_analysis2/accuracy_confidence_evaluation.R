@@ -220,6 +220,10 @@ for(i in 1:nfold){
 	  
 	  model = fit(trainData, modelNames[j], models[[j]])
 	  
+	  print(testData)
+	  
+	  m_predict(model, testData)
+	  
 	  predicted = as.vector(m_predict(model, testData))
 	  names(predicted) <- rownames(testData)
 	  #print(predicted)

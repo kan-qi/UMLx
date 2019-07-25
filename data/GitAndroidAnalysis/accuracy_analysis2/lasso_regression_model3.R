@@ -98,6 +98,7 @@ clean <- function(dataset){
   data.numeric <- dataset[, numeric_columns]
   data.numeric <- data.frame(apply(dataset, 2, as.numeric))
   
+  
   # remove near zero variance columns
   library(caret)
   nzv_cols <- nearZeroVar(data.numeric)
@@ -122,28 +123,45 @@ clean <- function(dataset){
 
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
-  dataset = modelData
-  lasso = list()
+  #dataset = modelData
+  #lasso = list()
   
   #ind_variables = c("Activity_Num", "Component_Num", "Precedence_Num",	"Stimulus_Num",	"Response_Num",	"Tran_Num",	"Boundary_Num")
   cleanData <- clean(dataset)
+  #keep the columns that have been changed and set into the ind_variables
+  #ind_varialbles = c()
   x_data <- data.matrix(cleanData[names(cleanData)])
   y_data <- data.matrix(cleanData[c("Effort")])
   
+  #lasso_lm <- glmnet(x = x_data, y = y_data, alpha = 1, standardize = T)
   
-  lasso_lm <- glmnet(x = x_data, y = y_data, alpha = 1, standardize = T)
-  print(lasso_lm$lambda)
-  plot(lasso_lm)
+  set.seed(2)
+  lambda_list <- Lasso_range(x_data,y_data,100)
+  cvfit = cv.glmnet(x_data,y_data,
+                    standardize = T, lambda = lambda_list, type.measure = 'mse', nfolds = 5, alpha = 1)
+  
+  lasso_lm = cvfit$glmnet.fit
+  
+  #print(lasso_lm$lambda)
+  #plot(lasso_lm)
   #for 10 biggest final features
-  plot_glmnet(lasso_lm)                             # default colors
+  #plot_glmnet(lasso_lm)                             # default colors
   #plot_glmnet(lasso_lm, label=10)
   lasso$m = lasso_lm
+  lasso$m$cv_lambda = min(cvfit$cvm)
+  lasso$m$cvfit = cvfit
+  #lasso$m$ind_variables = ind_variables
+  lasso$m$lambda_list = lambda_list
   lasso
   
 }
 
 m_predict.lasso <- function(lasso, testData){
-  pred <- predict(lasso$m,newx=testData,s=lasso$lambda)
+  predicted <- predict(lasso$m,newx=as.matrix(testData[,lasso$m$ind_variables]),s=lasso$m$cv_lambda)
+  predicted_names <- rownames(predicted)
+  predicted <- as.vector(predicted[,1])
+  names(predicted) <- predicted_names
+  predicted
 }
 
 lasso_model <- function(dataset){
