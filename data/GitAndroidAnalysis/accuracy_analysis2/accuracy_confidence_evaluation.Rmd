@@ -167,17 +167,18 @@ benchmarkResults <- modelBenchmark(models, modelData)
 #evaluate goodness of fit
 fitResults <- benchmarkResults$fitResults
 goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
-goodnessRankResults = data.frame(matrix(ncol=0, nrow=length(fitResults)))
+goodnessRankResults = data.frame(matrix(ncol=length(goodness_fit_metrics), nrow=length(fitResults)))
+colnames(goodnessRankResults) <- goodness_fit_metrics
 goodnessRankResults$model_labels = names(fitResults)
 for (i in 1:length(goodness_fit_metrics)){
   g = goodness_fit_metrics[i]
-  g = "r_squared"
   selectData = data.frame(matrix(ncol=0, nrow=length(fitResults)))
   selectData$model_labels <- names(fitResults)
+  selectData[, g] <- c()
   for(j in 1:length(fitResults)){
   m = fitResults[[j]]
   m_name = names(fitResults)[j]
-  selectData[which(selectData$model_labels == m_name), g] <- m[[g]]
+  selectData[m_name, g] <- m[[g]]
   }
   selectData[paste("rank", i, sep = "")] <- rank(selectData[,g], ties.method = "min")
   goodnessRankResults <- merge(goodnessRankResults, selectData, by = "model_labels", all=FALSE)
@@ -289,7 +290,7 @@ for(i in 1:length(accuracy_metrics)){
     geom_bar(stat="identity", colour = "black") + 
     #scale_y_discrete(expand = c(0, 0)) + 
     guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
-    geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
+    geom_text(aes(label = rank, vjust = -0.3, hjust = 0.5)) +
     #ggtitle(accuracy_metrics[i]) +
     labs(caption=toupper(accuracy_metrics[i])) + 
     theme(plot.caption = element_text(hjust=0.5, size=rel(1)),

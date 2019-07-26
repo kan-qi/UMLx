@@ -103,7 +103,7 @@ modelBenchmark <- function(models, dataset){
   #dataset <- modelData
   
   #evaluating the goodness of fit for the compared models using R^2
-  goodness_fit_metrics <- c("R2", "f-test")
+  goodness_fit_metrics <- c("R2", "f_test")
   fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
@@ -119,7 +119,7 @@ modelBenchmark <- function(models, dataset){
              )
 }
 
-evalFit <- function(models, dataset, fit_metrics = c("R2", "f-test")){
+evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
   #dataset = modelData
   
   modelNames = names(models)
@@ -161,8 +161,8 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f-test")){
     }
     
     #f-test
-    if("f-test" %in% fit_metrics){
-    eval_metric_results[[modelName]]$f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)
+    if("f_test" %in% fit_metrics){
+    eval_metric_results[[modelName]]$f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)$p.value
     }
     
   }
@@ -451,6 +451,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   # estimatied value falls in [mean(x) - t * se, mean(m) + t * se]
   calEstimation <- function(x){
     #return(c(mean(x)-t*sd(x), mean(x), mean(x)+t*sd(x)))
+    x = na.omit(x)
     return(c(quantile(x, 0.5-confidence_level/2), mean(x), quantile(x, 0.5+confidence_level/2)))
   }
   
