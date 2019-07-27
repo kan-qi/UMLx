@@ -212,17 +212,6 @@ for(i in 1:length(models)){
   }
 }
 
-print("melt avg preds info")
-ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
-
-print("melt avg preds info as lines and smooth function")
-ggplot(meltAvgPreds) + theme_bw() + 
-		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
-		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
-
-
 print("melt avg preds info as dots and smooth function")
 ggplot(meltAvgPreds) + theme_bw() + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
