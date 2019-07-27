@@ -351,6 +351,9 @@ nonOverlappingPairs <- data.frame(matrix(ncol = 7, nrow = 0))
 colnames(nonOverlappingPairs) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
+    if(g == "predRange"){
+      next
+    }
     g_label <- toupper(g)
     selectedData <- df[df$metric_labels == g,]
     p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
@@ -422,9 +425,7 @@ for (i in 1:length(accuracy_metrics)){
 
 ```{r evaluate the p-values under family-wise control}
 
-foldResults <- cvResults$foldResults
-
-sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
+sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics[! accuracy_metrics %in% c("predRange")], model_names, "boot")
 
 
 round_df <- function(df, digits) {
@@ -457,6 +458,10 @@ write.csv(filtered_sig_bs_f,'sig_bs_f.csv')
 # Using the "sig_bs" results, create a graph to represent the direct graph for the models.
 library(igraph)
 for(metric_i in 1:length(accuracy_metrics)){
+  print(accuracy_metrics[metric_i])
+  if(accuracy_metrics[metric_i] == "predRange"){
+    next
+  }
   selectedData <- sig_bs[sig_bs$metric == metric_labels[metric_i],]
   m <- matrix(0, nrow = length(models), ncol = length(models), byrow = FALSE)
   colnames(m) <- names(models)
@@ -464,9 +469,9 @@ for(metric_i in 1:length(accuracy_metrics)){
   for(i in 1:nrow(selectedData)){
     if(selectedData$BH_p_value[i] < 0.05){
     if(selectedData$direction[i] == "+"){
-      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$bonferroni_p_value[i], 3)
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$BH_p_value[i], 3)
     }else if(selectedData$direction[i] == "-"){
-      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$bonferroni_p_value[i], 3)
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$BH_p_value[i], 3)
     }
     }
   }
@@ -496,9 +501,12 @@ for(metric_i in 1:length(accuracy_metrics)){
 
   net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
   
-  plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold,
-              vertex.color="white", vertex.label.color="black", vertex.size=25,
-              edge.color="black", edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+lo <- layout.fruchterman.reingold(net, niter = 1000)
+plot(net, vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+              edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label = edge_val, edge.label.cex=0.7)
+  
+#plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
   
   title(main = metric_labels[metric_i])
 }

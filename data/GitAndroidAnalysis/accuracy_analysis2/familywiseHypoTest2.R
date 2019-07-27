@@ -73,16 +73,6 @@ nhypo <- choose(nmodels,2) * nmetrics
 print("number of hypothesis:")
 print(nhypo)
 
-
-dfHypothesis <- matrix(nrow=nhypo,ncol=4)
-colnames(dfHypothesis) <- c('model1','model2','metric','direction')
-dfPValue <- matrix(nrow=nhypo,ncol=5)
-colnames(dfPValue) <- c('model1_mean','model2_mean', 'p_value','BH_p_value','bonferroni_p_value')
-
-dfeffectS <- matrix(nrow=nhypo, ncol=1)
-colnames(dfeffectS) <- c('cohen_d')
-
-model_metric_name <- names(iterationResults)
 model_labels <- c()
 for(i in 1:nmodels){
   for(j in 1:nmetrics){
@@ -97,15 +87,29 @@ for(i in 1:nmodels){
   }
 }
 
+
+measurement_labels <- paste(model_labels, metric_labels, sep="_")
+iterationResults <- iterationResults[, measurement_labels]
+
+dfHypothesis <- matrix(nrow=nhypo,ncol=4)
+colnames(dfHypothesis) <- c('model1','model2','metric','direction')
+dfPValue <- matrix(nrow=nhypo,ncol=5)
+colnames(dfPValue) <- c('model1_mean','model2_mean', 'p_value','BH_p_value','bonferroni_p_value')
+
+dfeffectS <- matrix(nrow=nhypo, ncol=1)
+colnames(dfeffectS) <- c('cohen_d')
+
 # for each accuracy metric, pair two models to construct hypothesis and run significance test
 # total number of hypothesis = C(nmodels, 2) * nmetrics
 i <- 1
 while (i<=nhypo){
 for (j in 1:nmetrics){
+print(metric_names[j])
 to_pair <- seq(from = j , to = j+(nmodels-1)*nmetrics ,by = nmetrics)
-#print(to_pair)
+print(to_pair)
 for (k in 1:(nmodels-1)){
     for (l in (k+1):nmodels){
+      print(paste(model_names[k], model_names[l], sep=" vs "))
         id1 <- to_pair[k]
         id2 <- to_pair[l]
         #print(id1)
@@ -118,7 +122,7 @@ for (k in 1:(nmodels-1)){
             y <- iterationResults[,id2]
 
             if(method == 'cv'){
-              p <- singleHypoTest(x,y, 't_test')
+              p <- singleHypoTest(x,y,'t_test')
             }
             else {
               p <- singleHypoTest(x,y,'boot')
@@ -134,8 +138,10 @@ for (k in 1:(nmodels-1)){
             s2_squared = sum((y-mu_2)^2)/(n2-1)
             s = sqrt(((n1-1)*s1_squared+(n2-1)*s2_squared)/(n1+n2-2))
             cohen_d <- (mu_1-mu_2)/s
-            
+            print(mu_1)
+            print(mu_2)
             d <- mu_1 - mu_2
+            
             if (d>0){
                 direction <- '+'
             }
