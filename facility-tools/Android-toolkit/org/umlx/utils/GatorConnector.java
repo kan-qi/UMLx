@@ -180,10 +180,16 @@ public class GatorConnector {
         return handlers;
     }
 
+
+    int numViews = 0;
+    int numScreens = 0; //activities that have at least one view associatee with.
+    int numEventHandlers = 0;
+
     public List<String[]> parseGatorFile(File gatorFile) throws IOException, SAXException, ParserConfigurationException {
         Debug.v().println("parseGatorFile");
 
         List<String[]> eventHandlers = new ArrayList<String[]>();
+        int viewNumber = 0;
 
         if (gatorFile == null || !gatorFile.exists()) {
             System.out.println("gator file doesn't exist.");
@@ -224,7 +230,19 @@ public class GatorConnector {
 //        }
 
         String tname = node.getNodeName().trim();
-        if (tname.equals("Activity") || tname.equals("Dialog")) {
+
+        if(tname.equals("Dialog")){
+            numViews++;
+        }
+        else if(tname.equals("View")){
+            numViews++;
+
+            if(parent.getNodeName().trim() == "Activity"){
+                numScreens++;
+            }
+
+        }
+        else if (tname.equals("Activity")) {
             // String activityName =
             // node.getAttributes().getNamedItem("name").getNodeValue();
             activityNode = node;
@@ -244,6 +262,8 @@ public class GatorConnector {
                 String[] eventHandler = new String[] { className, methodName, viewName, activityName };
                 eventHandlers.add(eventHandler);
             }
+
+            numEventHandlers++;
         }
 
         // Parse the child nodes
