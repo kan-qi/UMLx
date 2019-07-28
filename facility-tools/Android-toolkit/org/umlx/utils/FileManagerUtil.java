@@ -14,7 +14,7 @@ import java.util.Map;
 import target.RepoBrowser;
 
 public class FileManagerUtil {
-    String outputDirPath = "."
+    String outputDirPath = ".";
 
     public FileManagerUtil(String outputDirPath) {
         this.outputDirPath = outputDirPath;
@@ -79,17 +79,17 @@ public class FileManagerUtil {
                 paths.addAll(searchFiles(file, regE)); // Calls same method again.
                 if(regE != null) {
                     if (fileName.matches(regE)){
-                        paths.add(filePath)
+                        paths.add(filePath);
                     }
                 }
                 else{
-                    paths.add(filePath)
+                    paths.add(filePath);
                 }
             } else if(file.isFile()){
                 System.out.println("File: " + filePath);
                 if(regE != null) {
                     if (fileName.matches(regE)){
-                        paths.add(filePath)
+                        paths.add(filePath);
                     }
                 }
                 else {

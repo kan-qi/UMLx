@@ -1,4 +1,6 @@
-package org.umlx;/*
+package org.umlx;
+
+/*
  * org.umlx.CodeAnalysis.java
  */
 
