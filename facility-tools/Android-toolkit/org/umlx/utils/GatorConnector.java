@@ -1,6 +1,5 @@
 package org.umlx.utils;
 
-import org.umlx.DebugOutput;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,8 +13,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -179,11 +176,21 @@ public class GatorConnector {
 //            System.exit(0);
         return handlers;
     }
+    
+
+    public int numViews = 0;
+    public int numScreens = 0; //activities that have at least one view associatee with.
+    public int numEventHandlers = 0;
 
     public List<String[]> parseGatorFile(File gatorFile) throws IOException, SAXException, ParserConfigurationException {
         Debug.v().println("parseGatorFile");
 
+        numViews = 0;
+        numScreens = 0; //activities that have at least one view associatee with.
+        numEventHandlers = 0;
+
         List<String[]> eventHandlers = new ArrayList<String[]>();
+        //int viewNumber = 0;
 
         if (gatorFile == null || !gatorFile.exists()) {
             System.out.println("gator file doesn't exist.");
@@ -224,7 +231,19 @@ public class GatorConnector {
 //        }
 
         String tname = node.getNodeName().trim();
-        if (tname.equals("Activity") || tname.equals("Dialog")) {
+
+        if(tname.equals("Dialog")){
+            numViews++;
+        }
+        else if(tname.equals("View")){
+            numViews++;
+
+            if(parent.getNodeName().trim() == "Activity"){
+                numScreens++;
+            }
+
+        }
+        else if (tname.equals("Activity")) {
             // String activityName =
             // node.getAttributes().getNamedItem("name").getNodeValue();
             activityNode = node;
@@ -244,6 +263,8 @@ public class GatorConnector {
                 String[] eventHandler = new String[] { className, methodName, viewName, activityName };
                 eventHandlers.add(eventHandler);
             }
+
+            numEventHandlers++;
         }
 
         // Parse the child nodes

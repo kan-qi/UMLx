@@ -2,6 +2,8 @@ package org.umlx;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.umlx.utils.FileManagerUtil;
 import org.umlx.utils.FlowDroidConnector;
 import org.umlx.utils.GatorConnector;
 import org.umlx.writers.*;
@@ -27,6 +29,32 @@ import java.util.*;
 //dump the call graph from FlowDroid
 public class UMLxAndroidToolKit {
     public UMLxAndroidToolKit(){}
+    
+    private static int numOfLayoutFiles(String inputDir, String outputDir) {
+    	  FileManagerUtil fileUtil = new FileManagerUtil(outputDir);
+          Map<String, List<String>> filePaths = new HashMap<String, List<String>>();
+          Map<String, List<String>> xmlPaths = new HashMap<String, List<String>>();
+  			try {
+  			filePaths = fileUtil.findFiles(inputDir, "^layout(.*)", false);
+  			List<String> directList = new ArrayList<String>();
+  			for(String targetPath : filePaths.keySet()){
+  	            //System.out.println(filePaths.get(targetPath));
+  	            directList.addAll(filePaths.get(targetPath));
+  	        }
+  			xmlPaths = fileUtil.findFiles(directList, "(.*)xml$", true);
+  			} catch (IOException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  			}
+  		
+  		 int numLayouts = 0;
+          for(String targetPath : xmlPaths.keySet()){
+//              System.out.println(xmlPaths.get(targetPath));
+        	  	numLayouts += xmlPaths.get(targetPath).size();
+          }
+          
+          return numLayouts;
+    }
 
     //output the call graph to JSON formate
     private static String dumpCallGraph(CallGraph cg){
@@ -57,10 +85,10 @@ public class UMLxAndroidToolKit {
 
     public static void main(String[] args){
 
-//        java -cp "out/production/Android-toolkit;libs/*" org.umlx.UMLxAndroidToolKit "f:/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "f:/D/Andr
-//        oid_SDK/platforms" "./"
+//      java -cp "out/production/Android-toolkit;libs/*" org.umlx.UMLxAndroidToolKit "f:/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "f:/D/Andr
+//      oid_SDK/platforms" "./"
 
-//        java -cp "./out/production/Android-toolkit:./libs/*" org.umlx.UMLxAndroidToolKit "/mnt/f/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "/mnt/f/D/Android_SDK/platforms" "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output"
+//      java -cp "./out/production/Android-toolkit:./libs/*" org.umlx.UMLxAndroidToolKit "/mnt/f/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "/mnt/f/D/Android_SDK/platforms" "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output"
 
         if (args.length < 2){
             printUsage();
@@ -84,10 +112,9 @@ public class UMLxAndroidToolKit {
             Configs.appPkg = args[2];
         }
 
-
-//        org.umlx.Configs.project = "/mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk";
-//        org.umlx.Configs.sdkDir = "/mnt/f/D/Android_SDK/platforms";
-//        org.umlx.Configs.outputDir = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output";
+//      org.umlx.Configs.project = "/mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk";
+//      org.umlx.Configs.sdkDir = "/mnt/f/D/Android_SDK/platforms";
+//      org.umlx.Configs.outputDir = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output";
 
         //read manifest object
         try {
@@ -115,7 +142,6 @@ public class UMLxAndroidToolKit {
             }
         }
 
-
         System.out.println(Configs.appPkg);
 
         File apkFile = new File(Configs.project);
@@ -139,6 +165,10 @@ public class UMLxAndroidToolKit {
         MultiMap<String, String> gatorCallbacks = GatorConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir, Configs.sdkVer);
         MultiMap<String, String> flowDroidCallbacks = FlowDroidConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir);
 
+        //scan the xml files for the layout.
+        //scan the number of files under the folder: Resoruces/res/layout*
+        int numOfLayoutFiles = numOfLayoutFiles(Configs.outputDir+"/Resources/res", Configs.outputDir);
+
         soot.G.reset();
         Options.v().set_src_prec(Options.src_prec_apk);
         Options.v().set_process_dir(Collections.singletonList(Configs.project));
@@ -159,7 +189,7 @@ public class UMLxAndroidToolKit {
                 c.setApplicationClass();
                 components.add(c);
                 for(String mtd : flowDroidCallbacks.get(cls)) {
-//                    SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
+//                  SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
                     SootMethod entryPoint = c.getMethodUnsafe(mtd);
                     if (entryPoint == null) {
                         continue;
@@ -183,26 +213,29 @@ public class UMLxAndroidToolKit {
             }
         }
 
-        for(SootClass c : callbackMethodSigs.keySet()){
-            for(SootMethod method: callbackMethodSigs.get(c)) {
-//                GatorHandlersWriter.v().println("<" + c.getName() + ": " + method.getSignature()+">");
-                  GatorHandlersWriter.v().println(method.getSignature());
+        for(SootClass c : callbackMethodSigs.keySet()) {
+            for (SootMethod method : callbackMethodSigs.get(c)) {
+//              GatorHandlersWriter.v().println("<" + c.getName() + ": " + method.getSignature()+">");
+                GatorHandlersWriter.v().println(method.getSignature());
             }
         }
 
-
-
         createMainMethod();
+
+        int numServices = 0;
+       	int numActivities = 0;
+       	int numBroadcastReceivers = 0;
+       	int numContentProviders = 0;
 
         DebugOutput.v().println("classes and methods1:");
         DebugOutput.v().println("package: " + Configs.appPkg);
         for (SootClass cs : Scene.v().getClasses()) {
             ClassWriter.v().println(cs.getName());
             DebugOutput.v().println("classes: "+cs.getName());
-//            if(cs.getName().equals("org.apache.log.LogTarget")){
-//                cs.setPhantomClass();
-//                continue;
-//            }
+//          if(cs.getName().equals("org.apache.log.LogTarget")){
+//              cs.setPhantomClass();
+//              continue;
+//           }
 
             if(cs.isPhantomClass()){
                 continue;
@@ -217,17 +250,41 @@ public class UMLxAndroidToolKit {
                 DebugOutput.v().println("library classes: "+cs.getName());
             }
 
-//            for (SootMethod mtd : cs.getMethods()) {
-//
-//                    DebugOutput.v().println("methods:"+mtd.getName());
-//            }
+//          for (SootMethod mtd : cs.getMethods()) {
+//              DebugOutput.v().println("methods:"+mtd.getName());
+//          }
+
+            SootClass AndroidServiceCls = Scene.v().getSootClass("android.app.Service");
+            SootClass AndroidContentProviderCls = Scene.v().getSootClass("android.content.ContentProvider");
+            SootClass AndroidActivityCls = Scene.v().getSootClass("android.app.Activity");
+            SootClass AndroidBroadcastReceiverCls = Scene.v().getSootClass("android.content.BroadcastReceiver");
+            //add the counters for activity, broadcast receiver, content provider, and services
+
+            FastHierarchy fastHierarchy = null;
+
+            try {
+                fastHierarchy = Scene.v().getFastHierarchy();
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+
+            if(fastHierarchy != null) {
+                if (Scene.v().getFastHierarchy().isSubclass(cs, AndroidServiceCls)) {
+                    numServices++;
+                } else if (Scene.v().getFastHierarchy().isSubclass(cs, AndroidContentProviderCls)) {
+                    numContentProviders++;
+                } else if (Scene.v().getFastHierarchy().isSubclass(cs, AndroidActivityCls)) {
+                    numActivities++;
+                } else if (Scene.v().getFastHierarchy().isSubclass(cs, AndroidBroadcastReceiverCls)) {
+                    numBroadcastReceivers++;
+                }
+            }
         }
 
 
         ICFG icfg = new ICFG();
 //
-        PackManager.v().getPack("jtp").add(
-                new Transform("jtp.myTransform", new BodyTransformer() {
+        PackManager.v().getPack("jtp").add( new Transform("jtp.myTransform", new BodyTransformer() {
                     protected void internalTransform(Body body, String phase, Map options) {
 //                        System.out.print("jtp.myTransform");
                         if(!body.getMethod().getDeclaringClass().getName().startsWith(Configs.appPkg)){
@@ -251,6 +308,7 @@ public class UMLxAndroidToolKit {
                                icfg.addEdge(new ICFG.CallEdge(e.getSrc().method(), u, e.getTgt().method(), index));
                                index++;
                            }
+
                            for(Unit sc : cfg.getSuccsOf(u)){
                                if(!visitedUnits.contains(sc)){
                                    stack.add(sc);
@@ -264,12 +322,11 @@ public class UMLxAndroidToolKit {
 
         Options.v().setPhaseOption("jb", "on");
         Options.v().setPhaseOption("cg", "on");
-
         Options.v().setPhaseOption("jtp.npc", "on");
+
         final CodeAnalysis.CodeAnalysisResult[] codeAnalysisResult = new CodeAnalysis.CodeAnalysisResult[1];
 
         PackManager.v().getPack("wjtp").add(new Transform("wjtp.umlxcx", new SceneTransformer(){
-
             @Override
             protected void internalTransform(String s, Map<String, String> map) {
                codeAnalysisResult[0] = CodeAnalysis.v().run();
@@ -295,6 +352,18 @@ public class UMLxAndroidToolKit {
         String res = dumpCallGraph(callGraph);
 
         CallGraphWriter.v().printf("%s", res);
+       
+        //dump other Android app attributes
+		String AndroidAttrs = "{\"Services\":\""+numServices+
+					"\",\"Activities\":\""+numActivities+
+					"\",\"BroadcastReceivers\":\""+numBroadcastReceivers+
+					"\",\"ContentProviders\":\""+numContentProviders+
+					"\",\"LayoutFiles\":\""+numOfLayoutFiles+
+					"\",\"Views\":\""+GatorConnector.v().numViews+
+					"\",\"Screens\":\""+GatorConnector.v().numScreens+
+					"\",\"EventHandlers\":\""+GatorConnector.v().numEventHandlers+"\"}";
+			
+		AndroidAttrsWriter.v().print(AndroidAttrs);
     }
 
 
@@ -306,6 +375,7 @@ public class UMLxAndroidToolKit {
     static private AndroidEntryPointCreator createEntryPointCreator() {
         // If we we already have an entry point creator, we make sure to clean up our
         // leftovers from previous runs
+
         if (entryPointCreator == null)
             entryPointCreator = new AndroidEntryPointCreator(manifest, components);
         else {
@@ -316,7 +386,7 @@ public class UMLxAndroidToolKit {
         MultiMap<SootClass, SootMethod> filteredCallbackMethodSigs = new HashMultiMap<>();
 
         DebugOutput.v().println("compoents and callbacks: start");
-            for (SootClass sc : components) {
+        for (SootClass sc : components) {
                 DebugOutput.v().println("component: "+sc.getName());
                 Set<SootMethod> callbackMtds = callbackMethodSigs.get(sc);
                 if (callbackMtds != null)
@@ -324,7 +394,7 @@ public class UMLxAndroidToolKit {
                         filteredCallbackMethodSigs.put(sc, cd);
                         DebugOutput.v().println("method: "+cd.getName());
                     }
-            }
+        }
 
         DebugOutput.v().println("compoents and callbacks: end");
         entryPointCreator.setCallbackFunctions(filteredCallbackMethodSigs);
@@ -340,8 +410,10 @@ public class UMLxAndroidToolKit {
         entryPointCreator = createEntryPointCreator();
         SootMethod dummyMainMethod = entryPointCreator.createDummyMain();
         Scene.v().setEntryPoints(Collections.singletonList(dummyMainMethod));
-        if (!dummyMainMethod.getDeclaringClass().isInScene())
+
+        if (!dummyMainMethod.getDeclaringClass().isInScene()) {
             Scene.v().addClass(dummyMainMethod.getDeclaringClass());
+        }
 
         // addClass() declares the given class as a library class. We need to
         // fix this.

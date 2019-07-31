@@ -1,5 +1,7 @@
 (function(){
-	
+	/*
+	* Implementing the specific rules to identify the elements.
+	*/
 	var pathPatternMatchUtil = require("../../utils/TransactionPatternMatchUtil.js");
 
 	var functionalPatterns = [

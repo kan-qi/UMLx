@@ -63,6 +63,7 @@
      		 for(var i in filePaths){
      		 var path = filePaths[i];
      		 if( fs.existsSync(path) ) {
+     		    //console.log(path);
      			 var fileContent = fs.readFileSync(path, 'utf8');
      			 fileContents.push(JSON.parse(fileContent.trim()));
      		 }

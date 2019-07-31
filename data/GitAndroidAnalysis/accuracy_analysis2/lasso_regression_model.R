@@ -86,3 +86,126 @@ lasso_model <- function(dataset){
   parameters = list()
   
 }
+
+moel_data_cols <- function(){
+  cols <- c(
+    #Tan
+    
+    #Costagliola
+    
+    #Minkiewicz
+    
+    #Albrecht
+    
+    #Karner
+    
+    #kim
+    
+    #zivkovic
+    
+    #Frances
+    
+    #Nitze
+    
+    #De Souza
+    
+    #Robles & Qi
+    
+    #"UseCase_Num",
+    #"Tran_Num",
+    #"Actor_Num",
+    #"Avg_Actor",
+    #"Component_num",
+    #"Attribute_num",
+    #"Operation_num",
+    #"class_num",
+    #"Top_Level_Classes",
+    #"Average_Depth_Inheritance_Tree",
+    #"Average_Number_Of_Children_Per_Base_Class",
+    #"Number_Of_Inheritance_Relationships",
+    #"Depth_Inheritance_Tree",
+    #"para_num", 
+    #"usage_num", 
+    #"real_num",
+    #"assoc_num",
+    #"external_oper_num",
+    #"data_object_num",
+    #"avg_operation",
+    #"avg_attribute",
+    #"avg_parameter",
+    #"avg_usage",
+    #"avg_real",
+    #"avg_assoc",
+    #"avg_instVar",
+    #"weighted_oper_num",
+    "DET",
+    "RET",
+    "ILF",
+    "EIF",
+    "EI",
+    "EO",
+    "EQ",
+    "EXT",
+    "ERY",
+    "RED",
+    "WRT", 
+    "NOET",
+    "NOAAE",
+    "NORT",
+    "NEM",
+    "NSR",
+    "NOS",
+    "WMC",
+    "MPC",
+    "DIT",
+    "NIVPC",
+    "NUMS",
+    "NTLC",
+    "ANWMC",
+    "ADIT",
+    "NOCPBC",
+    "NOC",
+    "NOR",
+    "ANAPUC",
+    "ANRPUC",
+    "NOC",
+    "NOIR",
+    "NOUR",
+    "NORR",
+    "NOM",
+    "NOP",
+    "NOCAL",
+    "NOASSOC",
+    "ANMC",
+    "ANPC",
+    "ANCAC",
+    "ANASSOCC",
+    "ANRELC",
+    "NOC",
+    "NOAPC",
+    "NODET",
+    "NORET",
+    "NOMPC",
+    "NPPM",
+    "NMT",
+    #"Num_User_Story",
+    #"Num_Tasks",
+    #"project_manager_estimate",
+    #"developer_estimate",
+    "Effort",
+    "Duration", #NODAY
+    "Personnel", #NOCTR
+    "PublishTime",
+    "StartTime",
+    "activePersonnel",
+    "Commits", #NOCMT
+    "Files",
+    #"Blanks",
+    "Comments",
+    "SLOC",
+    #"NSCRN", #adding number of screens
+    #"NOSV",
+    #"NODV",
+    #"NXML"
+  )
+}

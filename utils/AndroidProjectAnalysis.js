@@ -337,6 +337,31 @@ else if(functionSelection === "--calculate-cocomo-estimation-result"){
 	});
 	
 }
+else if(functionSelection === "--collect-android-attributes"){
+	var outputPath = repo.reportDir + pathSeparator + "android-attributes.csv";
+	var androidAttrsCSV = "Proj, Services, Activities, BroadcastReceivers, ContentProviders, LayoutFiles, Views, Screens, EventHandlers";
+
+    for(var i in repo.projectList){
+    	var androidAttrsPath = repo.projectList[i].path + pathSeparator + "android-attrs.json";
+    	if(!FileManagerUtils.existsSync(androidAttrsPath)){
+        	continue;
+        }
+        //console.log(androidAttrsPath);
+        androidAttrs = FileManagerUtils.readJSONSync(androidAttrsPath);
+        //console.log(androidAttrs);
+        androidAttrsCSV += "\n"+repo.projectList[i].tag+","
+                + androidAttrs.Services+","
+                +androidAttrs.Activities+","
+                +androidAttrs.BroadcastReceivers+","
+                +androidAttrs.ContentProviders+","
+                +androidAttrs.LayoutFiles+","
+                +androidAttrs.Views+","
+                +androidAttrs.Screens+","
+                +androidAttrs.EventHandlers;
+    }
+
+    FileManagerUtils.writeFileSync(outputPath, androidAttrsCSV);
+}
 else if(functionSelection === "--fix-android-analysis-reference"){
     var androidAnalysisPaths = [];
 	var androidAnalysisReadPaths = [];

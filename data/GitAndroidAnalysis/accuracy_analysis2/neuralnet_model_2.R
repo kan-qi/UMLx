@@ -118,7 +118,7 @@ fitModel <- function(data.train, verbose=F) {
                     maxit=1000,
                     #tuneLength=5,
                     tuneGrid=nnet.grid,
-                    trtrace=F,
+                    trace=F,
                     linout=1,
                     verbose=verbose)
   
