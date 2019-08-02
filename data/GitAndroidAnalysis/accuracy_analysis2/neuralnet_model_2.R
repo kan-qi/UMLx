@@ -122,11 +122,8 @@ fitModel <- function(data.train, verbose=FALSE) {
                     maxit=1000,
                     #tuneLength=5,
                     tuneGrid=nnet.grid,
-<<<<<<< HEAD
                     trtrace=FALSE,
-=======
                     trace=F,
->>>>>>> f1c581b51655fd5735fd12007487554de1b867d5
                     linout=1,
                     verbose=verbose)
   
@@ -683,7 +680,7 @@ plot.nnet<-function(mod.in,nid=TRUE,all.out=TRUE,all.in=TRUE,bias=TRUE,wts.only=
 }
 
 
-## Stub for testing
+# Stub for testing
 # filename <- "temp/android_dataset_6_4.csv"
 # modelData <- read.csv(filename, header=TRUE, sep=",", row.names="Project")
 # modelData$Project <- NULL
@@ -693,3 +690,4 @@ plot.nnet<-function(mod.in,nid=TRUE,all.out=TRUE,all.in=TRUE,bias=TRUE,wts.only=
 # neuralnet <- m_fit.neuralnet(neuralnet, modelData)
 # print(neuralnet)
 # predictions <- m_predict.neuralnet(neuralnet, modelData)
+# print(predictions)
