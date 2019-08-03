@@ -28,18 +28,18 @@ clean <- function(dataset) {
 }
 
 # Impute missing data in the dataset
-impute <- function(dataset) {
-  if (any(is.na(dataset))) {
+impute <- function(data) {
+  if (any(is.na(data))) {
     library(mice)
     library(randomForest)
   
     # perform mice imputation, based on random forests.
-    miceMod <- mice(dataset, method="rf", print=FALSE, remove_collinear=TRUE)
+    miceMod <- mice(data, method="rf", print=FALSE, remove_collinear=TRUE)
   
     # generate the completed data.
-    dataset <- complete(miceMod)
+    data <- complete(miceMod)
   }
-  return(dataset)
+  return(data)
 }
 
 
@@ -283,7 +283,7 @@ m_predict.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   library(dplyr)
   set.seed(1984)  # set a seed
   
-  dims = neuralnet$dims
+  dims = neuralnet$hyperparameters$dims
   data = dataset[, dims]
   data <- impute(data)
   transform <- neuralnet$transform
