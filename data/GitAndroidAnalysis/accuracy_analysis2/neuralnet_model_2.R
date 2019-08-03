@@ -283,7 +283,7 @@ m_predict.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   library(dplyr)
   set.seed(1984)  # set a seed
   
-  dims = neuralnet$hyperparameters$dims
+  dims = neuralnet$dims
   data = dataset[, dims]
   data <- impute(data)
   transform <- neuralnet$transform
