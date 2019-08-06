@@ -11,8 +11,12 @@
 
 ## Data processing ##
 clean <- function(dataset) {
+  # Drop columns that are in "drop" list
+  drop <- c("UIElements", "Screens", "UseCases", "Operations")
+  data <- subset(dataset, select=!names(dataset) %in% drop)
+  
   # Excluding y values
-  data <- dataset[, names(dataset) != "Effort"]
+  data <- data[, names(data) != "Effort"]
   
   # Keep numeric data only
   numeric_columns <- unlist(lapply(data, is.numeric))
@@ -34,7 +38,7 @@ impute <- function(data) {
     library(randomForest)
   
     # perform mice imputation, based on random forests.
-    miceMod <- mice(data, method="rf", print=FALSE, remove_collinear=TRUE)
+    miceMod <- mice(data, m=5, method="rf", print=FALSE, remove_collinear=TRUE)
   
     # generate the completed data.
     data <- complete(miceMod)
@@ -215,6 +219,7 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   
   data <- clean(dataset)
   data <- impute(data)
+  data <- clean(data)
   dims <- names(data)
   neuralnet$dims = dims
   
