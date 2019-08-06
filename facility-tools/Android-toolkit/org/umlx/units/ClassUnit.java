@@ -32,8 +32,17 @@ public class ClassUnit{
 		List<MethodUnit> methodUnits;
 		List<AttrUnit> attrUnits;
 		private String name;
+		private String type;
 
-		public List<AttrUnit> getAttr(){
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public List<AttrUnit> getAttr(){
 			return this.attrUnits;
 		}
 
@@ -51,6 +60,8 @@ public class ClassUnit{
 					this.getUuid()+"\","+
 					"\"name\":\""+
 					this.getName()+"\","+
+					"\"type\":\""+
+					this.getType()+"\","+
 					"\"isWithinBoundary\":\""+
 					this.isWithinBoundary()+"\","+
 					"\"methodUnits\":["

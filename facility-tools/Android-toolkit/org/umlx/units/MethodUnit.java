@@ -18,6 +18,15 @@ public class MethodUnit {
 			}
 			this.setAttachment(method);
 			this.setSignature(method.getSignature());
+			if(method.isPublic()){
+				this.publicity = "public";
+			}
+			else if(method.isPrivate()){
+				this.publicity = "private";
+			}
+			else{
+				this.publicity = "default";
+			}
 		}
 		String returnType;
 		List<String> parameterTypes;
@@ -25,6 +34,7 @@ public class MethodUnit {
 		private String uuid;
 		private SootMethod attachment;
 		private String signature;
+		private String publicity;
 
 		public String getReturnType() {
 			return this.returnType;
@@ -40,6 +50,7 @@ public class MethodUnit {
 			str.append("\"name\":\""+getName()+"\",");
 			str.append("\"UUID\":\""+getUuid()+"\",");
 			str.append("\"returnType\":\""+returnType+"\",");
+			str.append("\"publicity\":\""+this.publicity+"\",");
 			str.append("\"parameterTypes\":[");
 			int i = 0;
 			for(String parameterType : parameterTypes) {

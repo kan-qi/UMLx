@@ -27,8 +27,8 @@
 			}
 		}
 		
-		console.log("reformatted label");
-		console.log(reformattedLabel);
+		//console.log("reformatted label");
+		//console.log(reformattedLabel);
 		return reformattedLabel;
 	}
 
@@ -79,8 +79,7 @@
 
 	function drawUSIMDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
 
-		console.log("the domainmodel is: " + JSON.stringify(DomainModel));
-
+		//console.log("the domainmodel is: " + JSON.stringify(DomainModel));
 
 //		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {
 //		    if (err) throw err;
@@ -95,7 +94,7 @@
 		var activities = UseCase.Activities;
 		var precedenceRelations = UseCase.PrecedenceRelations;
 
-		console.log(precedenceRelations);
+		//console.log(precedenceRelations);
 
 
 		var graph = 'digraph g {\
@@ -419,12 +418,12 @@ var transactions = UseCase.Transactions;
 
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
-		console.log("the whole class diagram model is" + domainModel);
-		console.log("the whole class diagram model is" + JSON.stringify(domainModel));
+		//console.log("the whole class diagram model is" + domainModel);
+		//console.log("the whole class diagram model is" + JSON.stringify(domainModel));
 		var  domainModelElements = domainModel.Elements;
-		      console.log("run the create class dia");
-              console.log("class diagram model is"+domainModelElements);
-              console.log("class diagram model is"+JSON.stringify(domainModelElements));
+		      //console.log("run the create class dia");
+              //console.log("class diagram model is"+domainModelElements);
+              //console.log("class diagram model is"+JSON.stringify(domainModelElements));
 
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
@@ -486,8 +485,8 @@ var transactions = UseCase.Transactions;
 
             graph += 'imagepath = \"./public\"}';
 
-     		console.log("the diagram model graph is:"+graph);
-			console.log("the graphFilePath is:"+ graphFilePath);
+     		//console.log("the diagram model graph is:"+graph);
+			//console.log("the graphFilePath is:"+ graphFilePath);
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
      			console.log("class Diagram is done");
      		});
@@ -502,7 +501,7 @@ var transactions = UseCase.Transactions;
      		return;
      	}
 
-        console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
+        //console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
         var  dicComponentElements = dicComponent[Object.keys(dicComponent)[0]]["classUnits"];  
         
 		var graph = 'digraph class_diagram {';
@@ -636,9 +635,9 @@ var transactions = UseCase.Transactions;
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                    	 console.log(classMethodUnits[j]);
+                    	 //console.log(classMethodUnits[j]);
                          tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
-                         console.log(classMethodUnits[j]);
+                         //console.log(classMethodUnits[j]);
                          var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
                          for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
                         	 if(k != 0){
@@ -678,9 +677,9 @@ var transactions = UseCase.Transactions;
      
             graph += 'imagepath = \"./public\"}';
 
-     		console.log("the dicClassUnits graph is:"+graph);
+     		//console.log("the dicClassUnits graph is:"+graph);
 
-     		console.log("the dicClassUnits is:"+ graphFilePath);
+     		//console.log("the dicClassUnits is:"+ graphFilePath);
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
      			console.log("class Diagram is done");

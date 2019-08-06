@@ -374,9 +374,9 @@
                             var type = element.Type;
 							if (type === "boundary") {
                             			boundaryNum++;
-                            	} else if (type === "control") {
+                            } else if (type === "control") {
                             			controlNum++;
-                            	} else if (type === "entity") {
+                            } else if (type === "entity") {
                             			entityNum++;
                             			dataObjectNum++;
                             }

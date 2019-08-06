@@ -229,7 +229,7 @@ public class UMLxAndroidToolKit {
 
         DebugOutput.v().println("classes and methods1:");
         DebugOutput.v().println("package: " + Configs.appPkg);
-        for (SootClass cs : Scene.v().getClasses()) {
+        for (SootClass cs : Scene.v().getClasses()){
             ClassWriter.v().println(cs.getName());
             DebugOutput.v().println("classes: "+cs.getName());
 //          if(cs.getName().equals("org.apache.log.LogTarget")){

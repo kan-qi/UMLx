@@ -33,7 +33,7 @@
 	var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
 	var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 //	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
+	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator1.js');
 
 	var userStoryEvaluator = require('./evaluators/StoryPointEvaluator/UserStoryEvaluator.js');
 	

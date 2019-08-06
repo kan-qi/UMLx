@@ -543,6 +543,69 @@ else if(functionSelection === "--filter-logs"){
 	}
 
 }
+else if(functionSelection === "--clean-repos"){
+
+//	filterLogs(repo.projectList, repo.reportDir);
+
+//	var projectPaths = "";
+
+	for(var i in repo.projectList){
+		var projectPath = repo.projectList[i].path;
+        if(!FileManagerUtils.existsSync(projectPath)){
+            continue;
+        }
+
+        var files = FileManagerUtils.listFilesSync(projectPath);
+        for(var j in files){
+            var file = files[j];
+            if(file === repo.projectList[i].apkFileName){
+                continue;
+            }
+            console.log(projectPath+pathSeparator+file);
+            if(FileManagerUtils.isDirSync(projectPath+pathSeparator+file))
+            {
+            FileManagerUtils.deleteFolderRecursive(projectPath+pathSeparator+file);
+            }
+            else
+            {
+            FileManagerUtils.deleteFileSync(projectPath+pathSeparator+file);
+            }
+        }
+	}
+
+}
+else if(functionSelection === "--check-repos"){
+
+//	filterLogs(repo.projectList, repo.reportDir);
+
+//	var projectPaths = "";
+
+	for(var i in repo.projectList){
+		var projectPath = repo.projectList[i].path;
+        if(!FileManagerUtils.existsSync(projectPath)){
+            continue;
+        }
+
+        var files = FileManagerUtils.listFilesSync(projectPath);
+        for(var j in files){
+            var file = files[j];
+            if(file === repo.projectList[i].apkFileName){
+                console.log(file+" repo doesn't exist.")
+                continue;
+            }
+            console.log(projectPath+pathSeparator+file);
+            if(FileManagerUtils.isDirSync(projectPath+pathSeparator+file))
+            {
+            FileManagerUtils.deleteFolderRecursive(projectPath+pathSeparator+file);
+            }
+            else
+            {
+            FileManagerUtils.deleteFileSync(projectPath+pathSeparator+file);
+            }
+        }
+	}
+
+}
 else if(functionSelection === "--distribute-effort-to-personnel"){
     var onlineProjects = [];
     var onlineProjectsIndex = {};
@@ -641,8 +704,8 @@ for(var i in onlineProjectData){
 
 var useCaseProjects = [];
 var useCaseProjectsIndex = {};
-if(FileManagerUtils.existsSync(repo.repoDir+"/UseCaseAnalysisResults.csv")){
-var useCaseProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/UseCaseAnalysisResults.csv", true);
+if(FileManagerUtils.existsSync(repo.repoDir+"/Use_Case_Analysis_Results.csv")){
+var useCaseProjectData = FileManagerUtils.loadCSVFileSync(repo.repoDir+"/Use_Case_Analysis_Results.csv", true);
 for(var i in useCaseProjectData){
     var useCaseProject = useCaseProjectData[i];
     useCaseProjects.push(useCaseProject.Project);

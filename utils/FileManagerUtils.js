@@ -259,6 +259,9 @@
 		},
 		parseCSVData: parseCSVData,
 			deleteFolderRecursive : deleteFolderRecursive,
+			listFilesSync: function(folder){
+               return fs.readdirSync(folder);
+			},
 			readFilesSync : readFilesSync,
 			readFileSync: readFileSync,
 			writeFileSync: writeFileSync,

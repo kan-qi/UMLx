@@ -9,6 +9,7 @@ import org.umlx.units.CompositeClassUnit;
 import org.umlx.writers.GraphsWriter;
 
 import soot.SootClass;
+import soot.util.Chain;
 
 public class ExtendsGraph {
     public static void constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
@@ -25,18 +26,38 @@ public class ExtendsGraph {
                 System.out.println(e.toString());
             }
 
-            if (superClassUnit == null) {
-                continue;
+            if (superClassUnit != null) {
+                String from = superClassUnit.getName();
+                //if parent class is not in the map, ignore it
+                if (classUnitByName.containsKey(classUnit.getName()) && classUnitByName.containsKey(from)) {
+                    ClassUnit parent = classUnitByName.get(from);
+                    List<ClassUnit> temp = new ArrayList();
+                    temp.add(parent);
+                    temp.add(classUnit);
+                    extendsClasses.add(temp);
+                }
             }
 
-            String from = superClassUnit.getName();
-            //if parent class is not in the map, ignore it
-            if (classUnitByName.containsKey(classUnit.getName()) && classUnitByName.containsKey(from)) {
-                ClassUnit parent = classUnitByName.get(from);
-                List<ClassUnit> temp = new ArrayList();
-                temp.add(parent);
-                temp.add(classUnit);
-                extendsClasses.add(temp);
+            Chain<SootClass> interfaces = null;
+
+            try {
+                interfaces = sootClassUnit.getInterfaces();
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+
+            if (interfaces != null) {
+                for(SootClass interfaceUnit : interfaces) {
+                    String from = interfaceUnit.getName();
+                    //if parent class is not in the map, ignore it
+                    if (classUnitByName.containsKey(classUnit.getName()) && classUnitByName.containsKey(from)) {
+                        ClassUnit parent = classUnitByName.get(from);
+                        List<ClassUnit> temp = new ArrayList();
+                        temp.add(parent);
+                        temp.add(classUnit);
+                        extendsClasses.add(temp);
+                    }
+                }
             }
         }
 

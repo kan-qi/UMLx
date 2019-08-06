@@ -178,7 +178,7 @@
 				
 //				debug.writeJson2("control_flow_graph", controlFlowGraph);
 
-				domainModelInfo = domainModelConstruction.createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.extendsGraph, codeAnalysisResults.compositionGraph, codeAnalysisResults.dicMethodUnits, dicResponseMethodUnits);
+				domainModelInfo = domainModelConstruction.createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.extendsGraph, codeAnalysisResults.compositionGraph, codeAnalysisResults.dicMethodUnits, dicResponseMethodUnits, codeAnalysisResults.dicClassUnits);
 				
 				Model.DomainModel = domainModelInfo.DomainModel;
 				

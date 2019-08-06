@@ -88,6 +88,17 @@ public class CodeAnalysis {
 				classUnit = new ClassUnit(c, true);
 			}
 
+
+			if(c.isAbstract()){
+				classUnit.setType("abstract");
+			}
+			else if(c.isInterface()){
+				classUnit.setType("interface");
+			}
+			else {
+				classUnit.setType("class");
+			}
+
 			allClassUnits.add(classUnit);
 		}
 
