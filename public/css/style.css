@@ -217,12 +217,6 @@ width: 35px;
 	/* margin-top: 30px; */
 }
 
-.block>.panel-heading {
-	border: 0;
-	padding-left: 10%;
-	padding-right: 10%;
-}
-
 .chart-block {
 	float: left;
 	width: 48%;
@@ -282,24 +276,12 @@ width: 35px;
 	height: 65%;
 }
 
-.tab-pane {
-	overflow: auto;
-	border: 1px solid lightgray;
-	border-top: 0;
-	padding: 10px;
-}
-
 .statistical-item {
 	display: block;
 }
 
 .clear {
 	clear: both;
-}
-
-#repo-stats-chart, #model-stats-chart {
-	padding: 0;
-	background: #f5f5f5;
 }
 
 .no-border{
@@ -326,20 +308,6 @@ width: 35px;
 	padding-right: 0;
 	margin-bottom: 5px;
 	line-height: 2;
-}
-
-.repo-info-content .tab-pane, .model-info-content {
-	min-height: 80%;
-	margin: 0 auto;
-	width: 80%;
-	border: 0;
-}
-
-.tab-pane {
-	min-height: 80%;
-	margin: 0 auto;
-	width: 100%;
-	border: 0;
 }
 
 .nav-tabs>li>a {
@@ -509,9 +477,9 @@ select.sEstimator.form-control {
 
 #estimation-result-panel-body{
 	margin: auto;
-	padding: 20px;
+	/* padding: 20px; */
 	margin-bottom: 20px;
-	width: 80%;
+	/* width: 80%; */
 /*	border-radius: 10px;
 	border: 2px dotted grey;*/
 }
@@ -812,10 +780,6 @@ label. control-label. col-md-4 {
     text-align: left;
 }
 
-#wrapRow {
-	margin: 10px;
-}
-
 #dirAddress {
 	font-size: 16px;
 	margin: 5px 0 10px;
@@ -911,10 +875,6 @@ label. control-label. col-md-4 {
 
 #model-stats-chart {
 	min-height: 95vh;
-}
-
-#display-panel .panel {
-	margin-bottom: 0;
 }
 
 #submitArchivesButton {
@@ -1143,12 +1103,12 @@ width: 35px;
     border-top-right-radius: 3px;
 	*/
 	border: 0;
+	width: 80%;
+	margin: 0 auto;
 }
 
 .block>.panel-heading {
 	border: 0;
-	padding-left: 10%;
-	padding-right: 10%;
 }
 
 .chart-block {
@@ -1212,9 +1172,8 @@ width: 35px;
 
 .tab-pane {
 	overflow: auto;
-	border: 1px solid lightgray;
-	border-top: 0;
-	padding: 10px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 .statistical-item {
@@ -1260,15 +1219,6 @@ width: 35px;
 	min-height: 80%;
 	margin: 0 auto;
 	width: 100%;
-	border: 0;
-}
-
-.tab-pane {
-	min-height: 80%;
-	margin: 0 auto;
-	width: 100%;
-	border: 0;
-	height: 100%
 }
 
 .nav-tabs>li>a {
@@ -1497,7 +1447,7 @@ input[type=file] {
     text-align: center;
     text-transform: uppercase;
     margin-top: 3rem !important;
-    margin-bottom: 1rem !important;
+    margin-bottom: 3rem !important;
     padding-left: 30px;
     padding-right: 30px;
 }
@@ -1538,7 +1488,7 @@ input[type=file] {
 	background-color: #fff;
 	background-clip: border-box;
 	border: 1px solid rgba(0, 0, 0, 0.125);
-	border-radius: 5px;
+	border-radius: 13px;
 	margin-bottom: 10px;
 	box-shadow: 0 0 2.5rem 0 rgba(0, 0, 0, 0.05);
 }
@@ -1857,7 +1807,7 @@ label. control-label. col-md-4 {
 
 #displayArchive table, #displayRepoArchive table, #displayUploads table{
     margin: auto;
-    width: 95%;
+    width: 100%;
 }
 
 #displayArchive table tr, #displayRepoArchive table tr, #displayUploads table tr{
@@ -1867,7 +1817,10 @@ label. control-label. col-md-4 {
 }
 
 #wrapRow {
-	margin: 10px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 #dirAddress {
@@ -1875,7 +1828,7 @@ label. control-label. col-md-4 {
 	margin: 5px 0 10px;
 }
 .modal-content {
-	height: auto;
+	height: 100%;
 }
 
 #use-case-nodes {
@@ -2008,15 +1961,11 @@ label. control-label. col-md-4 {
 }
 
 .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
-	background: black;
+	background: #17A2B8;
 }
 
 .pagination>li>a, .pagination>li>span {
 	color: black;
-}
-
-.file-link {
-	color: #aba7a7;
 }
 
 .navbar {
@@ -2076,4 +2025,12 @@ th {
 
 .status-row {
 	margin-bottom: 10px;
+}
+
+.container {
+	width: 100%;
+}
+
+.table>tbody>tr>td {
+	vertical-align: middle;
 }

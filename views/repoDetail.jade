@@ -5,7 +5,7 @@ div.block.panel.panel-default
   div.panel-body(id="repo-stats-chart")
    div.repo-info-content
     div.tab-content
-      div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0; background: #f5f5f5")
+      div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0;")
           div.form-container
             form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func("' + repoID + '")', method='post', action='/')
               // file browser
@@ -14,10 +14,10 @@ div.block.panel.panel-default
                   label.input-group-btn
                       a.btn.btn-dark.btn-submit.btn-browse.overview-btn(style='border-radius: 13px; line-height: 31px; background: #17a2b8') Browse
                           input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
-              button.btn-dark.btn-submit.overview-elements.overview-btn(id="estimatorBtn" type="button", data-toggle="modal", data-target="#exampleModalCenter" style = "color: white; background: #17a2b8") Estimator
+              button.btn-dark.btn-submit.overview-elements.overview-btn(id="estimatorBtn" type="button", data-toggle="modal", data-target="#exampleModalCenter" style = "color: white; background: #17a2b8;") Estimator
               // Estimator Modal
-              #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true', )
-                .modal-dialog.modal-dialog-centered(role='document', style="margin-top : 5%;" )
+              #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true', style="height: 100%; padding-left: 0 !important" )
+                .modal-dialog.modal-dialog-centered(role='document', style="margin: 5% auto; width: 90%;")
                   .modal-content
                     .modal-header
                       //- h2#exampleModalLongTitle.modal-title.text-center Choose the parameters 
@@ -43,7 +43,7 @@ div.block.panel.panel-default
                     
                       //- button.close(type='button', data-dismiss='modal', aria-label='Close')
                       //-   span(aria-hidden='true') ×
-                    .modal-body(style = "height: 400px; overflow-y: auto;")
+                    .modal-body(style = "height: 79%; overflow-y: auto;")
                       #sec-1
                         .panel-group
                             .panel.panel-default
@@ -237,7 +237,7 @@ div.block.panel.panel-default
                                                 option 4
                                                 option 5
                     .modal-footer
-                      button.btn.btn-primary.silver(type='button', data-dismiss='modal') Close
+                      button.btn.btn-primary.silver(type='button', data-dismiss='modal', style="border-radius: 13px") Close
               // Submit button
               div.overview-elements
                   button.btn-dark.btn-submit.overview-elements.overview-btn(type='submit' style = "padding: 0 auto; background: #17a2b8") Submit

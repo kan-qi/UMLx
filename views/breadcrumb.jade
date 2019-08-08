@@ -1,7 +1,8 @@
-ol(class="breadcrumb", style="margin: 0; padding:0")
+ol(class="breadcrumb", style="margin: 0; padding:0; background-color: white")
     if repoID
-        li(class="breadcrumb-item")
-            a(href='/') Repo
+            a(href='/') 
+                h3(style="display: inline-block; color: 17A2B8") Repo 
+            h3(style="display: inline-block; margin-left: 5px")  / 
     if modelName && model_id
-        li(class="breadcrumb-item")
-            a(class="model-title breadcrumb-link", href="/queryModelInfo?model_id="+model_id) #{modelName}
+            a(href="/queryModelInfo?model_id="+model_id) 
+                h3(style="display: inline-block; color: 17A2B8") #{modelName}

@@ -18,15 +18,15 @@ html
         img.mb-4(src="img/UMLxlogo.png" width="92" height="92")
         h1.h2.mb-3.font-weight-normal Sign In
         label.sr-only(for="username") Username
-        input.form-control(type="text" id="username" name="username" placeholder="Username" required="" autofocus="")
+        input.form-control(type="text" id="username" name="username" placeholder="Username" required="" autofocus="" style="border-radius:13px; margin-top: 30px")
         label.sr-only(for="password") Password
-        input.form-control(type="password" id="password" name="password" placeholder="Password" required="")
-        div.checkbox.mb-3 
+        input.form-control(type="password" id="password" name="password" placeholder="Password" required="" style="border-radius:13px; margin-top: 30px; margin-bottom: 30px")
+        div.checkbox.mb-3(style="font-size: 15px")
           label 
-            input(type="checkbox" value="remember-me")
+            input(type="checkbox" value="remember-me", style="margin-right: 5px")
             span.remember  Remember me     
-        a(href='/') Forgot Password? 
-        button.btn.btn-lg.btn-info.btn-block(type="submit") Login
+        a(href='/', style="font-size: 15px") Forgot Password? 
+        button.btn.btn-lg.btn-info.btn-block(type="submit" style="border-radius:13px; font-size: 16px") Login
         br
         br
         hr
