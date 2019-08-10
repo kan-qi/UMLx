@@ -15,7 +15,7 @@ source("size_metric_based_models.R")
 source("neuralnet_model_2.R")
 source("stepwise_linear_model.R")
 source("lasso_regression_model3.R")
-source("regression_tree_model_1.R")
+source("regression_tree_model_8_7.R")
 source('familywiseHypoTest2.R')
 library(jsonlite)
 library(reshape)
@@ -37,7 +37,8 @@ Combined Data Effort Values
 #modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
 
-modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
+#modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
+modelData <- selectData("dsets/combined_data_set_4.csv")
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 #dataset <- modelData
 
@@ -86,10 +87,12 @@ size_models <- size_metric_models(modelData)
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-#models$step_lnr <- stepwise_linear_model(modelData)
+step_model <- stepwise_linear_model(modelData)
+models$step_lnr <- step_model
 
 #initialize the neuralnet model
-#models$neuralnet = neuralnet_model(modelData)
+neuralnetModel = neuralnet_model(modelData)
+models$neuralnet = neuralnetModel
 
 #initialize the lasso regression model. having problems, need to debug
 #models$lasso = lasso_model(modelData)
@@ -99,7 +102,8 @@ models = append(models, size_models)
 #fitted_model$lambda_list <-NULL
 #fitted_model_1 <- structure(fitted_model, class="hello")
 #initialize the regression tree model
-##models$reg_tree = regression_tree_model(modelData)
+reg_tree_model = regression_tree_model(modelData)
+models$reg_tree = reg_tree_model
 
 #load the machine learning based models
 #to create a model, following 3 steps:

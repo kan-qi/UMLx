@@ -666,6 +666,50 @@ else if(functionSelection === "--distribute-effort-to-personnel"){
      FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "effort_distribution.csv", output);
 
 }
+else if(functionSelection === "--connect-data-sheets"){
+	var datasheet1 = repo.repoDir + pathSeparator + "android_dataset_8_6_3.csv";
+	var datasheet2 = repo.repoDir + pathSeparator + "Use_Case_Analysis_Results_1.csv";
+
+	var data1 = FileManagerUtils.loadCSVFileSync2(datasheet1, true);
+	var data2 = FileManagerUtils.loadCSVFileSync2(datasheet2, true);
+
+	var header = data1.header + ","+data2.header;
+
+    var projects2 = [];
+    var projects2Index = {};
+    var projects2List = [];
+
+    for(var i in data2.body){
+            var project = data2.body[i];
+            //console.log(project);
+            projects2.push(project.Project);
+            projects2Index[project.Project] = i;
+            projects2List[i] = project;
+    }
+
+
+    var outputStr = "";
+    outputStr += header;
+
+    //console.log(projects2);
+
+    for(var i in data1.body){
+         var proj1 = data1.body[i];
+
+         var matches = stringSimilarity.findBestMatch(proj1.PROJ, projects2);
+
+         matchedProject  =  projects2List[projects2Index[matches.bestMatch.target]];
+
+         console.log(matchedProject.line);
+
+         outputStr += "\n"+proj1.line + "," + matchedProject.line;
+
+         console.log(project+" matched: "+matches.bestMatch.target);
+    }
+
+    FileManagerUtils.writeFileSync(repo.reportDir + pathSeparator + "combined_data_set.csv", outputStr);
+
+}
 else if(functionSelection === "--generate-repo-analysis-report"){
 
 //var modelOutputDirs = FileManagerUtils.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);

@@ -290,7 +290,7 @@ m_predict.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   
   dims = neuralnet$dims
   data = dataset[, dims]
-  data <- impute(data)
+  #data <- impute(data)
   transform <- neuralnet$transform
   data_test <- predict(transform, data[, names(data) != "Effort"])
   data_test$Effort <- data$Effort
