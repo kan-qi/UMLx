@@ -9,13 +9,29 @@
 #############################################################
 #############################################################
 
+library(caret)
+library(dplyr)
+library(parallel)
+library(nnet)
+
+library(mice)
+library(randomForest)
+
+library(nnet)
+
+library(caret)
+library(dplyr)
+library(doParallel)
+
+
 ## Data processing ##
-clean <- function(dataset) {
+clean_neural <- function(dataset) {
   # Drop columns that are in "drop" list
-  drop <- c("UIElements", "Screens", "UseCases", "Operations")
-  data <- subset(dataset, select=!names(dataset) %in% drop)
+  #drop <- c("UIElements", "Screens", "UseCases", "Operations")
+  #data <- subset(dataset, select=!names(dataset) %in% drop)
   
   # Excluding y values
+  data = dataset
   data <- data[, names(data) != "Effort"]
   
   # Keep numeric data only
@@ -34,9 +50,6 @@ clean <- function(dataset) {
 # Impute missing data in the dataset
 impute <- function(data) {
   if (any(is.na(data))) {
-    library(mice)
-    library(randomForest)
-  
     # perform mice imputation, based on random forests.
     miceMod <- mice(data, m=5, method="rf", print=FALSE, remove_collinear=TRUE)
   
@@ -52,12 +65,11 @@ startParallelProcessing <- function() {
   ## TODO: For making the result reproducible on parallel processing we need to set the seeds according to:
   ## https://stackoverflow.com/questions/13403427/fully-reproducible-parallel-models-using-caret
   # Library parallel() is a native R library, no CRAN required
-  library(parallel)
+
   # nCores <- detectCores(logical=FALSE)
   # nThreads <- detectCores(logical=TRUE)
   # cat("CPU with",nCores,"cores and",nThreads,"threads detected.\n")
   # load the doParallel/doSNOW library for caret cluster use
-  library(doParallel)
   # convention to leave 1 core for OS
   # cluster <- makeCluster(detectCores() - 1)
   cluster <- makeCluster(4)
@@ -114,7 +126,6 @@ fitModel <- function(data.train, verbose=FALSE) {
   
   ## Fit Model
   ######################################################## Neural Network NNET
-  library(nnet)
   if (verbose) cat("****** Neural Network - NNET ...  \n")
   nnet.grid <- expand.grid(size=c(1, 5, 7),
                            decay=c(0, 0.01, 0.1))
@@ -141,14 +152,13 @@ fitModel <- function(data.train, verbose=FALSE) {
 
 
 # Try out different hyperparameters and save the best one
-neuralnet_model <- function(dataset, verbose=FALSE) {
-  library(caret)
-  library(dplyr)
+neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
   
   set.seed(1984)  # set a seed
-  
+  #print(regression_cols)
+  regressionData = dataset[, regression_cols]
   # Clean dataset to keep features that we care about only
-  data <- clean(dataset)
+  data <- clean_neural(regressionData)
   data <- impute(data)
   
   if (verbose) {
@@ -207,21 +217,24 @@ neuralnet_model <- function(dataset, verbose=FALSE) {
   print(perf_grid[order(perf_grid$RMSE.test, decreasing=FALSE),])
   
   if (verbose) print(hyperparameters)
-  return(list(hyperparameters = hyperparameters))
+  
+  return(list(hyperparameters = hyperparameters, regression_cols = regression_cols))
 }
 
 
 # Training function for the neuralnet model
 m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
-  library(caret)
-  library(dplyr)
-  set.seed(1984)  # set a seed
   
-  data <- clean(dataset)
+  set.seed(1984)  # set a seed
+  #print(neuralnet$regression_cols)
+  regressionData <- dataset[, neuralnet$regression_cols]
+  data <- clean_neural(regressionData[, colnames(regressionData) != "Effort"])
   data <- impute(data)
-  data <- clean(data)
+  #data <- clean_neural(data)
   dims <- names(data)
+  print(dims)
   neuralnet$dims = dims
+  data$Effort = regressionData$Effort
   
   # get hyperparameters of the neuralnet
   pcaComp <- neuralnet$hyperparameters$pcaComp
@@ -257,7 +270,6 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
                                 verboseIter=FALSE)
   
   ## Fit Model
-  library(nnet)
   if (verbose) cat("****** Neural Network - NNET ...  \n")
   nnet.grid <- expand.grid(size=size, decay=decay)
 

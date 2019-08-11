@@ -11,9 +11,9 @@ Lasso_range = function(x, y, k){
   # k: the length of sequence
   # output:
   # seq: a sequence of lambdaa from high to low
-  x = x_data
-  y = y_data
-  k = 100
+  #x = x_data
+  #y = y_data
+  #k = 100
   
   # define my own scale function to simulate that in glmnet
   myscale = function(x) sqrt(sum((x - mean(x)) ^ 2) / length(x))
@@ -92,7 +92,7 @@ cv_lasso_model = function(x_data,y_data){
 }
 
 # Preprocess dataset
-clean <- function(dataset){
+clean_lasso <- function(dataset){
   
   # numeric data only
   numeric_columns <- unlist(lapply(dataset, is.numeric))
@@ -125,10 +125,10 @@ m_fit.lasso <- function(lasso,dataset){
   #dataset = modelData
   #lasso = list()
   
-  regressionData <- dataset[, regression_cols()]
+  regressionData <- dataset[, lasso$regression_cols]
   
   #ind_variables = c("Activity_Num", "Component_Num", "Precedence_Num",	"Stimulus_Num",	"Response_Num",	"Tran_Num",	"Boundary_Num")
-  cleanData <- clean(regressionData)
+  cleanData <- clean_lasso(regressionData)
   #keep the columns that have been changed and set into the ind_variables
   
   #ind_variables <- setdiff(names(dataset), names(cleanData))
@@ -179,126 +179,10 @@ m_predict.lasso <- function(lasso, testData){
   
 }
 
-lasso_model <- function(dataset){
+lasso_model <- function(dataset, regression_cols = c()){
   
-  parameters = list()
-  
-}
-
-
-regression_cols <- function(){
-  #duplicate:
-  #"Avg_Actor",
-  #"Component_num",
-  #"Attribute_num",
-  #"Operation_num",
-  #"class_num",
-  #"Top_Level_Classes",
-  #"Average_Depth_Inheritance_Tree",
-  #"Average_Number_Of_Children_Per_Base_Class",
-  #"Number_Of_Inheritance_Relationships",
-  #"Depth_Inheritance_Tree",
-  #"para_num", 
-  #"usage_num", 
-  #"real_num",
-  #"assoc_num",
-  #"external_oper_num",
-  #"data_object_num",
-  #"avg_operation",
-  #"avg_attribute",
-  #"avg_parameter",
-  #"avg_usage",
-  #"avg_real",
-  #"avg_assoc",
-  #"avg_instVar",
-  #"weighted_oper_num",
-  cols <- c(
-    ##Karner
-    "UseCase_Num",
-    "Tran_Num",
-    "Actor_Num",
-    ##Albrecht
-    "DET",
-    "RET",
-    "ILF",
-    "EIF",
-    "EI",
-    "EO",
-    "EQ",
-    ##Nitze
-    "EXT",
-    "ERY",
-    "RED",
-    "WRT", 
-    ##Tan
-    "NOET",
-    "NOAAE",
-    "NORT",
-    "NEM",
-    "NSR",
-    ##Minkiewicz
-    "NOS",
-    "WMC",
-    "MPC",
-    "DIT",
-    "NIVPC",
-    "NUMS",
-    "NTLC",
-    "ANWMC",
-    "ADIT",
-    "NOCPBC",
-    ##kim
-    "NOC",
-    "NOR",
-    "ANAPUC",
-    "ANRPUC",
-    "NOC",
-    "NOIR",
-    "NOUR",
-    "NORR",
-    "NOM",
-    "NOP",
-    "NOCAL",
-    "NOASSOC",
-    "ANMC",
-    "ANPC",
-    "ANCAC",
-    "ANASSOCC",
-    "ANRELC",
-    ##zivkovic
-    "NOC",
-    "NOAPC",
-    "NODET",
-    "NORET",
-    "NOMPC",
-    "NPPM",
-    "NMT",
-    #"Num_User_Story",
-    #"Num_Tasks",
-    #"project_manager_estimate",
-    #"developer_estimate",
-    ##Robles & Qi
-    "Duration", #NODAY
-    "Personnel", #NOCTR
-    "PublishTime",
-    "StartTime",
-    "activePersonnel",
-    "Commits", #NOCMT
-    "Files",
-    #"Blanks",
-    "Comments",
-    "SLOC",
-    "Type",
-    ##Frances
-    #"Services", #"NSCRN", #adding number of screens
-    #"Activities",
-    #"BroadcastReceivers",
-    #"ContentProviders",
-    #"LayoutFiles", #"NXML"
-    #"Screens",
-    ##De Souza
-    #"EventHandlers", #"NODV",
-    #"Views", #"NOSV",
-    "Effort"
+  parameters = list(
+    regression_cols = regression_cols
   )
+  
 }

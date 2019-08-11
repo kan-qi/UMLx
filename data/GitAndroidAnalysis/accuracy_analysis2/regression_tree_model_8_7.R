@@ -39,14 +39,17 @@ m_fit.reg_tree <- function(reg_tree,dataset){
   # train_df['Type'] <- apply(train_df['Type'], 1, function(x) if(x == 'Website') 1 else if (x =='Mobile App') 2 else if (x=='Information System') 3 else 4)
 
   #features = 'default'
+  #dataset = modelData
+  
   prune = TRUE
   plot_tree = FALSE
   
-    
-  train_df <- clean(data)
+  regression_cols = reg_tree$regression_cols;
+  regressionData <- dataset[, regression_cols];
+  train_df <- clean_tree(regressionData[, colnames(regressionData)!="Effort"])
   dims <- colnames(train_df)
   reg_tree$dims <- dims
-  
+  train_df$Effort = regressionData$Effort  
   
   # rt = rpart(Effort~., method="class", data=train_df)
   
@@ -115,28 +118,34 @@ m_predict.reg_tree <- function(reg_tree, testData){
     # predict variable names (no target variable)
   #  predictors <- c('NT', 'NORT', 'EUCP', 'DM', 'Tran_Num', 'EXUCP', 'EXT', 'ANPC', 'class_num', 'Attribute_num', 'real_num', 'MPC', 'COSMIC', 'Complex_UC', 'ANAPUC', 'EF', 'NEM', 'Personnel', 'TRAN_NA', 'EXTIVK', 'Avg_TD', 'avg_attribute', 'objectdata_num', 'NOP', 'SWTIII', 'NOR', 'NOUC', 'ControlNum', 'IFPUG', 'Average_UC', 'Component_num', 'WMC', 'RR', 'Arch_Diff', 'UCP', 'Type', 'Activity_Num', 'ANWMC', 'Actor_Num', 'MKII', 'Priori_COCOMO_Estimate', 'Avg_TL', 'INT', 'UseCase_Num', 'avg_real', 'NT.1', 'EXTCLL', 'avg_usage', 'Boundary_Num', 'Simple_UC', 'COCOMO_Estimate')
   #}
+  
+  #print(reg_tree$dims)
+  
+  for(i in 1:length(reg_tree$dims)){
+    print(reg_tree$dims[i])
+    testData[, reg_tree$dims[i]]
+  }
   test_df <- testData[, reg_tree$dims]
   #test_df <- testData[,names(testData)%in%predictors]
   # test_df['Type'] <- apply(test_df['Type'], 1, function(x) if(x == 'Website') 1 else if (x =='Mobile App') 2 else if (x=='Information System') 3 else 4)
-  
-  
+
   predict(reg_tree$m, test_df)
 }
 
-regression_tree_model <- function(modelData){
+regression_tree_model <- function(modelData, regression_cols){
   
-  models = list()
+  reg_tree = list()
   
-  models$reg_tree = list()
-  
-  models
+  reg_tree$regression_cols = regression_cols
+
+  reg_tree
   
 }
 
 
 
 # Preprocess dataset
-clean <- function(dataset){
+clean_tree <- function(dataset){
   
   # numeric data only
   #numeric_columns <- unlist(lapply(dataset, is.numeric))
@@ -144,7 +153,8 @@ clean <- function(dataset){
   #data.numeric <- data.frame(apply(dataset, 2, as.numeric))
   
   # remove near zero variance columns
-  #dataset <- modelData
+  #dataset <- regressionData
+  
   library(caret)
   nzv_cols <- nearZeroVar(dataset)
   if(length(nzv_cols) > 0) data <- dataset[, -nzv_cols]
@@ -158,7 +168,7 @@ clean <- function(dataset){
   # print(md.pattern(data))
   miceMod <- mice(data, method="rf", print=FALSE, remove_collinear = TRUE)
   # generate the completed data.
-  data.imputed <- complete(miceMod)
+  data.imputed <- mice::complete(miceMod)
   # remove collinear columns
   
   #descrCorr <- cor(data.imputed)
@@ -167,9 +177,10 @@ clean <- function(dataset){
   #coli <- findLinearCombos(data.imputed1)
   
   
-  coli <- findLinearCombos(data.imputed)
-  data.done <- data.imputed[, -coli$remove]
-  data.done$Effort <- dataset$Effort
+  #coli <- findLinearCombos(data.imputed)
+  #data.done <- data.imputed[, -coli$remove]
+  #data.done$Effort <- dataset$Effort
+  data.done <- data.imputed
   return(data.done)
 }
 

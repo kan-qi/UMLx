@@ -87,22 +87,19 @@ size_models <- size_metric_models(modelData)
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-step_model <- stepwise_linear_model(modelData)
+step_model <- stepwise_linear_model(modelData, regression_cols())
 models$step_lnr <- step_model
 
 #initialize the neuralnet model
-neuralnetModel = neuralnet_model(modelData)
+neuralnetModel = neuralnet_model(modelData, regression_cols())
 models$neuralnet = neuralnetModel
 
 #initialize the lasso regression model. having problems, need to debug
-#models$lasso = lasso_model(modelData)
-#fitted_model <- fit(modelData, "lasso", models$lasso)
-#print(fitted_model)
-#m_predict.lasso(fitted_model, modelData)
-#fitted_model$lambda_list <-NULL
-#fitted_model_1 <- structure(fitted_model, class="hello")
+las_model = lasso_model(modelData, regression_cols())
+models$lasso = las_model
+
 #initialize the regression tree model
-reg_tree_model = regression_tree_model(modelData)
+reg_tree_model = regression_tree_model(modelData, regression_cols())
 models$reg_tree = reg_tree_model
 
 #load the machine learning based models
@@ -196,16 +193,6 @@ for(i in 1:length(models)){
     metric_labels = c(metric_labels, accuracy_metrics[j])
   }
 }
-
-print("melt avg preds info")
-ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
-
-print("melt avg preds info as lines and smooth function")
-ggplot(meltAvgPreds) + theme_bw() + 
-		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
-		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 
 print("melt avg preds info as dots and smooth function")

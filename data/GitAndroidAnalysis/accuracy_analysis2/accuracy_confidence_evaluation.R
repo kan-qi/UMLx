@@ -463,3 +463,121 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   ret <- list(bsEstimations = bsEstimations, iterResults = iterResults, iterResults1=iterResults1)
 }
 
+
+regression_cols <- function(){
+  #duplicate:
+  #"Avg_Actor",
+  #"Component_num",
+  #"Attribute_num",
+  #"Operation_num",
+  #"class_num",
+  #"Top_Level_Classes",
+  #"Average_Depth_Inheritance_Tree",
+  #"Average_Number_Of_Children_Per_Base_Class",
+  #"Number_Of_Inheritance_Relationships",
+  #"Depth_Inheritance_Tree",
+  #"para_num", 
+  #"usage_num", 
+  #"real_num",
+  #"assoc_num",
+  #"external_oper_num",
+  #"data_object_num",
+  #"avg_operation",
+  #"avg_attribute",
+  #"avg_parameter",
+  #"avg_usage",
+  #"avg_real",
+  #"avg_assoc",
+  #"avg_instVar",
+  #"weighted_oper_num",
+  cols <- c(
+    ##Karner
+    "UseCase_Num",
+    "Tran_Num",
+    "Actor_Num",
+    ##Albrecht
+    "DET",
+    "RET",
+    "ILF",
+    "EIF",
+    "EI",
+    "EO",
+    "EQ",
+    ##Nitze
+    "EXT",
+    "ERY",
+    "RED",
+    "WRT", 
+    ##Tan
+    "NOET",
+    "NOAAE",
+    "NORT",
+    "NEM",
+    "NSR",
+    ##Minkiewicz
+    "NOS",
+    "WMC",
+    "MPC",
+    "DIT",
+    "NIVPC",
+    "NUMS",
+    "NTLC",
+    #"ANWMC",
+    #"ADIT",
+    "NOCPBC",
+    ##kim
+    "NOUC",
+    "NOR",
+    "ANAPUC",
+    "ANRPUC",
+    "NOC",
+    "NOIR",
+    "NOUR",
+    "NORR",
+    "NOM",
+    "NOP",
+    "NOCA",
+    "NOASSOC",
+    "ANMC",
+    "ANPC",
+    "ANCAC",
+    "ANASSOCC",
+    "ANRELC",
+    ##zivkovic
+    "NOAPC",
+    "NODET",
+    "NORET",
+    "NOMPC",
+    "NPPM",
+    "NMT",
+    #"Num_User_Story",
+    #"Num_Tasks",
+    #"project_manager_estimate",
+    #"developer_estimate",
+    ##Robles & Qi
+    "Duration", #NODAY
+    "Personnel", #NOCTR
+    "PublishTime",
+    "StartTime",
+    "ActivePersonnel",
+    "Commits", #NOCMT
+    "Files",
+    #"Blanks",
+    "Comments",
+    "SLOC",
+    "Type",
+    ##Frances
+    #"Services", #"NSCRN", #adding number of screens
+    #"Activities",
+    #"BroadcastReceivers",
+    #"ContentProviders",
+    #"LayoutFiles", #"NXML"
+    #"Screens",
+    ##De Souza
+    #"EventHandlers", #"NODV",
+    #"Views", #"NOSV",
+    "Effort"
+  )
+}
+
+
