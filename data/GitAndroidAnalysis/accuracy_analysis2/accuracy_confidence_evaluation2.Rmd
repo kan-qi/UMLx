@@ -162,24 +162,36 @@ ggplot(outputData, aes(x=SWTIII, y=Effort)) + geom_point()+theme_bw()
 comparing the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
 benchmarkResults <- modelBenchmark(models, modelData)
+
+model_names <- benchmarkResults$model_names
+accuracy_metrics <- benchmarkResults$accuracy_metrics
+fitReesults <- benchmarkResults$fitResults
+cvResults <- benchmarkResults$cvResults
+bsRet <- benchmarkResults$bsResults
 ```
 
 ```{r evaluate goodness of fit of the models}
 #evaluate goodness of fit
-fitReesults <- benchmarkResults$fitResults
 
 ```
 
 ```{r evaluate the out-of-sample accuracy of the models}
 #evaluate cross-validation
-model_names <- benchmarkResults$model_names
-accuracy_metrics <- benchmarkResults$accuracy_metrics
-#plot for the cross validation results
-cvResults <- benchmarkResults$cvResults
+
+#plot for the cross validation results for pred(.01)- pred(0.50)
 avgPreds <- cvResults[["avgPreds"]]
 avgPreds <- data.frame(avgPreds)
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+#rank the cv results of different metric
+accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
 model_labels <- c()
 for(i in 1:length(models)){
   for(j in 1:length(accuracy_metrics)){
@@ -194,15 +206,322 @@ for(i in 1:length(models)){
   }
 }
 
-print("melt avg preds info as dots and smooth function")
-ggplot(meltAvgPreds) + theme_bw() + 
-		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
-		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15))+
-		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$label <- rownames(cvAccuracyResults)
+cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults$label <- NULL
+cvAccuracyResults$model_labels <- model_labels
+cvAccuracyResults$metric_labels <- metric_labels
 
-#rank the cv results of different metric
+#calculate ranking results
+cvRankResults <- data.frame(model_names)
+names(cvRankResults)<-c("model_labels")
 
+for (i in 1:length(accuracy_metrics)){
+  g = accuracy_metrics[i]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  colnames(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#make a total rank(rank*) base on the ranki
+rank_sum <- vector(mode = "integer",length = length(models))
+for (i in 1:length(models)){
+  selectedData <- cvRankResults[i,]
+  for(j in 1:length(accuracy_metrics)){
+    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
+  }
+}
+rank_sum <- rank(rank_sum, ties.method = "min")
+print(rank_sum)
+cvRankResults["rank*"] <- rank_sum
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
+
+#change the first line as the row name
+rownames(cvRankResults) = cvRankResults[,1]
+cvRankResults <- cvRankResults[,-1]
+
+print(round(cvRankResults,2))
+
+# draw histogram base on ranking
+library(ggplot2)
+modelsName = rownames(cvRankResults)
+p <- list()
+for(i in 1:length(accuracy_metrics)){
+  g = paste("rank", i, sep = "")
+  selectedData <- cvRankResults[names(cvRankResults) == g]
+  names(selectedData) <- c("rank");
+  p[[i]] <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+    geom_bar(stat="identity", colour = "black") + 
+    #scale_y_discrete(expand = c(0, 0)) + 
+    guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
+    geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
+    #ggtitle(accuracy_metrics[i]) +
+    labs(caption=toupper(accuracy_metrics[i])) + 
+    theme(plot.caption = element_text(hjust=0.5, size=rel(1)),
+          #axis.line=element_blank(),
+          axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
+}
+
+library("cowplot")
+
+prow <- plot_grid( p[[1]] + theme(legend.position="none"),
+                   p[[2]] + theme(legend.position="none"),
+                   p[[3]] + theme(legend.position="none"),
+                   p[[4]] + theme(legend.position="none"),
+                   p[[5]] + theme(legend.position="none"),
+                   p[[6]] + theme(legend.position="none"),
+                   align = 'vh',
+                   hjust = -1,
+                   nrow = 1
+                  )
+legend_b <- get_legend(p[[1]] + theme(legend.position="bottom", legend.justification="center"))
+title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='bold')
+p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2 , 1, .1))
+p_cvRank
+
+# draw overall ranking histogram
+selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
+names(selectedData) <- c("rank");
+p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+  geom_bar(stat="identity", colour = "black", width = 0.7) + 
+  #scale_y_discrete(expand = c(0, 0)) + 
+  guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
+  geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
+  ggtitle("Overall Ranking Result for Cross Validation") +
+  #labs(caption=toupper("Total Rank")) + 
+  theme(plot.caption = element_text(hjust=0.5, size=rel(0.5)), legend.position = "bottom",legend.text=element_text(size=10), 
+        plot.title = element_text(hjust = 0.5), 
+        #axis.line=element_blank(),
+        axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
+p_cvAllRank
+```
+
+```{r evaluate overlapping of 84% confidence intervals}
+#evaluate bootstrap results
+bsRet <- benchmarkResults$bsResults
+#bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
+bsEstimations <- bsRet[['bsEstimations']]
+iterResults <- bsRet[['iterResults']]
+
+#save as csv
+#write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
+#write.csv(iterResults, file='iterResults.csv', quote=F, row.names = F)
+
+#read from csv
+#bsEstimations <- read.csv('bsEstimations.csv')
+#rownames(bsEstimations) <- c('lower','mean','upper')
+#iterResults <- read.csv('iterResults.csv')
+
+# plot bootstrapping results
+
+df <- data.frame(t(bsEstimations))
+df$labels <- rownames(df)
+df$model_labels <- model_labels
+df$metric_labels <- metric_labels
+
+print(metric_labels)
+
+nonOverlappingPairs <- data.frame(matrix(ncol = 7, nrow = 0))
+colnames(nonOverlappingPairs) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
+for (i in 1:length(accuracy_metrics)){
+    g = metric_labels[i]
+    if(g == "predRange"){
+      next
+    }
+    g_label <- toupper(g)
+    selectedData <- df[df$metric_labels == g,]
+    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
+    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
+    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
+    xlab('MODEL') +
+    ylab(g_label) +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))
+    print(p)
+    for (j in 1:(nrow(selectedData)-1)){
+      for (k in (j+1):nrow(selectedData)){
+        if(selectedData[j,]$lower>selectedData[k,]$upper | selectedData[j,]$upper<selectedData[k,]$lower){
+          #selectedData[j,] and selectedData[k,] non-overlap
+          nonOverlap <- data.frame(
+            selectedData[j,]$model_labels,
+            selectedData[k,]$model_labels,
+            g,
+            round(selectedData[j,]$mean, 3),
+            round(selectedData[k,]$mean, 3),
+            paste0("[", as.character(round(selectedData[j,]$lower, 3)), ", ", as.character(round(selectedData[j,]$upper, 3)), "]"),
+            paste0("[", as.character(round(selectedData[k,]$lower, 3)), ", ", as.character(round(selectedData[k,]$upper, 3)), "]")
+            )
+          colnames(nonOverlap) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
+          nonOverlappingPairs <- rbind(nonOverlappingPairs, nonOverlap)
+        }
+      }
+    }
+}
+
+# apply filters on the overlapping results.
+filteredNonOverlappingPairs = nonOverlappingPairs[which((nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1"))) & nonOverlappingPairs$Metric %in% c("mmre", "mdmre", "pred25"),]
+
+write.csv(filteredNonOverlappingPairs,'nonOverlappingPairs.csv')
+
+print(nonOverlappingPairs)
+
+for (i in 1:length(accuracy_metrics)){
+    g = metric_labels[i]
+    g_label <- toupper(g)
+    selectedData <- df[df$metric_labels == g,]
+    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
+    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
+    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
+    xlab('MODEL') +
+    ylab(g_label) +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))+
+    theme_bw()
+    print(p)
+}
+
+# draw a partially ordered graph based on non-overlapping pairs
+
+
+# for (i in 1:length(metric_labels)){
+#     g = metric_labels[i]
+#     selectedData <- df[df$metric_labels == g,]
+#     p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) +
+#     geom_crossbar(width = 0.5, position = "dodge") +
+#     #coord_flip() +
+#     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+#     xlab('model') +
+#     ylab(g) +
+#     ggtitle(g)
+#     print(p)
+# }
+```
+
+```{r evaluate the p-values under family-wise control}
+
+sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics[! accuracy_metrics %in% c("predRange")], model_names, "boot")
+
+
+round_df <- function(df, digits) {
+  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
+
+  df[,nums] <- round(df[,nums], digits = digits)
+
+  (df)
+}
+
+sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25")),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
+sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
+sig_bs_f = round_df(sig_bs_f, 2)
+print(sig_bs_f)
+
+#identify the parirs that are not identified from the 84% overlaps.
+nonOverlappingPairsIndices <- paste(nonOverlappingPairs$Model1, nonOverlappingPairs$Model2, nonOverlappingPairs$Metric, sep="-")
+print(nonOverlappingPairsIndices)
+
+sig_bs_f_indices <- paste(sig_bs_f$model1, sig_bs_f$model2, sig_bs_f$metric, sep="-")
+print(sig_bs_f_indices)
+sig_bs_f$index <- sig_bs_f_indices
+`%ni%` <- Negate(`%in%`)
+filtered_sig_bs_f = sig_bs_f[which(sig_bs_f$index %ni% nonOverlappingPairsIndices), ]
+
+write.csv(filtered_sig_bs_f,'sig_bs_f.csv')
+
+# Using the "sig_bs" results, create a graph to represent the direct graph for the models.
+library(igraph)
+for(metric_i in 1:length(accuracy_metrics)){
+  print(accuracy_metrics[metric_i])
+  if(accuracy_metrics[metric_i] == "predRange"){
+    next
+  }
+  selectedData <- sig_bs[sig_bs$metric == metric_labels[metric_i],]
+  m <- matrix(0, nrow = length(models), ncol = length(models), byrow = FALSE)
+  colnames(m) <- names(models)
+  rownames(m) <- names(models)
+  for(i in 1:nrow(selectedData)){
+    if(selectedData$BH_p_value[i] < 0.05){
+    if(selectedData$direction[i] == "+"){
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$BH_p_value[i], 3)
+    }else if(selectedData$direction[i] == "-"){
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$BH_p_value[i], 3)
+    }
+    }
+  }
+  
+  edge_val <- c() 
+  # if A -> B -> C, remove edge A -> C
+  for(i in 1:length(models)){
+    for(j in 1:length(models)){
+      if(m[i,j] != 0){
+        edge_val <- c(edge_val, m[i,j]) 
+        for(k in 1:length(models)){
+          if(m[j,k] != 0)
+            m[i,k] = 0
+        }
+      }
+    }
+  }
+  
+  #plot the directed graph
+  model_mean <- matrix(0, nrow = length(models), byrow = FALSE)
+  rownames(model_mean) <- names(models)
+  colnames(model_mean) <- "mean"
+  for(i in 1:nrow(selectedData)){
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$model1_mean, 3)
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model2)] = round(selectedData[i,]$model2_mean, 3)
+  }
+
+  net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
+  
+lo <- layout.fruchterman.reingold(net, niter = 1000)
+plot(net, vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+              edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label = edge_val, edge.label.cex=0.7)
+  
+#plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  
+  title(main = metric_labels[metric_i])
+}
+
+
+# filter for 
+
+```
+
+```{r stratified analysis, warning = FALSE}
+projectCategories <- as.matrix(read.csv("./project_categorization.csv"))
+print(projectCategories)
+nCategories <- nrow(projectCategories)
+benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
+categorizedBenchmarkResults = list()
+
+for(i in 1:nCategories){
+  #print(projectCategories[i, ])
+  categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=projectCategories[i,])
+
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
+  
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
+  
+  print(categorizedDataset)
+  benchmarkResults <- modelBenchmark(models, categorizedDataset)
+  categorizedBenchmarkResults[[benchmarkLabels[i]]] <- benchmarkResults
+  
+  # calculate the rank information
+  
+cvResults <- benchmarkResults$cvResults
+  
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
 cvAccuracyResults$model_labels <- model_labels
 cvAccuracyResults$metric_labels <- accuracy_metrics
@@ -243,45 +562,7 @@ cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
 rownames(cvRankResults) = cvRankResults[,1]
 cvRankResults <- cvRankResults[,-1]
 
-print(round(cvRankResults,2))
-
-
-# draw histogram base on ranking
-library(ggplot2)
-modelsName = rownames(cvRankResults)
-p <- list()
-for(i in 1:length(accuracy_metrics)){
-  g = paste("rank", i, sep = "")
-  selectedData <- cvRankResults[names(cvRankResults) == g]
-  names(selectedData) <- c("rank");
-  p[[i]] <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
-    geom_bar(stat="identity", colour = "black") + 
-    #scale_y_discrete(expand = c(0, 0)) + 
-    guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
-    geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
-    #ggtitle(accuracy_metrics[i]) +
-    labs(caption=toupper(accuracy_metrics[i])) + 
-    theme(plot.caption = element_text(hjust=0.5, size=rel(1)),
-          #axis.line=element_blank(),
-          axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
-}
-
-library("cowplot")
-
-prow <- plot_grid( p[[1]] + theme(legend.position="none"),
-                   p[[2]] + theme(legend.position="none"),
-                   p[[3]] + theme(legend.position="none"),
-                   p[[4]] + theme(legend.position="none"),
-                   p[[5]] + theme(legend.position="none"),
-                   p[[6]] + theme(legend.position="none"),
-                   align = 'vh',
-                   hjust = -1,
-                   nrow = 1
-                  )
-legend_b <- get_legend(p[[1]] + theme(legend.position="bottom", legend.justification="center"))
-title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='bold')
-p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2 , 1, .1))
-p_cvRank
+#print(round(cvRankResults,2))
 
 # draw overall ranking histogram
 selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
@@ -290,7 +571,7 @@ p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) 
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
   guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
-  geom_text(aes(label = rank, vjust = -0.8, hjust = 0.5)) +
+  geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
   ggtitle("Overall Ranking Result for Cross Validation") +
   #labs(caption=toupper("Total Rank")) + 
   theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
@@ -298,198 +579,6 @@ p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) 
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
 p_cvAllRank
-```
-
-```{r evaluate overlapping of 84% confidence intervals}
-#evaluate bootstrap results
-bsRet <- benchmarkResults$bsResults
-#bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
-bsEstimations <- bsRet[['bsEstimations']]
-iterResults <- bsRet[['iterResults']]
-
-#save as csv
-#write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
-#write.csv(iterResults, file='iterResults.csv', quote=F, row.names = F)
-
-#read from csv
-#bsEstimations <- read.csv('bsEstimations.csv')
-#rownames(bsEstimations) <- c('lower','mean','upper')
-#iterResults <- read.csv('iterResults.csv')
-
-# plot bootstrapping results
-
-df <- data.frame(t(bsEstimations))
-df$labels <- rownames(df)
-df$model_labels <- model_labels
-df$metric_labels <- metric_labels
-
-print(metric_labels)
-
-nonOverlappingPairs <- data.frame(matrix(ncol = 7, nrow = 0))
-colnames(nonOverlappingPairs) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
-for (i in 1:length(accuracy_metrics)){
-    g = metric_labels[i]
-    g_label <- toupper(g)
-    selectedData <- df[df$metric_labels == g,]
-    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
-    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
-    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
-    xlab('MODEL') +
-    ylab(g_label) +
-    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
-    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))
-    print(p)
-    for (j in 1:(nrow(selectedData)-1)){
-      for (k in (j+1):nrow(selectedData)){
-        if(selectedData[j,]$lower>selectedData[k,]$upper | selectedData[j,]$upper<selectedData[k,]$lower){
-          #selectedData[j,] and selectedData[k,] non-overlap
-          nonOverlap <- data.frame(
-            selectedData[j,]$model_labels,
-            selectedData[k,]$model_labels,
-            g,
-            round(selectedData[j,]$mean, 3),
-            round(selectedData[k,]$mean, 3),
-            paste0("[", as.character(round(selectedData[j,]$lower, 3)), ", ", as.character(round(selectedData[j,]$upper, 3)), "]"),
-            paste0("[", as.character(round(selectedData[k,]$lower, 3)), ", ", as.character(round(selectedData[k,]$upper, 3)), "]")
-            )
-          colnames(nonOverlap) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
-          nonOverlappingPairs <- rbind(nonOverlappingPairs, nonOverlap)
-        }
-      }
-    }
-}
-
-nonOverlappingPairs = nonOverlappingPairs[which(nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1")),]
-
-print(nonOverlappingPairs)
-
-
-for (i in 1:length(accuracy_metrics)){
-    g = metric_labels[i]
-    g_label <- toupper(g)
-    selectedData <- df[df$metric_labels == g,]
-    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
-    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
-    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
-    xlab('MODEL') +
-    ylab(g_label) +
-    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
-    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))+
-    theme_bw()
-    print(p)
-}
-
-# draw a partially ordered graph based on non-overlapping pairs
-
-
-# for (i in 1:length(metric_labels)){
-#     g = metric_labels[i]
-#     selectedData <- df[df$metric_labels == g,]
-#     p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) +
-#     geom_crossbar(width = 0.5, position = "dodge") +
-#     #coord_flip() +
-#     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
-#     xlab('model') +
-#     ylab(g) +
-#     ggtitle(g)
-#     print(p)
-# }
-```
-
-```{r evaluate the p-values under family-wise control}
-
-foldResults <- cvResults$foldResults
-
-sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
-
-
-round_df <- function(df, digits) {
-  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
-
-  df[,nums] <- round(df[,nums], digits = digits)
-
-  (df)
-}
-
-sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
-sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25", "mae")),]
-sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
-sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
-sig_bs_f = round_df(sig_bs_f, 2)
-print(sig_bs_f)
-
-
-# Using the "sig_bs" results, create a graph to represent the direct graph for the models.
-library(igraph)
-for(metric_i in 1:length(accuracy_metrics)){
-  selectedData <- sig_bs[sig_bs$metric == metric_labels[metric_i],]
-  m <- matrix(0, nrow = length(models), ncol = length(models), byrow = FALSE)
-  colnames(m) <- names(models)
-  rownames(m) <- names(models)
-  for(i in 1:nrow(selectedData)){
-    if(selectedData$BH_p_value[i] < 0.05){
-    if(selectedData$direction[i] == "+"){
-      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$bonferroni_p_value[i], 3)
-    }else if(selectedData$direction[i] == "-"){
-      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$bonferroni_p_value[i], 3)
-    }
-    }
-  }
-  
-  edge_val <- c() 
-  # if A -> B -> C, remove edge A -> C
-  for(i in 1:length(models)){
-    for(j in 1:length(models)){
-      if(m[i,j] != 0){
-        edge_val <- c(edge_val, m[i,j]) 
-        for(k in 1:length(models)){
-          if(m[j,k] != 0)
-            m[i,k] = 0
-        }
-      }
-    }
-  }
-  
-  #plot the directed graph
-  model_mean <- matrix(0, nrow = length(models), byrow = FALSE)
-  rownames(model_mean) <- names(models)
-  colnames(model_mean) <- "mean"
-  for(i in 1:nrow(selectedData)){
-    model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$model1_mean, 3)
-    model_mean[which(rownames(model_mean) == selectedData[i,]$model2)] = round(selectedData[i,]$model2_mean, 3)
-  }
-
-  net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
-  
-  plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold,
-              vertex.color="white", vertex.label.color="black", vertex.size=25,
-              edge.color="black", edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
-  
-  title(main = metric_labels[metric_i])
-}
-
-
-# filter for 
-
-```
-
-```{r stratified analysis, warning = FALSE}
-projectCategories <- as.matrix(read.csv("./project_categorization.csv"))
-print(projectCategories)
-nCategories <- nrow(projectCategories)
-benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
-categorizedBenchmarkResults = list()
-
-for(i in 1:nCategories){
-  #print(projectCategories[i, ])
-  categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=projectCategories[i,])
-
-  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
-  
-  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
-  
-  print(categorizedDataset)
-  categorizedBenchmarkResults[[benchmarkLabels[i]]] <- modelBenchmark(models, categorizedDataset)
 
 }
 
