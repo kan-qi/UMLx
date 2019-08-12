@@ -12,11 +12,11 @@ source("utils/model_funcs.R")
 source("accuracy_confidence_evaluation.R")
 source("transaction_based_model.R")
 source("size_metric_based_models.R")
-source("neuralnet_model_2.R")
+source("neuralnet_model.R")
 source("stepwise_linear_model.R")
-source("lasso_regression_model3.R")
-source("regression_tree_model_1.R")
-source('familywiseHypoTest2.R')
+source("lasso_regression_model.R")
+source("regression_tree_model.R")
+source('familywiseHypoTest.R')
 library(jsonlite)
 library(reshape)
 library(tidyverse)
@@ -37,7 +37,8 @@ Combined Data Effort Values
 #modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
 
-modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
+#modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
+modelData <- selectData("dsets/combined_data_set_4.csv")
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 #dataset <- modelData
 
@@ -86,20 +87,20 @@ size_models <- size_metric_models(modelData)
 models = append(models, size_models)
 
 #intialize the step-wise learning model
-#models$step_lnr <- stepwise_linear_model(modelData)
+step_model <- stepwise_linear_model(modelData, regression_cols())
+models$step_lnr <- step_model
 
 #initialize the neuralnet model
-#models$neuralnet = neuralnet_model(modelData)
+neuralnetModel = neuralnet_model(modelData, regression_cols())
+models$neuralnet = neuralnetModel
 
 #initialize the lasso regression model. having problems, need to debug
-models$lasso = lasso_model(modelData)
-#fitted_model <- fit(modelData, "lasso", models$lasso)
-#print(fitted_model)
-#m_predict.lasso(fitted_model, modelData)
-#fitted_model$lambda_list <-NULL
-#fitted_model_1 <- structure(fitted_model, class="hello")
+las_model = lasso_model(modelData, regression_cols())
+models$lasso = las_model
+
 #initialize the regression tree model
-##models$reg_tree = regression_tree_model(modelData)
+reg_tree_model = regression_tree_model(modelData, regression_cols())
+models$reg_tree = reg_tree_model
 
 #load the machine learning based models
 #to create a model, following 3 steps:
@@ -161,43 +162,36 @@ ggplot(outputData, aes(x=SWTIII, y=Effort)) + geom_point()+theme_bw()
 comparing the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
 benchmarkResults <- modelBenchmark(models, modelData)
+
+model_names <- benchmarkResults$model_names
+accuracy_metrics <- benchmarkResults$accuracy_metrics
+fitReesults <- benchmarkResults$fitResults
+cvResults <- benchmarkResults$cvResults
+bsRet <- benchmarkResults$bsResults
 ```
 
 ```{r evaluate goodness of fit of the models}
 #evaluate goodness of fit
-fitResults <- benchmarkResults$fitResults
-goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
-goodnessRankResults = data.frame(matrix(ncol=length(goodness_fit_metrics), nrow=length(fitResults)))
-colnames(goodnessRankResults) <- goodness_fit_metrics
-goodnessRankResults$model_labels = names(fitResults)
-for (i in 1:length(goodness_fit_metrics)){
-  g = goodness_fit_metrics[i]
-  selectData = data.frame(matrix(ncol=0, nrow=length(fitResults)))
-  selectData$model_labels <- names(fitResults)
-  selectData[, g] <- c()
-  for(j in 1:length(fitResults)){
-  m = fitResults[[j]]
-  m_name = names(fitResults)[j]
-  selectData[m_name, g] <- m[[g]]
-  }
-  selectData[paste("rank", i, sep = "")] <- rank(selectData[,g], ties.method = "min")
-  goodnessRankResults <- merge(goodnessRankResults, selectData, by = "model_labels", all=FALSE)
-}
-
-write.csv(goodnessRankResults, "goodness_rank_results.csv")
 
 ```
 
 ```{r evaluate the out-of-sample accuracy of the models}
 #evaluate cross-validation
-model_names <- benchmarkResults$model_names
-accuracy_metrics <- benchmarkResults$accuracy_metrics
-#plot for the cross validation results
-cvResults <- benchmarkResults$cvResults
+
+#plot for the cross validation results for pred(.01)- pred(0.50)
 avgPreds <- cvResults[["avgPreds"]]
 avgPreds <- data.frame(avgPreds)
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+#rank the cv results of different metric
+accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
 model_labels <- c()
 for(i in 1:length(models)){
   for(j in 1:length(accuracy_metrics)){
@@ -212,22 +206,15 @@ for(i in 1:length(models)){
   }
 }
 
-print("melt avg preds info as dots and smooth function")
-ggplot(meltAvgPreds) + theme_bw() + 
-		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
-		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15))+
-		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
-
-#rank the cv results of different metric
-
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$label <- rownames(cvAccuracyResults)
+cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults$label <- NULL
 cvAccuracyResults$model_labels <- model_labels
-print(model_labels)
-cvAccuracyResults$metric_labels <- accuracy_metrics
+cvAccuracyResults$metric_labels <- metric_labels
 
 #calculate ranking results
-cvRankResults <- data.frame(names(models))
+cvRankResults <- data.frame(model_names)
 names(cvRankResults)<-c("model_labels")
 
 for (i in 1:length(accuracy_metrics)){
@@ -264,9 +251,6 @@ cvRankResults <- cvRankResults[,-1]
 
 print(round(cvRankResults,2))
 
-write.csv(round(cvRankResults,2), "model_ranking_results.csv")
-
-
 # draw histogram base on ranking
 library(ggplot2)
 modelsName = rownames(cvRankResults)
@@ -278,8 +262,8 @@ for(i in 1:length(accuracy_metrics)){
   p[[i]] <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
     geom_bar(stat="identity", colour = "black") + 
     #scale_y_discrete(expand = c(0, 0)) + 
-    guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
-    geom_text(aes(label = rank, vjust = -0.3, hjust = 0.5)) +
+    guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
+    geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
     #ggtitle(accuracy_metrics[i]) +
     labs(caption=toupper(accuracy_metrics[i])) + 
     theme(plot.caption = element_text(hjust=0.5, size=rel(1)),
@@ -310,21 +294,19 @@ names(selectedData) <- c("rank");
 p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
-  guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
+  guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
   geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
   ggtitle("Overall Ranking Result for Cross Validation") +
   #labs(caption=toupper("Total Rank")) + 
-  theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
+  theme(plot.caption = element_text(hjust=0.5, size=rel(0.5)), legend.position = "bottom",legend.text=element_text(size=10), 
         plot.title = element_text(hjust = 0.5), 
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
 p_cvAllRank
-
 ```
 
 ```{r evaluate overlapping of 84% confidence intervals}
 #evaluate bootstrap results
-bsRet <- benchmarkResults$bsResults
 #bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
 bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
@@ -342,6 +324,7 @@ iterResults <- bsRet[['iterResults']]
 
 df <- data.frame(t(bsEstimations))
 df$labels <- rownames(df)
+df <- df[- grep("predRange", df$labels),]
 df$model_labels <- model_labels
 df$metric_labels <- metric_labels
 
@@ -425,7 +408,7 @@ for (i in 1:length(accuracy_metrics)){
 
 ```{r evaluate the p-values under family-wise control}
 
-sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics[! accuracy_metrics %in% c("predRange")], model_names, "boot")
+sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
 
 
 round_df <- function(df, digits) {
@@ -525,7 +508,7 @@ categorizedBenchmarkResults = list()
 
 for(i in 1:nCategories){
   #print(projectCategories[i, ])
-  categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=projectCategories[i,])
+  categorizedDataset <- selectData("dsets/combined_data_set_4.csv", selector=projectCategories[i,])
 
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
   
@@ -538,10 +521,31 @@ for(i in 1:nCategories){
   # calculate the rank information
   
 cvResults <- benchmarkResults$cvResults
-  
+
+model_names <- benchmarkResults$model_names
+accuracy_metrics <- benchmarkResults$accuracy_metrics
+
+accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
+model_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, names(models)[i])
+  }
+}
+
+metric_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
+
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$label <- rownames(cvAccuracyResults)
+cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults$label <- NULL
 cvAccuracyResults$model_labels <- model_labels
-cvAccuracyResults$metric_labels <- accuracy_metrics
+cvAccuracyResults$metric_labels <- metric_labels
 
 #calculate ranking results
 cvRankResults <- data.frame(names(models))
@@ -587,7 +591,7 @@ names(selectedData) <- c("rank");
 p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
-  guides(fill = guide_legend(title = "MODEL", nrow = 1)) +
+  guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
   geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
   ggtitle("Overall Ranking Result for Cross Validation") +
   #labs(caption=toupper("Total Rank")) + 
