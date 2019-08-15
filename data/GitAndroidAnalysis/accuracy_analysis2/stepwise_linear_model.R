@@ -11,7 +11,7 @@ m_fit.step_lnr <- function(step_lnr,dataset){
   dims <- colnames(cleanData)
   step_lnr$dims <- dims
   str_frm <- paste("Effort ~", paste(dims, collapse="+"))
-  print(str_frm)
+  #print(str_frm)
   regressionData <- cleanData
   regressionData$Effort <- dataset$Effort
   frm <- as.formula(str_frm)
@@ -57,8 +57,8 @@ stepwise_linear_model <- function(modelData, regression_cols=c()){
 
   # Preprocess dataset
 clean_step <- function(dataset){
-  print("clean....")
-  print(rownames(dataset))
+  #print("clean....")
+  #print(rownames(dataset))
   # numeric data only
   numeric_columns <- unlist(lapply(dataset, is.numeric))
   data.numeric <- dataset[, numeric_columns]
@@ -103,9 +103,9 @@ clean_step <- function(dataset){
     data.removed <- data[, -highCorr]
     #coli <- findLinearCombos(data.imputed1)
     
-    print("data frame removed: ")
-    print(highCorr)
-    print(c(ncol = ncol(data.removed), nrow = nrow(data.removed)))
+    #print("data frame removed: ")
+    #print(highCorr)
+    #print(c(ncol = ncol(data.removed), nrow = nrow(data.removed)))
     
     if(is.null(data.removed) || is.null(dim(data.removed)) || dim(data.removed)[2] < 2){
       break

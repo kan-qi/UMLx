@@ -524,6 +524,12 @@ for(i in 1:nCategories){
   
   # calculate the rank information
   
+}
+
+#print the categorized benchmark results
+for(i in 1: length(names(categorizedBenchmarkResults))){
+benchmarkResults = categorizedBenchmarkResults[[names(categorizedBenchmarkResults)[i]]]
+  
 cvResults <- benchmarkResults$cvResults
 
 model_names <- benchmarkResults$model_names
@@ -578,7 +584,7 @@ for (i in 1:length(models)){
   }
 }
 rank_sum <- rank(rank_sum, ties.method = "min")
-print(rank_sum)
+#print(rank_sum)
 cvRankResults["rank*"] <- rank_sum
 
 cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
@@ -592,6 +598,7 @@ cvRankResults <- cvRankResults[,-1]
 # draw overall ranking histogram
 selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
 names(selectedData) <- c("rank");
+modelsName <- rownames(selectedData)
 p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
@@ -603,7 +610,7 @@ p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) 
         plot.title = element_text(hjust = 0.5), 
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
-p_cvAllRank
+print(p_cvAllRank)
 
 }
 

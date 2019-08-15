@@ -380,13 +380,13 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
       resampleIndexes = c()
       while(length(unique(resampleIndexes)) <= 1){
         resampleIndexes <- sample(1:N, size=N, replace=TRUE)
-        print("bootstrap indexes")
-        print(resampleIndexes)
+        #print("bootstrap indexes")
+        #print(resampleIndexes)
         #print(sample(1:5, size=5, replace=TRUE)
       }
       #resample = dataset[resampleIndexes,]
     }
-    print(rownames(resample))
+    #print(rownames(resample))
     #sampleIndexes <- sample(1:N, size=sample_size)
     # train:test = 40:10
     train_data_size = as.integer(0.8*N)
@@ -395,8 +395,8 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
     trainDataRows <- c()
     while(testIdenticalRows(trainDataRows) <= 1){
       trainIndexes <- sample(1:N, size=train_data_size, replace=FALSE)
-      print("train indexes")
-      print(trainIndexes)
+      #print("train indexes")
+      #print(trainIndexes)
       trainData <- resample[trainIndexes, ]
       trainDataRows = rownames(trainData)
       #print(sample(1:5, size=5, replace=TRUE)
