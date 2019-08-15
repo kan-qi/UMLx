@@ -1050,6 +1050,8 @@ trainsaction_based_model <- function(modelData){
   # Returns:
   #   the list of cuts points for the individual dimensions
   
+  models = list()
+  
   #cachedTransactionFiles = list()
   SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
@@ -1080,6 +1082,39 @@ trainsaction_based_model <- function(modelData){
     ),
     SWTIIresults = SWTIIresults
   )
+  
+  #cachedTransactionFiles = list()
+  SWTIresults <- performSearch(6, modelData, c())
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  SWTIModelSelector <- 1
+  
+  modelParams = SWTIresults[[SWTIModelSelector]][["bayesModel"]]
+  
+  models$tm1 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIresults = SWTIresults
+  )
+  
+  models
+  
+}
+
+
+trainsaction_based_model1 <- function(modelData){
+  # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
+  #
+  # Args:
+  #   modelData: a held-out dataset to search for the hyperparameter
+  #
+  # Returns:
+  #   the list of cuts points for the individual dimensions
+  
+  models = list()
   
   #cachedTransactionFiles = list()
   SWTIresults <- performSearch(6, modelData, c())

@@ -507,14 +507,14 @@ benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
 categorizedBenchmarkResults = list()
 
 for(i in 1:nCategories){
-  #print(projectCategories[i, ])
+  print(projectCategories[i, ])
   categorizedDataset <- selectData("dsets/combined_data_set_4.csv", selector=projectCategories[i,])
 
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
   
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
   
-  print(categorizedDataset)
+  #print(categorizedDataset)
   benchmarkResults <- modelBenchmark(models, categorizedDataset)
   categorizedBenchmarkResults[[benchmarkLabels[i]]] <- benchmarkResults
   

@@ -17,7 +17,13 @@ m_fit.step_lnr <- function(step_lnr,dataset){
   frm <- as.formula(str_frm)
   #step_m <- lm(frm, data=dataset)
   step_m <- lm(frm, data=regressionData)
-  step_lnr$m <- stepAIC(step_m, direction = "forward", trace = FALSE, k=log(nrow(dataset)))
+  step_lnr$m <- step_m
+  
+  tryCatch( { step_lnr$m <- stepAIC(step_m, direction = "both", trace = FALSE) }
+            , error = function(e) {
+              print("-infinite AIC")
+              })
+ 
   #step_lnr$cols_removed = c()
   #print(step_lnr$m)
   step_lnr
@@ -47,42 +53,66 @@ stepwise_linear_model <- function(modelData, regression_cols=c()){
   #str_frm <- gsub("[\r\n]", "", str_frm)
   #frm <- as.formula(str_frm)
   
-}
+  }
 
-# Preprocess dataset
+  # Preprocess dataset
 clean_step <- function(dataset){
-  
+  print("clean....")
+  print(rownames(dataset))
   # numeric data only
   numeric_columns <- unlist(lapply(dataset, is.numeric))
   data.numeric <- dataset[, numeric_columns]
   data.numeric <- data.frame(apply(dataset, 2, as.numeric))
-  
-  # remove near zero variance columns
-  library(caret)
-  nzv_cols <- nearZeroVar(data.numeric)
-  if(length(nzv_cols) > 0) data <- data.numeric[, -nzv_cols]
-  
-  sapply(data, function(x) sum(is.na(x)))
   
   ## Impute
   library(mice)
   library(randomForest)
   # perform mice imputation, based on random forests.
   # print(md.pattern(data))
-  miceMod <- mice(data, method="rf", print=FALSE, remove_collinear = TRUE)
-  # generate the completed data.
-  data.imputed <- mice::complete(miceMod)
+  
+  data.imputed = data.numeric
+  tryCatch( { 
+       miceMod <- mice(data.numeric, method="rf", print=FALSE, remove_collinear = TRUE)
+       # generate the completed data.
+       data.imputed <- mice::complete(miceMod)
+    }, error = function(e) {
+          print("nothing left to impute")
+  })
+  
+  # remove near zero variance columns
+  library(caret)
+  nzv_cols <- nearZeroVar(data.imputed)
+  if(length(nzv_cols) > 0) data <- data.imputed[, -nzv_cols]
+  
+  #sapply(data, function(x) sum(is.na(x)))
+  
+  if(is.null(data) || is.null(dim(data)) || dim(data)[2] < 2){
+    data = data.imputed
+  }
   
   # remove collinear columns
   #need to consider the number of columns after colinearity analysis to make sure that the column number is fewer than row number.
   
-  descrCorr <- cor(data.imputed)
-  cor_limits <- c(0.99, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1)
+  descrCorr <- cor(data)
+  data.done = data
+  #cor_limits <- c(0.99, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1)
+  cor_limits <- seq(0.99, 0.01, by = -0.02)
   for(i in 1:length(cor_limits)){
     highCorr <- findCorrelation(descrCorr, cor_limits[i])
-    data.done <- data.imputed[, -highCorr]
+    
+    data.removed <- data[, -highCorr]
     #coli <- findLinearCombos(data.imputed1)
-    if(nrow(data.done) > ncol(data.done)+1){
+    
+    print("data frame removed: ")
+    print(highCorr)
+    print(c(ncol = ncol(data.removed), nrow = nrow(data.removed)))
+    
+    if(is.null(data.removed) || is.null(dim(data.removed)) || dim(data.removed)[2] < 2){
+      break
+    }
+    
+    if(nrow(data.removed) > ncol(data.removed)){
+      data.done = data.removed
       break
     }
   }

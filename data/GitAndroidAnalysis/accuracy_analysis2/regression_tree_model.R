@@ -64,8 +64,8 @@ m_fit.reg_tree <- function(reg_tree,dataset){
   
   # show the relation between Complexity Parameter and x-error
   # For getting higher mmre and lower pre
-  plotcp(rt)
-  printcp(rt)
+  #plotcp(rt)
+  #printcp(rt)
   
 
   reg_tree$m <- rt

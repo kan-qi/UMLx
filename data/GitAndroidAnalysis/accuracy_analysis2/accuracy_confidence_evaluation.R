@@ -313,15 +313,32 @@ ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults =
 
 }
 
+testIdenticalRows <- function(row_names){
+  #row_names = c()
+  #row_names = c("Timber_S1W1L1_2019-4-29@1559141370065.2", "Timber_S1W1L1_2019-4-29@1559141370065.1", "Timber_S1W1L1_2019-4-29@1559141370065")
+  if(length(row_names) > 1){
+  for(i in 1:length(row_names)){
+    print(i)
+  g <- regexpr("\\.[^\\.]*$", row_names[i])
+  if(g[[1]] > 1){
+  row_names[i] = substr(row_names[i], 1, g[[1]]-1)
+  }
+  print(row_names[i])
+  }
+  }
+  
+  length(unique(row_names))
+}
+
 #bootstrapping to evaluate the statistical significance of the accuracy improvements
 bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
 
   set.seed(42)
-  # create 10000 samples of size 50
+  #create 10000 samples of size 50
   N <- nrow(dataset)
   #niters <- 10
   #sample_size <- as.integer(0.83*N)
-  sample_size <- N
+  #sample_size <- N
   
   niters <- 100
   
@@ -355,21 +372,36 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   iterResults1 <- array(0,dim=c(predRange,nmodels,niters+1))
 
   for (i in 1:niters){
-    
+    #resample = data.frame()
     if(i == 1){
       resample = dataset
     }
     else{
-      resampleIndexes <- sample(1:N, size=sample_size, replace=TRUE)
-      resample = dataset[resampleIndexes,]
+      resampleIndexes = c()
+      while(length(unique(resampleIndexes)) <= 1){
+        resampleIndexes <- sample(1:N, size=N, replace=TRUE)
+        print("bootstrap indexes")
+        print(resampleIndexes)
+        #print(sample(1:5, size=5, replace=TRUE)
+      }
+      #resample = dataset[resampleIndexes,]
     }
-    
+    print(rownames(resample))
     #sampleIndexes <- sample(1:N, size=sample_size)
     # train:test = 40:10
-    train_data_size = as.integer(0.8*sample_size)
-    trainIndexes <- sample(1:N, size=train_data_size)
+    train_data_size = as.integer(0.8*N)
+    trainData <- NULL
+    trainIndexes = NULL
+    trainDataRows <- c()
+    while(testIdenticalRows(trainDataRows) <= 1){
+      trainIndexes <- sample(1:N, size=train_data_size, replace=FALSE)
+      print("train indexes")
+      print(trainIndexes)
+      trainData <- resample[trainIndexes, ]
+      trainDataRows = rownames(trainData)
+      #print(sample(1:5, size=5, replace=TRUE)
+    }
     
-    trainData <- resample[trainIndexes, ]
     testData <- resample[-trainIndexes, ]
     
     eval_metrics = c()
