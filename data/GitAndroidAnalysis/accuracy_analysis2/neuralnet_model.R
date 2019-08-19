@@ -214,7 +214,7 @@ neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
   }
   
   ## Print performance result
-  print(perf_grid[order(perf_grid$RMSE.test, decreasing=FALSE),])
+  if(verbose) print(perf_grid[order(perf_grid$RMSE.test, decreasing=FALSE),])
   
   if (verbose) print(hyperparameters)
   
@@ -232,7 +232,7 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   data <- impute(data)
   #data <- clean_neural(data)
   dims <- names(data)
-  print(dims)
+  #print(dims)
   neuralnet$dims = dims
   data$Effort = regressionData$Effort
   

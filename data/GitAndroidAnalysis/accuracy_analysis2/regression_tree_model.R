@@ -121,10 +121,10 @@ m_predict.reg_tree <- function(reg_tree, testData){
   
   #print(reg_tree$dims)
   
-  for(i in 1:length(reg_tree$dims)){
-    print(reg_tree$dims[i])
-    testData[, reg_tree$dims[i]]
-  }
+  #for(i in 1:length(reg_tree$dims)){
+    #print(reg_tree$dims[i])
+  #  testData[, reg_tree$dims[i]]
+  #}
   test_df <- testData[, reg_tree$dims]
   #test_df <- testData[,names(testData)%in%predictors]
   # test_df['Type'] <- apply(test_df['Type'], 1, function(x) if(x == 'Website') 1 else if (x =='Mobile App') 2 else if (x=='Information System') 3 else 4)

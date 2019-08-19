@@ -27,7 +27,7 @@ modelProfile <- function(trainedModels, dataset){
   rownames(profileData) <- rownames
   
   modelNames = names(trainedModels)
-  print(modelNames)
+  #print(modelNames)
   
   nmodels <- length(modelNames)
   
@@ -222,7 +222,7 @@ for(i in 1:nfold){
 	  
 	  model = fit(trainData, modelNames[j], models[[j]])
 	  
-	  print(testData)
+	  #print(testData)
 	  
 	  m_predict(model, testData)
 	  
@@ -318,12 +318,12 @@ testIdenticalRows <- function(row_names){
   #row_names = c("Timber_S1W1L1_2019-4-29@1559141370065.2", "Timber_S1W1L1_2019-4-29@1559141370065.1", "Timber_S1W1L1_2019-4-29@1559141370065")
   if(length(row_names) > 1){
   for(i in 1:length(row_names)){
-    print(i)
+   # print(i)
   g <- regexpr("\\.[^\\.]*$", row_names[i])
   if(g[[1]] > 1){
   row_names[i] = substr(row_names[i], 1, g[[1]]-1)
   }
-  print(row_names[i])
+  #print(row_names[i])
   }
   }
   

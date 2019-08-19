@@ -1,9 +1,9 @@
-selectData <- function(dataPath, selector="default"){
+selectData <- function(modelData, selector="default"){
   
 #dataPath <- "modelEvaluations-1-3.csv"
 #selector <- "SLOC2ndQ25"
 #dataPath = "../android_analysis_datasets/android_dataset_6_20_1.csv"
-modelData <- read.csv(dataPath)
+
 modelData$Project = as.character(modelData$Project)
 rownames(modelData) <- modelData$Project
 #modelData$Project <- NULL
