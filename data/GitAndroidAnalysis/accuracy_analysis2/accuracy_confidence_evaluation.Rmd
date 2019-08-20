@@ -38,7 +38,8 @@ Combined Data Effort Values
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
 
 #modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
-modelData <- selectData("dsets/combined_data_set_4.csv")
+#modelData <- selectData("dsets/combined_data_set_4.csv")
+modelData <- selectData("dsets/combined_data_set_4_rufus.csv")
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 #dataset <- modelData
 
@@ -76,7 +77,7 @@ modelData <- selectData("dsets/combined_data_set_4.csv")
 
 models = list()
 #register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
-transaction_models <- trainsaction_based_model(modelData)
+transaction_models <- trainsaction_based_model1(modelData)
 models = append(models, transaction_models)
 
 #models$tm3 <- trainsaction_based_model3(modelData)
@@ -125,16 +126,19 @@ trainedModels <- modelTrain(models, modelData)
 outputData <- modelProfile(trainedModels, modelData)
 transactionData <- transaction_data_profile(modelData)
 outputData <- merge(outputData, transactionData, by="row.names")
+rownames(outputData) <- outputData$Row.names
+outputData$Row.names <- NULL
 
 #evaluate the models for their size metrics
-sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
+#sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
+sizeMetricLabels <- c('SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
 sizeMeasures <- data.frame(matrix(nrow=nrow(outputData), ncol=length(sizeMetricLabels)))
 rownames(sizeMeasures) <- rownames(outputData)
 colnames(sizeMeasures) <- sizeMetricLabels
-outputData$LOG_SLOC <- log(outputData$SLOC)
 sizeMeasures[,sizeMetricLabels] <- outputData[,sizeMetricLabels]
 sizeMeasures <- na.omit(sizeMeasures)
 effortData <- modelData[rownames(sizeMeasures), 'Effort']
+
 
 #run the correlation analysis of the size metrics
 sizeCor <- cor(sizeMeasures)
@@ -142,7 +146,7 @@ print(round(sizeCor, digits=2))
   
 #run the correlation analysis of size metrics and project effort
 effortCor <- apply(sizeMeasures, 2, function(x) {
-    d <- data.frame(x=x, effortData)
+    d <- data.frame(x=x, Effort=effortData)
     corT <- cor.test(d$x, d$Effort)
     c(corT$estimate, corT$p.value)
   })
@@ -158,29 +162,92 @@ ggplot(outputData, aes(x=SWTI, y=Effort)) + geom_point()+theme_bw()
 ggplot(outputData, aes(x=SWTII, y=Effort)) + geom_point()+theme_bw()
 ggplot(outputData, aes(x=SWTIII, y=Effort)) + geom_point()+theme_bw()
 
+#print(models$tm2$cuts)
+
 ```
-comparing the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
+Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
 benchmarkResults <- modelBenchmark(models, modelData)
 
-model_names <- benchmarkResults$model_names
-accuracy_metrics <- benchmarkResults$accuracy_metrics
-fitReesults <- benchmarkResults$fitResults
+#model_names <- benchmarkResults$model_names
+#model_names <- model_names[!model_names %in% c("tm2", "tm3")]
+model_names <- c("neuralnet", "lasso", "reg_tree", "tm1", "ucp", "fp", "cosmic", "sloc", "ln_sloc", "step_lnr")
+model_texts <- c("NEURAL_NET", "LASSO", "REG_TREE", "TRAN", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC", "STEP_REG")
+model_estimator <- c("ANN", "LASSO", "REG TREE", "LSR", "LSR", "LSR", "LSR", "LSR", "LSR", "STEP")
+
+model_mapping <- data.frame(model_names=model_names, model_texts=model_texts, model_estimator=model_estimator)
+accuracy_metrics <- benchmarkResults$accuracy_metric
+#accuracy_metrics <- accuracy_metrics[!accuracy_metrics %in% c("pred15", "pred50")]
+goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
+fitResults <- benchmarkResults$fitResults
 cvResults <- benchmarkResults$cvResults
 bsRet <- benchmarkResults$bsResults
+bsEstimations <- bsRet[['bsEstimations']]
+iterResults <- bsRet[['iterResults']]
+
+accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
+model_labels <- c()
+for(i in 1:length(model_names)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, model_names[i])
+  }
+}
+
+metric_labels <- c()
+for(i in 1:length(model_names)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
+
+accuracy_labels <- paste(model_labels, metric_labels, sep="_")
+print(accuracy_labels)
+
 ```
 
 ```{r evaluate goodness of fit of the models}
 #evaluate goodness of fit
+goodnessRankResults = data.frame(model_labels = model_names)
+#goodnessRankResults = data.frame(matrix(ncol=length(goodness_fit_metrics), nrow=length(fitResults)))
+#colnames(goodnessRankResults) <- goodness_fit_metrics
+goodnessRankResults <- merge(goodnessRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
 
+for (i in 1:length(goodness_fit_metrics)){
+  g = goodness_fit_metrics[i]
+  selectData = data.frame(matrix(ncol=0, nrow=length(model_names)))
+  selectData$model_labels <- model_names
+  rownames(selectData) = selectData$model_labels
+  selectData[, g] <- c()
+  for(j in 1:length(model_names)){
+  m = fitResults[[model_names[j]]]
+  m_name = model_names[j]
+  selectData[m_name, g] <- m[[g]]
+  }
+  selectData[, g] = round(selectData[, g],2)
+  goodnessRankResults <- merge(goodnessRankResults, selectData, by = "model_labels", all=FALSE)
+}
+
+
+goodnessRankResults["Rank"] <- rank(-goodnessRankResults[,"R2"], ties.method = "min")
+goodnessRankResults <- goodnessRankResults[order(goodnessRankResults$Rank),]
+
+write.csv(goodnessRankResults, "goodness_rank_results_8_20.csv")
 ```
 
 ```{r evaluate the out-of-sample accuracy of the models}
-#evaluate cross-validation
+#evaluate cross-validation and plot the cross validation results for pred(.01)- pred(0.50)
 
-#plot for the cross validation results for pred(.01)- pred(0.50)
 avgPreds <- cvResults[["avgPreds"]]
 avgPreds <- data.frame(avgPreds)
+avgPreds <- avgPreds[,names(avgPreds) %in% c(model_names, "Pred")]
+names(avgPreds) <- model_mapping$model_texts[match(names(avgPreds), model_mapping$model_names)]
+names(avgPreds)[1] = c("Pred")
+
+#apply new labels
+#colnames(avgPreds) <- c("Pred", "SWT", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")
+#colnames(avgPreds) <- c("Pred", "SWT-I", "SWT-II", "SWT-III", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")
+#colnames(avgPreds) <- c("Pred", "SWT-I", "SWT-II", "SWT-III", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")
+#colnames(avgPreds) <- c("Pred", "NEURAL_NET", "LASSO", "REG_TREE", "TRAN", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC", "STEP_REG")
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
 print("melt avg preds info as dots and smooth function")
@@ -191,24 +258,11 @@ ggplot(meltAvgPreds) + theme_bw() +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 #rank the cv results of different metric
-accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
-model_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    model_labels = c(model_labels, names(models)[i])
-  }
-}
-
-metric_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    metric_labels = c(metric_labels, accuracy_metrics[j])
-  }
-}
 
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
 cvAccuracyResults$label <- rownames(cvAccuracyResults)
-cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+#cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults <- cvAccuracyResults[cvAccuracyResults$label %in% accuracy_labels,]
 cvAccuracyResults$label <- NULL
 cvAccuracyResults$model_labels <- model_labels
 cvAccuracyResults$metric_labels <- metric_labels
@@ -231,9 +285,9 @@ for (i in 1:length(accuracy_metrics)){
   cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
 }
 
-#make a total rank(rank*) base on the ranki
-rank_sum <- vector(mode = "integer",length = length(models))
-for (i in 1:length(models)){
+#make a total rank(rank*) base on the ranks
+rank_sum <- vector(mode = "integer",length = length(model_names))
+for (i in 1:length(model_names)){
   selectedData <- cvRankResults[i,]
   for(j in 1:length(accuracy_metrics)){
     rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
@@ -243,30 +297,38 @@ rank_sum <- rank(rank_sum, ties.method = "min")
 print(rank_sum)
 cvRankResults["rank*"] <- rank_sum
 
-cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
 
 #change the first line as the row name
-rownames(cvRankResults) = cvRankResults[,1]
-cvRankResults <- cvRankResults[,-1]
+#cvRankResults <- merge(cvRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
+#rownames(cvRankResults) = cvRankResults$model_texts
+#cvRankResults$model_labels = NULL
+#cvRankResults$model_estimator = NULL
+#cvRankResults$model_texts = NULL
+
+rownames(cvRankResults) <- model_mapping$model_texts[match(cvRankResults$model_labels, model_mapping$model_names)]
+cvRankResults$model_labels = NULL
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
 
 print(round(cvRankResults,2))
 
+write.csv(round(cvRankResults,2), "cv_rank_results.csv")
+
 # draw histogram base on ranking
 library(ggplot2)
-modelsName = rownames(cvRankResults)
 p <- list()
 for(i in 1:length(accuracy_metrics)){
   g = paste("rank", i, sep = "")
   selectedData <- cvRankResults[names(cvRankResults) == g]
   names(selectedData) <- c("rank");
-  p[[i]] <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+  p[[i]] <- ggplot(selectedData, aes(x=rownames(cvRankResults), y=rank, fill=rownames(cvRankResults))) +
     geom_bar(stat="identity", colour = "black") + 
     #scale_y_discrete(expand = c(0, 0)) + 
     guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
     geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
     #ggtitle(accuracy_metrics[i]) +
     labs(caption=toupper(accuracy_metrics[i])) + 
-    theme(plot.caption = element_text(hjust=0.5, size=rel(1)),
+    theme(plot.caption = element_text(hjust=1, size=rel(1)),
           #axis.line=element_blank(),
           axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
 }
@@ -277,8 +339,6 @@ prow <- plot_grid( p[[1]] + theme(legend.position="none"),
                    p[[2]] + theme(legend.position="none"),
                    p[[3]] + theme(legend.position="none"),
                    p[[4]] + theme(legend.position="none"),
-                   p[[5]] + theme(legend.position="none"),
-                   p[[6]] + theme(legend.position="none"),
                    align = 'vh',
                    hjust = -1,
                    nrow = 1
@@ -291,7 +351,7 @@ p_cvRank
 # draw overall ranking histogram
 selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
 names(selectedData) <- c("rank");
-p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+p_cvAllRank <- ggplot(selectedData, aes(x=rownames(selectedData), y=rank, fill=rownames(selectedData))) +
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
   guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
@@ -303,13 +363,12 @@ p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) 
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
 p_cvAllRank
+
 ```
 
 ```{r evaluate overlapping of 84% confidence intervals}
 #evaluate bootstrap results
 #bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
-bsEstimations <- bsRet[['bsEstimations']]
-iterResults <- bsRet[['iterResults']]
 
 #save as csv
 #write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
@@ -325,6 +384,10 @@ iterResults <- bsRet[['iterResults']]
 df <- data.frame(t(bsEstimations))
 df$labels <- rownames(df)
 df <- df[- grep("predRange", df$labels),]
+df <- df[- grep("pred15", df$labels),]
+df <- df[- grep("pred50", df$labels),]
+df <- df[- grep("tm2", df$labels),]
+df <- df[- grep("tm3", df$labels),]
 df$model_labels <- model_labels
 df$metric_labels <- metric_labels
 
@@ -334,19 +397,7 @@ nonOverlappingPairs <- data.frame(matrix(ncol = 7, nrow = 0))
 colnames(nonOverlappingPairs) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
-    if(g == "predRange"){
-      next
-    }
-    g_label <- toupper(g)
     selectedData <- df[df$metric_labels == g,]
-    p <- ggplot(selectedData, aes(x = labels, y = mean)) + 
-    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
-    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
-    xlab('MODEL') +
-    ylab(g_label) +
-    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
-    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))
-    print(p)
     for (j in 1:(nrow(selectedData)-1)){
       for (k in (j+1):nrow(selectedData)){
         if(selectedData[j,]$lower>selectedData[k,]$upper | selectedData[j,]$upper<selectedData[k,]$lower){
@@ -367,12 +418,14 @@ for (i in 1:length(accuracy_metrics)){
     }
 }
 
+print(nonOverlappingPairs)
+
 # apply filters on the overlapping results.
 filteredNonOverlappingPairs = nonOverlappingPairs[which((nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1"))) & nonOverlappingPairs$Metric %in% c("mmre", "mdmre", "pred25"),]
 
 write.csv(filteredNonOverlappingPairs,'nonOverlappingPairs.csv')
 
-print(nonOverlappingPairs)
+print(filteredNonOverlappingPairs)
 
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
@@ -420,14 +473,15 @@ round_df <- function(df, digits) {
 }
 
 sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
-sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% c("mmre", "mdmre", "pred25")),]
-sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm3") | sig_bs_f$model2 %in% c("tm3")),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% accuracy_metrics),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm1", "tm2", "tm3") | sig_bs_f$model2 %in% c("tm1", "tm2", "tm3")),]
 sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
 sig_bs_f = round_df(sig_bs_f, 2)
 print(sig_bs_f)
 
 #identify the parirs that are not identified from the 84% overlaps.
-nonOverlappingPairsIndices <- paste(nonOverlappingPairs$Model1, nonOverlappingPairs$Model2, nonOverlappingPairs$Metric, sep="-")
+#nonOverlappingPairsIndices <- paste(nonOverlappingPairs$Model1, nonOverlappingPairs$Model2, nonOverlappingPairs$Metric, sep="-")
+nonOverlappingPairsIndices = c()
 print(nonOverlappingPairsIndices)
 
 sig_bs_f_indices <- paste(sig_bs_f$model1, sig_bs_f$model2, sig_bs_f$metric, sep="-")
@@ -506,9 +560,15 @@ nCategories <- nrow(projectCategories)
 benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
 categorizedBenchmarkResults = list()
 
+projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
+projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+
 for(i in 1:nCategories){
   print(projectCategories[i, ])
-  categorizedDataset <- selectData("dsets/combined_data_set_4.csv", selector=projectCategories[i,])
+  categorizedDataset <- selectData(datasheet, selector=projectCategories[i,])
+  
+  #categorizedDataset <- selectData("dsets/combined_data_set_4_1.csv", c("type", "Entertainment"))
+  #print(rownames(categorizedDataset))
 
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
   
@@ -520,39 +580,32 @@ for(i in 1:nCategories){
   
   # calculate the rank information
   
+}
+
+projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
+projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+
+#print the categorized benchmark results
+for(i in 1: nCategories){
+benchmarkResults = categorizedBenchmarkResults[[names(categorizedBenchmarkResults)[i]]]
+  
 cvResults <- benchmarkResults$cvResults
 
-model_names <- benchmarkResults$model_names
-accuracy_metrics <- benchmarkResults$accuracy_metrics
-
-accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
-model_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    model_labels = c(model_labels, names(models)[i])
-  }
-}
-
-metric_labels <- c()
-for(i in 1:length(models)){
-  for(j in 1:length(accuracy_metrics)){
-    metric_labels = c(metric_labels, accuracy_metrics[j])
-  }
-}
 
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
 cvAccuracyResults$label <- rownames(cvAccuracyResults)
-cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+#cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults <- cvAccuracyResults[cvAccuracyResults$label %in% accuracy_labels,]
 cvAccuracyResults$label <- NULL
 cvAccuracyResults$model_labels <- model_labels
 cvAccuracyResults$metric_labels <- metric_labels
 
 #calculate ranking results
-cvRankResults <- data.frame(names(models))
+cvRankResults <- data.frame(model_names)
 names(cvRankResults)<-c("model_labels")
 
-for (i in 1:length(accuracy_metrics)){
-  g = accuracy_metrics[i]
+for (j in 1:length(accuracy_metrics)){
+  g = accuracy_metrics[j]
   selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
   selectedData <- selectedData[,-3]#delete the metric_labels
   colnames(selectedData)<-c(g, "model_labels")
@@ -565,41 +618,47 @@ for (i in 1:length(accuracy_metrics)){
   cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
 }
 
+#cvRankResults$model_labels = c("COSMIC", "IFPUG", "LASSO", "LOG SLOC", "NEURALNET", "REG TREE", "SLOC", "STEP LNR", "SWTI", "SWTII","SWTIII", "UCP")
+#cvRankResults <- merge(cvRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
+
+rownames(cvRankResults) <- model_mapping$model_texts[match(cvRankResults$model_labels, model_mapping$model_names)]
+cvRankResults$model_labels = NULL
+
 #make a total rank(rank*) base on the ranki
-rank_sum <- vector(mode = "integer",length = length(models))
-for (i in 1:length(models)){
-  selectedData <- cvRankResults[i,]
-  for(j in 1:length(accuracy_metrics)){
-    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
+rank_sum <- vector(mode = "integer",length = length(model_names))
+for (j in 1:length(model_names)){
+  selectedData <- cvRankResults[j,]
+  for(k in 1:length(accuracy_metrics)){
+    rank_sum[j] <- rank_sum[j] + selectedData[,2*k]
   }
 }
 rank_sum <- rank(rank_sum, ties.method = "min")
-print(rank_sum)
+#print(rank_sum)
 cvRankResults["rank*"] <- rank_sum
 
 cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
 
 #change the first line as the row name
-rownames(cvRankResults) = cvRankResults[,1]
-cvRankResults <- cvRankResults[,-1]
+#rownames(cvRankResults) = cvRankResults[,1]
+#cvRankResults <- cvRankResults[,-1]
 
 #print(round(cvRankResults,2))
-
 # draw overall ranking histogram
 selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
 names(selectedData) <- c("rank");
+modelsName <- rownames(selectedData)
 p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
   geom_bar(stat="identity", colour = "black", width = 0.7) + 
   #scale_y_discrete(expand = c(0, 0)) + 
   guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
   geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
-  ggtitle("Overall Ranking Result for Cross Validation") +
+  ggtitle(projectCategoryLabels[i]) +
   #labs(caption=toupper("Total Rank")) + 
   theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
         plot.title = element_text(hjust = 0.5), 
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
-p_cvAllRank
+print(p_cvAllRank)
 
 }
 

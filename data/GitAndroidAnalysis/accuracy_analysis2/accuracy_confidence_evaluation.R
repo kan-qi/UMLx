@@ -38,6 +38,10 @@ modelProfile <- function(trainedModels, dataset){
     
     model_profile_data = m_profile(trainedModels[[i]], dataset)
     
+    if(ncol(model_profile_data) == 0){
+      next
+    }
+    
     colnames <- colnames(model_profile_data)
     
     for(j in 1:length(colnames)){

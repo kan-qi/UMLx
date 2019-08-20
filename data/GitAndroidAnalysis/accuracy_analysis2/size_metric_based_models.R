@@ -113,7 +113,7 @@ m_predict.ln_sloc <- function(ln_sloc, testData){
 
 m_profile.ln_sloc <- function(ln_sloc, dataset){
   #testData <- modelData
-  profileData <- data.frame(LOG_SLOC=dataset$LN_SLOC, row.names=rownames(dataset))
+  profileData <- data.frame(LOG_SLOC=log(dataset$SLOC), row.names=rownames(dataset))
 }
 
 #the baseline model which only takes the average of the output traning dataset.

@@ -14,3 +14,7 @@ m_predict <- function(x,...) UseMethod('m_predict', x)
 m_profile <- function(x,...) UseMethod('m_profile', x)
 
 m_save <- function(x,...) UseMethod('m_save', x)
+
+m_profile.default <- function(model, dataset){
+  data.frame(matrix(nrow=0, ncol=0))
+}
