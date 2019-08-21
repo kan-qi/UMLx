@@ -39,7 +39,9 @@ Combined Data Effort Values
 
 #modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
 #modelData <- selectData("dsets/combined_data_set_4.csv")
-modelData <- selectData("dsets/combined_data_set_4_rufus.csv")
+dataset <- read.csv("dsets/combined_data_set_4_rufus.csv")
+#dataset <- read.csv("dsets/combined_data_set_4_1.csv")
+modelData <- selectData(dataset)
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 #dataset <- modelData
 
@@ -77,7 +79,7 @@ modelData <- selectData("dsets/combined_data_set_4_rufus.csv")
 
 models = list()
 #register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
-transaction_models <- trainsaction_based_model1(modelData)
+transaction_models <- trainsaction_based_model(modelData)
 models = append(models, transaction_models)
 
 #models$tm3 <- trainsaction_based_model3(modelData)
@@ -176,7 +178,13 @@ model_texts <- c("NEURAL_NET", "LASSO", "REG_TREE", "TRAN", "UCP", "IFPUG", "COS
 model_estimator <- c("ANN", "LASSO", "REG TREE", "LSR", "LSR", "LSR", "LSR", "LSR", "LSR", "STEP")
 
 model_mapping <- data.frame(model_names=model_names, model_texts=model_texts, model_estimator=model_estimator)
-accuracy_metrics <- benchmarkResults$accuracy_metric
+
+#accuracy_metrics <- c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')
+#accuracy_metric_texts <- c('MMRE','PRED15','PRED25','PRED50', 'MDMRE', 'MAE', 'PREDRANGE')
+accuracy_metrics <- c('mmre', 'pred25', 'mdmre', 'mae')
+accuracy_metric_texts <- c('MMRE', 'PRED25', 'MDMRE', 'MAE')
+accuracy_mapping <- data.frame(accuracy_metrics = accuracy_metrics, accuracy_metric_texts=accuracy_metric_texts)
+#accuracy_metrics <- benchmarkResults$accuracy_metric
 #accuracy_metrics <- accuracy_metrics[!accuracy_metrics %in% c("pred15", "pred50")]
 goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
 fitResults <- benchmarkResults$fitResults
@@ -185,7 +193,6 @@ bsRet <- benchmarkResults$bsResults
 bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
 
-accuracy_metrics <- accuracy_metrics[! accuracy_metrics %in% c("predRange")]
 model_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){
@@ -325,10 +332,10 @@ for(i in 1:length(accuracy_metrics)){
     geom_bar(stat="identity", colour = "black") + 
     #scale_y_discrete(expand = c(0, 0)) + 
     guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
-    geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
+    geom_text(aes(label = rank, vjust = -0.3, hjust = 0.5)) +
     #ggtitle(accuracy_metrics[i]) +
     labs(caption=toupper(accuracy_metrics[i])) + 
-    theme(plot.caption = element_text(hjust=1, size=rel(1)),
+    theme(plot.caption = element_text(hjust=0.5, vjust = 2.5, size=rel(1)),
           #axis.line=element_blank(),
           axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
 }
@@ -340,7 +347,7 @@ prow <- plot_grid( p[[1]] + theme(legend.position="none"),
                    p[[3]] + theme(legend.position="none"),
                    p[[4]] + theme(legend.position="none"),
                    align = 'vh',
-                   hjust = -1,
+                   hjust = 0,
                    nrow = 1
                   )
 legend_b <- get_legend(p[[1]] + theme(legend.position="bottom", legend.justification="center"))
@@ -383,18 +390,20 @@ p_cvAllRank
 
 df <- data.frame(t(bsEstimations))
 df$labels <- rownames(df)
-df <- df[- grep("predRange", df$labels),]
-df <- df[- grep("pred15", df$labels),]
-df <- df[- grep("pred50", df$labels),]
-df <- df[- grep("tm2", df$labels),]
-df <- df[- grep("tm3", df$labels),]
+#df <- df[- grep("predRange", df$labels),]
+#df <- df[- grep("pred15", df$labels),]
+#df <- df[- grep("pred50", df$labels),]
+#df <- df[- grep("tm2", df$labels),]
+#df <- df[- grep("tm3", df$labels),]
+df <- df[df$label %in% accuracy_labels,]
 df$model_labels <- model_labels
 df$metric_labels <- metric_labels
 
 print(metric_labels)
 
-nonOverlappingPairs <- data.frame(matrix(ncol = 7, nrow = 0))
-colnames(nonOverlappingPairs) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
+nonOverlappingPairs <- data.frame(matrix(ncol = 8, nrow = 0))
+overlappingPairAttrs <- c("model1", "model2", "metric", "direction", "mean1", "mean2", "84% CI1", "84% CI2")
+colnames(nonOverlappingPairs) <- overlappingPairAttrs
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
     selectedData <- df[df$metric_labels == g,]
@@ -402,16 +411,33 @@ for (i in 1:length(accuracy_metrics)){
       for (k in (j+1):nrow(selectedData)){
         if(selectedData[j,]$lower>selectedData[k,]$upper | selectedData[j,]$upper<selectedData[k,]$lower){
           #selectedData[j,] and selectedData[k,] non-overlap
+          direction = "="
+          if(selectedData[j,]$mean > selectedData[k,]$mean){
+            direction = "+"
+          }
+          else if(selectedData[j,]$mean < selectedData[k,]$mean){
+            direction = "-"
+          }
+          
+          if(selectedData[j,]$metric %in% c("mae", "mdmre", "mmre")){
+            if(direction == "+"){
+              direction = "-"
+            }
+            else if(direction == "-"){
+              direction = "+"
+            }
+          }
           nonOverlap <- data.frame(
             selectedData[j,]$model_labels,
             selectedData[k,]$model_labels,
             g,
+            direction,
             round(selectedData[j,]$mean, 3),
             round(selectedData[k,]$mean, 3),
             paste0("[", as.character(round(selectedData[j,]$lower, 3)), ", ", as.character(round(selectedData[j,]$upper, 3)), "]"),
             paste0("[", as.character(round(selectedData[k,]$lower, 3)), ", ", as.character(round(selectedData[k,]$upper, 3)), "]")
             )
-          colnames(nonOverlap) <- c("Model1", "Model2", "Metric","Mean1", "Mean2", "84% CI1", "84% CI2")
+          colnames(nonOverlap) <- overlappingPairAttrs
           nonOverlappingPairs <- rbind(nonOverlappingPairs, nonOverlap)
         }
       }
@@ -421,11 +447,15 @@ for (i in 1:length(accuracy_metrics)){
 print(nonOverlappingPairs)
 
 # apply filters on the overlapping results.
-filteredNonOverlappingPairs = nonOverlappingPairs[which((nonOverlappingPairs$Model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$Model2 %in% c("tm3", "tm2", "tm1"))) & nonOverlappingPairs$Metric %in% c("mmre", "mdmre", "pred25"),]
+filteredNonOverlappingPairs = nonOverlappingPairs[which(nonOverlappingPairs$metric %in% accuracy_metrics),]
+filteredNonOverlappingPairs = nonOverlappingPairs[which((nonOverlappingPairs$model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$model2 %in% c("tm3", "tm2", "tm1"))) ,]
+nonOverlappingPairsIndices <- paste(filteredNonOverlappingPairs$model1, filteredNonOverlappingPairs$model2, filteredNonOverlappingPairs$metric, sep="-")
 
 write.csv(filteredNonOverlappingPairs,'nonOverlappingPairs.csv')
 
 print(filteredNonOverlappingPairs)
+print(nonOverlappingPairsIndices)
+
 
 for (i in 1:length(accuracy_metrics)){
     g = metric_labels[i]
@@ -457,12 +487,73 @@ for (i in 1:length(accuracy_metrics)){
 #     ggtitle(g)
 #     print(p)
 # }
+
+
+# Using the "sig_bs" results, create a graph to represent the direct graph for the models.
+library(igraph)
+for(metric_i in 1:length(accuracy_metrics)){
+  #print(accuracy_metrics[metric_i])
+  #if(accuracy_metrics[metric_i] == "predRange"){
+  #  next
+  #}
+  #print(accuracy_metrics)
+  selectedData <- nonOverlappingPairs[nonOverlappingPairs$metric == metric_labels[metric_i],]
+  m <- matrix(0, nrow = length(model_names), ncol = length(model_names), byrow = FALSE)
+  #colnames(m) <- names(models)
+  #rownames(m) <- names(models)
+  colnames(m) <- model_names
+  rownames(m) <- model_names
+  for(i in 1:nrow(selectedData)){
+    if(selectedData$direction[i] == "+"){
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = 1
+    }else if(selectedData$direction[i] == "-"){
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = 1
+    }
+  }
+  
+  edge_val <- c() 
+  # if A -> B -> C, remove edge A -> C
+  for(i in 1:length(model_names)){
+    for(j in 1:length(model_names)){
+      if(m[i,j] != 0){
+        edge_val <- c(edge_val, m[i,j]) 
+        for(k in 1:length(model_names)){
+          if(m[j,k] != 0)
+            m[i,k] = 0
+        }
+      }
+    }
+  }
+  
+  #plot the directed graph
+  model_mean <- matrix(0, nrow = length(model_names), byrow = FALSE)
+  rownames(model_mean) <- model_names
+  colnames(model_mean) <- "mean"
+  for(i in 1:nrow(selectedData)){
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$mean1, 3)
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model2)] = round(selectedData[i,]$mean2, 3)
+  }
+
+  net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
+  
+lo <- layout.fruchterman.reingold(net, niter = 1000)
+plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+              edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label.cex=0.7)
+  
+#plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  
+  title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels[metric_i], "accuracy_metric_texts"])
+}
 ```
 
 ```{r evaluate the p-values under family-wise control}
 
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
+sig_bs = sig_bs[which(sig_bs$model1 %in% model_names | sig_bs$model2 %in% model_names),]
 
+#sig_bs$model1 <- model_mapping$model_texts[match(sig_bs_f$model1, model_mapping$model_names)]
+#sig_bs$model2 <- model_mapping$model_texts[match(sig_bs_f$model2, model_mapping$model_names)]
 
 round_df <- function(df, digits) {
   nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
@@ -472,6 +563,7 @@ round_df <- function(df, digits) {
   (df)
 }
 
+#print only pair comparisons that are related to transaction models
 sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% accuracy_metrics),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm1", "tm2", "tm3") | sig_bs_f$model2 %in% c("tm1", "tm2", "tm3")),]
@@ -480,10 +572,6 @@ sig_bs_f = round_df(sig_bs_f, 2)
 print(sig_bs_f)
 
 #identify the parirs that are not identified from the 84% overlaps.
-#nonOverlappingPairsIndices <- paste(nonOverlappingPairs$Model1, nonOverlappingPairs$Model2, nonOverlappingPairs$Metric, sep="-")
-nonOverlappingPairsIndices = c()
-print(nonOverlappingPairsIndices)
-
 sig_bs_f_indices <- paste(sig_bs_f$model1, sig_bs_f$model2, sig_bs_f$metric, sep="-")
 print(sig_bs_f_indices)
 sig_bs_f$index <- sig_bs_f_indices
@@ -495,14 +583,17 @@ write.csv(filtered_sig_bs_f,'sig_bs_f.csv')
 # Using the "sig_bs" results, create a graph to represent the direct graph for the models.
 library(igraph)
 for(metric_i in 1:length(accuracy_metrics)){
-  print(accuracy_metrics[metric_i])
-  if(accuracy_metrics[metric_i] == "predRange"){
-    next
-  }
+  #print(accuracy_metrics[metric_i])
+  #if(accuracy_metrics[metric_i] == "predRange"){
+  #  next
+  #}
+  #print(accuracy_metrics)
   selectedData <- sig_bs[sig_bs$metric == metric_labels[metric_i],]
-  m <- matrix(0, nrow = length(models), ncol = length(models), byrow = FALSE)
-  colnames(m) <- names(models)
-  rownames(m) <- names(models)
+  m <- matrix(0, nrow = length(model_names), ncol = length(model_names), byrow = FALSE)
+  #colnames(m) <- names(models)
+  #rownames(m) <- names(models)
+  colnames(m) <- model_names
+  rownames(m) <- model_names
   for(i in 1:nrow(selectedData)){
     if(selectedData$BH_p_value[i] < 0.05){
     if(selectedData$direction[i] == "+"){
@@ -515,11 +606,11 @@ for(metric_i in 1:length(accuracy_metrics)){
   
   edge_val <- c() 
   # if A -> B -> C, remove edge A -> C
-  for(i in 1:length(models)){
-    for(j in 1:length(models)){
+  for(i in 1:length(model_names)){
+    for(j in 1:length(model_names)){
       if(m[i,j] != 0){
         edge_val <- c(edge_val, m[i,j]) 
-        for(k in 1:length(models)){
+        for(k in 1:length(model_names)){
           if(m[j,k] != 0)
             m[i,k] = 0
         }
@@ -528,8 +619,8 @@ for(metric_i in 1:length(accuracy_metrics)){
   }
   
   #plot the directed graph
-  model_mean <- matrix(0, nrow = length(models), byrow = FALSE)
-  rownames(model_mean) <- names(models)
+  model_mean <- matrix(0, nrow = length(model_names), byrow = FALSE)
+  rownames(model_mean) <- model_names
   colnames(model_mean) <- "mean"
   for(i in 1:nrow(selectedData)){
     model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$model1_mean, 3)
@@ -539,13 +630,13 @@ for(metric_i in 1:length(accuracy_metrics)){
   net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
   
 lo <- layout.fruchterman.reingold(net, niter = 1000)
-plot(net, vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
+plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
     vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
               edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label = edge_val, edge.label.cex=0.7)
   
 #plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
   
-  title(main = metric_labels[metric_i])
+  title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels[metric_i], "accuracy_metric_texts"])
 }
 
 

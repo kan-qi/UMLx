@@ -141,15 +141,22 @@ for (k in 1:(nmodels-1)){
             print(mu_1)
             print(mu_2)
             d <- mu_1 - mu_2
+            direction = "="
             
             if (d>0){
                 direction <- '+'
             }
-            if (d<0){
+            else if (d<0){
                 direction <- '-'
             }
-            if (d==0){
-                direction <- '='
+            
+            if(metric_names[j] %in% c("mae", "mdmre", "mmre")){
+              if(direction == "+"){
+                direction = "-"
+              }
+              else if(direction == "-"){
+                direction = "+"
+              }
             }
 
             dfHypothesis[i,] <- c(model_labels[id1], model_labels[id2], metric_labels[id1], direction)

@@ -146,6 +146,7 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
     model = fit(dataset, modelNames[i], models[[i]])
     
     predicted = m_predict(model, dataset)
+    #print(predicted)
     
     actual = dataset$Effort
     names(actual) <- rownames(dataset)
@@ -155,7 +156,7 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
     #print(intersectNames)
     
     model_eval_fit = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
-    #print(model_eval_predict)
+    #print(actual[intersectNames])
     
     eval_metric_results[[modelName]]$model_eval_fit = model_eval_fit
     
@@ -344,13 +345,9 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   #sample_size <- as.integer(0.83*N)
   #sample_size <- N
   
-  niters <- 100
+  niters <- 1000
   
   confidence_level <- 0.83
-  
-  nfold = 2
-  
-  folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
   
   modelNames = names(models)
   

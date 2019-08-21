@@ -10,7 +10,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-source("neuralnet_model_2.R")
+source("neuralnet_model.R")
 
 
 ```
@@ -18,26 +18,29 @@ source("neuralnet_model_2.R")
 Loading data form the csv file
 
 ```{r}
-filename <- "temp/android_dataset_6_4.csv"
+filename <- "dsets/android_dataset_6_4.csv"
 dataset <- read.csv(filename, header=TRUE, sep=",", row.names="Project")
 dataset$Project <- NULL
 ```
 
 Load our neuralnet model
 ```{r}
-neuralnet <- list()
 neuralnet <- neuralnet_model(dataset)
-neuralnet <- m_fit.neuralnet(neuralnet, dataset)
+neuralnet <- fit(neuralnet, "neuralnet", dataset)
 print(neuralnet)
 ```
 
 Visualize neuralnet
 ```{r}
 plot.nnet(neuralnet$m)
+plot.nnet(trainedModels$neuralnet$m)
+plot(trainedModels$neuralnet$m)
+post(trainedModels$reg_tree$m, file = "./ptree.ps")
+plot(trainedModels$lasso$m)
 ```
 
 Predict result
 ```{r}
-predictions <- m_predict.neuralnet(neuralnet, modelData)
+predictions <- m_predict(neuralnet, modelData)
 print(predictions)
 ```
