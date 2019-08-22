@@ -58,7 +58,8 @@ public class FlowDroidConnector {
 //          CommandLine.run("java -cp "+classPath+" org.umlx.utils.FlowDroidConnector \""+project+"\" \""+sdkDir+"\" \""+outputDir+"\"");
 //            CommandLine.run("java -cp ./out/production/Android-toolkit:./libs/* org.umlx.utils.FlowDroidConnector "+project+" "+sdkDir+" "+outputDir);
 //            CommandLine.run("java -cp ./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/* org.umlx.utils.FlowDroidConnector "+project+" "+sdkDir+"/platforms "+outputDir);
-            CommandLine.run("java -cp ./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/* org.umlx.utils.FlowDroidConnector "+project+" "+sdkDir+"/platforms "+outputDir);
+            //CommandLine.run("java -cp ./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/* org.umlx.utils.FlowDroidConnector "+project+" "+sdkDir+"/platforms "+outputDir);
+            CommandLine.run("java -cp ./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/* org.umlx.utils.FlowDroidConnector "+project+" "+sdkDir+"/platforms "+outputDir);
 
         } catch (InterruptedException e) {
             e.printStackTrace();

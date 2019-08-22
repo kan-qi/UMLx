@@ -218,7 +218,7 @@ for(i in 1:nfold){
 	
 	eval_metrics = c()
 	eval_pred = c()
-	print(i)
+	#print(i)
 	for(j in 1:nmodels){
 	  #j = 2
 	  modelName <- modelNames[j]
@@ -284,7 +284,9 @@ for(i in 1:nfold){
 	  
 	  #print(eval_metrics)
 	  if("predRange" %in% accuracy_metrics){
-	    foldResults1[, j, i] = predR(model_eval_mre, predRange)
+	    predRangeResults <- predR(model_eval_mre, predRange)
+	    foldResults1[, j, i] = predRangeResults
+	    foldResults[i, paste(modelName, "predRange", sep="_")] = mean(predRangeResults)
 	  }
 	}
 	
@@ -346,6 +348,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   #sample_size <- N
   
   niters <- 1000
+  #niters <- 100
   
   confidence_level <- 0.83
   
@@ -468,7 +471,9 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
       #print(eval_metrics)
       
       if("predRange" %in% accuracy_metrics){
-        iterResults1[,j,i] = predR(model_eval_mre, predRange)
+        predRangeResults <- predR(model_eval_mre, predRange)
+        iterResults1[, j, i] = predRangeResults
+        iterResults[i, paste(modelName, "predRange", sep="_")] = mean(predRangeResults)
       }
     
     }
@@ -600,15 +605,15 @@ regression_cols <- function(){
     "SLOC",
     "Type",
     ##Frances
-    #"Services", #"NSCRN", #adding number of screens
-    #"Activities",
-    #"BroadcastReceivers",
-    #"ContentProviders",
-    #"LayoutFiles", #"NXML"
-    #"Screens",
+    "Services", #"NSCRN", #adding number of screens
+    "Activities",
+    "BroadcastReceivers",
+    "ContentProviders",
+    "LayoutFiles", #"NXML"
+    "Screens",
     ##De Souza
-    #"EventHandlers", #"NODV",
-    #"Views", #"NOSV",
+    "EventHandlers", #"NODV",
+    "Views", #"NOSV",
     "Effort"
   )
 }

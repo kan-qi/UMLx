@@ -692,7 +692,7 @@ calEffortAdj <- function(regressionData){
   #   an approximation of effort adjustment factor based on linear regression with prior weights
   
   summary <- summary(priorFit(regressionData))
-  print(summary)
+  #print(summary)
 
   effortAdj <- c(mean = summary$coefficients["transactionSum","Estimate"], var=summary$coefficients["transactionSum","Std. Error"]^2)
 }
@@ -729,7 +729,7 @@ readTransactionData <- function(filePath){
   #   the fitted linear model using the prior weights
   #filePath = "d:/AndroidAnalysis/GatorAnalysisResults4/S1W1L1_5_29/prey_S1W1L1_2019-4-28@1559052797326_analysis/filteredTransactionEvaluation.csv"
   if(!is.null(cachedTransactionFiles[[filePath]])){
-    print("cache exits")
+    #print("cache exits")
     cachedTransactionFiles[[filePath]]
   } else if (!file.exists(filePath)) {
     print(filePath)
@@ -908,7 +908,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     bayesianModel$cuts <- cutPoints
     
     bm_validationResults <- crossValidate(regressionData, k, function(trainData) bayesfit(trainData, 1000, 500), predict.blm)
-    print(bm_validationResults)
+    #print(bm_validationResults)
     
     #the regression model fit
     regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData));

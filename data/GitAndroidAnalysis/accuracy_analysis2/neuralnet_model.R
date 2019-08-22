@@ -54,7 +54,7 @@ impute <- function(data) {
     miceMod <- mice(data, m=5, method="rf", print=FALSE, remove_collinear=TRUE)
   
     # generate the completed data.
-    data <- complete(miceMod)
+    data <- mice::complete(miceMod)
   }
   return(data)
 }
