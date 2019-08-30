@@ -103,6 +103,163 @@ modelPredict <- function(models, dataset){
   predictions
 }
 
+modelBenchmarkIndividual <- function(models, dataset, benchmarkResults){
+  
+  #modelsTest1 <- models
+  #models <- modelsTest1
+  benchmarkResultsUpdate <- modelBenchmark(models, dataset)
+  
+  benchmarkResults <- updateBenchmarkResults(benchmarkResults, benchmarkResultsUpdate)
+  
+  benchmarkResults
+}
+
+#only benchmark for the models in the list. Update the results in the benchmarkresults for the models
+updateBenchmarkResults <- function(benchmarkResults, benchmarkResultsUpdate){
+  #benchmarkResultsTest1 <- benchmarkResults
+  #benchmarkResults <- benchmarkResultsTest1
+  fitResults <- benchmarkResults$fitResults
+  cvResults <- benchmarkResults$cvResults
+  bsResults <- benchmarkResults$bsResults
+  model_names <- benchmarkResults$model_names
+  accuracy_metrics = benchmarkResults$accuracy_metrics
+  goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
+  
+  accuracy_results <- cvResults$accuracyResults
+  avgPreds <- cvResults$avgPreds
+  foldResults <- cvResults$foldResults
+  foldResults1 <- cvResults$foldResults1
+  #print(foldResults1)
+  
+  bsEstimations <- bsResults$bsEstimations
+  iterResults <- bsResults$iterResults
+  iterResults1 <- bsResults$iterResults1
+  
+  #read the updated information
+  fitResults_update <- benchmarkResultsUpdate$fitResults
+  
+  cvResults_update <- benchmarkResultsUpdate$cvResults
+  bsResults_update <- benchmarkResultsUpdate$bsResults
+  
+  model_names_update <- benchmarkResultsUpdate$model_names
+  accuracy_metrics_update = benchmarkResultsUpdate$accuracy_metrics
+  goodness_fit_metrics_update = benchmarkResultsUpdate$goodness_fit_metrics
+  
+  model_indices_update <- match(model_names_update, model_names)
+  
+  accuracy_results_update <- cvResults_update$accuracyResults
+  avgPreds_update <- cvResults_update$avgPreds
+  foldResults_update <- cvResults_update$foldResults
+  foldResults1_update <- cvResults_update$foldResults1
+  
+  bsEstimations_update <- bsResults_update$bsEstimations
+  iterResults_update <- bsResults_update$iterResults
+  iterResults1_update <- bsResults_update$iterResults1
+  
+  #update fit results
+  for(i in 1:length(model_names_update)){
+    fitResults[[model_names_update[i]]] = fitResults_update[[model_names_update[i]]] 
+  }
+  #fitResults[[model_names_update]] = fitResults_update[[model_names_update]]
+  
+  model_labels_update <- c()
+  for(i in 1:length(model_names_update)){
+    for(j in 1:length(accuracy_metrics_update)){
+      model_labels_update = c(model_labels_update, model_names_update[i])
+    }
+  }
+  #print(model_labels_update)
+  
+  metric_labels_update <- c()
+  for(i in 1:length(model_names_update)){
+    for(j in 1:length(accuracy_metrics_update)){
+      metric_labels_update = c(metric_labels_update, accuracy_metrics_update[j])
+    }
+  }
+  
+  model_accuracy_labels_update <- paste(model_labels_update, metric_labels_update, sep="_")
+  #print(model_accuracy_labels_update)
+  
+  accuracy_results[model_accuracy_labels_update] = accuracy_results_update[model_accuracy_labels_update]
+  avgPreds = as.data.frame(avgPreds)
+  avgPreds_update = as.data.frame(avgPreds_update)
+  avgPreds[model_names_update] = avgPreds_update[model_names_update]
+  foldResults = as.data.frame(foldResults)
+  foldResults_update = as.data.frame(foldResults_update)
+  foldResults[model_accuracy_labels_update] = foldResults_update[model_accuracy_labels_update]
+  newCols = sum(is.na(model_indices_update))
+  newDims = dim(foldResults1)+c(0,newCols, 0)
+  foldResults1_new <- array(0,dim=newDims)
+  #print(model_indices_update)
+  for(i in 1:dim(foldResults1)[3]){
+    addedCols = 0
+    for(j in 1:dim(foldResults1)[2]){
+    #print(foldResults1[,j,i])
+    foldResults1_new[,j,i] = foldResults1[,j,i]
+    }
+    for(j in 1:length(model_indices_update)){
+      #print(model_indices_update[j])
+      if(is.na(model_indices_update[j])){
+        addedCols = addedCols+1
+        #print(dim(foldResults1)[2]+addedCols)
+        foldResults1_new[,dim(foldResults1)[2]+addedCols,i] = foldResults1_update[,j,i]
+      }
+      else{
+        foldResults1_new[,model_indices_update[j],i] = foldResults1_update[,j,i]
+      }
+    }
+  }
+  #print(foldResults1_new)
+  
+  cvResults$accuracyResults <- accuracy_results
+  cvResults$avgPreds <- avgPreds
+  cvResults$foldResults <- foldResults
+  cvResults$foldResults1 <- foldResults1_new
+  
+  bsEstimations = as.data.frame(bsEstimations)
+  bsEstimations_update = as.data.frame(bsEstimations_update)
+  bsEstimations[model_accuracy_labels_update] = bsEstimations_update[model_accuracy_labels_update]
+  print(bsEstimations)
+  iterResults = as.data.frame(iterResults)
+  iterResults_update = as.data.frame(iterResults_update)
+  iterResults[model_accuracy_labels_update] = iterResults_update[model_accuracy_labels_update]
+  
+  newCols = sum(is.na(model_indices_update))
+  newDims = dim(iterResults1)+c(0,newCols, 0)
+  iterResults1_new <- array(0,dim=newDims)
+  #print(model_indices_update)
+  for(i in 1:dim(iterResults1)[3]){
+    addedCols = 0
+    for(j in 1:dim(iterResults1)[2]){
+      #print(foldResults1[,j,i])
+      iterResults1_new[,j,i] = iterResults1[,j,i]
+    }
+    for(j in 1:length(model_indices_update)){
+      #print(model_indices_update[j])
+      if(is.na(model_indices_update[j])){
+        addedCols = addedCols+1
+        #print(dim(foldResults1)[2]+addedCols)
+        iterResults1_new[,dim(iterResults1)[2]+addedCols,i] = iterResults1_update[,j,i]
+      }
+      else{
+        iterResults1_new[,model_indices_update[j],i] = iterResults1_update[,j,i]
+      }
+    }
+  }
+  
+  bsResults$bsEstimations <- bsEstimations
+  bsResults$iterResults <- iterResults
+  bsResults$iterResults1 <- iterResults1_new
+  
+  benchmarkResults$fitResults = fitResults
+  benchmarkResults$cvResults = cvResults
+  benchmarkResults$bsResults = bsResults
+  benchmarkResults$model_names = c(model_names, model_names_update[is.na(model_indices_update)])
+  benchmarkResults$accuracy_metrics = accuracy_metrics
+  benchmarkResults$goodness_fit_metrics = goodness_fit_metrics
+  benchmarkResults
+}
+
 #modelBenchmark would preform goodness of fit, cross validation, and bootrapping significance test
 modelBenchmark <- function(models, dataset){
   #dataset <- modelData
@@ -181,7 +338,7 @@ cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','p
 
 #dataset = modelData
 
-nfold = 2
+nfold = 5
 
 folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
 
@@ -216,8 +373,8 @@ for(i in 1:nfold){
 	testData <- dataset[testIndexes, ]
 	trainData <- dataset[-testIndexes, ]
 	
-	eval_metrics = c()
-	eval_pred = c()
+	#eval_metrics = c()
+	#eval_pred = c()
 	#print(i)
 	for(j in 1:nmodels){
 	  #j = 2
@@ -315,6 +472,8 @@ for(i in 1:predRange)
 	}
 	
 }
+avgPreds <- as.data.frame(avgPreds)
+foldResults <- as.data.frame(foldResults)
 
 ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults, foldResults1 = foldResults1)
 
@@ -347,7 +506,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   #sample_size <- as.integer(0.83*N)
   #sample_size <- N
   
-  niters <- 1000
+  niters <- 100
   #niters <- 100
   
   confidence_level <- 0.83
@@ -376,6 +535,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   iterResults1 <- array(0,dim=c(predRange,nmodels,niters+1))
 
   for (i in 1:niters){
+    print(paste("iter: ", i, sep=""))
     #resample = data.frame()
     if(i == 1){
       resample = dataset
@@ -407,9 +567,9 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
     }
     
     testData <- resample[-trainIndexes, ]
-    
-    eval_metrics = c()
-    eval_pred = c()
+    #print(trainIndexes)
+    #eval_metrics = c()
+    #eval_pred = c()
     
     for(j in 1:nmodels){
       
@@ -497,6 +657,9 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   bsEstimations <- apply(iterResults, 2, calEstimation)  # 3*54 matrix
   colnames(bsEstimations) <- model_accuracy_indice
   rownames(bsEstimations) <- c('lower','mean','upper')
+  
+  bsEstimations <- as.data.frame(bsEstimations)
+  iterResults <- as.data.frame(iterResults)
   
   ret <- list(bsEstimations = bsEstimations, iterResults = iterResults, iterResults1=iterResults1)
 }

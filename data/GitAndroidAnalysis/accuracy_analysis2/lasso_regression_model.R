@@ -43,7 +43,7 @@ lasso_range = function(x, y, k){
 #lasso_range(x_data,y_data, 100)
 
 cv_lasso_model = function(x_data,y_data){
-  set.seed(2)
+  #set.seed(2)
   lambda_list <- lasso_range(x_data,y_data,100)
   percent = 50
   cvfit = cv.glmnet(x_data,y_data,
@@ -93,7 +93,7 @@ cv_lasso_model = function(x_data,y_data){
 
 # Preprocess dataset
 clean_lasso <- function(dataset){
-  set.seed(32)
+  #set.seed(32)
   # numeric data only
   numeric_columns <- unlist(lapply(dataset, is.numeric))
   data.numeric <- dataset[, numeric_columns]
@@ -146,7 +146,6 @@ m_fit.lasso <- function(lasso,dataset){
   
   #lasso_lm <- glmnet(x = x_data, y = y_data, alpha = 1, standardize = T)
   
-  set.seed(2)
   lambda_list <- lasso_range(x_data,y_data,100)
   cvfit = cv.glmnet(x_data,y_data,
                     standardize = T, lambda = lambda_list, type.measure = 'mse', nfolds = 5, alpha = 1)

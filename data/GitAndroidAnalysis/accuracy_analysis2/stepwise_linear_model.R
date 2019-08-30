@@ -9,6 +9,7 @@ m_fit.step_lnr <- function(step_lnr,dataset){
   cleanData <- clean_step(dataset[, colnames(dataset) != "Effort"])
   #str_frm <- paste("Effort ~",step_lnr$formula)
   dims <- colnames(cleanData)
+  print(dims)
   step_lnr$dims <- dims
   str_frm <- paste("Effort ~", paste(dims, collapse="+"))
   #print(str_frm)
@@ -111,7 +112,8 @@ clean_step <- function(dataset){
       break
     }
     
-    if(nrow(data.removed) > ncol(data.removed)){
+    #ste the ratio between variables and data to avoid "inifite -AIC" proglem.
+    if(nrow(data.removed) > ncol(data.removed)*2){
       data.done = data.removed
       break
     }

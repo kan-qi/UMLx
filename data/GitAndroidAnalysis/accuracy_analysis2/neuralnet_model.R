@@ -129,7 +129,7 @@ fitModel <- function(data.train, verbose=FALSE) {
   if (verbose) cat("****** Neural Network - NNET ...  \n")
   nnet.grid <- expand.grid(size=c(1, 5, 7),
                            decay=c(0, 0.01, 0.1))
-  set.seed(1984)
+  #set.seed(1984)
   nnet.fit <- train(Effort ~ .,
                     data=data.train,
                     method="nnet",
@@ -154,7 +154,7 @@ fitModel <- function(data.train, verbose=FALSE) {
 # Try out different hyperparameters and save the best one
 neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
   
-  set.seed(1984)  # set a seed
+  #set.seed(1984)  # set a seed
   #print(regression_cols)
   regressionData = dataset[, regression_cols]
   # Clean dataset to keep features that we care about only
@@ -225,7 +225,7 @@ neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
 # Training function for the neuralnet model
 m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   
-  set.seed(1984)  # set a seed
+  #set.seed(1984)  # set a seed
   #print(neuralnet$regression_cols)
   regressionData <- dataset[, neuralnet$regression_cols]
   data <- clean_neural(regressionData[, colnames(regressionData) != "Effort"])
@@ -298,7 +298,7 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
 m_predict.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   library(caret)
   library(dplyr)
-  set.seed(1984)  # set a seed
+  #set.seed(1984)  # set a seed
   
   dims = neuralnet$dims
   data = dataset[, dims]

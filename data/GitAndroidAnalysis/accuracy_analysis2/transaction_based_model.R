@@ -245,7 +245,7 @@ classify <- function(data, cutPoints) {
   }
 }
 
-calcMMRE <- function(testData, pred) {
+#calcMMRE <- function(testData, pred) {
   # Calculates mean magnitude relative error (MMRE).
   #
   # Args:
@@ -254,12 +254,12 @@ calcMMRE <- function(testData, pred) {
   #
   # Returns:
   #   MMRE
-  mmre <- abs(testData - pred)/testData
-  mean_value <- mean(mmre)
-  mean_value
-}
+#  mmre <- abs(testData - pred)/testData
+#  mean_value <- mean(mmre)
+#  mean_value
+#}
 
-calcPRED <- function(testData, pred, percent) {
+#calcPRED <- function(testData, pred, percent) {
   # Calculates percentage relative error deviation (PRED).
   #
   # Args:
@@ -270,11 +270,22 @@ calcPRED <- function(testData, pred, percent) {
   # Returns:
   #   PRED
   
-  value <- abs(testData - pred)/testData
-  percent_value <- percent/100
-  pred_value <- value <= percent_value
-  mean(pred_value)
-}
+#  value <- abs(testData - pred)/testData
+#  percent_value <- percent/100
+#  pred_value <- value <= percent_value
+#  mean(pred_value)
+#}
+
+
+mre <- function(x) abs(x[1] - x[2])/x[2]
+mmre <- function(mre) mean(mre)
+pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
+mdmre <- function(mre) median(mre)
+
+mse <-  function(x) mean((x[, 1] - x[, 2])^2)
+mae<- function(x) sum(apply(x, 1, function(x) abs(x[1] - x[2])))/length(x)
 
 crossValidate <- function(data, k, fit_func, predict_func){
   # Performs k-fold cross validation with Bayesian linear regression as training 
@@ -295,7 +306,11 @@ crossValidate <- function(data, k, fit_func, predict_func){
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
   foldMMRE <- vector(length = k)
-  foldPRED <- vector(length = k)
+  foldPRED15 <- vector(length = k)
+  foldPRED25 <- vector(length = k)
+  foldPRED50 <- vector(length = k)
+  foldMDMRE <- vector(length = k)
+  foldMAE <- vector(length = k)
   for (i in 1:k) {
     testIndexes <- which(folds == i, arr.ind = TRUE)
     testData <- data[testIndexes, ]
@@ -303,12 +318,74 @@ crossValidate <- function(data, k, fit_func, predict_func){
     
     model <- fit_func(trainData)
     predicted = predict_func(model, testData)
+    actual = testData$Effort
+    names(actual) <- rownames(testData)
+    #print("predicted:")
+    #print(predicted)
+    #print("actual:")
+    #print(testData$Effort)
+    intersectNames <- intersect(names(predicted), names(actual))
+    #print(intersectNames)
+    predict_vs_actual = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
+    #print(predict_vs_actual)
+    mre_vals = apply(predict_vs_actual, 1, mre)
+    #foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    #foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+    # relative errors
+    foldMMRE[i] <- mmre(mre_vals)
+    foldPRED15[i] <- pred15(mre_vals)
+    foldPRED25[i] <- pred25(mre_vals)
+    foldPRED50[i] <- pred50(mre_vals)
+    foldMDMRE[i] <- mdmre(mre_vals)
     
-    foldMSE[i] <- mean((predicted - testData$Effort)^2)
-    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
-    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+    # absolute errors
+    foldMSE[i] <- mse(predict_vs_actual)
+    foldMAE[i] <- mae(predict_vs_actual)
   }
-  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+  results <- c("MSE" = mean(foldMSE),
+               "MAE" = mean(foldMAE),
+               "MMRE" = mean(foldMMRE),
+               "PRED15" = mean(foldPRED15),
+               "PRED25" = mean(foldPRED25),
+               "PRED50" = mean(foldPRED50),
+               "MDMRE" = mean(foldMDMRE)
+               )
+}
+
+# rank the models
+rankModels <- function(accuracyMeasures){
+  accuracy_metrics <- names(accuracyMeasures)
+  cvRankResults <- data.frame(matrix(nrow=nrow(accuracyMeasures), ncol=0))
+  #print(accuracy_metrics)
+  for (i in 1:length(accuracy_metrics)){
+    g = accuracy_metrics[i]
+    #print(g)
+    selectedData <- data.frame(matrix(nrow=nrow(accuracyMeasures), ncol=0))
+    selectedData[g] <- accuracyMeasures[, g]#delete the metric_labels
+    #print(selectedData)
+    if(g == "MMRE" || g == "MDMRE" || g == "MAE" || g == "MSE"){
+      selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,g], ties.method = "min")
+    }else{
+      selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,g], ties.method = "min")
+    }
+    
+    cvRankResults <- cbind(cvRankResults, selectedData)
+  }
+  
+  
+  #make a total rank(rank*) base on the ranks
+  rank_sum <- vector(mode = "integer",length = nrow(cvRankResults))
+  for (i in 1:nrow(cvRankResults)){
+    selectedData <- cvRankResults[i,]
+    for(j in 1:length(accuracy_metrics)){
+      rank_sum[i] <- rank_sum[i] + selectedData[,2*j]
+    }
+  }
+  
+  rank_sum <- rank(rank_sum, ties.method = "min")
+  #print(rank_sum)
+  cvRankResults["rank*"] <- rank_sum
+  cvRankResults
 }
 
 
@@ -834,6 +911,24 @@ generateRegressionData <- function(projects, cutPoints, effortData, transactionF
   regressionData <- as.data.frame(regressionData)
 }
 
+
+#profile iteration data
+profileIterationData <- function(iterResults){
+  lcuts <- lapply(iterResults, function(iterationResult){
+    iterationResult$bayesModel$cuts
+  })
+  
+  laccuracy <- sapply(iterResults, function(iterationResult){
+    iterationResult$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+  })
+  
+  #print(laccuracy)
+  accuracyRanks <- rankModels(as.data.frame(t(laccuracy)))
+  #print(accuracyRanks)
+  
+  list(lcuts = lcuts, laccuracy = round(accuracyRanks, 2))
+}
+
 performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5) {
   # Performs search for the optimal number of bins and weights to apply to each
   # bin through linear regression.
@@ -1055,11 +1150,21 @@ trainsaction_based_model <- function(modelData){
   #cachedTransactionFiles = list()
   SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
-  SWTIIIModelSelector <- 3
+  
+  #SWTIIIresults <- models$tm3$SWTIIIresults
+  accuracyMeasures <- as.data.frame(t(sapply(SWTIIIresults, function(iterResults){
+    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+  })))
+  accuracyRanks <- rankModels(accuracyMeasures)
+  #print(accuracyRanks)
+  #print(accuracyMeasures)
+  #SWTIIIModelSelector <- 3
+  SWTIIIModelSelector <- which.min(accuracyRanks[,'rank*'])
+  print(paste("swtiii: ", SWTIIIModelSelector, sep=""))
  
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
   
-  models$tm2 = list(
+  models$tm3 = list(
     cuts = modelParams$cuts,
     trainedModel = list(
       weights = lapply(modelParams$weights,Bayes.sum),
@@ -1070,10 +1175,22 @@ trainsaction_based_model <- function(modelData){
   )
   
   SWTIIresults <- performSearch(6, modelData, c("TL", "TD"))
-  SWTIIModelSelector <- 4
+  #SWTIIModelSelector <- 4
+  
+  #SWTIIresults <- models$tm2$SWTIIresults
+  accuracyMeasures <- as.data.frame(t(sapply(SWTIIresults, function(iterResults){
+    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+  })))
+  #print(accuracyMeasures)
+  accuracyRanks <- rankModels(accuracyMeasures)
+  #print(accuracyRanks)
+  SWTIIModelSelector <- which.min(accuracyRanks[,'rank*'])
+  #print(SWTIIModelSelector)
+  #print(paste("swtiii: ", SWTIIIModelSelector, sep=""))
+  
   modelParams = SWTIIresults[[SWTIIModelSelector]][["bayesModel"]]
   
-  models$tm3 = list(
+  models$tm2 = list(
     cuts = modelParams$cuts,
     trainedModel = list(
       weights = lapply(modelParams$weights,Bayes.sum),
@@ -1252,7 +1369,14 @@ trainsaction_based_model3 <- function(modelData){
   #cachedTransactionFiles = list()
   SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
-  SWTIIIModelSelector <- 3
+  #SWTIIIModelSelector <- 3
+  #SWTIIIresults <- models$tm3$SWTIIIresults
+  accuracyMeasures <- sapply(SWTIIIresults, function(iterResults){
+    iterResults$bayesModelAccuracyMeasure[c('PRED', 'MMRE')]
+  })
+  print(as.data.frame(t(accuracyMeasures)))
+  SWTIIIModelSelector <- which.max(accuracyMeasures)
+  #print(SWTIIIModelSelector)
   
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
   
