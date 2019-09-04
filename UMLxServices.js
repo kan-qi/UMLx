@@ -600,6 +600,11 @@ app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 
 });
 
 
+app.get('/loadEstimatorInfo', function(req, res){
+    res.render('estimationPanel', {estimatorParameters: {}});
+});
+
+
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
 	res.render('estimationPage', {cookieName: "EstimationPageOptions"});

@@ -39,314 +39,161 @@
 	label: "ducp_effort_prediction"
 	}
 	
-	
-
-	/*
-	 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
-	 */
-	
 	function estimateUseCaseEffort(modelInfo, estimationResults, projectEffort, modelConfig){
-		//predict presonnel, schedule based on predicted effort
-		//need to update
-//		var sizeMetric = umlEstimationInfo.sizeMetric;
-//		var transactionMetric = umlEstimationInfo.transactionMetric;
-		
-//		calculateResourceAllocation(modelInfo, personnel);
-//		modelInfo.predictedPersonnel = personnel;
-		
-		//need to update
-//		var projectDuration = projectEffort/10;
-		
-		//the better way of estimating the duration by COCOMO
-		/*
-		 * PM_NS = A*Size^E*\prod_(i=1)^nEM_i
-		 * 
-		 * TDEV_NS = C*(PM_NS)^F
-		 * 
-		 * F = D + 0.2*0.01*\sum_(j=1)^5(SF_j)
-		 * = D + 0.2*(E-B)
-		 * 
-		 * A = 2.94
-		 * B = 0.91
-		 * C = 3.67
-		 * D = 0.28
-		 * 
-		 * P = PM_NS/TDEV_NS
-		 * 
-		 * 152 is for PH/PM ratio
-		 * 
-		 * y = 3.67*(x)^(0.28+0.2*(1.15-0.91))
-		 */
-		
-//		modelInfo.predictedDuration = projectDuration;
-//		calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
-		
-		var availablePersonnel = null;
-		var availableSchedule = null;
-		var hoursPerMonth = null;
-		if(modelInfo.projectInfo){
-			availablePersonnel = modelInfo.projectInfo.personnel;
-			availableSchedule = modelInfo.projectInfo.schedule;
-			hoursPerMonth = modelInfo.projectInfo.hoursPerMonth;
-		}
-		
-		var projectEffortInPMCOCOMO = projectEffort/152;
-		
-		console.log("project effort");
-		console.log(projectEffortInPM);
-		
-		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
-		
-		if(availableSchedule && projectDuration > availableSchedule){
-			projectDuration = availableSchedule;
-		}
-		
-		console.log("schedule prediction");
-		console.log(projectDuration);
-		
-		if(!hoursPerMonth){
-			hoursPerMonth = 152;
-		}
+    		//predict presonnel, schedule based on predicted effort
 
-		var projectEffortInPM = projectEffort/hoursPerMonth;
-		
-		var personnel = projectEffortInPM/projectDuration;
-		
-		var feasible = true;
-		
-		if(availablePersonnel){
-			if(personnel > availablePersonnel){
-			// try to fit the resource using personnel as invariant.
-			var refitSchedule = projectEffortInPM/personnel;
-			if(refitSchedule > availableSchedule){
-				feasible = false;
-				projectDuration = availableSchedule;
-			} else{
-				projectDuration = refitSchedule;
-			}
-			personnel = availablePersonnel;
-			}
-		}
-		
-		estimationResults.feasible = feasible;
-		
-		console.log("transaction data");
-		console.log(modelInfo['TransactionAnalytics']);
-		
-//		var personnel_UI_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
-//		var personnel_DB_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
-//		var personnel_FS_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
-//		
-//		personnel_UI = Math.round(personnel_UI_estimated);
-//		personnel_DB = Math.round(personnel_DB_estimated);
-//		personnel_FS = Math.round(personnel_FS_estimated);
-//		
-//		if(personnel_UI == 0 && personnel_UI_estimated != 0){
-//			personnel_UI = 1;
-//		}
-//		
-//		if(personnel_DB == 0 && personnel_DB_estimated != 0){
-//			personnel_DB = 1;
-//		}
-//		
-//		if(personnel_FS == 0 && personnel_FS_estimated != 0){
-//			personnel_FS = 1;
-//		}
-		
-//		personnel = personnel_UI + personnel_DB + personnel_FS;
-		
-//		estimationResults.Personnel_UI = personnel_UI;
-//		estimationResults.Personnel_DB = personnel_DB;
-//		estimationResults.Personnel_FS = personnel_FS;
-		
-//		var totalTransactions = modelInfo['TransactionAnalytics'].INT+modelInfo['TransactionAnalytics'].DM+modelInfo['TransactionAnalytics'].CTRL;
-//		var personnel_UI_estimated = totalTransactions == 0 ? 0 : modelInfo['TransactionAnalytics'].INT/totalTransactions;
-//		var personnel_DB_estimated = totalTransactions == 0 ? 0 : modelInfo['TransactionAnalytics'].DM/totalTransactions;
-//		var personnel_FS_estimated = totalTransactions == 0 ? 0 : modelInfo['TransactionAnalytics'].CTRL/totalTransactions;
-//		
-		
+    //		modelInfo.predictedDuration = projectDuration;
+    //		calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
 
-		// var boundaryNum =  modelInfo["ComponentAnalytics"].BoundaryNum;
-		// var controlNum = modelInfo["ComponentAnalytics"].ControlNum;
-		// var entityNum = modelInfo["ComponentAnalytics"].EntityNum;
-		// var totalNum = boundaryNum + controlNum + entityNum;
-		
-	    // var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
-	    // var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
-	    // var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
-	    
-		// estimationResults.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
-		// estimationResults.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
-		// estimationResults.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
-		
-		estimationResults.Personnel = Math.ceil(personnel);
-		
-//		projectDuration = projectEffortInPM/personnel;
-		
-		estimationResults.Duration = projectDuration.toFixed(2);
-		
-		estimationResults.HoursPerMonth = hoursPerMonth;
-		
-		var useCaseEstimatesById = {};
-		
-		for(var i in estimationResults.UseCases){
-			useCaseEstimatesById[estimationResults.UseCases[i]._id] = estimationResults.UseCases[i];
-		}
-		
-		var viewEffortWeight = 0;
-		var controlEffortWeight = 0;
-		var modelEffortWeight = 0;
+    		var availablePersonnel = Number.POSITIVE_INFINITY;
+    		var availableSchedule = Number.POSITIVE_INFINITY;
+    		var hoursPerMonth = 152;
+    		if(modelInfo.projectInfo){
+    			availablePersonnel = modelInfo.projectInfo.personnel;
+    			availableSchedule = modelInfo.projectInfo.schedule;
+    			hoursPerMonth = modelInfo.projectInfo.hoursPerMonth;
+    		}
 
-		//calculate distributions
+    		var projectEffortInPMCOCOMO = projectEffort/152;
 
-		//distribute project effort
-		for(var i in modelInfo.UseCases){
-			var useCase = modelInfo.UseCases[i];
-			
-			var useCaseEstimates = useCaseEstimatesById[useCase._id];
-			if(!useCaseEstimates){
-				useCaseEstimatesById[useCase._id] = {
-						Name: useCase.Name,
-						_id: useCase._id,
-				}
-				useCaseEstimates = useCaseEstimatesById[useCase._id];
-			}
+    		//estimate project duration based on COCOMO
+            /*
+            		 * PM_NS = A*Size^E*\prod_(i=1)^nEM_i
+            		 *
+            		 * TDEV_NS = C*(PM_NS)^F
+            		 *
+            		 * F = D + 0.2*0.01*\sum_(j=1)^5(SF_j)
+            		 * = D + 0.2*(E-B)
+            		 *
+            		 * A = 2.94
+            		 * B = 0.91
+            		 * C = 3.67
+            		 * D = 0.28
+            		 *
+            		 * P = PM_NS/TDEV_NS
+            		 *
+            		 * 152 is for PH/PM ratio
+            		 *
+            		 * y = 3.67*(x)^(0.28+0.2*(1.15-0.91))
+            */
 
-			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
-			
-			var useCaseMetric = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
-			var modelMetric = modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric];
-			var useCaseEffort = (modelMetric == 0) ? 0 : projectEffort/modelMetric*useCaseMetric;
-			
-//			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
-//			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
-			
-			var useCaseEffortInPMCOCOMO = useCaseEffort/152;
-			
-			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
+    		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
 
-//			var personnel = projectEffort/12;
-			
-			if(availableSchedule && useCaseDuration > availableSchedule){
-				useCaseDuration = availableSchedule;
-			}
-			
-			var useCaseEffortInPM = useCaseEffort/hoursPerMonth;
-			
-			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
-			
-			useCaseEstimates.feasible = true;
-//			if(availablePersonnel){
-//				if(useCasePersonnel < availablePersonnel){
-//				useCaseEstimates.feasible = false;
-//				}
-//				else{
-//				useCasePersonnel = availablePersonnel;
-//				}
-//			}
-			
-			if(availablePersonnel){
-				if(useCasePersonnel > availablePersonnel){
-				// try to fit the resource using personnel as invariant.
-				var refitSchedule = useCaseEffortInPM/useCasePersonnel;
-				if(refitSchedule > availableSchedule){
-					useCaseEstimates.feasible = false;
-					useCaseDuration = availableSchedule;
-				} else{
-					useCaseDuration = refitSchedule;
-				}
-				useCasePersonnel = availablePersonnel;
-				}
-			}
-			
-//			var useCase = modelInfo.UseCases[i];
-//			useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
-		
-//			useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
-//			useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
-			
-			//distribute project effort
-			
-//				useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
-//				useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
-//				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
-//				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
-			
-//				var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-//				var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-//				var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+    		if(projectDuration > availableSchedule){
+    			projectDuration = availableSchedule;
+    		}
 
-//				personnel_UI = Math.round(personnel_UI_estimated);
-//				personnel_DB = Math.round(personnel_DB_estimated);
-//				personnel_FS = Math.round(personnel_FS_estimated);
-//				
-//				if(personnel_UI == 0 && personnel_UI_estimated != 0){
-//					personnel_UI = 1;
-//				}
-//				
-//				if(personnel_DB == 0 && personnel_DB_estimated != 0){
-//					personnel_DB = 1;
-//				}
-//				
-//				if(personnel_FS == 0 && personnel_FS_estimated != 0){
-//					personnel_FS = 1;
-//				}
-				
-//				useCasePersonnel = personnel_UI + personnel_DB + personnel_FS;
-			
+    		//calculate the personnel
+            var projectEffortInPM = projectEffort/hoursPerMonth;
+            var personnel = projectEffortInPM/projectDuration;
+            if(personnel > availablePersonnel){
+                //recalculate the productivity factors
+                personnel = availablePersonnel
+                 hoursPerMonth = projectEffort/(personnel*projectDuration)
+             }
 
-				var boundaryNum =  useCase["ComponentAnalytics"].BoundaryNum > 0 ? useCase["ComponentAnalytics"].BoundaryNum : 2;
-				var controlNum = useCase["ComponentAnalytics"].ControlNum > 0 ? useCase["ComponentAnalytics"].ControlNum : 1;
-				var entityNum = useCase["ComponentAnalytics"].EntityNum > 0 ? useCase["ComponentAnalytics"].EntityNum : 1;
-				var totalNum = boundaryNum + controlNum + entityNum;
-				
-			    var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
-			    var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
-				var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
-				
-				viewEffortWeight += personnel_UI_estimated;
-				controlEffortWeight += personnel_FS_estimated;
-				modelEffortWeight += personnel_DB_estimated;
+            if(personnel < 160){
+    		    estimationResults.feasible = true;
+    		}
 
-//			    var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-//			    var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-//			    var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+    		estimationResults.Personnel = Math.ceil(personnel);
 
-			    
-				useCaseEstimates.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
-				useCaseEstimates.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
-				useCaseEstimates.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
-				
-//				personnel_UI = Math.round(personnel_UI_estimated);
-//				personnel_DB = Math.round(personnel_DB_estimated);
-//				personnel_FS = Math.round(personnel_FS_estimated);
-				
-				
-//				estimationResults.Personnel = Math.ceil(personnel);
+    		estimationResults.Duration = projectDuration.toFixed(2);
+
+    		estimationResults.HoursPerMonth = hoursPerMonth;
+
+    		var useCaseEstimatesById = {};
+
+    		for(var i in estimationResults.UseCases){
+    			useCaseEstimatesById[estimationResults.UseCases[i]._id] = estimationResults.UseCases[i];
+    		}
+
+    		var viewEffortWeight = 0;
+    		var controlEffortWeight = 0;
+    		var modelEffortWeight = 0;
+
+    		//distribute project effort
+    		for(var i in modelInfo.UseCases){
+    			var useCase = modelInfo.UseCases[i];
+
+    			var useCaseEstimates = useCaseEstimatesById[useCase._id];
+    			if(!useCaseEstimates){
+    				useCaseEstimatesById[useCase._id] = {
+    						Name: useCase.Name,
+    						_id: useCase._id,
+    				}
+    				useCaseEstimates = useCaseEstimatesById[useCase._id];
+    			}
+
+    			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
+
+    			var useCaseMetric = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+    			var modelMetric = modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+    			var useCaseEffort = (modelMetric == 0) ? 0 : projectEffort/modelMetric*useCaseMetric;
+
+    			var useCaseEffortInPMCOCOMO = useCaseEffort/152;
+
+    			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
+
+    			if(availableSchedule && useCaseDuration > availableSchedule){
+    				useCaseDuration = availableSchedule;
+    			}
+
+    			var useCaseEffortInPM = useCaseEffort/hoursPerMonth;
+
+    			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
+
+    			// prioritization information of the use cases.
+    			useCaseEstimates.feasible = true;
+
+    			if(useCasePersonnel > availablePersonnel){
+    				// try to fit the resource using personnel as invariant.
+    				var refitSchedule = useCaseEffortInPM/useCasePersonnel;
+    				if(refitSchedule > availableSchedule){
+    					useCaseEstimates.feasible = false;
+    				} else{
+    					useCaseDuration = refitSchedule;
+    				}
+    			}
+
+    				var boundaryNum =  useCase["ComponentAnalytics"].BoundaryNum > 0 ? useCase["ComponentAnalytics"].BoundaryNum : 2;
+    				var controlNum = useCase["ComponentAnalytics"].ControlNum > 0 ? useCase["ComponentAnalytics"].ControlNum : 1;
+    				var entityNum = useCase["ComponentAnalytics"].EntityNum > 0 ? useCase["ComponentAnalytics"].EntityNum : 1;
+    				var totalNum = boundaryNum + controlNum + entityNum;
+
+    			    var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
+    			    var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
+    				var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+
+    				viewEffortWeight += personnel_UI_estimated;
+    				controlEffortWeight += personnel_FS_estimated;
+    				modelEffortWeight += personnel_DB_estimated;
 
 
-				useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
-				
-//				useCaseDuration = useCaseEffortInPM / personnel;
-				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
+    				useCaseEstimates.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
+    				useCaseEstimates.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
+    				useCaseEstimates.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
 
-				useCaseEstimates.Effort = useCaseEffort.toFixed(2);
-				
-				estimationResults.UseCases.push(useCaseEstimates);
-		}
+    				useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
 
-		var totalWeight = viewEffortWeight+controlEffortWeight+modelEffortWeight;
-		estimationResults.Personnel_UI = parseFloat(viewEffortWeight/totalWeight*100).toFixed(2)+"%";
-		estimationResults.Personnel_DB = parseFloat(modelEffortWeight/totalWeight*100).toFixed(2)+"%";
-		estimationResults.Personnel_FS = parseFloat(controlEffortWeight/totalWeight*100).toFixed(2)+"%";
-		
+    				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
 
-		console.log("estimation result");
-		console.log(estimationResults);
-		
-		
-	}
-	
+    				useCaseEstimates.Effort = useCaseEffort.toFixed(2);
+
+    				estimationResults.UseCases.push(useCaseEstimates);
+    		}
+
+    		var totalWeight = viewEffortWeight+controlEffortWeight+modelEffortWeight;
+    		estimationResults.Personnel_UI = parseFloat(viewEffortWeight/totalWeight*100).toFixed(2)+"%";
+    		estimationResults.Personnel_DB = parseFloat(modelEffortWeight/totalWeight*100).toFixed(2)+"%";
+    		estimationResults.Personnel_FS = parseFloat(controlEffortWeight/totalWeight*100).toFixed(2)+"%";
+
+    		//console.log("estimation result");
+    		//console.log(estimationResults);
+            //process.exit();
+    	}
+
+
 	// distribute the effort to different types of components.
 	function estimateMVCEffort(modelInfo, estimationResults, projectEffort, modelConfig){
 		
